@@ -13,7 +13,7 @@
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-header">
-					<a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_package') }}</a>
+					<a href="{{ route('packages.invest') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_package') }}</a>
 					<a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_clp') }}</a>
 				</div>
 				<div class="box-body" style="padding-top:0;">

@@ -25,5 +25,15 @@ return [
     'wallet_out'           	=> 'Out',
     'wallet_info'           	=> 'Info',
 
+    'btn_withdraw'           	=> 'Withdraw',
+    'bnt_otp'           	=> 'Request OTP',
+
+    'withdraw_btc'           	=> 'BTC Withdrawals',
+    'withdraw_address'           	=> 'Address Wallet BTC',
+    'withdraw_amountUSD'           	=> 'Amount(USD)',
+    'withdraw_amountBTC'           	=> 'Amount(BTC)',
+    'withdraw_fee'           	=> 'Withdrawal Fee',
+    'withdraw_status'           	=> 'Status',
+
 
 ];

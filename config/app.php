@@ -124,6 +124,9 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    'coinbase_key' => env('COINBASE_KEY'),
+    'coinbase_secret' => env('COINBASE_SECRET'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -181,6 +184,8 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
 		Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
+		PragmaRX\Google2FALaravel\ServiceProvider::class,
+		Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
     ],
 
     /*
@@ -232,6 +237,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 		'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
+		'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
     ],
 
 ];

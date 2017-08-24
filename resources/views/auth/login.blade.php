@@ -12,30 +12,57 @@
                 <a href="{{ url('/home') }}"><b>Admin</b>LTE</a>
             </div><!-- /.login-logo -->
 
-        @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <strong>Whoops!</strong> {{ trans('adminlte_lang::message.someproblems') }}<br><br>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <div class="login-box-body">
         <p class="login-box-msg"> {{ trans('adminlte_lang::message.siginsession') }} </p>
 
-        <login-form name="{{ config('auth.providers.users.field','email') }}"
-                    domain="{{ config('auth.defaults.domain','') }}"></login-form>
+        <!--login-form name="{{ config('auth.providers.users.field','email') }}"
+                    domain="{{ config('auth.defaults.domain','') }}"></login-form-->
+		<form action="{{ url(config('adminlte.login_url', 'login')) }}" method="post">
+			{!! csrf_field() !!}
 
-        @include('adminlte::auth.partials.social_login')
-
+			<div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
+				<input type="email" name="email" class="form-control" value="{{ old('email') }}"
+					   placeholder="{{ trans('adminlte::adminlte.email') }}">
+				<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+				@if ($errors->has('email'))
+					<span class="help-block">
+						<strong>{{ $errors->first('email') }}</strong>
+					</span>
+				@endif
+			</div>
+			<div class="form-group has-feedback {{ $errors->has('password') ? 'has-error' : '' }}">
+				<input type="password" name="password" class="form-control"
+					   placeholder="{{ trans('adminlte::adminlte.password') }}">
+				<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+				@if ($errors->has('password'))
+					<span class="help-block">
+						<strong>{{ $errors->first('password') }}</strong>
+					</span>
+				@endif
+			</div>
+			<div class="form-group">
+				{!! app('captcha')->display()!!}
+				{!! $errors->first('g-recaptcha-response','<div class="alert alert-danger">:message</div>')!!}
+			</div>
+			<div class="row">
+				<div class="col-xs-8">
+					<div class="checkbox icheck">
+						<label>
+							<input type="checkbox" name="remember"> {{ trans('adminlte_lang::default.remember_me') }}
+						</label>
+					</div>
+				</div>
+				<!-- /.col -->
+				<div class="col-xs-4">
+					<button type="submit"
+							class="btn btn-primary btn-block btn-flat">{{ trans('adminlte_lang::default.btn_sign_in') }}</button>
+				</div>
+				<!-- /.col -->
+			</div>
+		</form>
         <a href="{{ url('/password/reset') }}">{{ trans('adminlte_lang::message.forgotpassword') }}</a><br>
         <a href="{{ url('/register') }}" class="text-center">{{ trans('adminlte_lang::message.registermember') }}</a>
-
     </div>
-
     </div>
     </div>
     @include('adminlte::layouts.partials.scripts_auth')

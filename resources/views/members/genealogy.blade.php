@@ -62,8 +62,10 @@
 											text: user.id +' '+ user.u,
 											data: {
 												username: user.id +' '+ user.u,
-												pkg: '$' + user.pkg,
-												numMember: user.dmc,
+                                                packageId: user.packageId,
+                                                totalMembers: user.totalMembers,
+                                                leg: user.leg,
+                                                loyaltyId: user.loyaltyId,
 												level: user.l,
 											},
 											id: user.id,
@@ -79,14 +81,16 @@
 										text: user.id +' '+ user.u,
 										data: {
 											username: user.id +' '+ user.u,
-											pkg: '$' + user.pkg,
-											numMember: user.dmc,
+                                            packageId: user.packageId,
+                                            totalMembers: user.totalMembers,
+                                            leg: user.leg,
+                                            loyaltyId: user.loyaltyId,
 											level: user.l,
 										},
 										id: user.id,
 										children: user.dmc?true:false,
 										icon: "/img/jstree/user.png",
-										state: {opened: false}
+										state: {opened: true}
 									}]);
 								}
 							}
@@ -98,9 +102,10 @@
 				table: {
 					columns: [
 						{width: '50%', header: "ID/Username"},
-						{width: '5%', value: "numMember", header: "Total member"},
-						{width: '5%', value: "pkg", header: "Active Package"},
-						{width: '2%', value: "level", header: "Loyalty"},
+						{width: '5%', value: "totalMembers", header: "Total member"},
+						{width: '5%', value: "packageId", header: "Active Package"},
+						{width: '5%', value: "leg", header: "Left/Right"},
+						{width: '5%', value: "loyaltyId", header: "Loyalty"},
 					],
 					width: "100%",
 					resizable: true,
@@ -134,73 +139,6 @@
 					return false;
 				}
 			});
-
-			$(document).on('click', '.ph-history', function(){
-				var id = $(this).parent().parent().attr('id');
-				$.ajax({
-					url: "/getPackageHistory",
-					type: "POST",
-					data: {
-					userid: id,
-					_csrf: 'LP3m3qBE-6j1VNbd4i7NgiJrZ-LaLF-oo7N0'
-					},
-					timeout : 15000
-				}).done(function(data) {
-					if (!data.err) {
-						var username = $('#genealogy-container').jstree(true).get_node(id).data.username;
-						$('#ph-history-username').text(username);
-						$('#ph-history-content').html('');
-						var index = 1;
-						data.phs.forEach(function(ph) {
-							ph.index = index++;
-							var phItem = phItemTemplate(ph);
-							$('#ph-history-content').append(phItem);
-						});
-						$('#ph-history-modal').modal('show');
-					} else {
-						swal({
-							title: "There's something wrong",
-							text: ErrorCodes[data.err],
-							type: "error"
-						});
-					}
-				});
-			});
-			$(document).on('click', '.downline-stats', function(){
-				var id = $(this).parent().parent().attr('id');
-				$.ajax({
-					url: "/getDownlinePHStats",
-					type: "POST",
-					data: {
-						userid: id,
-					},
-					timeout : 15000
-				}).done(function(data) {
-					if (!data.err) {
-						var username = $('#genealogy-container').jstree(true).get_node(id).data.username;
-						$('#downline-stats-username').text(username);
-						$('#downline-stats-content').html('');
-						var index = 1;
-						for (var i = 0; i < data.length; i++) {
-							if (data[i]) {
-								var item = {amount: data[i].toFixed(3)};
-								item.index = index++;
-								var d = moment('2016-08', 'YYYY-MM');
-								item.month = d.add(i, 'month').format('MM/YYYY');
-								var phItem = downlinePHItemTemplate(item);
-								$('#downline-stats-content').append(phItem);
-							}
-						}
-						$('#downline-stats-modal').modal('show');
-					} else {
-						swal({
-							title: "There's something wrong",
-							text: ErrorCodes[data.err],
-							type: "error"
-						});
-					}
-				});
-			});	
 		});
 	</script>
 @endsection

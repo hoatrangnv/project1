@@ -9,6 +9,8 @@ return [
     'btn_update'                  => 'Update',
     'btn_edit'                  => 'Edit',
     'btn_delete'                  => 'Delete',
+    'btn_sign_in'                  => 'Sign in',
+    'remember_me'                  => 'Remember me',
 	'create_at'                 => 'Date Create',
 	'update_at'                 => 'Date Update',
 	'side_dashboard'                 => 'Dashboard',
@@ -25,4 +27,6 @@ return [
 	'side_member_genealogy'                 => 'Genealogy Tree',
 	'side_member_binary'                 => 'Binary Tree',
 	'side_member_refferals'                 => 'Refferals',
+
+	'action'                 => 'Action',
 ];

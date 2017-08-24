@@ -62,7 +62,7 @@
 			<li class="treeview{{ Request::segment(1) === 'mybonus' ? ' active' : null }}">
 				<a href="#"><i class='fa fa-link'></i> <span>{{ trans('adminlte_lang::default.side_mybonus') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
 				<ul class="treeview-menu">
-                    <li class="{{ Request::segment(2) === 'fast' ? 'active' : null }}"><a href="{{ url('mybonus/fast') }}">{{ trans('adminlte_lang::default.side_mybonust_fast') }}</a></li>
+                    <li class="{{ Request::segment(2) === 'faststart' ? 'active' : null }}"><a href="{{ url('mybonus/faststart') }}">{{ trans('adminlte_lang::default.side_mybonust_fast') }}</a></li>
                     <li class="{{ Request::segment(2) === 'binary' ? 'active' : null }}"><a href="{{ url('mybonus/binary') }}">{{ trans('adminlte_lang::default.side_mybonus_binary') }}</a></li>
                     <li class="{{ Request::segment(2) === 'loyalty' ? 'active' : null }}"><a href="{{ url('mybonus/loyalty') }}">{{ trans('adminlte_lang::default.side_mybonus_loyalty') }}</a></li>
                 </ul>

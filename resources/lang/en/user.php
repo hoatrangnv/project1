@@ -7,10 +7,18 @@ return [
     'header_edit'            	=> 'Edit',
     'add'                 		=> 'Add User',
     'edit'                 		=> 'Edit User',
-    'username'                  => 'Name',
+    'firstname'                 => 'First Name',
+    'lastname'                  => 'Last Name',
+    'username'                  => 'User Name',
     'email'                 	=> 'Email',
     'password'                 	=> 'Password',
     'password_confirmation'     => 'Confirm Password',
-    
+    'country'     => 'Country',
+    'phone'     => 'Phone Number',
+    'referer'     => 'Id Sponsor',
+    'btn_register'     => 'Register',
+    'terms_text'     => 'Terms and conditions',
+    'membreship'     => 'I already have a membership',
+
 
 ];
