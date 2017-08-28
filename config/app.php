@@ -1,5 +1,5 @@
 <?php
-//define('ADMINLTETEMPLATE_PATH', realpath(base_path('resources/views')));
+define('ADMINLTETEMPLATE_PATH', realpath(base_path()));
 return [
 
     /*
