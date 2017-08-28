@@ -1,5 +1,5 @@
 <?php
-define('ADMINLTETEMPLATE_PATH', realpath(base_path()));
+// define('ADMINLTETEMPLATE_PATH', realpath(base_path()));
 return [
 
     /*
