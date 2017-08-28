@@ -42,7 +42,11 @@
 			</div>
 			<div class="form-group">
 				{!! app('captcha')->display()!!}
-				{!! $errors->first('g-recaptcha-response','<div class="alert alert-danger">:message</div>')!!}
+				@if ($errors->has('g-recaptcha-response'))
+					<span class="help-block">
+						{{ $errors->first('g-recaptcha-response') }}
+					</span>
+				@endif
 			</div>
 			<div class="row">
 				<div class="col-xs-8">

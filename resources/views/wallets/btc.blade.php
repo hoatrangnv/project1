@@ -15,7 +15,7 @@
 				<div class="box-header">
 					<button type="button" class="btn btn-sm btn-success" data-title="{{ trans('adminlte_lang::wallet.deposit') }}" id="btcDeposit">{{ trans('adminlte_lang::wallet.deposit') }}</button>
 					<a href="{{ url('wallets/btcwithdraw') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.withdraw') }}</a>
-					<a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.transfer') }}</a>
+					<a href="{{ url('wallets/btctransfer') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_clp') }}</a>
 					<!--a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.create_bitcoin') }}</a-->
 				</div>
 				<div class="box-body" style="padding-top:0;">

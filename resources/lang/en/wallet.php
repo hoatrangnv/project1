@@ -12,6 +12,10 @@ return [
     'deposit'           	=> 'Deposit',
     'withdraw'           	=> 'Withdraw',
     'transfer'           	=> 'Transfer',
+    'buy_clp'           	=> 'Buy CLP Coin',
+    'sell_clp'           	=> 'Sell CLP Coin',
+    'btctransfer'           	=> 'Btc Coin Transfer',
+    'clptransfer'           	=> 'CLP Coin Transfer',
     'create_bitcoin'           	=> 'Create Bitcoin address',
     'create_clpcoin'           	=> 'Create CLPcoin address',
 

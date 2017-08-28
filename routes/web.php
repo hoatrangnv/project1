@@ -53,7 +53,23 @@ Route::get('wallets/btc', 'WalletController@btc');
 Route::get('wallets/clp', 'WalletController@clp');
 Route::get('wallets/reinvest', 'WalletController@reinvest');
 Route::get('wallets/deposit', 'WalletController@deposit');
+
 Route::get('wallets/btcwithdraw', 'WalletController@btcwithdraw');
+Route::post('wallets/btcwithdraw', 'WalletController@btcwithdraw');
+
+Route::get('wallets/buyclp', 'WalletController@buyclp');
+Route::post('wallets/buyclp', 'WalletController@buyclp');
+
+Route::get('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
+Route::post('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
+
+Route::get('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
+Route::post('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
+
+Route::get('wallets/buysellclp', 'WalletController@buysellclp');
+
+
+
 Route::resource('wallets', 'WalletController');
 Route::get('authenticator', 'Auth2FAController@index');
 Route::post('authenticator', 'Auth2FAController@index');

@@ -13,10 +13,11 @@
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-header">
-					<a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.deposit') }}</a>
-					<a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.withdraw') }}</a>
-					<a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.transfer') }}</a>
-					<a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.create_clpcoin') }}</a>
+					<!--a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.deposit') }}</a>
+					<a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.withdraw') }}</a-->
+					<!--a href="{{ url('wallets/clptransfer') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.transfer') }}</a-->
+					<a href="{{ url('wallets/clptransfer') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
+					<!--a href="{{ route('permissions.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.create_clpcoin') }}</a-->
 				</div>
 				<div class="box-body" style="padding-top:0;">
 					<table class="table table-bordered table-hover table-striped dataTable">
