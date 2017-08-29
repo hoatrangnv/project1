@@ -80,3 +80,8 @@ Route::post('authenticator/check2fa', 'Auth2FAController@check2fa');
 //Route::get('members/genealogy', 'MemberController@genealogy');
 //
 //Route::get('members/genealogy', 'MemberController@genealogy');
+
+//Profile router
+Route::get('profile','Profile\ProfileController@index');
+Route::post('profile/changepassword','Profile\ProfileController@changePassword');
+Route::get('profile/switchauthen','Profile\ProfileController@switchTwoFactorAuthen');
