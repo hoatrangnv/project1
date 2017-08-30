@@ -89,7 +89,7 @@ class ProfileController extends Controller
                         ->pluck('is2fa');
             ($data[0] == 1) ? $tmp = 0 : $tmp = 1; 
             $result = User::where('id',Auth::user()->id)
-                    ->update( [ 'is2fa2' => $tmp ] );
+                    ->update( [ 'is2fa' => $tmp ] );
             if($result == 1){
                 return Response::json([
                     "success" => true,

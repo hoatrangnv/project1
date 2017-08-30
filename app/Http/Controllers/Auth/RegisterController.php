@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Account;
+use Mail;
 
 /**
  * Class RegisterController
@@ -116,6 +117,32 @@ class RegisterController extends Controller
         $user = User::create($fields);
         $fields['userId'] = $user->id;
         UserData::create($fields);
+        //gui mail
+        $dataSendMail = [
+            "mail_to" => $data['email'],
+            "name"    => $data['name']
+        ];
+        
+        $resultSendMail = $this->sendMail($dataSendMail);
         return $user;
     }
+
+    /*
+    *author huynq
+    *send mail after register
+    */
+    private function sendMail($dataSendMail){
+        try {
+            if(count($dataSendMail)>0){
+                $result = Mail::send('templates.mail.register', $dataSendMail, function($message) use ($dataSendMail) 
+                {
+                    $message->to( $dataSendMail['mail_to'], $dataSendMail['name'] )->subject('Welcome to the crypyto!');
+                });
+                return $result;
+            } 
+        } catch (Exception $e) {
+            var_dump($e->getmessage());
+        }
+    }
+
 }

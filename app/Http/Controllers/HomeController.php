@@ -48,12 +48,19 @@ class HomeController extends Controller
             $data['totalF1UserRight'] = $totalF1User->totalBonusRight;
             //Goi Packgade id
             $data['package'] = $totalF1User->packageId;
-            $data['value']   = Package::where('id',$data['package'])->get()[0]->price;
+
+            if( count( Package::where('id',$data['package'])->get() ) == 0 ){
+                $data['value'] = 0;
+            }else{
+                $data['value'] = Package::where('id',$data['package'])->get()[0]->price;
+            }
+
             //Doanh so F1 moi
             $newF1InWeek = $this->newF1InWeek();
             $data['newF1InWeek'] = $newF1InWeek['total'];
             $data['leftNew']     = $newF1InWeek['leftNew'];
             $data['rightNew']    = $newF1InWeek['rightNew'];
+            
             return view('adminlte::home.index')->with('data', $data);
         } catch (Exception $e) {
             //Debug
@@ -70,10 +77,14 @@ class HomeController extends Controller
         try {
             $data =  BonusBinary::where('userId',Auth::user()->id)
                     ->get();
-            if($data[0]){
+            if(count($data) > 0){
                 $data['total']   = $data[0]->leftNew + $data[0]->rightNew;
                 $data['leftNew'] = $data['0']->leftNew;
                 $data['rightNew']= $data['0']->rightNew;
+            }else{
+                $data['total'] = 0;
+                $data['leftNew'] = 0;
+                $data['rightNew'] = 0;
             }
             return $data;
         } catch (Exception $e) {

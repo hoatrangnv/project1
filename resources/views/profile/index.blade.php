@@ -376,7 +376,8 @@
                     url : "profile/switchauthen",
                     type : "get",
                     success : function (result){
-                        if(!result.success){
+                        console.log(result);
+                        if(result.success){
                            alert("update thanh cong");
                         }else{
                            alert("update khong thanh cong");
