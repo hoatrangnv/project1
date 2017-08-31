@@ -87,3 +87,4 @@ Route::post('profile/changepassword','Profile\ProfileController@changePassword')
 Route::get('profile/switchauthen','Profile\ProfileController@switchTwoFactorAuthen');
 
 Route::get('sendmail','SendmailController@sendmail');
+Route::get('getnotification','GetNotificationController@getNotification');

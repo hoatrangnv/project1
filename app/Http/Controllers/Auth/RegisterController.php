@@ -117,6 +117,7 @@ class RegisterController extends Controller
         $user = User::create($fields);
         $fields['userId'] = $user->id;
         UserData::create($fields);
+        UserCoin::create($fields);
         //gui mail
         $dataSendMail = [
             "mail_to" => $data['email'],
