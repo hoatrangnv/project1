@@ -70,8 +70,8 @@ class WalletController extends Controller
                 $user = UserCoin::findOrFail($currentuserid);
                 if ($user->walletAddress == '' && $user->accountCoinBase != '') {
                     $configuration = Configuration::apiKey(config('app.coinbase_key'), config('app.coinbase_secret'));
-                    $client = Client::create($configuration);
-                    $account = $client->getAccount($user->accountCoinBase);
+                    $client    = Client::create($configuration);
+                    $account   = $client->getAccount($user->accountCoinBase);
                     $addressId = $client->getAccountAddresses($account);
                     $addresses = $client->getAccountAddress($account, $addressId->getFirstId());
                     $walletAddress = json_encode($addresses->getAddress());
