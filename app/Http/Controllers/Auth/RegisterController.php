@@ -9,9 +9,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
+use App\UserCoin;
 use Coinbase\Wallet\Resource\Account;
 use Mail;
-
+use Coinbase\Wallet\Resource\Address;
+use Auth;
 /**
  * Class RegisterController
  * @package %%NAMESPACE%%\Http\Controllers\Auth
@@ -115,8 +117,16 @@ class RegisterController extends Controller
             $fields['username'] = $data['username'];
         }
         $user = User::create($fields);
+       
         $fields['userId'] = $user->id;
         UserData::create($fields);
+        $userCoin = UserCoin::create($fields);
+
+        //Tao vi
+        $contact= $client->getAccount($userCoin->accountCoinBase);
+        $nome = 'name_for_address';
+        $endereco= new Address(['name' => $nome]);
+        $client->createAccountAddress($contact, $endereco);
         //gui mail
         $dataSendMail = [
             "mail_to" => $data['email'],
