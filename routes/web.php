@@ -88,3 +88,6 @@ Route::get('profile/switchauthen','Profile\ProfileController@switchTwoFactorAuth
 
 Route::get('sendmail','SendmailController@sendmail');
 Route::get('getnotification','GetNotificationController@getNotification');
+
+/***------- TEST -------***/
+Route::get('ethereumtest', 'EthereumTestController@index');
