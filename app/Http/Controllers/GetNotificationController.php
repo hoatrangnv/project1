@@ -4,33 +4,30 @@
 
 class GetNotificationController
 
+<<<<<<< HEAD
+=======
+use Coinbase\Wallet\Client;
+use Coinbase\Wallet\Configuration;
+use Coinbase\Wallet\Resource\Address;
+use App\BitGoSDK;
+
+class GetNotificationController extends Controller
+{
     public function __construct()
     {
         // $this->middleware('auth');
     }
     
     public function getNotification(){
-        echo "<pre>";
-        var_dump(json_encode(file_get_contents('php://input'),TRUE));exit();
-        $return_code = 200;
 
-
-        $conn = mysqli_connect('42.112.28.129', 'root', 'Topica@123##', 'shop') or die ('Không thể kết nối tới database');
-        $data = json_encode(file_get_contents('php://input'),TRUE);
-
-
-        $id = $data['order']['id'];
-        $status = $data['order']['id'];
-        $amount = $data['order']['total_btc']['cents'];
-        $user = $data['order']['custom'];
-
-        $sql = "INSERT INTO `sales` (`username`,`sales_id,`price_in_btc`) VALUES ('$user', '$id' ,'$amount')";
-        $result = mysqli_query($conn, $sql);
-
-        // Nếu thực thi không được thì thông báo truy vấn bị sai
-        if (!$result){
-            die ('Câu truy vấn bị sai');
-        }
+        // key chains = 33PK7u86q3v1cPqcKBhwmCHzs6RfFYfzJP
+        // wallets_id = 33PK7u86q3v1cPqcKBhwmCHzs6RfFYfzJP
+        // wallets_id = 3JYs1xqtq7fL5dFyy4E3LyeycM5QMwyLkG
+        // address_wallet = 3P5t8x767hbNsc5nkFmHqSiMPVyQ9r4nTu
+       $bitgo = new BitGoSDK('v2x15b687915c114fd8d4583bedcf0617e5b41cfe311d2e31db7aba849939a739ef');
+       $wallet = $bitgo->createWallet();
+       dd($wallet);
+       // dd($bitgo->createAddress('33PK7u86q3v1cPqcKBhwmCHzs6RfFYfzJP','0x69920a31a0a1aca870e2d1bbf03913ad8065f6fb'));
     }
 
 }
