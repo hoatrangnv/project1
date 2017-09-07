@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>flsadjf</title>
+</head>
+<body>
+hello!
+<script type="text/javascript">
+var BitGoJS = require('bitgo');
+
+var useProduction = false;
+var bitgo = new BitGoJS.BitGo(useProduction);
+
+bitgo.ping({}, function(err, res) {
+  if (err) {
+    console.dir(err);
+  } else {
+    console.log(JSON.stringify(res, null, 4));
+  }
+});
+</script>
+</body>
+</html>
