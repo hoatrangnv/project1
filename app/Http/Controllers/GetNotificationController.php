@@ -5,6 +5,7 @@ use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Address;
 use App\BitGo\BitGoSDK;
+use URL;
 
 class GetNotificationController extends Controller
 { 
@@ -17,18 +18,23 @@ class GetNotificationController extends Controller
     }
     
     public function getNotification(){
+        dd(URL::to('/'));
         $bitgo = new BitGoSDK();
         $bitgo->authenticateWithAccessToken("v2xe40828a04fbdd989d4b45e7e997821854388f44e4ae918663e057087384cd44b");
         // $wallet = $bitgo->wallets();
-        $bitgo->unlock('0000000');
-        $wallet = $bitgo->wallets()->getWallet('2N9XUSpu2Y4MRAoRELLUwtFhLJkmDfuDKfg');
-        // $createWallet = $wallet->createWallet("test_10h","longpass");
-        $sendCoins = $wallet->sendCoins("2N2aY8SbfdfaHYmXqTCHEBnMvnGLLDA5age", 1000000, "huydkzhi@300393", $message = null);
+        // $bitgo->unlock('0000000');
+        $wallet = $bitgo->wallets()->getWallet('2NBEtswNfQ8APtc2S39R3i4FhCZoxW82D4u');
+        // dd($wallet);
+        // $createWallet = $wallet->createWallet("test_27222h","longpass");
+        // $sendCoins = $wallet->sendCoins("2N2aY8SbfdfaHYmXqTCHEBnMvnGLLDA5age", 1000000, "huydkzhi@300393", $message = null);
 
-        $createWebhook = $wallet->createWebhook("","");
-
-
-        dd($sendCoins);
+        // $createWebhook = $wallet->createWebhook("transaction","http://backoffice.cryptolending.org/hook2.php");
+        // dd($createWebhook);
+        // $listWebhook = $wallet->listWebhooks();
+        // dd($listWebhook);
+        dd($createWallet,$createWallet['wallet']->getRawWallet(),$createWallet['wallet']->getID());
+       //  echo "<pre>";
+       // print_r();die();
     }
 
 }

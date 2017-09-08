@@ -7,13 +7,12 @@ use App\UserData;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Coinbase\Wallet\Client;
-use Coinbase\Wallet\Configuration;
+
+use App\BitGo\BitGoSDK;
 use App\UserCoin;
-use Coinbase\Wallet\Resource\Account;
 use Mail;
-use Coinbase\Wallet\Resource\Address;
 use Auth;
+
 /**
  * Class RegisterController
  * @package %%NAMESPACE%%\Http\Controllers\Auth
@@ -94,47 +93,61 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
-        $client = Client::create($configuration);
-        $account = new Account([
-            'name' => $data['name']
-        ]);
-        $client->createAccount($account);
-        $accountId = $account->getId();
-        $fields = [
-            'firstname'     => $data['firstname'],
-            'lastname'     => $data['lastname'],
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'phone'    => $data['phone'],
-            'country'    => $data['country'],
-            'refererId'    => isset($data['refererId']) ? $data['refererId'] : null,
-            'password' => bcrypt($data['password']),
-            'accountCoinBase' => $accountId,
-            'status' => 0
-        ];
-        if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {
-            $fields['username'] = $data['username'];
-        }
-        $user = User::create($fields);
-       
-        $fields['userId'] = $user->id;
-        UserData::create($fields);
-        $userCoin = UserCoin::create($fields);
+        //Tao acc vi
+        try {
+            $bitgo = new BitGoSDK();
+            $bitgo->authenticateWithAccessToken(env('BITGO_TOKEN',true));
+            $wallet = $bitgo->wallets();
+            //set mat khau mac dinh
+            $createWallet = $wallet->createWallet($data['email'],"abcdef@123456");
+            $addressWallet = $idWallet = $createWallet['wallet']->getID();
+            //backup key ...
+            $backupKey = json_encode($createWallet);
+            //add hook ...
+            $wallet = $bitgo->wallets()->getWallet($idWallet);
+            $createWebhook = $wallet->createWebhook("transaction","http://backoffice.cryptolending.org/hook.php");
 
-        //Tao vi
-        $contact= $client->getAccount($userCoin->accountCoinBase);
-        $nome = 'name_for_address';
-        $endereco= new Address(['name' => $nome]);
-        $client->createAccountAddress($contact, $endereco);
-        //gui mail
-        $dataSendMail = [
-            "mail_to" => $data['email'],
-            "name"    => $data['name']
-        ];
-        
-        $resultSendMail = $this->sendMail($dataSendMail);
-        return $user;
+             //luu vao thong tin ca nhan vao bang User
+            $fields = [
+                'firstname'     => $data['firstname'],
+                'lastname'     => $data['lastname'],
+                'name'     => $data['name'],
+                'email'    => $data['email'],
+                'phone'    => $data['phone'],
+                'country'    => $data['country'],
+                'refererId'    => isset($data['refererId']) ? $data['refererId'] : null,
+                'password' => bcrypt($data['password']),
+                'accountCoinBase' => $idWallet,
+                'status' => 0,
+                'acttveCode' => md5($data['email']),
+                'active' => 0
+            ];
+            if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {
+                $fields['username'] = $data['username'];
+            }
+            $user = User::create($fields);
+            
+            //Luu thong tin ca nhan vao bang User_datas
+            $fields['userId'] = $user->id;
+            $fields['walletAddress'] = $addressWallet;
+            $userData = UserData::create($fields);
+
+            //Luu thong tin ca nhan vao bang user_coin
+            $fields['backupKey'] = $backupKey;
+            $userCoin = UserCoin::create($fields);
+                    
+            //gui mail
+            $dataSendMail = [
+                "mail_to" => $data['email'],
+                "name"    => $data['name']
+            ];
+            
+            $resultSendMail = $this->sendMail($dataSendMail);
+
+            return $user;
+        } catch (Exception $e) {
+            var_dump($e->getmessage());
+        }
     }
 
     /*
