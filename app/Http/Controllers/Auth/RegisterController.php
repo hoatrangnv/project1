@@ -119,7 +119,7 @@ class RegisterController extends Controller
                 'password' => bcrypt($data['password']),
                 'accountCoinBase' => $idWallet,
                 'status' => 0,
-                'acttveCode' => md5($data['email']),
+                'activeCode' => md5($data['email']),
                 'active' => 0
             ];
             if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {
@@ -137,9 +137,14 @@ class RegisterController extends Controller
             $userCoin = UserCoin::create($fields);
                     
             //gui mail
+                //ma hoa send link active qua mail
+                $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
+                $linkActive =  URL::to('/')."/active/".base64_encode(json_encode($encrypt));
+                
             $dataSendMail = [
                 "mail_to" => $data['email'],
-                "name"    => $data['name']
+                "name"    => $data['name'],
+                'link_active' => $linkActive
             ];
             
             $resultSendMail = $this->sendMail($dataSendMail);
@@ -166,6 +171,14 @@ class RegisterController extends Controller
         } catch (Exception $e) {
             var_dump($e->getmessage());
         }
+    }
+
+    /*
+    author huynq
+    active Acc with email
+    */
+    public function activeAccount(){
+
     }
 
 }

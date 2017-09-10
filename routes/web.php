@@ -91,3 +91,5 @@ Route::get('getnotification','GetNotificationController@getNotification');
 
 /***------- TEST -------***/
 Route::get('ethereumtest', 'EthereumTestController@index');
+/*-----Active mail--------*/
+Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
