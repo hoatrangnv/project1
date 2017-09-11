@@ -119,7 +119,6 @@ class RegisterController extends Controller
                 'password' => bcrypt($data['password']),
                 'accountCoinBase' => $idWallet,
                 'status' => 0,
-                'activeCode' => md5($data['email']),
                 'active' => 0
             ];
             if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {
