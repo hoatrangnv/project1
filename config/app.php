@@ -126,6 +126,8 @@ return [
 
     'coinbase_key' => env('COINBASE_KEY'),
     'coinbase_secret' => env('COINBASE_SECRET'),
+    'bitgo_token' => env('BITGO_TOKEN'),
+    'bitgo_password' => env('BITGO_PASSWORD'),
 
     /*
     |--------------------------------------------------------------------------

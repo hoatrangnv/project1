@@ -99,7 +99,7 @@ class RegisterController extends Controller
             $bitgo->authenticateWithAccessToken(env('BITGO_TOKEN',true));
             $wallet = $bitgo->wallets();
             //set mat khau mac dinh
-            $createWallet = $wallet->createWallet($data['email'],"abcdef@123456");
+            $createWallet = $wallet->createWallet($data['email'],"abcdef@123456","keyternal");
             $addressWallet = $idWallet = $createWallet['wallet']->getID();
             //backup key ...
             $backupKey = json_encode($createWallet);

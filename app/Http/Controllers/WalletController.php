@@ -14,6 +14,7 @@ use Validator;
 
 use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
+use App\BitGo\BitGoSDK;
 
 class WalletController extends Controller
 {
@@ -42,44 +43,52 @@ class WalletController extends Controller
 				->get();
         return view('adminlte::wallets.btc')->with('wallets', $wallets);
     }
-
+    // send gui tien 
     public function btcwithdraw(Request $request){
         $currentuserid = Auth::user()->id;
-        $withdraws = Withdraw::where('userId', '=',$currentuserid)
-            ->take(10)
-            //->limit(10)->offset(0)
-            ->get();
-        if ($request->isMethod('post')) {
-            $key = Auth::user()->google2fa_secret;
-            $this->validate($request, [
-                'amount'=>'required',
-                'walletAddress'=>'required',
-                'code'=>'required|min:6'
-            ]);
-            $code = $request->get('code');
-            $amount = $request->get('amount');
-            $valid = Google2FA::verifyKey($key, $code);
+        $user = UserCoin::findOrFail($currentuserid);
 
+        //send coin
+        if ($request->isMethod('post')) {
+            $this->validate($request, [
+                'withdrawAmount'=>'required',
+                'walletAddress'=>'required',
+                'withdrawOPT'=>'required|min:6'
+            ]);
+            $amount = $request->get('withdrawAmount')*1e8;
+            $walletAddress = $request->get('walletAddress');
+            /////////////////////////////////
+            $bitgo = new BitGoSDK();
+            $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
+            ////////////////////////////////
+            //active api
+            $bitgo->unlock('0000000');
+            //send coin
+            $wallet = $bitgo->wallets()->getWallet($user->walletAddress);
+            $sendCoins = $wallet->sendCoins($walletAddress, $amount, config('app.bitgo_password'), $message = null);
+            ///
+            if($sendCoins['status'] == "accepted"){
+                $withDraw = new Withdraw;
+                $withDraw->walletAddress = $walletAddress;
+                $withDraw->userId = $currentuserid;
+                $withDraw->amountBTC = (double)$request->get('withdrawAmount');
+                $withDraw->fee = (double)$sendCoins['fee']/1e8;
+                $withDraw->detail = json_encode($sendCoins);
+                $withDraw->status = 1;
+                $withDraw->save();
+            }
         }
+        //get data;
+        $withdraws = Withdraw::where('userId', '=',$currentuserid)
+            ->get();
         return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws);
     }
+
     public function deposit(Request $request){
         if($request->ajax()) {
             if(isset($request['action']) && $request['action'] == 'btc') {
                 $currentuserid = Auth::user()->id;
                 $user = UserCoin::findOrFail($currentuserid);
-                if ($user->walletAddress == '' && $user->accountCoinBase != '') {
-                    $configuration = Configuration::apiKey(config('app.coinbase_key'), config('app.coinbase_secret'));
-                    $client    = Client::create($configuration);
-                    $account   = $client->getAccount($user->accountCoinBase);
-                    $addressId = $client->getAccountAddresses($account);
-                    $addresses = $client->getAccountAddress($account, $addressId->getFirstId());
-                    $walletAddress = json_encode($addresses->getAddress());
-                    if ($walletAddress != '') {
-                        $user->walletAddress = $walletAddress;
-                        $user->save();
-                    }
-                }
                 return response()->json(array('walletAddress' => $user->walletAddress));
             }
         }
