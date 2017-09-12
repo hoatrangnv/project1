@@ -154,6 +154,7 @@
                             if(data.err) {
                                 $('#refererId').parent().addClass('has-error');
                                 $('#refererIdError').text(data.err);
+                                $('#referrerName').val('');
                             }else{
                                 $('#referrerName').parent().removeClass('has-error');
                                 $('#refererNameError').text('');
@@ -178,6 +179,7 @@
                             if(data.err) {
                                 $('#referrerName').parent().addClass('has-error');
                                 $('#refererNameError').text(data.err);
+                                $('#refererId').val('');
                             }else{
                                 $('#refererId').parent().removeClass('has-error');
                                 $('#refererIdError').text('');
