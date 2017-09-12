@@ -20,11 +20,7 @@ class MyBonusController extends Controller
 
 	public function faststart(Request $request){
 		$currentuserid = Auth::user()->id;
-        //$fastStart = User::findOrFail($currentuserid);
-        //$fastStart = BonusFastStart::where('userId', '=',$currentuserid)->first();
-        //print_r($fastStart->users->name); die;
         $fastStarts = BonusFastStart::where('userId', '=',$currentuserid)->paginate();
-
         return view('adminlte::mybonus.faststart')->with('fastStarts', $fastStarts);
     }
 	
