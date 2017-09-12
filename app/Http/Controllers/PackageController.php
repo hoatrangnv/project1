@@ -17,7 +17,7 @@ class PackageController extends Controller
     }
     public function index()
     {
-        $packages = Package::all(); 
+        $packages = Package::all();
         return view('adminlte::packages.index')->with('packages', $packages);
     }
     public function create()

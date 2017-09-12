@@ -34,14 +34,25 @@
 							<tr>
 								<td>{{ $key+1 }}</td>
 								<td>{{ $wallet->created_at }}</td> 
-								<td>{{ $wallet->type }}</td> 
-								<td>{{ $wallet->inOut }}</td> 
-								<td>{{ $wallet->inOut }}</td> 
+								<td>{{ $wallet->type }}</td>
+								<td>
+									@if($wallet->inOut=='in')
+										<span class="glyphicon glyphicon-log-in text-primary"></span>
+									@endif
+								</td>
+								<td>
+									@if($wallet->inOut=='out')
+										<span class="glyphicon glyphicon-log-out text-danger"></span>
+									@endif
+								</td>
 								<td>{{ $wallet->note }}</td> 
 							</tr>
 							@endforeach
 						</tbody>
 					</table>
+					<div class="text-center">
+						{{ $wallets->links() }}
+					</div>
 				</div>
 			</div>
 		</div>
