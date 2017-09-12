@@ -155,6 +155,8 @@
                                 $('#refererId').parent().addClass('has-error');
                                 $('#refererIdError').text(data.err);
                             }else{
+                                $('#referrerName').parent().removeClass('has-error');
+                                $('#refererNameError').text('');
                                 $('#refererId').parent().removeClass('has-error');
                                 $('#refererIdError').text('');
                                 $('#referrerName').val(data.username);
@@ -177,6 +179,8 @@
                                 $('#referrerName').parent().addClass('has-error');
                                 $('#refererNameError').text(data.err);
                             }else{
+                                $('#refererId').parent().removeClass('has-error');
+                                $('#refererIdError').text('');
                                 $('#referrerName').parent().removeClass('has-error');
                                 $('#refererNameError').text('');
                                 $('#refererId').val(data.id);
