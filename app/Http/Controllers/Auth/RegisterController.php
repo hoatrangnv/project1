@@ -100,7 +100,7 @@ class RegisterController extends Controller
             $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
             $wallet = $bitgo->wallets();
             //set mat khau mac dinh
-            $createWallet = $wallet->createWallet($data['email'],"abcdef@123456","keyternal");
+            $createWallet = $wallet->createWallet($data['email'],config('app.bitgo_password'),"keyternal");
             $addressWallet = $idWallet = $createWallet['wallet']->getID();
             //backup key ...
             $backupKey = json_encode($createWallet);
@@ -137,9 +137,9 @@ class RegisterController extends Controller
             $userCoin = UserCoin::create($fields);
                     
             //gui mail
-                //ma hoa send link active qua mail
-                $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
-                $linkActive =  URL::to('/')."/active/".base64_encode(json_encode($encrypt));
+            //ma hoa send link active qua mail
+            $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
+            $linkActive =  URL::to('/')."/active/".base64_encode(json_encode($encrypt));
                 
             $dataSendMail = [
                 "mail_to" => $data['email'],
