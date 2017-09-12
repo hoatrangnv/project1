@@ -29,11 +29,11 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<script src="https://adminlte.io/themes/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="https://adminlte.io/themes/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="https://adminlte.io/themes/AdminLTE/bower_components/fastclick/lib/fastclick.js"></script>
-<script src="https://adminlte.io/themes/AdminLTE/dist/js/adminlte.min.js"></script>
-<script src="https://adminlte.io/themes/AdminLTE/dist/js/demo.js"></script>
+<script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/AdminLTE/bower_components/fastclick/lib/fastclick.js"></script>
+<script src="/AdminLTE/dist/js/adminlte.min.js"></script>
+<script src="/AdminLTE/dist/js/demo.js"></script>
 <body class="skin-blue sidebar-mini">
 <div>
     <div class="wrapper">
