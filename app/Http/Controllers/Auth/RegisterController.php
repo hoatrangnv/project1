@@ -156,7 +156,7 @@ class RegisterController extends Controller
             $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
             $linkActive =  URL::to('/active/').base64_encode(json_encode($encrypt));
 
-            $user->notify(new UserRegistered($user, $linkActive));
+            $user->notify(new UserRegistered($data['email'], $linkActive));
             return $user;
         } catch (Exception $e) {
             var_dump($e->getmessage());

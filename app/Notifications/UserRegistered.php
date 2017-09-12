@@ -25,7 +25,7 @@ class UserRegistered extends Notification
         return (new MailMessage)
             ->from('no-reply@cryptolending.org', 'CLP Coin')
             ->subject('Welcome to the crypyto')
-            ->cc($dataSendMail['mail_to'], $this->user->name)
+            // ->cc($dataSendMail['mail_to'], $this->user->name)
             ->greeting('Dear '.$this->user->name. ',')
             ->line('Welcome to the crypyto.')
             ->action('Active Account', $this->link_active)
