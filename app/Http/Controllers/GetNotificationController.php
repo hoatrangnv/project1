@@ -14,16 +14,20 @@ class GetNotificationController extends Controller
     public function getNotification(){
         $date = time();
         $data = file_get_contents('php://input');
-        $text = print_r($data,true);
-
+        // $text = print_r($data,true);
+        // $file = fopen("/var/www/html/cryptolending/public/history_notification/text_".$date.".txt", 'w');
+        // fwrite($file, $text);
         //Insert DB
-        $notification = Notification::create(
+        try {
+            $notification = Notification::create(
             [
-                'data' => $text,
+                'data' => $data,
                 'status' => 0
             ]
         );
-
+        } catch (Exception $e) {
+            
+        }
     }       
 
 }

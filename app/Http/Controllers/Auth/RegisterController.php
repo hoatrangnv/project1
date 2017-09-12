@@ -12,6 +12,7 @@ use App\BitGo\BitGoSDK;
 use App\UserCoin;
 use Mail;
 use Auth;
+use URL;
 
 /**
  * Class RegisterController
@@ -96,7 +97,7 @@ class RegisterController extends Controller
         //Tao acc vi
         try {
             $bitgo = new BitGoSDK();
-            $bitgo->authenticateWithAccessToken(env('BITGO_TOKEN',true));
+            $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
             $wallet = $bitgo->wallets();
             //set mat khau mac dinh
             $createWallet = $wallet->createWallet($data['email'],"abcdef@123456","keyternal");
@@ -105,7 +106,7 @@ class RegisterController extends Controller
             $backupKey = json_encode($createWallet);
             //add hook ...
             $wallet = $bitgo->wallets()->getWallet($idWallet);
-            $createWebhook = $wallet->createWebhook("transaction","http://backoffice.cryptolending.org/hook.php");
+            $createWebhook = $wallet->createWebhook("transaction","http://backoffice.cryptolending.org/getnotification");
 
              //luu vao thong tin ca nhan vao bang User
             $fields = [
