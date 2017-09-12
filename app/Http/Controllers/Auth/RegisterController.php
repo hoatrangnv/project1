@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use App\BitGo\BitGoSDK;
 use App\Notifications\UserRegistered;
+use App\UserData;
+use App\UserCoin;
 use URL;
 
 /**

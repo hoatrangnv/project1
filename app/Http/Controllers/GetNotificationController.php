@@ -12,6 +12,7 @@ class GetNotificationController extends Controller
     }
     
     public function getNotification(){
+        dd(config('app.bitgo_hook'));
         $date = time();
         $data = file_get_contents('php://input');
         // $text = print_r($data,true);
