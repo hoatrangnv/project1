@@ -71,7 +71,7 @@ class LoginController extends Controller
             'password' => 'required|string',
             'g-recaptcha-response'=>'required|captcha',
         ], [
-            $this->username() . '.exists' => 'The selected email is invalid or the account has been disabled.'
+            $this->username() . '.exists' => 'The selected email is invalid or the account has been disabled or the account not active.'
         ]);
     }
     protected function attempLoginUsingUsernameAsAnEmail(Request $request)
