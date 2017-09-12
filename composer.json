@@ -6,21 +6,20 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "acacha/admin-lte-template-laravel": "4.*",
-        "achse/geth-jsonrpc-php-client": "^1.0",
-        "anhskohbo/no-captcha": "^2.3",
-        "bacon/bacon-qr-code": "~1.0",
-        "coinbase/coinbase": "2.*",
-        "guzzlehttp/guzzle": "^6.3",
+        "acacha/admin-lte-template-laravel": "^5.0",
+        "anhskohbo/no-captcha": "^2.4",
+        "laracasts/flash": "^3.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "laravelcollective/html": "^5.4",
-        "mashape/unirest-php": "^3.0",
-        "pragmarx/google2fa-laravel": "^0.1.2",
-        "spatie/laravel-permission": "^1.9"
+        "laravelcollective/html": "^5.3.0",
+        "spatie/laravel-permission": "^2.1",
+		"bacon/bacon-qr-code": "~1.0",
+		"mashape/unirest-php": "^3.0",
+		"pragmarx/google2fa-laravel": "^0.1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
+        "laravel/dusk": "^1.0",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~5.7"
     },
@@ -55,6 +54,7 @@
     },
     "config": {
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "optimize-autoloader": true
     }
 }

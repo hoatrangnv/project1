@@ -25098,7 +25098,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mixins: [__WEBPACK_IMPORTED_MODULE_1__InitializeIcheck__["a" /* default */], __WEBPACK_IMPORTED_MODULE_2__redirect__["a" /* default */]],
   data: function data() {
     return {
-      form: new __WEBPACK_IMPORTED_MODULE_0_acacha_forms___default.a({ name: '', email: '', password: '', password_confirmation: '', terms: '', referer: '' })
+      form: new __WEBPACK_IMPORTED_MODULE_0_acacha_forms___default.a({ name: '', email: '', password: '', password_confirmation: '', terms: '' })
     };
   },
   watch: {
@@ -44174,7 +44174,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "submit": function($event) {
         $event.preventDefault();
-		_vm.form.referer = encodeURIComponent(document.location);
         _vm.submit($event)
       },
       "keydown": function($event) {
@@ -44335,21 +44334,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.form.password_confirmation = $event.target.value
       }
     }
-  }), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: encodeURIComponent(document.location),
-      expression: "form.referer"
-    }],
-    attrs: {
-      "type": "hidden",
-      "name": "referer"
-    },
-	domProps: {
-      "value": encodeURIComponent(document.location)
-    },
-	
   })]), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {

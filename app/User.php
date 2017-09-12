@@ -5,12 +5,11 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Notifications\ResetPassword;
 
 class User extends Authenticatable
 {
-    use HasRoles;
-    use Notifiable;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'status', 'refererId', 'firstname', 'lastname', 'phone', '2fa', 'google2fa_secret', 'password'
+        'name', 'email', 'status', 'refererId', 'firstname', 'lastname', 'phone', 'is2fa', 'google2fa_secret', 'password'
     ];
 
     /**
@@ -30,9 +29,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function setPasswordAttribute($password)
-    {   
-        $this->attributes['password'] = bcrypt($password);
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+    public function userData() {
+        return $this->hasOne(userData::class, 'userId', 'id');
     }
     public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $level = 1){// Hoa hong truc tiep F1 -> F3
         if($refererId > 0){
@@ -237,7 +239,9 @@ class User extends Authenticatable
         }
         return 0;
     }
-    public function userData() {
-        return $this->hasOne(userData::class, 'userId', 'id');
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPassword($token));
     }
 }
+

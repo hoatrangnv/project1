@@ -21,7 +21,7 @@ class ActiveController extends Controller
 
             //check neu da active roi redirect ve login
             try {
-                $activeUser = User::where('email', '=', $data['1'])->firstOrFail();
+                $activeUser = User::where('email', '=', $data[1])->firstOrFail();
                 if( $activeUser->active == 1 ) {
                     return redirect("home");
                 }
@@ -32,7 +32,7 @@ class ActiveController extends Controller
             //kiem tra va update kich hoat tk
             if ( $data[0] = hash( "sha256", md5( md5( $data[1] ) ) ) ) {
                 try {
-                    $affectedRows = User::where( 'email', '=', $data['1'] )->update( ['active' => 1] );
+                    $affectedRows = User::where( 'email', '=', $data[1] )->update( ['active' => 1] );
                     if($affectedRows == 1){
                         return redirect("login");
                     }else{

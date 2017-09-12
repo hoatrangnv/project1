@@ -23,20 +23,14 @@ class MyBonusController extends Controller
         //$fastStart = User::findOrFail($currentuserid);
         //$fastStart = BonusFastStart::where('userId', '=',$currentuserid)->first();
         //print_r($fastStart->users->name); die;
-        $fastStarts = BonusFastStart::where('userId', '=',$currentuserid)
-				->take(10)
-			   //->limit(10)->offset(0)
-				->get();
+        $fastStarts = BonusFastStart::where('userId', '=',$currentuserid)->paginate();
 
         return view('adminlte::mybonus.faststart')->with('fastStarts', $fastStarts);
     }
 	
 	public function binary(Request $request){
 		$currentuserid = Auth::user()->id;
-        $binarys = BonusBinary::where('userId', '=',$currentuserid)
-				->take(10)
-			   //->limit(10)->offset(0)
-				->get();
+        $binarys = BonusBinary::where('userId', '=',$currentuserid)->paginate();
         return view('adminlte::mybonus.binary')->with('binarys', $binarys);
     }
     public function binaryCalculatorBonus(Request $request){
@@ -82,19 +76,23 @@ class MyBonusController extends Controller
     public function loyalty(){
         $loyaltyBonus = array('silver' => 5000, 'gold' => 10000, 'pear' => 20000, 'emerald' => 50000, 'diamond' => 100000);
         $currentuserid = Auth::user()->id;
-        $loyaltyUser = LoyaltyUser::findOrFail($currentuserid);
-        $loyaltyUserData = array(
-            'silverLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isSilver', 1)->where('leftRight', '=', 'left')->count(),
-            'silverRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isSilver', 1)->where('leftRight', '=', 'right')->count(),
-            'goldLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isGold', 1)->where('leftRight', '=', 'left')->count(),
-            'goldRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isGold', 1)->where('leftRight', '=', 'right')->count(),
-            'pearLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isPear', 1)->where('leftRight', '=', 'left')->count(),
-            'pearRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isPear', 1)->where('leftRight', '=', 'right')->count(),
-            'emeraldLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isEmerald', 1)->where('leftRight', '=', 'left')->count(),
-            'emeraldRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isEmerald', 1)->where('leftRight', '=', 'right')->count(),
-            'diamondLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isDiamond', 1)->where('leftRight', '=', 'left')->count(),
-            'diamondRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isDiamond', 1)->where('leftRight', '=', 'right')->count(),
-        );
+        $loyaltyUser = LoyaltyUser::find($currentuserid);
+        $loyaltyUserData = array();
+        if($loyaltyUser){
+            $loyaltyUserData = array(
+                'silverLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isSilver', 1)->where('leftRight', '=', 'left')->count(),
+                'silverRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isSilver', 1)->where('leftRight', '=', 'right')->count(),
+                'goldLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isGold', 1)->where('leftRight', '=', 'left')->count(),
+                'goldRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isGold', 1)->where('leftRight', '=', 'right')->count(),
+                'pearLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isPear', 1)->where('leftRight', '=', 'left')->count(),
+                'pearRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isPear', 1)->where('leftRight', '=', 'right')->count(),
+                'emeraldLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isEmerald', 1)->where('leftRight', '=', 'left')->count(),
+                'emeraldRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isEmerald', 1)->where('leftRight', '=', 'right')->count(),
+                'diamondLeft' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isDiamond', 1)->where('leftRight', '=', 'left')->count(),
+                'diamondRight' => LoyaltyUser::where('refererId', '=', $currentuserid)->where('isDiamond', 1)->where('leftRight', '=', 'right')->count(),
+            );
+        }
+
         return view('adminlte::mybonus.loyalty', array('loyaltyUser' => $loyaltyUser, 'loyaltyBonus' => $loyaltyBonus, 'loyaltyUserData' => $loyaltyUserData));
     }
     public function show($id)

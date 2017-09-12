@@ -25,7 +25,6 @@ class Auth2FAController extends Controller
     private $keyPrefix = '';
     public function __construct()
     {
-        $this->middleware(['auth']);
     }
 
 

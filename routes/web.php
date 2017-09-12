@@ -1,95 +1,60 @@
 <?php
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::group(['middleware' => 'auth'], function () {
-    //    Route::get('/link1', function ()    {
-//        // Uses Auth Middleware
-//    });
-
-    //Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
-    #adminlte_routes
-});
 Auth::routes();
-//Route::get('/home', 'HomeController@index');
-//
-//Route::get('/', 'PostController@index')->name('home');
-Route::resource('users', 'UserController');
-Route::resource('roles', 'RoleController');
-Route::resource('permissions', 'PermissionController');
-Route::resource('posts', 'PostController');
 
-Route::get('mybonus/faststart', 'MyBonusController@faststart');
-Route::get('mybonus/binary', 'MyBonusController@binary');
-Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
-Route::resource('mybonus', 'MyBonusController');
+Route::get('/home', 'HomeController@index')->name('home');
+Route::group( ['middleware' => ['auth']], function() {
+    Route::resource('users', 'UserController');
+    Route::resource('roles', 'RoleController');
+    Route::resource('posts', 'PostController');
+    Route::get('members/genealogy', 'MemberController@genealogy');
+    Route::get('members/binary', 'MemberController@binary');
+    Route::get('members/refferals', 'MemberController@refferals');
+    Route::get('members/pushIntoTree', 'MemberController@pushIntoTree');
+    Route::resource('members', 'MemberController');
+    Route::get('authenticator', 'Auth2FAController@index');
+    Route::post('authenticator', 'Auth2FAController@index');
 
-Route::get('packages/invest', 'PackageController@invest');
-Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
-Route::resource('packages', 'PackageController');
+    Route::get('wallets/usd', 'WalletController@usd');
+    Route::get('wallets/btc', 'WalletController@btc');
+    Route::get('wallets/clp', 'WalletController@clp');
+    Route::get('wallets/reinvest', 'WalletController@reinvest');
+    Route::get('wallets/deposit', 'WalletController@deposit');
 
-Route::get('members/genealogy', 'MemberController@genealogy');
-Route::get('members/binary', 'MemberController@binary');
-Route::get('members/refferals', 'MemberController@refferals');
-Route::get('members/pushIntoTree', 'MemberController@pushIntoTree');
-Route::resource('members', 'MemberController');
+    Route::get('wallets/btcwithdraw', 'WalletController@btcwithdraw');
+    Route::post('wallets/btcwithdraw', 'WalletController@btcwithdraw');
 
+    Route::get('wallets/buyclp', 'WalletController@buyclp');
+    Route::post('wallets/buyclp', 'WalletController@buyclp');
 
-Route::get('wallets/usd', 'WalletController@usd');
-Route::get('wallets/btc', 'WalletController@btc');
-Route::get('wallets/clp', 'WalletController@clp');
-Route::get('wallets/reinvest', 'WalletController@reinvest');
-Route::get('wallets/deposit', 'WalletController@deposit');
+    Route::get('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
+    Route::post('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
 
-Route::get('wallets/btcwithdraw', 'WalletController@btcwithdraw');
-Route::post('wallets/btcwithdraw', 'WalletController@btcwithdraw');
+    Route::get('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
+    Route::post('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
 
-Route::get('wallets/buyclp', 'WalletController@buyclp');
-Route::post('wallets/buyclp', 'WalletController@buyclp');
+    Route::get('wallets/buysellclp', 'WalletController@buysellclp');
 
-Route::get('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
-Route::post('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
+    Route::get('mybonus/faststart', 'MyBonusController@faststart');
+    Route::get('mybonus/binary', 'MyBonusController@binary');
+    Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
+    Route::resource('mybonus', 'MyBonusController');
 
-Route::get('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
-Route::post('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
+    Route::get('packages/invest', 'PackageController@invest');
+    Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
+    Route::resource('packages', 'PackageController');
 
-Route::get('wallets/buysellclp', 'WalletController@buysellclp');
-
-
-
-Route::resource('wallets', 'WalletController');
-Route::get('authenticator', 'Auth2FAController@index');
-Route::post('authenticator', 'Auth2FAController@index');
-Route::get('authenticator/check2fa', 'Auth2FAController@check2fa');
-Route::post('authenticator/check2fa', 'Auth2FAController@check2fa');
+    //Profile router
+    Route::get('profile','ProfileController@index');
+    Route::post('profile/changepassword','ProfileController@changePassword');
+    Route::get('profile/switchauthen','ProfileController@switchTwoFactorAuthen');
 
 
-//Route::get('members/genealogy', 'MemberController@genealogy');
-//
-//Route::get('members/genealogy', 'MemberController@genealogy');
-
-//Profile router
-Route::get('profile','Profile\ProfileController@index');
-Route::post('profile/changepassword','Profile\ProfileController@changePassword');
-Route::get('profile/switchauthen','Profile\ProfileController@switchTwoFactorAuthen');
-
-Route::get('sendmail','SendmailController@sendmail');
+});
 Route::get('getnotification','GetNotificationController@getNotification');
-
 /***------- TEST -------***/
 Route::get('ethereumtest', 'EthereumTestController@index');
-/*-----Active mail--------*/
+
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");

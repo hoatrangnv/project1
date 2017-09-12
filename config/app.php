@@ -1,5 +1,5 @@
 <?php
-// define('ADMINLTETEMPLATE_PATH', realpath(base_path()));
+
 return [
 
     /*
@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Laravel',
+    'name' => env('APP_NAME', 'Laravel'),
 
     /*
     |--------------------------------------------------------------------------
@@ -123,12 +123,8 @@ return [
     'log' => env('APP_LOG', 'single'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
-
-    'coinbase_key' => env('COINBASE_KEY'),
-    'coinbase_secret' => env('COINBASE_SECRET'),
     'bitgo_token' => env('BITGO_TOKEN'),
     'bitgo_password' => env('BITGO_PASSWORD'),
-
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -172,6 +168,9 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
+        Laracasts\Flash\FlashServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -181,13 +180,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        Spatie\Permission\PermissionServiceProvider::class,
-
-        Collective\Html\HtmlServiceProvider::class,
 		Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
-		PragmaRX\Google2FALaravel\ServiceProvider::class,
-		Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
+        Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
+        PragmaRX\Google2FALaravel\ServiceProvider::class,
     ],
 
     /*
@@ -239,7 +234,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 		'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
-		'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
+        'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
     ],
 
 ];

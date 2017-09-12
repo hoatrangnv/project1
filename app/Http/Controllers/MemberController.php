@@ -14,7 +14,6 @@ class MemberController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
         parent::__construct();
     }
     public function index(){
@@ -197,9 +196,7 @@ class MemberController extends Controller
 		$currentuserid = Auth::user()->id;
         //$users = User::where('referrerId='.$currentuserid); 
         $users = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->orderBy('userId', 'desc')
-               ->take(10)
-			   //->limit(10)->offset(0)
-               ->get();
+               ->paginate();
         return view('adminlte::members.refferals')->with('users', $users);
     }
 	public function pushIntoTree(Request $request){

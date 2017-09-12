@@ -8,7 +8,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use Illuminate\Http\Request;
 use App\UserData;
 use App\BonusBinary;
 use App\Package;
@@ -28,7 +27,6 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth']);
         parent::__construct();
     }
 
@@ -60,7 +58,7 @@ class HomeController extends Controller
             $data['newF1InWeek'] = $newF1InWeek['total'];
             $data['leftNew']     = $newF1InWeek['leftNew'];
             $data['rightNew']    = $newF1InWeek['rightNew'];
-            
+
             return view('adminlte::home.index')->with('data', $data);
         } catch (Exception $e) {
             //Debug
@@ -76,7 +74,7 @@ class HomeController extends Controller
     {
         try {
             $data =  BonusBinary::where('userId',Auth::user()->id)
-                    ->get();
+                ->get();
             if(count($data) > 0){
                 $data['total']   = $data[0]->leftNew + $data[0]->rightNew;
                 $data['leftNew'] = $data['0']->leftNew;
@@ -88,8 +86,8 @@ class HomeController extends Controller
             }
             return $data;
         } catch (Exception $e) {
-            echo $e->gettraceasstring();    
-        }    
+            echo $e->gettraceasstring();
+        }
     }
 
     /*
@@ -97,19 +95,19 @@ class HomeController extends Controller
     *Tong doanh so F1 tu khi tham gia and trai and phai
     */
     private function totalF1($value='')
-    {   
+    {
         try {
             $data = UserData::where('userId',Auth::user()->id)
-                    ->get();
+                ->get();
             if ($data) {
-                return $data[0]; 
+                return $data[0];
             }else{
                 //Debug
                 var_dump("Khong ton tai value");
-            }      
+            }
         } catch (Exception $e) {
             echo ($e->gettraceasstring());
-        }  
+        }
     }
 
     /*

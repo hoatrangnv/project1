@@ -12,8 +12,6 @@ use Auth;
 use Session;
 use Validator;
 
-use Coinbase\Wallet\Client;
-use Coinbase\Wallet\Configuration;
 use App\BitGo\BitGoSDK;
 
 class WalletController extends Controller
@@ -29,21 +27,18 @@ class WalletController extends Controller
 	public function usd(Request $request){
 		$currentuserid = Auth::user()->id;
 		$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',1)
-				->take(10)
-			   //->limit(10)->offset(0)
-				->get();
+               ->paginate();
         return view('adminlte::wallets.usd')->with('wallets', $wallets);
     }
 	
 	public function btc(Request $request){
 		$currentuserid = Auth::user()->id;
 		$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',2)
-				->take(10)
-			   //->limit(10)->offset(0)
-				->get();
+				    ->take(10)
+                    ->paginate();
         return view('adminlte::wallets.btc')->with('wallets', $wallets);
     }
-    // send gui tien 
+
     public function btcwithdraw(Request $request){
         $currentuserid = Auth::user()->id;
         $user = UserCoin::findOrFail($currentuserid);
@@ -98,18 +93,14 @@ class WalletController extends Controller
 	public function clp(){
 		$currentuserid = Auth::user()->id;
 		$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',3)
-				->take(10)
-			   //->limit(10)->offset(0)
-				->get();
+               ->paginate();
         return view('adminlte::wallets.clp')->with('wallets', $wallets);
     }
 	
 	public function reinvest(){
 		$currentuserid = Auth::user()->id;
 		$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',4)
-				->take(10)
-			   //->limit(10)->offset(0)
-				->get();
+               ->paginate();
         return view('adminlte::wallets.reinvest')->with('wallets', $wallets);
     }
 	public function buyclp(Request $request){

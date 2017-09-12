@@ -18,9 +18,8 @@ class UserCoin extends Model
      * @var array
      */
     protected $fillable = [
-        'userId', 'accountCoinBase', 'walletAddress', 'btcCoinAmount', 'clpCoinAmount', 'usdAmount', 'reinvestAmount','backupKey'
+        'userId', 'accountCoinBase', 'walletAddress', 'btcCoinAmount', 'clpCoinAmount', 'usdAmount', 'reinvestAmount'
     ];
-    
     public function user() {
         return $this->hasOne(User::class, 'id', 'userId');
     }
