@@ -117,7 +117,7 @@ class RegisterController extends Controller
             $backupKey = json_encode($createWallet);
             //add hook ...
             $wallet = $bitgo->wallets()->getWallet($idWallet);
-            $createWebhook = $wallet->createWebhook("transaction","http://backoffice.cryptolending.org/getnotification");
+            $createWebhook = $wallet->createWebhook("transaction",config('app.bitgo_hook'));
 
             //luu vao thong tin ca nhan vao bang User
             $fields = [

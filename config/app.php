@@ -125,6 +125,7 @@ return [
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
     'bitgo_token' => env('BITGO_TOKEN'),
     'bitgo_password' => env('BITGO_PASSWORD'),
+    'bitgo_hook' => env('BITGO_HOOK'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
