@@ -67,9 +67,11 @@ class LoginController extends Controller
     protected function validateLogin(Request $request)
     {
         $this->validate($request, [
-            $this->username() => 'required|string',
+            $this->username() => 'required|exists:users,' . $this->username() . ',active,1',
             'password' => 'required|string',
             'g-recaptcha-response'=>'required|captcha',
+        ], [
+            $this->username() . '.exists' => 'The selected email is invalid or the account has been disabled.'
         ]);
     }
     protected function attempLoginUsingUsernameAsAnEmail(Request $request)
