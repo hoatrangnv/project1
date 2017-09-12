@@ -183,4 +183,20 @@ class UserController extends Controller
 
         return $user;
     }
+
+    public function search(Request $request)
+    {
+        $userId = $request->get('id', 0);
+        $userName = $request->get('username', '');
+        if($userId > 0 || $userName != ''){
+            if($userId > 0)
+                $user = User::find($userId);
+            elseif($userName != '')
+                $user = User::where('name', '=', $userName)->first();
+            if($user){
+                return response()->json(array('id' => $user->id, 'username'=>$user->name));
+            }
+        }
+        return response()->json(array('err' => 'User not exit.'));
+    }
 }

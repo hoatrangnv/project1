@@ -3,7 +3,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Auth::routes();
-
+Route::get('users/search',"UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::resource('users', 'UserController');
