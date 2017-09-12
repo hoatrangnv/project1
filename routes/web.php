@@ -37,6 +37,8 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('wallets/buysellclp', 'WalletController@buysellclp');
 
+    Route::get('wallets/getbtccoin',"WalletController@getBtcCoin");
+
     Route::get('mybonus/faststart', 'MyBonusController@faststart');
     Route::get('mybonus/binary', 'MyBonusController@binary');
     Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
@@ -54,6 +56,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
 });
 Route::get('getnotification','GetNotificationController@getNotification');
+Route::post('getnotification','GetNotificationController@getNotification');
 /***------- TEST -------***/
 Route::get('ethereumtest', 'EthereumTestController@index');
 

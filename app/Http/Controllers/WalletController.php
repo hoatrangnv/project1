@@ -39,6 +39,11 @@ class WalletController extends Controller
         return view('adminlte::wallets.btc')->with('wallets', $wallets);
     }
 
+    public function getBtcCoin(Request $request){
+        $coin = Auth()->user()->userCoin->btcCoinAmount;
+        return $coin;
+    }
+
     public function btcwithdraw(Request $request){
         $currentuserid = Auth::user()->id;
         $user = UserCoin::findOrFail($currentuserid);

@@ -6,6 +6,8 @@
 
 @section('contentheader_description')
 	{{ trans('adminlte_lang::wallet.btc') }}
+    <div class="btcCoin">{{ Auth()->user()->userCoin->btcCoinAmount }}</div>
+    <button type="button" class="btn btn-xs btn-success getBtccoin" data-title="{{ trans('adminlte_lang::wallet.deposit') }}" id="getBtccoin">Refresh</button>
 @endsection
 
 @section('main-content')
@@ -63,6 +65,13 @@
             });
             modal.modal('show');
         });
+
+        $('#getBtccoin').on('click', function () {
+            $.get( "getbtccoin", function( data ) {
+              $( ".btcCoin" ).html( data );
+            });
+        });
+
 	</script>
 
 	<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">

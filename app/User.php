@@ -36,6 +36,9 @@ class User extends Authenticatable
     public function userData() {
         return $this->hasOne(userData::class, 'userId', 'id');
     }
+    public function userCoin() {
+        return $this->hasOne(UserCoin::class, 'userId', 'id');
+    }
     public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $level = 1){// Hoa hong truc tiep F1 -> F3
         if($refererId > 0){
             $packageBonus = 0;
