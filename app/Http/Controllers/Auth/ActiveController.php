@@ -24,7 +24,7 @@ class ActiveController extends Controller
         if ( strlen( $infoActive ) > 0 ){
             $data = json_decode( base64_decode( $infoActive ) );
 
-            //check neu da active roi redirect ve login
+            //check neu da active roi va chua login hien thong bao da active kem link login
             try {
                 $activeUser = User::where('email', '=', $data[1])->firstOrFail();
                 if( $activeUser->active == 1 ) {
@@ -39,6 +39,7 @@ class ActiveController extends Controller
             if ( $data[0] = hash( "sha256", md5( md5( $data[1] ) ) ) ) {
                 try {
                     $affectedRows = User::where( 'email', '=', $data[1] )->update( ['active' => 1] );
+                    //Active vaf redirect ve trang thong bao kem theo link login
                     if($affectedRows == 1){
                         return redirect("notification/useractive");
                     }else{
