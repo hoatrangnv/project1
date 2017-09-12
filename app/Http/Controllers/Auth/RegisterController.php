@@ -154,7 +154,7 @@ class RegisterController extends Controller
             //gui mail
             //ma hoa send link active qua mail
             $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
-            $linkActive =  URL::to('/active/').base64_encode(json_encode($encrypt));
+            $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
 
             $user->notify(new UserRegistered($user, $linkActive));
             return $user;

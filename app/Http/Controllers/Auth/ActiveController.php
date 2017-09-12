@@ -16,6 +16,11 @@ class ActiveController extends Controller
     active Acc with email
     */
     public function activeAccount( $infoActive = "" ){
+        //chay sang trng hom neu da login
+        if(Auth::user()){
+            return redirect("home");
+        }
+
         if ( strlen( $infoActive ) > 0 ){
             $data = json_decode( base64_decode( $infoActive ) );
 
@@ -23,7 +28,8 @@ class ActiveController extends Controller
             try {
                 $activeUser = User::where('email', '=', $data[1])->firstOrFail();
                 if( $activeUser->active == 1 ) {
-                    return redirect("home");
+                    //chay sang trang thong bao
+                    return redirect("notification/useractived");
                 }
             } catch (Exception $e) {
                 echo "Error : ket noi";
@@ -34,7 +40,7 @@ class ActiveController extends Controller
                 try {
                     $affectedRows = User::where( 'email', '=', $data[1] )->update( ['active' => 1] );
                     if($affectedRows == 1){
-                        return redirect("login");
+                        return redirect("notification/useractive");
                     }else{
                         echo "Không thể active được tài khoản";
                     }

@@ -4,8 +4,8 @@ Route::get('/', function () {
 });
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 Route::group( ['middleware' => ['auth']], function() {
+    Route::get('/home', 'HomeController@index')->name('home');
     Route::resource('users', 'UserController');
     Route::resource('roles', 'RoleController');
     Route::resource('posts', 'PostController');
@@ -61,3 +61,5 @@ Route::post('getnotification','GetNotificationController@getNotification');
 Route::get('ethereumtest', 'EthereumTestController@index');
 
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
+Route::get('notification/useractive',"NotificationController@userActive");
+Route::get('notification/useractived',"NotificationController@userActived");
