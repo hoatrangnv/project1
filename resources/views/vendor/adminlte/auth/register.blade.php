@@ -88,11 +88,13 @@
                             </span>
                         @endif
                     </div>
-                    <div class="form-group input-group-sm">
-                        <input type="text" value="{{ $referrerId }}" name="refererId" class="form-control" disabled placeholder="Id Sponsor">
+                    <div class="form-group input-group-sm has-feedback">
+                        <input type="text" value="{{ $referrerId }}" name="refererId" id="refererId" class="form-control" placeholder="Id Sponsor">
+                        <span class="help-block" id="refererIdError"></span>
                     </div>
-                    <div class="form-group input-group-sm">
-                        <input type="text" value="{{ $referrerName }}" name="referrerName" class="form-control" disabled placeholder="Username Sponsor">
+                    <div class="form-group input-group-sm has-feedback">
+                        <input type="text" value="{{ $referrerName }}" name="referrerName" id="referrerName" class="form-control" placeholder="Username Sponsor">
+                        <span class="help-block" id="refererNameError"></span>
                     </div>
                     <div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">
                         {!! app('captcha')->display()!!}
@@ -137,6 +139,57 @@
                 checkboxClass: 'icheckbox_square-blue',
                 radioClass: 'iradio_square-blue',
                 increaseArea: '20%'
+            });
+            var mytimer;
+            $('#refererId').keyup(function(){
+                clearTimeout(mytimer);
+                var search = $(this).val();
+                if(search.length >= 1){
+                    mytimer = setTimeout(function(){
+                        $.ajax({
+                            type: "GET",
+                            url: "/users/search",
+                            data: {id : search}
+                        }).done(function(data){
+                            if(data.err) {
+                                $('#refererId').parent().addClass('has-error');
+                                $('#refererIdError').text(data.err);
+                                $('#referrerName').val('');
+                            }else{
+                                $('#referrerName').parent().removeClass('has-error');
+                                $('#refererNameError').text('');
+                                $('#refererId').parent().removeClass('has-error');
+                                $('#refererIdError').text('');
+                                $('#referrerName').val(data.username);
+                            }
+                        });
+                    }, 1000);
+                }
+            });
+            $('#referrerName').keyup(function(){
+                clearTimeout(mytimer);
+                var search = $(this).val();
+                if(search.length >= 3){
+                    mytimer = setTimeout(function(){
+                        $.ajax({
+                            type: "GET",
+                            url: "/users/search",
+                            data: {username : search}
+                        }).done(function(data){
+                            if(data.err) {
+                                $('#referrerName').parent().addClass('has-error');
+                                $('#refererNameError').text(data.err);
+                                $('#refererId').val('');
+                            }else{
+                                $('#refererId').parent().removeClass('has-error');
+                                $('#refererIdError').text('');
+                                $('#referrerName').parent().removeClass('has-error');
+                                $('#refererNameError').text('');
+                                $('#refererId').val(data.id);
+                            }
+                        });
+                    }, 1000);
+                }
             });
         });
     </script>
