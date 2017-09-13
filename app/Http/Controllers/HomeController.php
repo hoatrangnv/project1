@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\UserData;
 use App\BonusBinary;
 use App\Package;
+use App\UserCoin;
 use Auth;
 use Session;
 
@@ -58,7 +59,7 @@ class HomeController extends Controller
             $data['newF1InWeek'] = $newF1InWeek['total'];
             $data['leftNew']     = $newF1InWeek['leftNew'];
             $data['rightNew']    = $newF1InWeek['rightNew'];
-
+            $data['coin'] = $this->getInfoWallet();
             return view('adminlte::home.index')->with('data', $data);
         } catch (Exception $e) {
             //Debug
@@ -124,5 +125,15 @@ class HomeController extends Controller
     */
     private function tichLuy($value=''){
 
+    }
+    
+    private function getInfoWallet(){
+        try {
+            $data = UserCoin::where("userId",Auth::user()->id)
+                    ->get();
+            return $data;
+        } catch (Exception $ex) {
+            
+        }
     }
 }
