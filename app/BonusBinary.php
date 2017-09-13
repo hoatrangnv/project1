@@ -14,4 +14,7 @@ class BonusBinary extends Model
         parent::__construct($attributes);
         $this->setTable('bonus_binary');
     }
+    public function userData() {
+        return $this->hasOne(UserData::class, 'userId', 'userId');
+    }
 }

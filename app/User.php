@@ -74,6 +74,30 @@ class User extends Authenticatable
                             $user->save();
                         }
                     }
+                    $userCoin = UserCoin::find($refererId);
+                    if($userCoin && $packageBonus > 0){
+                        $usdAmount = ($packageBonus * 0.6);
+                        $reinvestAmount = ($packageBonus * 0.4);
+                        $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+                        $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+                        $userCoin->save();
+                        $fieldUsd = [
+                            'walletType' => 1,//usd
+                            'type' => 4,//bonus f1
+                            'inOut' => 'in',
+                            'userId' => $user->id,
+                            'amount' => $usdAmount,
+                        ];
+                        Wallet::create($fieldUsd);
+                        $fieldInvest = [
+                            'walletType' => 4,//reinvest
+                            'type' => 4,//bonus f1
+                            'inOut' => 'in',
+                            'userId' => $user->id,
+                            'amount' => $reinvestAmount,
+                        ];
+                        Wallet::create($fieldInvest);
+                    }
                     if($level < 3){
                         self::investBonusFastStart($user->refererId, $userId, $packageId, $packageBonus);
                         self::investBonus($userId, $user->refererId, $packageId, ($level + 1), $clpCoinAmount);
@@ -262,6 +286,124 @@ class User extends Authenticatable
             }
         }
         return 0;
+    }
+    public static function bonusDay(){
+        $lstUser = User::where('active', '=', 1)->where('status', '=', 1)->get();
+        foreach($lstUser as $user){
+            $userData = $user->userData;
+            $price = $userData->package->price;
+            $bonus = $userData->package->bonus;
+            $usdAmount = (($price * $bonus)*0.6);
+            $reinvestAmount = (($price * $bonus)*0.4);
+            $userCoin = $user->userCoin;
+            $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+            $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+            $userCoin->save();
+            $fieldUsd = [
+                'walletType' => 1,//usd
+                'type' => 3,//bonus day
+                'inOut' => 'in',
+                'userId' => $user->id,
+                'amount' => $usdAmount,
+            ];
+            Wallet::create($fieldUsd);
+            $fieldInvest = [
+                'walletType' => 4,//reinvest
+                'type' => 3,//bonus day
+                'inOut' => 'in',
+                'userId' => $user->id,
+                'amount' => $reinvestAmount,
+            ];
+            Wallet::create($fieldInvest);
+        }
+    }
+    public static function bonusBinaryWeekCron(){
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+        if($weeked < 10)$weekYear = $year.'0'.$weeked;
+        $firstWeek = $weeked - 1;
+        $firstYear = $year;
+        $firstWeekYear = $firstYear.$firstWeek;
+        if($firstWeek == 0){
+            $firstWeek = 52;
+            $firstYear = $year - 1;
+            $firstWeekYear = $firstYear.$firstWeek;
+        }
+        if($firstWeek < 10)$firstWeekYear = $firstYear.'0'.$firstWeek;
+
+        $lstBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->get();
+        foreach ($lstBinary as $binary) {
+            $leftOver = $binary->leftOpen + $binary->leftNew;
+            $rightOver = $binary->rightOpen + $binary->rightNew;
+            if ($leftOver >= $rightOver) {
+                $leftOpen = 0;
+                $rightOpen = $leftOver - $rightOver;
+                $settled = $rightOver;
+            } else {
+                $leftOpen = $rightOver - $leftOver;
+                $rightOpen = 0;
+                $settled = $leftOver;
+            }
+            $bonus = 0;
+            $userPackage = $binary->userData->package;
+            if (self::checkBinaryCount($binary->userId, 1)) {
+                if ($userPackage->price == 100) {
+                    $bonus = $settled * 0.05;
+                } elseif ($userPackage->price == 500) {
+                    $bonus = $settled * 0.06;
+                } elseif ($userPackage->price == 1000) {
+                    $bonus = $settled * 0.07;
+                } elseif ($userPackage->price == 2000) {
+                    $bonus = $settled * 0.08;
+                } elseif ($userPackage->price == 5000) {
+                    $bonus = $settled * 0.09;
+                } elseif ($userPackage->price == 10000) {
+                    $bonus = $settled * 0.1;
+                }
+            }
+            $binary->settled = $settled;
+            $binary->bonus = $bonus;
+            $binary->save();
+            if($bonus > 0){
+                $fieldUsd = [
+                    'walletType' => 1,//usd
+                    'type' => 5,//bonus week
+                    'inOut' => 'in',
+                    'userId' => $binary->userId,
+                    'amount' => ($bonus*0.6),
+                ];
+                Wallet::create($fieldUsd);
+                $fieldInvest = [
+                    'walletType' => 4,//reinvest
+                    'type' => 5,//bonus week
+                    'inOut' => 'in',
+                    'userId' => $binary->userId,
+                    'amount' => ($bonus*0.4),
+                ];
+                Wallet::create($fieldInvest);
+            }
+            $field = [
+                'userId' => $binary->userId,
+                'weeked' => $weeked,
+                'year' => $year,
+                'leftNew' => 0,
+                'rightNew' => 0,
+                'leftOpen' => $leftOpen,
+                'rightOpen' => $rightOpen,
+                'weekYear' => $weekYear,
+            ];
+            BonusBinary::create($field);
+        }
+
+    }
+    public function checkBinaryCount($userId, $packageId){
+        $countLeft = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight', '>', 'left')->count();
+        $countRight = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight', '>', 'right')->count();
+        if($countLeft >= 3 && $countRight >= 3){
+            return true;
+        }
+        return false;
     }
     public function sendPasswordResetNotification($token)
     {
