@@ -13,7 +13,6 @@ use App\BonusBinary;
 use App\Package;
 use App\UserCoin;
 use Auth;
-use Session;
 
 /**
  * Class HomeController
@@ -59,7 +58,8 @@ class HomeController extends Controller
             $data['newF1InWeek'] = $newF1InWeek['total'];
             $data['leftNew']     = $newF1InWeek['leftNew'];
             $data['rightNew']    = $newF1InWeek['rightNew'];
-            $data['coin'] = $this->getInfoWallet();
+            //Get số lương coin trong tài khoản
+            $data['coin'] = $this->getInfoCoin();
             return view('adminlte::home.index')->with('data', $data);
         } catch (Exception $e) {
             //Debug
@@ -78,8 +78,8 @@ class HomeController extends Controller
                 ->get();
             if(count($data) > 0){
                 $data['total']   = $data[0]->leftNew + $data[0]->rightNew;
-                $data['leftNew'] = $data['0']->leftNew;
-                $data['rightNew']= $data['0']->rightNew;
+                $data['leftNew'] = $data[0]->leftNew;
+                $data['rightNew']= $data[0]->rightNew;
             }else{
                 $data['total'] = 0;
                 $data['leftNew'] = 0;
@@ -127,13 +127,17 @@ class HomeController extends Controller
 
     }
     
-    private function getInfoWallet(){
+    /*
+    *Author huynq
+    *Thông tin coin 
+    */
+    private function getInfoCoin(){
         try {
             $data = UserCoin::where("userId",Auth::user()->id)
                     ->get();
             return $data;
         } catch (Exception $ex) {
-            
+            echo $e->gettraceasstring();
         }
     }
 }
