@@ -22,6 +22,7 @@
 							<th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
 							<th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
 							<th>{{ trans('adminlte_lang::wallet.wallet_type') }}</th>
+							<th>{{ trans('adminlte_lang::wallet.amount') }}</th>
 							<th>{{ trans('adminlte_lang::wallet.wallet_in') }}</th>
 							<th>{{ trans('adminlte_lang::wallet.wallet_out') }}</th>
 							<th>{{ trans('adminlte_lang::wallet.wallet_info') }}</th>
@@ -31,7 +32,12 @@
 							<tr>
 								<td>{{ $key+1 }}</td>
 								<td>{{ $wallet->created_at }}</td> 
-								<td>{{ $wallet->type }}</td> 
+								<td>@if($wallet->type==1)
+										Buy CLP Coin
+									@elseif($wallet->type==3)
+										Bonus Day
+									@endif</td>
+								<td>{{ $wallet->amount }}</td>
 								<td>
 									@if($wallet->inOut=='in')
 									<span class="glyphicon glyphicon-log-in text-primary"></span>
