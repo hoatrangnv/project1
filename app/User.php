@@ -39,24 +39,45 @@ class User extends Authenticatable
     public function userCoin() {
         return $this->hasOne(UserCoin::class, 'userId', 'id');
     }
-    public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $level = 1){// Hoa hong truc tiep F1 -> F3
+    public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $level = 1, $clpCoinAmount = 0){// Hoa hong truc tiep F1 -> F3
+        $package = Package::findOrFail($packageId);
+        if($package && $level == 1){
+            $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
+            $priceA = 0;
+            if($packageOld){
+                $priceA = $packageOld->price;
+            }
+            $clpCoinAmount = ($package->price - $priceA);
+            $userCoin = UserCoin::findOrFail($userId);
+            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $clpCoinAmount;
+            $userCoin->save();
+        }
         if($refererId > 0){
             $packageBonus = 0;
-            $package = Package::findOrFail($packageId);
             if($package){
-                if($level == 1)
-                    $packageBonus = $package->token * 0.1;
-                elseif($level == 2)
-                    $packageBonus = $package->token * 0.02;
-                elseif($level == 3)
-                    $packageBonus = $package->token * 0.01;
-
-                $user = User::findOrFail($refererId);
-                $user->totalBonus = $user->totalBonus + $packageBonus;
-                $user->save();
-                if($level < 3){
-                    self::investBonusFastStart($user->refererId, $userId, $packageId, $packageBonus);
-                    self::investBonus($userId, $user->refererId, $packageId, ($level + 1));
+                $user = UserData::find($refererId);
+                if($user){
+                    if($level == 1){//F1
+                        $packageBonus = $clpCoinAmount * 0.1;
+                        $user->totalBonus = $user->totalBonus + $packageBonus;
+                        $user->save();
+                    }elseif($level == 2){//F2
+                        if($user->package->price >= 1000){
+                            $packageBonus = $clpCoinAmount * 0.02;
+                            $user->totalBonus = $user->totalBonus + $packageBonus;
+                            $user->save();
+                        }
+                    }elseif($level == 3){//F3
+                        if($user->package->price >= 5000){
+                            $packageBonus = $clpCoinAmount * 0.01;
+                            $user->totalBonus = $user->totalBonus + $packageBonus;
+                            $user->save();
+                        }
+                    }
+                    if($level < 3){
+                        self::investBonusFastStart($user->refererId, $userId, $packageId, $packageBonus);
+                        self::investBonus($userId, $user->refererId, $packageId, ($level + 1), $clpCoinAmount);
+                    }
                 }
             }
         }

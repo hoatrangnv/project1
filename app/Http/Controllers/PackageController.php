@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\UserCoin;
+use App\UserData;
 use Illuminate\Http\Request;
 
 use App\User;
 use App\Package;
 use Auth;
 use Session;
+use App\Authorizable;
+use Validator;
 
 class PackageController extends Controller
 {
+    use Authorizable;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -42,10 +48,35 @@ class PackageController extends Controller
         $currentuserid = Auth::user()->id;
         $user = User::findOrFail($currentuserid);
         if ($request->isMethod('post')) {
-            $user->packageId = $request['packageId'];
-            $user->status = 1;
-            $user->save();
-            User::investBonus($user->id, $user->refererId, $user->packageId);
+            Validator::extend('packageCheck', function ($attribute, $value) {
+                $user = Auth::user();
+                //dd($user->userData->packageId);
+                if($user->userData->packageId < $value){
+                    $package = Package::find($value);
+                    if($package){
+                        $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
+                        $priceA = 0;
+                        if($packageOld){
+                            $priceA = $packageOld->price;
+                        }
+                        $clpCoinAmount = ($package->price - $priceA);
+                        if($user->userCoin->clpCoinAmount >= $clpCoinAmount){
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            });
+            $this->validate($request, [
+                    'packageId' => 'required|not_in:0|packageCheck',
+                ],['packageId.package_check' => 'CLP Coin not money buy package']);
+
+            $userData = UserData::findOrFail($currentuserid);
+            $userData->packageId = $request['packageId'];
+            $userData->status = 1;
+            $userData->save();
+
+            User::investBonus($user->id, $user->refererId, $request['packageId']);
             return redirect()->route('packages.invest')
                 ->with('flash_message',
                     'Buy package successfully.');

@@ -12,11 +12,6 @@ class UserCoin extends Model
     use Notifiable;
     public $timestamps = false;
     protected $primaryKey = 'userId';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'userId', 'accountCoinBase', 'walletAddress', 'btcCoinAmount', 'clpCoinAmount', 'usdAmount', 'reinvestAmount'
     ];
