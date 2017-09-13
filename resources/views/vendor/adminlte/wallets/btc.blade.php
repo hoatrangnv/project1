@@ -84,7 +84,7 @@
                 </div>
             </div>
 	</div>
-        <script src="http://adminlte.com/js/qrcode.min.js"></script>
+        <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
             
 	<script>
     
