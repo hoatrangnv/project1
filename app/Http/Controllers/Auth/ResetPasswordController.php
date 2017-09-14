@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Validator;
 
 class ResetPasswordController extends Controller
 {
@@ -97,9 +100,25 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-
-
-        //$this->sendMail($dataSendMail);
+        Validator::extend('emailCheck', function($attr, $value){
+            $count = DB::table('password_resets')
+                ->where('email','=',$value)
+                ->where('created_at','>',Carbon::now()->subDay(3))
+                ->count();
+            if($count>0)return true;
+            return false;
+        });
+        $this->validate($request,[
+            'email' => 'required|email',
+        ]);
+        $count = DB::table('password_resets')
+            ->where('email','=',$request->query('email'))
+            ->where('created_at','>',Carbon::now()->subDay(3))
+            ->count();
+        if($count==0){
+            $request->session()->flash('error', 'Link reset password expired!');
+        }
+        //$email = $request->query('email');
         return view('adminlte::auth.passwords.reset')->with(
             ['token' => $token, 'email' => $request->email]
         );
