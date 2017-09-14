@@ -16,6 +16,8 @@ use Validator;
 use Coinbase\Wallet\Enum\CurrencyCode;
 use Coinbase\Wallet\Resource\Transaction;
 use Coinbase\Wallet\Value\Money;
+use Coinbase\Wallet\Configuration;
+use Coinbase\Wallet\Client;
 
 class WalletController extends Controller
 {
@@ -80,7 +82,7 @@ class WalletController extends Controller
     public function btcwithdraw(Request $request){
         $currentuserid = Auth::user()->id;
         $user = UserCoin::findOrFail($currentuserid);
-
+        
         //send coin
         if ($request->isMethod('post')) {
             $this->validate($request, [
@@ -89,16 +91,22 @@ class WalletController extends Controller
                 'withdrawOPT'=>'required|min:6'
             ]);
             
+            $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
+            $client = Client::create($configuration);
+        
+            $transaction = Transaction::send([
+                'toBitcoinAddress' => $request->walletAddress,
+                'amount'           => new Money(0.1, CurrencyCode::BTC),
+                'description'      => 'Your first bitcoin!',
+                'fee'              => '0.0001' // only required for transactions under BTC0.0001
+            ]);
+        
+            $result = $client->createAccountTransaction($user->accountCoinBase, $transaction);
+            dd($result);
+            
         }
         
-        $transaction = Transaction::send([
-            'toBitcoinAddress' => $request->walletAddress,
-            'amount'           => new Money(0.1, CurrencyCode::BTC),
-            'description'      => 'Your first bitcoin!',
-            'fee'              => '0.0001' // only required for transactions under BTC0.0001
-        ]);
-
-        $client->createAccountTransaction($user->accountCoinBase, $transaction);
+        
         //get data;
         $withdraws = Withdraw::where('userId', '=',$currentuserid)
             ->get();
