@@ -12,7 +12,10 @@ use Auth;
 use Session;
 use Validator;
 
-use App\BitGo\BitGoSDK;
+//use App\BitGo\BitGoSDK;
+use Coinbase\Wallet\Enum\CurrencyCode;
+use Coinbase\Wallet\Resource\Transaction;
+use Coinbase\Wallet\Value\Money;
 
 class WalletController extends Controller
 {
@@ -80,8 +83,22 @@ class WalletController extends Controller
 
         //send coin
         if ($request->isMethod('post')) {
-           
+            $this->validate($request, [
+                'withdrawAmount'=>'required',
+                'walletAddress'=>'required',
+                'withdrawOPT'=>'required|min:6'
+            ]);
+            
         }
+        
+        $transaction = Transaction::send([
+            'toBitcoinAddress' => $request->walletAddress,
+            'amount'           => new Money(0.1, CurrencyCode::BTC),
+            'description'      => 'Your first bitcoin!',
+            'fee'              => '0.0001' // only required for transactions under BTC0.0001
+        ]);
+
+        $client->createAccountTransaction($user->accountCoinBase, $transaction);
         //get data;
         $withdraws = Withdraw::where('userId', '=',$currentuserid)
             ->get();
