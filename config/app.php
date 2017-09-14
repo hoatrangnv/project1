@@ -123,6 +123,8 @@ return [
     'log' => env('APP_LOG', 'single'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
+    'coinbase_key' => env('COINBASE_KEY'),
+    'coinbase_secret' => env('COINBASE_SECRET'),
     'bitgo_token' => env('BITGO_TOKEN'),
     'bitgo_password' => env('BITGO_PASSWORD'),
     'bitgo_hook' => env('BITGO_HOOK'),

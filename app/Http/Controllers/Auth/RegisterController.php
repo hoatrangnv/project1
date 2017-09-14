@@ -8,7 +8,13 @@ use Google2FA;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use App\BitGo\BitGoSDK;
+//use App\BitGo\BitGoSDK;
+
+use Coinbase\Wallet\Client;
+use Coinbase\Wallet\Configuration;
+use Coinbase\Wallet\Resource\Account;
+use Coinbase\Wallet\Resource\Address;
+
 use App\Notifications\UserRegistered;
 use App\UserData;
 use App\UserCoin;
@@ -32,7 +38,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
-
+    const COINBASE = 'coinbase';
     /**
      * Show the application registration form.
      *
@@ -98,7 +104,65 @@ class RegisterController extends Controller
             'g-recaptcha-response'=>'required|captcha',
         ]);
     }
+    
+    /**
+     * Generate a new Account Coinbase.
+     * @param  array  $data
+     * @return User
+     */
+    private function GenerateWallet( $type, $name = null ) {
+        $data = [];
+        switch ($type) {
+            case "bitgo":
+                $bitgo = new BitGoSDK();
+                $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
+                $wallet = $bitgo->wallets();
+                //set mat khau mac dinh
+                $createWallet = $wallet->createWallet($data['email'],config('app.bitgo_password'),"keyternal");
+                $addressWallet = $idWallet = $createWallet['wallet']->getID();
+                //backup key ...
+                $backupKey = json_encode($createWallet);
+                //add hook ...
+                $wallet = $bitgo->wallets()->getWallet($idWallet);
+                $createWebhook = $wallet->createWebhook("transaction",config('app.bitgo_hook'));
+                return $data = [ 'idWallet' => $idWallet ];
+            case self::COINBASE:
+                // tạo acc ví cho tk
+                $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
+                $client = Client::create($configuration);
+                $account = new Account([
+                    'name' => $name
+                ]);
+                $client->createAccount($account);
+                $accountId = $account->getId();
+          
+                // tạo địa chỉ ví || get địa chỉ ví
+                $account = $client->getAccount($accountId);
+                $address = new Address([
+                    'name' => $name
+                ]);
+                $client->createAccountAddress($account, $address);
 
+                $addressId = $client->getAccountAddresses($account);
+                $addresses = $client->getAccountAddress($account, $addressId->getFirstId());
+
+                $data = [ "accountId" => $accountId,
+                          "walletAddress" => $addresses->getAddress() ];
+                return $data;
+            default:
+                echo "chưa chọn lựa loại ví";
+        }
+    }
+    
+    /**
+     * Send mail active NewAccount
+     * @param  array  $data
+     * @return User
+     *
+    */
+    private function sendMailActive($data){
+        
+    }
     /**
      * Create a new user instance after a valid registration.
      *
@@ -109,18 +173,14 @@ class RegisterController extends Controller
     {
         //Tao acc vi
         try {
-            $bitgo = new BitGoSDK();
-            $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
-            $wallet = $bitgo->wallets();
-            //set mat khau mac dinh
-            $createWallet = $wallet->createWallet($data['email'],config('app.bitgo_password'),"keyternal");
-            $addressWallet = $idWallet = $createWallet['wallet']->getID();
-            //backup key ...
-            $backupKey = json_encode($createWallet);
-            //add hook ...
-            $wallet = $bitgo->wallets()->getWallet($idWallet);
-            $createWebhook = $wallet->createWebhook("transaction",config('app.bitgo_hook'));
-
+            //Tạo tk 
+            if($data['name']) {
+                $accountWallet = $this->GenerateWallet(self::COINBASE,$data['name']);
+            }
+            
+            if(!$accountWallet){
+                return false;
+            }
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['firstname'],
@@ -131,10 +191,9 @@ class RegisterController extends Controller
                 'country'    => $data['country'],
                 'refererId'    => isset($data['refererId']) ? $data['refererId'] : null,
                 'password' => bcrypt($data['password']),
-                'accountCoinBase' => $idWallet,
+                'accountCoinBase' => $accountWallet['accountId'],
                 'status' => 0,
                 'activeCode' => md5($data['email']),
-                'active' => 0,
                 'google2fa_secret' => Google2FA::generateSecretKey(16)
             ];
             if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {
@@ -142,13 +201,13 @@ class RegisterController extends Controller
             }
             $user = User::create($fields);
 
-            //Luu thong tin ca nhan vao bang User_datas
+            //SAVE to User_datas
             $fields['userId'] = $user->id;
-            $fields['walletAddress'] = $addressWallet;
+            $fields['walletAddress'] = $accountWallet['walletAddress'];
             $userData = UserData::create($fields);
 
             //Luu thong tin ca nhan vao bang user_coin
-            $fields['backupKey'] = $backupKey;
+//            $fields['backupKey'] = $backupKey;
             $userCoin = UserCoin::create($fields);
 
             //gui mail
@@ -157,7 +216,8 @@ class RegisterController extends Controller
             $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
 
             $user->notify(new UserRegistered($user, $linkActive));
-            return $user;
+            redirect('notiactive');
+//            return $user;
         } catch (Exception $e) {
             var_dump($e->getmessage());
         }

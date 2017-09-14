@@ -43,6 +43,36 @@ class WalletController extends Controller
         $coin = Auth()->user()->userCoin->btcCoinAmount;
         return $coin;
     }
+    
+    public function sendCoin() {
+        $this->validate($request, [
+            'withdrawAmount'=>'required',
+            'walletAddress'=>'required',
+            'withdrawOPT'=>'required|min:6'
+        ]);
+        $amount = $request->get('withdrawAmount')*1e8;
+        $walletAddress = $request->get('walletAddress');
+        /////////////////////////////////
+        $bitgo = new BitGoSDK();
+        $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
+        ////////////////////////////////
+        //active api
+        $bitgo->unlock('0000000');
+        //send coin
+        $wallet = $bitgo->wallets()->getWallet($user->walletAddress);
+        $sendCoins = $wallet->sendCoins($walletAddress, $amount, config('app.bitgo_password'), $message = null);
+        ///
+        if($sendCoins['status'] == "accepted"){
+            $withDraw = new Withdraw;
+            $withDraw->walletAddress = $walletAddress;
+            $withDraw->userId = $currentuserid;
+            $withDraw->amountBTC = (double)$request->get('withdrawAmount');
+            $withDraw->fee = (double)$sendCoins['fee']/1e8;
+            $withDraw->detail = json_encode($sendCoins);
+            $withDraw->status = 1;
+            $withDraw->save();
+        }
+    }
 
     public function btcwithdraw(Request $request){
         $currentuserid = Auth::user()->id;
@@ -50,33 +80,7 @@ class WalletController extends Controller
 
         //send coin
         if ($request->isMethod('post')) {
-            $this->validate($request, [
-                'withdrawAmount'=>'required',
-                'walletAddress'=>'required',
-                'withdrawOPT'=>'required|min:6'
-            ]);
-            $amount = $request->get('withdrawAmount')*1e8;
-            $walletAddress = $request->get('walletAddress');
-            /////////////////////////////////
-            $bitgo = new BitGoSDK();
-            $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
-            ////////////////////////////////
-            //active api
-            $bitgo->unlock('0000000');
-            //send coin
-            $wallet = $bitgo->wallets()->getWallet($user->walletAddress);
-            $sendCoins = $wallet->sendCoins($walletAddress, $amount, config('app.bitgo_password'), $message = null);
-            ///
-            if($sendCoins['status'] == "accepted"){
-                $withDraw = new Withdraw;
-                $withDraw->walletAddress = $walletAddress;
-                $withDraw->userId = $currentuserid;
-                $withDraw->amountBTC = (double)$request->get('withdrawAmount');
-                $withDraw->fee = (double)$sendCoins['fee']/1e8;
-                $withDraw->detail = json_encode($sendCoins);
-                $withDraw->status = 1;
-                $withDraw->save();
-            }
+           
         }
         //get data;
         $withdraws = Withdraw::where('userId', '=',$currentuserid)
