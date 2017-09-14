@@ -14,7 +14,7 @@ use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Account;
 use Coinbase\Wallet\Resource\Address;
-
+use Illuminate\Auth\Events\Registered;
 use App\Notifications\UserRegistered;
 use App\UserData;
 use App\UserCoin;
@@ -68,7 +68,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/login';
+    protected $redirectTo = '/notiactive';
 
     /**
      * Create a new controller instance.
@@ -105,6 +105,17 @@ class RegisterController extends Controller
         ]);
     }
     
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+//        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
+    }
     /**
      * Generate a new Account Coinbase.
      * @param  array  $data
@@ -216,8 +227,8 @@ class RegisterController extends Controller
             $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
 
             $user->notify(new UserRegistered($user, $linkActive));
-            redirect('notiactive');
-//            return $user;
+//            redirect('notiactive');
+            return $user;
         } catch (Exception $e) {
             var_dump($e->getmessage());
         }
