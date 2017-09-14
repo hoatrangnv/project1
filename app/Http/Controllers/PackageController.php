@@ -24,11 +24,11 @@ class PackageController extends Controller
     public function index()
     {
         $packages = Package::all();
-        return view('adminlte::packages.index')->with('packages', $packages);
+        return view('adminlte::package.index')->with('packages', $packages);
     }
     public function create()
     {
-        return view('adminlte::packages.create');
+        return view('adminlte::package.create');
     }
     public function store(Request $request)
     {
@@ -50,7 +50,6 @@ class PackageController extends Controller
         if ($request->isMethod('post')) {
             Validator::extend('packageCheck', function ($attribute, $value) {
                 $user = Auth::user();
-                //dd($user->userData->packageId);
                 if($user->userData->packageId < $value){
                     $package = Package::find($value);
                     if($package){
@@ -95,7 +94,7 @@ class PackageController extends Controller
     public function edit($id)
     {
         $package = Package::findOrFail($id);
-        return view('adminlte::packages.edit', compact('package'));
+        return view('adminlte::package.edit', compact('package'));
     }
     public function update(Request $request, $id)
     {
