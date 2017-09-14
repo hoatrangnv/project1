@@ -9,6 +9,14 @@
 @endsection
 
 @section('main-content')
+<style>
+    a {
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        outline: 0;
+    }
+</style>
 	<div class="row">
             <div class="col-lg-4">
                 <div class="row">
@@ -32,6 +40,8 @@
                                 <div class="form-group" style="text-align: center">
                                     <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your BTC Wallet address</h5>
                                     <h6 class="wallet-address"></h6>
+                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">BTC Wallet link</h5>
+                                    <a class="link-blockchain" href="" target="_blank">blockchain</a>, <a class="link-blockexplorer" href="" target="_blank">blockexplorer</a>
                                     <center><div id="qrcode" style="padding-bottom: 10px;"></div></center>
                                 </div>
                             </div>
@@ -42,9 +52,7 @@
             <div class="col-lg-8">
 		<div class="box">
                     <div class="box-header">
-                        <button type="button" class="btn btn-sm btn-success" data-title="{{ trans('adminlte_lang::wallet.deposit') }}" id="btcDeposit">{{ trans('adminlte_lang::wallet.deposit') }}</button>
-                        <a href="{{ url('wallets/btcwithdraw') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.withdraw') }}</a>
-                        <a href="{{ url('wallets/btctransfer') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_clp') }}</a>
+                        BTC Tranfer
                     </div>
                     <div class="box-body" style="padding-top:0;">
                         <table class="table table-bordered table-hover table-striped dataTable">
@@ -87,12 +95,14 @@
         <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
             
 	<script>
-    
+            //get wallet code and render code to qrcode
             $.ajax({
                 url: "{{ url('wallets/deposit') }}?action=btc",
             }).done(function(data) {
                 if (!data.err) {
                     $(".wallet-address").html(data.walletAddress);
+                    $(".link-blockchain").attr("href","https://blockchain.info/address/"+data.walletAddress);
+                    $(".link-blockexplorer").attr("href","https://blockexplorer.com/address/"+data.walletAddress);
                     var qrcode = new QRCode(document.getElementById("qrcode"), {
                         text: data.walletAddress,
                         colorDark : "#000000",
@@ -111,20 +121,4 @@
             });
 
 	</script>
-
-	<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title"></h4>
-				</div>
-				<div class="modal-body">
-
-				</div>
-				<div class="modal-footer">
-				</div>
-			</div>
-		</div>
-	</div>
 @endsection

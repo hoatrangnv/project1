@@ -20,13 +20,13 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">{{ trans('adminlte_lang::message.header') }}</li>
+            <!-- <li class="header" hide>{{ trans('adminlte_lang::message.header') }}</li> -->
             <!-- Optionally, you can add icons to the links -->
-            <li {{ Request::is('home') ? 'class=active' : '' }}><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
-            <li {{ Request::is('packages/invest') ? 'class=active' : '' }}><a href="{{ url('packages/invest') }}"><i class='fa fa-link'></i> <span>Investment Packages</span></a></li>
+            <li {{ Request::is('home') ? 'class=active' : '' }}><a href="{{ url('home') }}"><i class='fa fa-home'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
+            <li {{ Request::is('packages/invest') ? 'class=active' : '' }}><a href="{{ url('packages/invest') }}"><i class='fa fa-gift'></i> <span>Investment Packages</span></a></li>
             <li class="treeview{{ Request::segment(1) === 'members' ? ' active' : null }}">
                 <a href="#">
-                    <i class='fa fa-link'></i> <span>{{ trans('adminlte_lang::default.side_member') }}</span>
+                    <i class='fa fa-address-book'></i> <span>{{ trans('adminlte_lang::default.side_member') }}</span>
                     <span class="pull-right-container">
 						<i class="fa fa-angle-left pull-right"></i>
 					</span>
@@ -53,16 +53,22 @@
             @endcan
 
             <li class="treeview{{ Request::is('wallets*') ? ' active' : null }}">
-                <a href="#"><i class='fa fa-link'></i> <span>{{ trans('adminlte_lang::default.side_wallet') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="#"><i class='fa fa-credit-card'></i> <span>{{ trans('adminlte_lang::default.side_wallet') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li class="{{ Request::segment(2) === 'usd' ? 'active' : null }}"><a href="{{ url('wallets/usd') }}">{{ trans('adminlte_lang::default.side_wallet_usd') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'btc' ? 'active' : null }}"><a href="{{ url('wallets/btc') }}">{{ trans('adminlte_lang::default.side_wallet_btc') }}</a></li>
+                    <li class="treeview{{ Request::is('wallets/btc') || Request::is('wallets/btcwithdraw') ? ' active' : null }}">
+                        <a href="#"><i class=''></i> <span>{{ trans('adminlte_lang::default.side_wallet_btc') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li class="{{ Request::segment(2) === 'btc' ? 'active' : null }}"><a href="{{ url('wallets/btc') }}">{{ trans('adminlte_lang::default.side_wallet_btc') }}</a></li>
+                            <li class="{{ Request::segment(2) === 'btcwithdraw' ? 'active' : null }}"><a href="{{ url('wallets/btcwithdraw') }}">WithDraw</a></li>
+                        </ul>
+                    </li>
                     <li class="{{ Request::segment(2) === 'clp' ? 'active' : null }}"><a href="{{ url('wallets/clp') }}">{{ trans('adminlte_lang::default.side_wallet_clp') }}</a></li>
                     <li class="{{ Request::segment(2) === 'reinvest' ? 'active' : null }}"><a href="{{ url('wallets/reinvest') }}">{{ trans('adminlte_lang::default.side_wallet_reinvest') }}</a></li>
                 </ul>
             </li>
             <li class="treeview{{ Request::is('mybonus*') ? ' active' : null }}">
-                <a href="#"><i class='fa fa-link'></i> <span>{{ trans('adminlte_lang::default.side_mybonus') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="#"><i class='fa fa-money'></i> <span>{{ trans('adminlte_lang::default.side_mybonus') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li class="{{ Request::segment(2) === 'faststart' ? 'active' : null }}"><a href="{{ url('mybonus/faststart') }}">{{ trans('adminlte_lang::default.side_mybonust_fast') }}</a></li>
                     <li class="{{ Request::segment(2) === 'binary' ? 'active' : null }}"><a href="{{ url('mybonus/binary') }}">{{ trans('adminlte_lang::default.side_mybonus_binary') }}</a></li>

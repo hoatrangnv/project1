@@ -19,7 +19,7 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu">
+                <li class="dropdown messages-menu" style="display: none">
                     <!-- Menu toggle button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-envelope-o"></i>
@@ -52,7 +52,7 @@
                 </li><!-- /.messages-menu -->
 
                 <!-- Notifications Menu -->
-                <li class="dropdown notifications-menu">
+                <li class="dropdown notifications-menu" style="display: none">
                     <!-- Menu toggle button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
@@ -74,7 +74,7 @@
                     </ul>
                 </li>
                 <!-- Tasks Menu -->
-                <li class="dropdown tasks-menu">
+                <li class="dropdown tasks-menu" style="display: none">
                     <!-- Menu Toggle Button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-flag-o"></i>
@@ -166,7 +166,7 @@
                 @endif
 
                 <!-- Control Sidebar Toggle Button -->
-                <li>
+                <li style="display: none">
                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                 </li>
             </ul>
