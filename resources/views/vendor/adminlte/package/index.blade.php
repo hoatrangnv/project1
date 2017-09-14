@@ -11,15 +11,11 @@
 @section('main-content')
 	<div class="row">
 		<div class="col-xs-12">
-			@if (session('flash_message'))
-				<div class="alert alert-success">
-					{{ session('flash_message') }}
-				</div>
-			@endif
-			<!-- Default box -->
 			<div class="box">
 				<div class="box-header">
-					<a href="{{ route('packages.create') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::package.add') }}</a>
+					@can('add_users')
+						<a href="{{ route('packages.create') }}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> {{ trans('adminlte_lang::package.add') }}</a>
+					@endcan
 				</div>
 				<div class="box-body" style="padding-top:0;">
 					<table class="table table-bordered table-hover table-striped dataTable">
@@ -28,7 +24,9 @@
 							<th>{{ trans('adminlte_lang::package.price') }}</th>
 							<th>{{ trans('adminlte_lang::package.token') }}</th>
 							<th>{{ trans('adminlte_lang::package.replication') }}</th>
+							@can('edit_packages')
 							<th>{{ trans('adminlte_lang::package.action') }}</th>
+							@endcan
 						</tr>
 						<tbody>
 							 @foreach ($packages as $package)
@@ -37,12 +35,14 @@
 								<td>${{ $package->price }}</td>
 								<td>{{ $package->token }}</td>
 								<td>{{ $package->replication_time }}</td>
-								<td>
-								<a href="{{ URL::to('packages/'.$package->id.'/edit') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_edit') }}</a>
-								{!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy', $package->id] ]) !!}
-								{!! Form::submit(trans('adminlte_lang::default.btn_delete'), ['class' => 'btn btn-xs btn-danger']) !!}
-								{!! Form::close() !!}
-								</td>
+								@can('edit_packages')
+									<td class="text-center">
+										@include('shared._actions', [
+                                            'entity' => 'packages',
+                                            'id' => $package->id
+                                        ])
+									</td>
+								@endcan
 							</tr>
 							@endforeach
 						</tbody>

@@ -51,7 +51,13 @@
                     </a>
                 </li>
             @endcan
-
+            @can('view_packages')
+                <li class="{{ Request::is('packages*') ? 'active' : '' }}">
+                    <a href="{{ route('packages.index') }}">
+                        <i class="glyphicon glyphicon-user"></i> Packages
+                    </a>
+                </li>
+            @endcan
             <li class="treeview{{ Request::is('wallets*') ? ' active' : null }}">
                 <a href="#"><i class='fa fa-credit-card'></i> <span>{{ trans('adminlte_lang::default.side_wallet') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">

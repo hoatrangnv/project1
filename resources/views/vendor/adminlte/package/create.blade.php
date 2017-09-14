@@ -3,12 +3,13 @@
 @section('htmlheader_title')
 	{{ trans('adminlte_lang::package.header_title') }}
 @endsection
+
 @section('contentheader_description')
-	{{ trans('adminlte_lang::package.edit') }}
+	{{ trans('adminlte_lang::package.add') }}
 @endsection
 
 @section('main-content')
-	{{ Form::model($package, array('route' => array('packages.update', $package->id), 'method' => 'PUT')) }}
+	{{ Form::open(array('url' => 'packages')) }}
 	<div class="row">
 		<div class="col-xs-12">
 			<!-- Default box -->
@@ -17,28 +18,28 @@
 					<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 						{{ Form::label('name', trans('adminlte_lang::package.name')+':',  array('class' => 'col-sm-2 control-label')) }}
 						<div class="col-sm-10">
-							{{ Form::text('name', null, array('class' => 'form-control input-sm')) }}
+							{{ Form::text('name', '', array('class' => 'form-control input-sm')) }}
 							<small class="text-danger">{{ $errors->first('name') }}</small>
 						</div>
 					</div>
 					<div class="form-group{{ $errors->has('price') ? ' has-error' : '' }}">
 						{{ Form::label('price', trans('adminlte_lang::package.price')+':',  array('class' => 'col-sm-2 control-label')) }}
 						<div class="col-sm-10">
-							{{ Form::text('price', null, array('class' => 'form-control input-sm')) }}
+							{{ Form::text('price', '', array('class' => 'form-control input-sm')) }}
 							<small class="text-danger">{{ $errors->first('price') }}</small>
 						</div>
 					</div>
 					<div class="form-group{{ $errors->has('token') ? ' has-error' : '' }}">
 						{{ Form::label('token', trans('adminlte_lang::package.token')+':',  array('class' => 'col-sm-2 control-label')) }}
 						<div class="col-sm-10">
-							{{ Form::text('token', null, array('class' => 'form-control input-sm')) }}
+							{{ Form::text('token', '', array('class' => 'form-control input-sm')) }}
 							<small class="text-danger">{{ $errors->first('token') }}</small>
 						</div>
 					</div>
 					<div class="form-group">
-						{{ Form::label('replication_time', trans('adminlte_lang::package.replication')+':',  array('class' => 'col-sm-2 control-label')) }}
+						{{ Form::label('bonus', trans('adminlte_lang::package.bonus')+':',  array('class' => 'col-sm-2 control-label')) }}
 						<div class="col-sm-10">
-							{{ Form::text('replication_time', null, array('class' => 'form-control input-sm')) }}
+							{{ Form::text('bonus', '', array('class' => 'form-control input-sm')) }}
 						</div>
 					</div>
 				</div>
@@ -47,7 +48,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="inputStatus"> </label>
 						<div class="col-sm-10">
-							{{ Form::submit(trans('adminlte_lang::default.btn_edit'), array('class' => 'btn btn-primary')) }}
+							{{ Form::submit(trans('adminlte_lang::default.btn_add'), array('class' => 'btn btn-primary')) }}
 						</div>
 					</div>
 				</div>
