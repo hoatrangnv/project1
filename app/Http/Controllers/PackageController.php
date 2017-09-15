@@ -85,7 +85,7 @@ class PackageController extends Controller
         foreach ($packages as $package){
             $lstPackSelect[$package->id] = $package->name;
         }
-        return view('adminlte::packages.invest', ['packages' => $packages, 'user' => $user, 'lstPackSelect' => $lstPackSelect]);
+        return view('adminlte::package.invest', ['packages' => $packages, 'user' => $user, 'lstPackSelect' => $lstPackSelect]);
     }
     public function show($id)
     {

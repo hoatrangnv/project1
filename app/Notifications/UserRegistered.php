@@ -29,6 +29,7 @@ class UserRegistered extends Notification
             ->greeting('Dear '.$this->user->name. ',')
             ->line('Welcome to the crypyto.')
             ->action('Active Account', $this->link_active)
+            ->line('Link Active Account expire 3 day.')
             ->line('If you did not request Active Account, no further action is required. Please contact us if you did not submit this request.');
     }
 }

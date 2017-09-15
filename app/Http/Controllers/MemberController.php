@@ -194,7 +194,7 @@ class MemberController extends Controller
 	
 	public function refferals(){
 		$currentuserid = Auth::user()->id;
-        //$users = User::where('referrerId='.$currentuserid); 
+        //$users = User::where('referrerId='.$currentuserid);
         $users = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->orderBy('userId', 'desc')
                ->paginate();
         return view('adminlte::members.refferals')->with('users', $users);
