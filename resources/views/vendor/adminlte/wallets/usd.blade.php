@@ -14,7 +14,7 @@
 			<div class="box">
 				<div class="box-header">
 					<!--a href="{{ route('packages.invest') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_package') }}</a-->
-					<a href="{{ url('wallets/buyclp') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_clp') }}</a>
+					<a href="{{ url('wallets/buysellclp') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_clp') }}</a>
 				</div>
 				<div class="box-body" style="padding-top:0;">
 					<table class="table table-bordered table-hover table-striped dataTable">
