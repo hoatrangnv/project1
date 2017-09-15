@@ -69,7 +69,8 @@
 						});
 					?>
 					<div class="form-group input-group-sm has-feedback{{ $errors->has('packageId') ? ' has-error' : '' }}">
-						<?php echo Form::selectPackage('packageId', $lstPackSelect, $user->userData->packageId, ['class' => 'form-control input-sm'], 'Pick a package...', $user->userData->packageId);?>
+						<?php $packageId = ($user->userData ? $user->userData->packageId : null);
+						echo Form::selectPackage('packageId', $lstPackSelect, $packageId, ['class' => 'form-control input-sm'], 'Pick a package...', $packageId);?>
 						@if ($errors->has('packageId'))
 							<span class="help-block">
 								{{ $errors->first('packageId') }}
