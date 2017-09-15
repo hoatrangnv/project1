@@ -28,7 +28,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('wallets/buyclp', 'WalletController@buyclp');
     Route::post('wallets/buyclp', 'WalletController@buyclp');
-
+        
     Route::get('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
     Route::post('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
 
