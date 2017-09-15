@@ -218,16 +218,16 @@ class RegisterController extends Controller
             $userData = UserData::create($fields);
 
             //Luu thong tin ca nhan vao bang user_coin
-//            $fields['backupKey'] = $backupKey;
+            //$fields['backupKey'] = $backupKey;
             $userCoin = UserCoin::create($fields);
 
             //gui mail
             //ma hoa send link active qua mail
-            $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
-            $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
-
-            $user->notify(new UserRegistered($user, $linkActive));
-//            redirect('notiactive');
+            if($user) {
+                $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
+                $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
+                $user->notify(new UserRegistered($user, $linkActive));  
+            }
             return $user;
         } catch (Exception $e) {
             var_dump($e->getmessage());

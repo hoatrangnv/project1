@@ -14,7 +14,7 @@
 			<div class="box">
 				<div class="box-body" style="padding-top:0;">
 					<br>
-					{{ Form::open(array('url' => 'users')) }}
+					{{ Form::open(array('url' => 'wallets/btcwithdraw')) }}
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 						{{ Form::text('withdrawAmount', '', array('class' => 'form-control input-sm', 'placeholder' => "Bitcoin amount E.g. 0.1")) }}
