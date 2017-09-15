@@ -28,13 +28,6 @@
 							<small class="text-danger">{{ $errors->first('price') }}</small>
 						</div>
 					</div>
-					<div class="form-group{{ $errors->has('token') ? ' has-error' : '' }}">
-						{{ Form::label('token', trans('adminlte_lang::package.token')+':',  array('class' => 'col-sm-2 control-label')) }}
-						<div class="col-sm-10">
-							{{ Form::text('token', null, array('class' => 'form-control input-sm')) }}
-							<small class="text-danger">{{ $errors->first('token') }}</small>
-						</div>
-					</div>
 					<div class="form-group">
 						{{ Form::label('bonus', trans('adminlte_lang::package.bonus')+':',  array('class' => 'col-sm-2 control-label')) }}
 						<div class="col-sm-10">

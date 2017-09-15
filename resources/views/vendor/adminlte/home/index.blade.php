@@ -25,7 +25,7 @@
                             <div class="inner">
                                 <center>
                                     <p style="font-size:20px">{{ trans('adminlte_lang::home.btc_wallet') }}</p>
-                                    <h4 style="font-size:20px;font-weight:bold">{{ $data['coin'][0]->btcCoinAmount }}</h4>
+                                    <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->btcCoinAmount }}</h4>
                                 </center>
                             </div>
                           </div>
@@ -37,7 +37,7 @@
                                 <div class="inner">
                                     <center>
                                         <p style="font-size:20px">{{ trans('adminlte_lang::home.clp_wallet') }}</p>
-                                        <h4 style="font-size:20px;font-weight:bold">{{ $data['coin'][0]->clpCoinAmount }}</h4>
+                                        <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->clpCoinAmount }}</h4>
                                     </center>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@
                             <div class="inner">
                                 <center>
                                     <p style="font-size:20px">{{ trans('adminlte_lang::home.usd_wallet') }}</p>
-                                    <h4 style="font-size:20px;font-weight:bold">{{ $data['coin'][0]->usdAmount }}</h4>
+                                    <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->usdAmount }}</h4>
                                 </center>
                             </div>
                           </div>
@@ -65,7 +65,7 @@
                             <div class="inner">
                                 <center>
                                     <p style="font-size:20px">{{ trans('adminlte_lang::home.re_invest_wallet') }}</p>
-                                    <h4 style="font-size:20px;font-weight:bold">{{ $data['coin'][0]->reinvestAmount }}</h4>
+                                    <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->reinvestAmount }}</h4>
                                 </center>
                             </div>
                           </div>
@@ -134,13 +134,13 @@
                         <center>
                             <div class="row">
                                 <div class="col-md-6"><h3 class="box-title" style="font-size:20px;">{{ trans('adminlte_lang::home.your_pack') }}</h3></div>
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">Angel {{$data['package']}}</h3></div>
+                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->package->name }}</h3></div>
                             </div>
                         </center>
                         <center>
                             <div class="row">
                                 <div class="col-md-6"><h3 class="box-title" style="font-size:20px">{{ trans('adminlte_lang::home.value') }}</h3></div>
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">${{$data['value']}}</h3></div>
+                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">${{ Auth::user()->userData->package->price }}</h3></div>
                             </div>
                         </center>
                         <center>

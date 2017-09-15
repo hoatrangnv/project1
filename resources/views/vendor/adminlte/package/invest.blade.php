@@ -32,7 +32,7 @@
 							<tr>
 								<td>{{ $package->name }}</td>
 								<td>${{ $package->price }}</td>
-								<td>{{ $package->token }}</td>
+								<td>{{ number_format($package->price* \App\Package::Tygia) }}</td>
 							</tr>
 							@endforeach
 						</tbody>

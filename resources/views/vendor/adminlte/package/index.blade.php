@@ -23,7 +23,6 @@
 							<th>{{ trans('adminlte_lang::package.name') }}</th>
 							<th>{{ trans('adminlte_lang::package.price') }}</th>
 							<th>{{ trans('adminlte_lang::package.token') }}</th>
-							<th>{{ trans('adminlte_lang::package.replication') }}</th>
 							@can('edit_packages')
 							<th>{{ trans('adminlte_lang::package.action') }}</th>
 							@endcan
@@ -33,8 +32,7 @@
 							<tr>
 								<td>{{ $package->name }}</td>
 								<td>${{ $package->price }}</td>
-								<td>{{ $package->token }}</td>
-								<td>{{ $package->replication_time }}</td>
+								<td>{{ number_format($package->price* \App\Package::Tygia) }}</td>
 								@can('edit_packages')
 									<td class="text-center">
 										@include('shared._actions', [

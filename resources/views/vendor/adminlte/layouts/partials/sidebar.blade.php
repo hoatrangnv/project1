@@ -52,7 +52,7 @@
                 </li>
             @endcan
             @can('view_packages')
-                <li class="{{ Request::is('packages*') ? 'active' : '' }}">
+                <li class="{{ Request::is('packages*') && !Request::is('packages/invest') ? 'active' : '' }}">
                     <a href="{{ route('packages.index') }}">
                         <i class="glyphicon glyphicon-user"></i> Packages
                     </a>

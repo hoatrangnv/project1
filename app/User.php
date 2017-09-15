@@ -47,7 +47,7 @@ class User extends Authenticatable
             if($packageOld){
                 $priceA = $packageOld->price;
             }
-            $clpCoinAmount = ($package->price - $priceA);
+            $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
             $userCoin = UserCoin::findOrFail($userId);
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $clpCoinAmount;
             $userCoin->save();
@@ -118,18 +118,27 @@ class User extends Authenticatable
     public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos){
         $user = User::findOrFail($binaryUserId);
         $package = Package::findOrFail($packageId);
+        $clpCoinAmount = 0;
+        if($package) {
+            $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
+            $priceA = 0;
+            if ($packageOld) {
+                $priceA = $packageOld->price;
+            }
+            $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
+        }
         if ($legpos == 1){
-            $user->totalBonusLeft = $user->totalBonusLeft + $package->token;
+            $user->totalBonusLeft = $user->totalBonusLeft + $clpCoinAmount;
             $user->lastUserIdLeft = $userId;
             $user->leftMembers = $user->leftMembers + 1;
         }else{
-            $user->totalBonusRight = $user->totalBonusRight + $package->token;
+            $user->totalBonusRight = $user->totalBonusRight + $clpCoinAmount;
             $user->lastUserIdRight = $userId;
             $user->rightMembers = $user->rightMembers + 1;
         }
         $user->totalMembers = $user->totalMembers + 1;
         $user->save();
-        self::bonusBinaryWeek($binaryUserId, $package->token, $legpos);
+        self::bonusBinaryWeek($binaryUserId, $clpCoinAmount, $legpos);
         self::bonusLoyaltyUser($userId, $partnerId, $legpos);
         if($partnerId != $binaryUserId) {
             User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos);
@@ -215,9 +224,9 @@ class User extends Authenticatable
         foreach ($users as $user) {
             $package = Package::findOrFail($user->packageId);
             if($user->leftRight == 'left'){
-                $totalf1Left += $package->token * $user->num;
+                $totalf1Left += $package->price * $user->num;
             }else{
-                $totalf1Right += $package->token * $user->num;
+                $totalf1Right += $package->price * $user->num;
             }
         }
         if($totalf1Left >= 50000 && $totalf1Right >= 50000){

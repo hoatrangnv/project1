@@ -26,16 +26,17 @@ class MemberController extends Controller
 				if($request['action'] == 'getUser'){
 					if(isset($request['username']) && $request['username'] != ''){
                         $currentuserid = Auth::user()->id;
-                        $user = User::where('name', '=', $request['username'])->where('status', 1)->first();
-                        $userData = UserData::where('userId', '=', $user->id)->first();
-                        if($userData->refererId == $currentuserid || $userData->binaryUserId == $currentuserid){
+                        $user = User::where('name', '=', $request['username'])->where('active', 1)->first();
+                        //$userData = UserData::where('userId', '=', $user->id)->first();
+                        if($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid){
                             $fields = [
                                 'id'     => $user->id,
                                 'u'     => $user->name,
-                                'totalMembers'     => $userData->totalMembers,
-                                'packageId'     => $userData->packageId,
-                                'loyaltyId'     => $userData->loyaltyId,
-                                'leg'     => $userData->leftRight == 'left' ? 1 : $userData->leftRight == 'right' ? 2 : 0,
+                                'totalMembers'     => $user->userData->totalMembers,
+                                'packageId'     => $user->userData->packageId,
+                                'packageName'     => $user->userData->package->name,
+                                'loyaltyId'     => $user->userData->loyaltyId,
+                                'leg'     => $user->userData->leftRight == 'left' ? 1 : $user->userData->leftRight == 'right' ? 2 : 0,
                                 'pkg'     => 2000,
                                 'ws'     => self::getWeeklySale($user->id),
                                 'dmc'     => 3,
@@ -47,14 +48,15 @@ class MemberController extends Controller
 					}else{
                         $currentuserid = Auth::user()->id;
                         $user = User::findOrFail($currentuserid);
-                        $userData = UserData::where('userId', '=', $user->id)->first();
+                       // $userData = UserData::where('userId', '=', $user->id)->first();
                         $fields = [
                             'id'     => $user->id,
                             'u'     => $user->name,
-                            'totalMembers'     => $userData->totalMembers,
-                            'packageId'     => $userData->packageId,
-                            'loyaltyId'     => $userData->loyaltyId,
-                            'leg'     => $userData->leftRight == 'left' ? 1 : $userData->leftRight == 'right' ? 2 : 0,
+                            'totalMembers'     => $user->userData->totalMembers,
+                            'packageId'     => $user->userData->packageId,
+                            'packageName'     => $user->userData->package->name,
+                            'loyaltyId'     => $user->userData->loyaltyId,
+                            'leg'     => $user->userData->leftRight == 'left' ? 1 : $user->userData->leftRight == 'right' ? 2 : 0,
                             'pkg'     => 2000,
                             'ws'     => self::getWeeklySale($user->id),
                             'dmc'     => 3,
@@ -66,20 +68,19 @@ class MemberController extends Controller
                     $currentuserid = Auth::user()->id;
                     $fields = array();
                     if(isset($request['id']) && $request['id'] > 0){
-                        $users = UserData::where('binaryUserId', '=', $request['id'])->where('status', 1)->get();
+                        $userDatas = UserData::where('refererId', '=', $request['id'])->get();
                         $fields = array();
-                        foreach ($users as $user) {
-                            $userInfo = User::findOrFail($user->userId);
-                            if($user->refererId == $currentuserid || $userData->binaryUserId == $currentuserid) {
+                        foreach ($userDatas as $userData) {
+                            if($userData->user->active == 1 && ($userData->refererId == $currentuserid || $userData->binaryUserId == $currentuserid)) {
                                 $fields[] = [
-                                    'id' => $userInfo->id,
-                                    'u' => $userInfo->name,
-                                    'totalMembers' => $user->totalMembers,
-                                    'packageId' => $user->packageId,
-                                    'loyaltyId' => $user->loyaltyId,
-                                    'leg' => $user->leftRight == 'left' ? 1 : $user->leftRight == 'right' ? 2 : 0,
+                                    'id' => $userData->userId,
+                                    'u' => $userData->user->name,
+                                    'totalMembers' => $userData->totalMembers,
+                                    'packageId' => $userData->packageId,
+                                    'loyaltyId' => $userData->loyaltyId,
+                                    'leg' => $userData->leftRight == 'left' ? 1 : $userData->leftRight == 'right' ? 2 : 0,
                                     'pkg' => 2000,
-                                    'ws' => self::getWeeklySale($userInfo->id),
+                                    'ws' => self::getWeeklySale($userData->userId),
                                     'dmc' => 3,
                                     'l' => 'Rookie',
                                 ];
