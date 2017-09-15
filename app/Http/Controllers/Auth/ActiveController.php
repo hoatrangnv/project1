@@ -49,9 +49,12 @@ class ActiveController extends Controller
                 //kiem tra va update kich hoat tk
                 if ( $data[0] = hash( "sha256", md5( md5( $data[1] ) ) ) ) {
                     try {
-                        $affectedRows = User::where( 'email', '=', $data[1] )->update( ['active' => 1] );
+                        $user = User::where( 'email', '=', $data[1] )->first();
+                        $user->active = 1;
+                        $user->save();
+                        UserData::find($user->id )->update( ['active' => 1] );
                         //Active vaf redirect ve trang thong bao kem theo link login
-                        if($affectedRows == 1){
+                        if($user){
                             return redirect("notification/useractive");
                         }else{
                             $request->session()->flash('error', 'Không thể active được tài khoản!');
@@ -84,6 +87,7 @@ class ActiveController extends Controller
                 $user = User::where('email', '=', $email)->first();
                 $user->updated_at = date('Y-m-d H:i:s');
                 $user->save();
+                UserData::find($user->id )->update( ['active' => 1] );
                 $encrypt = [hash("sha256", md5(md5($email))), $email];
                 $linkActive = URL::to('/active') . "/" . base64_encode(json_encode($encrypt));
                 $user->notify(new UserRegistered($user, $linkActive));
