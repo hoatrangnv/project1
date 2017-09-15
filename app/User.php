@@ -34,7 +34,7 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
     public function userData() {
-        return $this->hasOne(userData::class, 'userId', 'id');
+        return $this->hasOne(UserData::class, 'userId', 'id');
     }
     public function userCoin() {
         return $this->hasOne(UserCoin::class, 'userId', 'id');
