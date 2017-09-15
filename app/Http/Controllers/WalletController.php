@@ -9,9 +9,8 @@ use App\User;
 use App\Wallet;
 use App\Withdraw;
 use Auth;
-use Session;
+use Symfony\Component\HttpFoundation\Session\Session; 
 use Validator;
-
 //use App\BitGo\BitGoSDK;
 use Coinbase\Wallet\Enum\CurrencyCode;
 use Coinbase\Wallet\Resource\Transaction;
@@ -21,33 +20,72 @@ use Coinbase\Wallet\Client;
 
 class WalletController extends Controller
 {
+    
     public function __construct()
     {
         $this->middleware('auth');
     }
-    public function index(){
+    
+    public function index() {
        return view('adminlte::wallets.genealogy');
     }
-	
-	public function usd(Request $request){
-		$currentuserid = Auth::user()->id;
-		$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',1)
-               ->paginate();
+    
+    /** 
+     * 
+     * @param Request $request
+     * @return type
+     */
+    
+    public function usd(Request $request) {
+        $currentuserid = Auth::user()->id;
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',1)
+       ->paginate();
         return view('adminlte::wallets.usd')->with('wallets', $wallets);
     }
-	
-	public function btc(Request $request){
-		$currentuserid = Auth::user()->id;
-		$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',2)
-				    //->take(10)
-                    ->paginate();
+    
+    /**
+     * @author 
+     * @param Request $request
+     * @return type
+     */
+    public function btc(Request $request){
+        $currentuserid = Auth::user()->id;
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',2)
+                            //->take(10)
+            ->paginate();
         return view('adminlte::wallets.btc')->with('wallets', $wallets);
     }
-
+    
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
     public function getBtcCoin(Request $request){
+        
+        $currentuserid = Auth::user()->id;
+        //get coin and update to DB
+        $configuration = Configuration::apiKey( 
+                    config('app.coinbase_key'), 
+                    config('app.coinbase_secret') );
+            
+        $client = Client::create($configuration);
+        $idCoinBase = Auth()->user()->userCoin->accountCoinBase;
+        $account = $client->getAccount($idCoinBase);
+        $btc = (double) $account->getBalance()->getAmount();
+        
+        //update db
+        UserCoin::where('userId', '=',$currentuserid)
+                ->update(['btcCoinAmount' => $btc]);
         $coin = Auth()->user()->userCoin->btcCoinAmount;
         return $coin;
     }
+    
+    /** 
+     * Send Coin with BitGO
+     * @param Request $request
+     * @return type
+     */
     
     public function sendCoin() {
         $this->validate($request, [
@@ -78,43 +116,93 @@ class WalletController extends Controller
             $withDraw->save();
         }
     }
-
-    public function btcwithdraw(Request $request){
+    
+    /**
+     * @author Huynq
+     * @param Request $request
+     * @return view
+     */
+    public function btcwithdraw( Request $request ) {
+       
         $currentuserid = Auth::user()->id;
         $user = UserCoin::findOrFail($currentuserid);
-        
-        //send coin
-        if ($request->isMethod('post')) {
-            
+        $withdraws = Withdraw::where('userId', '=',$currentuserid)
+                        ->get();
+        $session = new Session;
+        //send coin if request post
+        if ( $request->isMethod('post') ) {
+            //validate
             $this->validate($request, [
                 'withdrawAmount'=>'required',
                 'walletAddress'=>'required'
-//                'withdrawOPT'=>'required|min:6'
+                //'withdrawOPT'=>'required|min:6'
             ]);
+            
+            // so sánh tiền để chuyển vào tk
+            if ( $request->widthrawAmount < 
+                    UserCoin::findOrFail($currentuserid)->btcCoinAmount - config('app.fee_withRaw') ) {
+                
+                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
+                return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                
+            }
+            
             //Config API key
-            $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
+            $configuration = Configuration::apiKey( 
+                    config('app.coinbase_key'), 
+                    config('app.coinbase_secret') );
+            
             $client = Client::create($configuration);
         
             $transaction = Transaction::send([
                 'toBitcoinAddress' => $request->walletAddress,
-                'amount'           => new Money(0.1, CurrencyCode::BTC),
-                'description'      => 'Your first bitcoin!',
-                'fee'              => '0.0001' // only required for transactions under BTC0.0001
+                'amount'           => new Money($request->withdrawAmount, CurrencyCode::BTC),
+                'description'      => 'Your tranfer bitcoin!'
             ]);
             //get object account
             $account = $client->getAccount($user->accountCoinBase);
             //begin send
-            $result = $client->createAccountTransaction($account, $transaction);
-            
+            try {
+                $resultGiven = $client->createAccountTransaction($account, $transaction);
+                //Action save to DB
+                $dataInsert = [
+                    "walletAddress" => $request->walletAddress,
+                    "userId" => $currentuserid,
+                    "amountBTC" => $request->withdrawAmount,
+                    "detail" => json_encode($dataInsert)
+                ];
+                $dataInsert = Withdraw::creat($dataInsert);
+                
+                if($dataInsert == 1) {
+                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_withdraw') );
+                    //update btc amount _> DB
+                    $btc = (double) $account->getBalance()->getAmount();
+                    
+                    UserCoin::where('userId', '=',$currentuserid)
+                    ->update(['btcCoinAmount' => $btc]);
+                    
+                    return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                } else {
+                    //Không kết nối được DB
+                    $session->set( 'errorMessage', trans('adminlte_lang::wallet.error_db') );
+                    return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                }
+            } catch (\Exception $e) {
+                //lỗi không thực hiện được giao dịch trên coinbase
+                $request->session()->flash('errorMessage', $e->getMessage() );
+                return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+            }
+        }else{ 
+            return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
         }
         
-        
-        //get data to render view;
-        $withdraws = Withdraw::where('userId', '=',$currentuserid)
-            ->get();
-        return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws);
     }
-
+    
+    /** 
+     * 
+     * @param Request $request
+     * @return type
+     */
     public function deposit(Request $request){
         if($request->ajax()) {
             if(isset($request['action']) && $request['action'] == 'btc') {
@@ -125,21 +213,36 @@ class WalletController extends Controller
         }
         die();
     }
-
-	public function clp(){
-		$currentuserid = Auth::user()->id;
-		$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',3)
-               ->paginate();
+    
+    /** 
+     * 
+     * @return type
+     */
+    
+    public function clp(){
+        $currentuserid = Auth::user()->id;
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',3)
+       ->paginate();
         return view('adminlte::wallets.clp')->with('wallets', $wallets);
     }
-	
-	public function reinvest(){
-		$currentuserid = Auth::user()->id;
-		$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',4)
-               ->paginate();
+    
+    /**
+     * 
+     * @return type
+     */
+    public function reinvest(){
+        $currentuserid = Auth::user()->id;
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',4)
+        ->paginate();
         return view('adminlte::wallets.reinvest')->with('wallets', $wallets);
     }
-	public function buyclp(Request $request){
+    
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
+    public function buyclp(Request $request){
         $currentuserid = Auth::user()->id;
         $tygia = 1;
         if ($request->isMethod('post')) {
@@ -183,7 +286,12 @@ class WalletController extends Controller
         }
         return view('adminlte::wallets.buyclp')->with(compact('user', 'tygia'));
     }
-
+    
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
     public function buyclpbybtc(Request $request){
         $currentuserid = Auth::user()->id;
         $user = User::findOrFail($currentuserid);
@@ -227,6 +335,12 @@ class WalletController extends Controller
         }
         return view('adminlte::wallets.btctransfer')->with(compact('user', 'tygia'));
     }
+    
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
     public function sellclpbybtc(Request $request){
         $currentuserid = Auth::user()->id;
         $user = User::findOrFail($currentuserid);
@@ -270,15 +384,25 @@ class WalletController extends Controller
         }
         return view('adminlte::wallets.clptransfer')->with(compact('user', 'tygia'));
     }
-	public function buysellclp(){
+    
+    /**
+     * 
+     * @return type
+     */
+    public function buysellclp(){
         $currentuserid = Auth::user()->id;
         $user = User::findOrFail($currentuserid);
         $tygia = 1;
         return view('adminlte::wallets.buysellclp')->with(compact('user', 'tygia'));
     }
-	public function show($id)
+    
+    /**
+     * 
+     * @param type $id
+     */
+    public function show($id)
     {
-		echo $id;
+        echo $id;
         //return redirect('members/genealogy');
     }
 }
