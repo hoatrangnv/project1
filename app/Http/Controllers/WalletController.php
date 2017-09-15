@@ -139,7 +139,7 @@ class WalletController extends Controller
             ]);
             
             // so sánh tiền để chuyển vào tk
-            if ( $request->withdrawAmount <= 
+            if ( $request->withdrawAmount > 
                     UserCoin::findOrFail($currentuserid)->btcCoinAmount - config('app.fee_withRaw') ) {
                 
                 $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
@@ -169,8 +169,9 @@ class WalletController extends Controller
                     "walletAddress" => $request->walletAddress,
                     "userId" => $currentuserid,
                     "amountBTC" => $request->withdrawAmount,
-                    "detail" => json_encode($dataInsert)
+                    "detail" => json_encode($resultGiven)
                 ];
+                
                 $dataInsert = Withdraw::creat($dataInsert);
                 
                 if($dataInsert == 1) {

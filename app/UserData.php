@@ -18,7 +18,7 @@ class UserData extends Model
      * @var array
      */
     protected $fillable = [
-        'userId', 'refererId', 'accountCoinBase', 'walletAddress', 'packageId', 'isBinary', 'leftRight', 'totalBonusLeft', 'totalBonusRight', 'binaryUserId', 'lastUserIdLeft', 'lastUserIdRight', 'leftMembers', 'rightMembers', 'totalMembers',
+        'userId', 'refererId', 'accountCoinBase', 'walletAddress', 'packageId', 'packageDate', 'isBinary', 'leftRight', 'totalBonusLeft', 'totalBonusRight', 'binaryUserId', 'lastUserIdLeft', 'lastUserIdRight', 'leftMembers', 'rightMembers', 'totalMembers',
     ];
     public function user() {
         return $this->hasOne(User::class, 'id', 'userId');
