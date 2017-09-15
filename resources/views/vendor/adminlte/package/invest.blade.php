@@ -69,7 +69,13 @@
 						});
 					?>
 					<div class="form-group input-group-sm has-feedback{{ $errors->has('packageId') ? ' has-error' : '' }}">
-
+						<?php $packageId = ($user->userData ? $user->userData->packageId : null);
+						echo Form::selectPackage('packageId', $lstPackSelect, $packageId, ['class' => 'form-control input-sm'], 'Pick a package...', $packageId);?>
+						@if ($errors->has('packageId'))
+							<span class="help-block">
+								{{ $errors->first('packageId') }}
+							</span>
+						@endif
 					</div>
 					<br>
 					{{ Form::submit(trans('adminlte_lang::wallet.buy_package'), array('class' => 'btn btn-success btn-block')) }}
