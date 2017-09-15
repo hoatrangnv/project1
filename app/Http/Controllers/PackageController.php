@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\UserCoin;
 use App\UserData;
+use App\UserPackage;
 use Illuminate\Http\Request;
 
 use App\User;
@@ -69,8 +70,10 @@ class PackageController extends Controller
             $this->validate($request, [
                     'packageId' => 'required|not_in:0|packageCheck',
                 ],['packageId.package_check' => 'CLP Coin not money buy package']);
-
             $userData = UserData::findOrFail($currentuserid);
+            if($userData->packageId == 0 || $userData->packageId == null){
+                $userData->packageDate = date('Y-m-d H:i:s');
+            }
             $userData->packageId = $request['packageId'];
             $userData->status = 1;
             $userData->save();
