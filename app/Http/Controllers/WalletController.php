@@ -139,7 +139,7 @@ class WalletController extends Controller
             ]);
             
             // so sánh tiền để chuyển vào tk
-            if ( $request->widthrawAmount < 
+            if ( $request->widthrawAmount <= 
                     UserCoin::findOrFail($currentuserid)->btcCoinAmount - config('app.fee_withRaw') ) {
                 
                 $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
