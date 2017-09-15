@@ -134,23 +134,25 @@
                         <center>
                             <div class="row">
                                 <div class="col-md-6"><h3 class="box-title" style="font-size:20px;">{{ trans('adminlte_lang::home.your_pack') }}</h3></div>
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->package->name }}</h3></div>
+                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->package ? Auth::user()->userData->package->name : '' }}</h3></div>
                             </div>
                         </center>
                         <center>
                             <div class="row">
                                 <div class="col-md-6"><h3 class="box-title" style="font-size:20px">{{ trans('adminlte_lang::home.value') }}</h3></div>
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">${{ Auth::user()->userData->package->price }}</h3></div>
+                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">${{ Auth::user()->userData->package ? Auth::user()->userData->package->price : 0 }}</h3></div>
                             </div>
                         </center>
                         <center>
                             <div class="row">
                                 <div class="col-md-6"><h3 class="box-title" style="font-size:20px;">{{ trans('adminlte_lang::home.active') }}</h3></div>
+                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->packageDate }}</h3></div>
                             </div>
                         </center>
                         <center>
                             <div class="row">
                                 <div class="col-md-6"><h3 class="box-title" style="font-size:20px;">{{ trans('adminlte_lang::home.release') }}</h3></div>
+                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->packageDate }}</h3></div>
                             </div>
                         </center>
                     </div>
