@@ -52,6 +52,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('profile','ProfileController@index');
     Route::post('profile/changepassword','ProfileController@changePassword');
     Route::get('profile/switchauthen','ProfileController@switchTwoFactorAuthen');
+    Route::resource('profile', 'ProfileController');
 
 
 });
@@ -61,6 +62,8 @@ Route::post('getnotification','GetNotificationController@getNotification');
 Route::get('ethereumtest', 'EthereumTestController@index');
 
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
+Route::get('reactive',"Auth\ActiveController@reactiveAccount");
+Route::post('reactive',"Auth\ActiveController@reactiveAccount");
 Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
