@@ -128,6 +128,7 @@ return [
     'bitgo_token' => env('BITGO_TOKEN'),
     'bitgo_password' => env('BITGO_PASSWORD'),
     'bitgo_hook' => env('BITGO_HOOK'),
+    'fee_withRaw' => 0.0005,
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
