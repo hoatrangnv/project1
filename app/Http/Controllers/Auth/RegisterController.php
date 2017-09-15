@@ -14,7 +14,7 @@ use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Account;
 use Coinbase\Wallet\Resource\Address;
-
+use Illuminate\Auth\Events\Registered;
 use App\Notifications\UserRegistered;
 use App\UserData;
 use App\UserCoin;
@@ -68,7 +68,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/login';
+    protected $redirectTo = '/notiactive';
 
     /**
      * Create a new controller instance.
@@ -105,6 +105,17 @@ class RegisterController extends Controller
         ]);
     }
     
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+//        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
+    }
     /**
      * Generate a new Account Coinbase.
      * @param  array  $data
@@ -207,17 +218,17 @@ class RegisterController extends Controller
             $userData = UserData::create($fields);
 
             //Luu thong tin ca nhan vao bang user_coin
-//            $fields['backupKey'] = $backupKey;
+            //$fields['backupKey'] = $backupKey;
             $userCoin = UserCoin::create($fields);
 
             //gui mail
             //ma hoa send link active qua mail
-            $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
-            $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
-
-            $user->notify(new UserRegistered($user, $linkActive));
-            redirect('notiactive');
-//            return $user;
+            if($user) {
+                $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
+                $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
+                $user->notify(new UserRegistered($user, $linkActive));  
+            }
+            return $user;
         } catch (Exception $e) {
             var_dump($e->getmessage());
         }

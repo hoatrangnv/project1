@@ -12,7 +12,12 @@ use Auth;
 use Session;
 use Validator;
 
-use App\BitGo\BitGoSDK;
+//use App\BitGo\BitGoSDK;
+use Coinbase\Wallet\Enum\CurrencyCode;
+use Coinbase\Wallet\Resource\Transaction;
+use Coinbase\Wallet\Value\Money;
+use Coinbase\Wallet\Configuration;
+use Coinbase\Wallet\Client;
 
 class WalletController extends Controller
 {
@@ -77,12 +82,34 @@ class WalletController extends Controller
     public function btcwithdraw(Request $request){
         $currentuserid = Auth::user()->id;
         $user = UserCoin::findOrFail($currentuserid);
-
+        
         //send coin
         if ($request->isMethod('post')) {
-           
+            
+            $this->validate($request, [
+                'withdrawAmount'=>'required',
+                'walletAddress'=>'required'
+//                'withdrawOPT'=>'required|min:6'
+            ]);
+            //Config API key
+            $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
+            $client = Client::create($configuration);
+        
+            $transaction = Transaction::send([
+                'toBitcoinAddress' => $request->walletAddress,
+                'amount'           => new Money(0.1, CurrencyCode::BTC),
+                'description'      => 'Your first bitcoin!',
+                'fee'              => '0.0001' // only required for transactions under BTC0.0001
+            ]);
+            //get object account
+            $account = $client->getAccount($user->accountCoinBase);
+            //begin send
+            $result = $client->createAccountTransaction($account, $transaction);
+            
         }
-        //get data;
+        
+        
+        //get data to render view;
         $withdraws = Withdraw::where('userId', '=',$currentuserid)
             ->get();
         return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws);

@@ -19,6 +19,11 @@
                     {{ session('status') }}
                 </div>
             @endif
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
             <div class="login-box-body">
                 <p class="login-box-msg">{{ trans('adminlte_lang::message.passwordreset') }}</p>
                 <form class="form-horizontal" role="form" method="POST" action="{{ route('password.request') }}">
