@@ -58,7 +58,7 @@ class PackageController extends Controller
                         if($packageOld){
                             $priceA = $packageOld->price;
                         }
-                        $clpCoinAmount = ($package->price - $priceA);
+                        $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
                         if($user->userCoin->clpCoinAmount >= $clpCoinAmount){
                             return true;
                         }
