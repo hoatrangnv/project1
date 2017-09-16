@@ -30,15 +30,15 @@
 							@foreach ($users as $userData)
 							<tr>
 								<td></td>
-								<td>{{ $userData->user->id }}</td>
+								<td>{{ $userData->userId }}</td>
 								<td>{{ $userData->user->name }}</td>
 								<td>{{ $userData->user->name }}</td>
 								<td>{{ $userData->packageId }}</td>
 								<td>
-									<a href="{{ URL::to('permissions/'.$userData->user->id.'/edit') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_edit') }}</a>
+									<a href="{{ URL::to('permissions/'.$userData->userId.'/edit') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_edit') }}</a>
 								</td>
 								<td>
-									<button type="button" class="btn btn-default btn-xs push-into-tree{{ $userData->isBinary === 1 ? ' disabled' : null }}" data-id="{{ $userData->user->id }}" data-title="Push into tree" id="btcDeposit"><i class="fa fa-sitemap"></i></button>
+									<button type="button" class="btn btn-default btn-xs push-into-tree" {{ $userData->isBinary === 1 ? ' disabled' : null }} data-id="{{ $userData->userId }}" data-title="Push into tree" id="btcDeposit"><i class="fa fa-sitemap"></i></button>
 								</td>
 							</tr>
 							@endforeach
@@ -87,7 +87,6 @@
 			});
 		});
 	</script>
-
 	<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
