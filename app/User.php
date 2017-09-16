@@ -102,8 +102,9 @@ class User extends Authenticatable
                         Wallet::create($fieldInvest);
                     }
                     if($level < 3){
-                        self::investBonusFastStart($userData->userId, $userId, $packageId, $packageBonus);
-                        self::investBonus($userId, $user->refererId, $packageId, ($level + 1), $clpCoinAmount);
+                        if($packageBonus > 0)
+                            self::investBonusFastStart($userData->userId, $userId, $packageId, $packageBonus);
+                        self::investBonus($userId, $userData->refererId, $packageId, ($level + 1), $clpCoinAmount);
                     }
                 }
             }
