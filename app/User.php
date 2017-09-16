@@ -58,23 +58,23 @@ class User extends Authenticatable
         if($refererId > 0){
             $packageBonus = 0;
             if($package){
-                $user = UserData::find($refererId);
-                if($user){
+                $userData = UserData::find($refererId);
+                if($userData){
                     if($level == 1){//F1
                         $packageBonus = $clpCoinAmount * 0.1;
-                        $user->totalBonus = $user->totalBonus + $packageBonus;
-                        $user->save();
+                        $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                        $userData->save();
                     }elseif($level == 2){//F2
-                        if($user->package->price >= 1000){
+                        if($userData->package->price >= 1000){
                             $packageBonus = $clpCoinAmount * 0.02;
-                            $user->totalBonus = $user->totalBonus + $packageBonus;
-                            $user->save();
+                            $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                            $userData->save();
                         }
                     }elseif($level == 3){//F3
-                        if($user->package->price >= 5000){
+                        if($userData->package->price >= 5000){
                             $packageBonus = $clpCoinAmount * 0.01;
-                            $user->totalBonus = $user->totalBonus + $packageBonus;
-                            $user->save();
+                            $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                            $userData->save();
                         }
                     }
                     $userCoin = UserCoin::find($refererId);
@@ -88,7 +88,7 @@ class User extends Authenticatable
                             'walletType' => 1,//usd
                             'type' => 4,//bonus f1
                             'inOut' => 'in',
-                            'userId' => $user->userId,
+                            'userId' => $userData->userId,
                             'amount' => $usdAmount,
                         ];
                         Wallet::create($fieldUsd);
@@ -96,13 +96,13 @@ class User extends Authenticatable
                             'walletType' => 4,//reinvest
                             'type' => 4,//bonus f1
                             'inOut' => 'in',
-                            'userId' => $user->userId,
+                            'userId' => $userData->userId,
                             'amount' => $reinvestAmount,
                         ];
                         Wallet::create($fieldInvest);
                     }
                     if($level < 3){
-                        self::investBonusFastStart($user->refererId, $userId, $packageId, $packageBonus);
+                        self::investBonusFastStart($userData->userId, $userId, $packageId, $packageBonus);
                         self::investBonus($userId, $user->refererId, $packageId, ($level + 1), $clpCoinAmount);
                     }
                 }
