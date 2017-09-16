@@ -88,7 +88,7 @@ class User extends Authenticatable
                             'walletType' => 1,//usd
                             'type' => 4,//bonus f1
                             'inOut' => 'in',
-                            'userId' => $user->id,
+                            'userId' => $user->userId,
                             'amount' => $usdAmount,
                         ];
                         Wallet::create($fieldUsd);
@@ -96,7 +96,7 @@ class User extends Authenticatable
                             'walletType' => 4,//reinvest
                             'type' => 4,//bonus f1
                             'inOut' => 'in',
-                            'userId' => $user->id,
+                            'userId' => $user->userId,
                             'amount' => $reinvestAmount,
                         ];
                         Wallet::create($fieldInvest);
