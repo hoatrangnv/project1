@@ -202,9 +202,9 @@ class MemberController extends Controller
         $currentuserid = Auth::user()->id;
         if($request->ajax()){
             if(isset($request['userid']) && $request['userid'] > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
-                $user = User::findOrFail($request['userid']);
+                $user = UserData::findOrFail($request['userid']);
                 if($user && $user->refererId == $currentuserid){
-                    $userParent = User::findOrFail($currentuserid);
+                    $userParent = UserData::findOrFail($currentuserid);
                     $user->isBinary = 1;
                     $user->lastUserIdLeft = $user->id;
                     $user->lastUserIdRight = $user->id;

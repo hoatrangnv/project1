@@ -116,7 +116,7 @@ class User extends Authenticatable
         BonusFastStart::create($fields);
     }
     public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos){
-        $user = User::findOrFail($binaryUserId);
+        $user = UserData::findOrFail($binaryUserId);
         $package = Package::findOrFail($packageId);
         $clpCoinAmount = 0;
         if($package) {
