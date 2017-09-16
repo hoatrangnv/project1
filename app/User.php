@@ -39,6 +39,9 @@ class User extends Authenticatable
     public function userCoin() {
         return $this->hasOne(UserCoin::class, 'userId', 'id');
     }
+    public function userLoyatys() {
+        return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
+    }
     public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $level = 1, $clpCoinAmount = 0){// Hoa hong truc tiep F1 -> F3
         $package = Package::findOrFail($packageId);
         if($package && $level == 1){

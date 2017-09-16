@@ -102,11 +102,15 @@ class MemberController extends Controller
 			if(isset($request['id']) && $request['id'] > 0){
                 $user = User::findOrFail($request['id']);
                 if($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid || $currentuserid == $user->id) {
+                    $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
+                    $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $fields = [
                         'lvl' => 0,
                         'id' => $user->id,
                         'name' => $user->name,
                         'parentID' => $user->userData->binaryUserId,
+                        'childLeftId' => $childLeft ? $childLeft->userId : 0,
+                        'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
                         'weeklySale' => self::getWeeklySale($user->id),
                         'pkg' => 2000,
@@ -125,11 +129,15 @@ class MemberController extends Controller
                 }
 			}else{
                 $user = User::findOrFail($currentuserid);
+                $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
+                $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                 $fields = [
                     'lvl'     => 0,
                     'id'     => $user->id,
                     'name'     => $user->name,
                     'parentID'     => null,
+                    'childLeftId' => $childLeft ? $childLeft->userId : 0,
+                    'childRightId' => $childRight ? $childRight->userId : 0,
                     'level'     => 0,
                     'weeklySale'     => self::getWeeklySale($user->id),
                     'pkg'     => 2000,
