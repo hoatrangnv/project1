@@ -133,70 +133,73 @@ class WalletController extends Controller
         if ( $request->isMethod('post') ) {
             //validate
             $this->validate($request, [
-                'withdrawAmount'=>'required',
+                'withdrawAmount'=>'required|numeric',
                 'walletAddress'=>'required'
                 //'withdrawOPT'=>'required|min:6'
             ]);
             
-            // so sánh tiền để chuyển vào tk
-            if ( $request->withdrawAmount > 
-                    UserCoin::findOrFail($currentuserid)->btcCoinAmount - config('app.fee_withRaw') ) {
+            // nếu tổng số tiền sau khi trừ đi phí lơn hơn 
+            // số tiền chuyển đi thì thực hiện giao dịch 
+            
+            if ( UserCoin::findOrFail($currentuserid)->btcCoinAmount - config('app.fee_withRaw') > 
+                    $request->withdrawAmount ) {
                 
+                 //Config API key
+                $configuration = Configuration::apiKey( 
+                        config('app.coinbase_key'), 
+                        config('app.coinbase_secret') );
+            
+                $client = Client::create($configuration);
+
+                $transaction = Transaction::send([
+                    'toBitcoinAddress' => $request->walletAddress,
+                    'amount'           => new Money($request->withdrawAmount, CurrencyCode::BTC),
+                    'description'      => 'Your tranfer bitcoin!'
+                ]);
+                //get object account
+                $account = $client->getAccount($user->accountCoinBase);
+                //begin send
+                try {
+                    $resultGiven = $client->createAccountTransaction($account, $transaction);
+                    //Action save to DB
+                    $dataInsert = [
+                        "walletAddress" => $request->walletAddress,
+                        "userId" => $currentuserid,
+                        "amountBTC" => $request->withdrawAmount,
+                        "detail" => json_encode($resultGiven)
+                    ];
+
+                    $dataInsert = Withdraw::creat($dataInsert);
+
+                    if($dataInsert == 1) {
+                        $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_withdraw') );
+                        //update btc amount _> DB
+                        $btc = (double) $account->getBalance()->getAmount();
+
+                        UserCoin::where('userId', '=',$currentuserid)
+                        ->update(['btcCoinAmount' => $btc]);
+
+                        return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                    } else {
+                        //Không kết nối được DB
+                        Log::warning( "Error when insert DB !" );
+                        $session->set( 'errorMessage', trans('adminlte_lang::wallet.error_db') );
+                        return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                    }
+                } catch (\Exception $e) {
+                    //lỗi không thực hiện được giao dịch trên coinbase ghi vào LOG
+                    Log::error( $e->getTraceAsString() );
+                    $request->session()->flash('errorMessage', "Không thực hiện chuyển tiền được trên CoinBase" );
+                    return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                }   
+            }else {
+                //nếu không đủ tiền thì báo lỗi
                 $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
-                return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
-                
-            }
-            
-            //Config API key
-            $configuration = Configuration::apiKey( 
-                    config('app.coinbase_key'), 
-                    config('app.coinbase_secret') );
-            
-            $client = Client::create($configuration);
-        
-            $transaction = Transaction::send([
-                'toBitcoinAddress' => $request->walletAddress,
-                'amount'           => new Money($request->withdrawAmount, CurrencyCode::BTC),
-                'description'      => 'Your tranfer bitcoin!'
-            ]);
-            //get object account
-            $account = $client->getAccount($user->accountCoinBase);
-            //begin send
-            try {
-                $resultGiven = $client->createAccountTransaction($account, $transaction);
-                //Action save to DB
-                $dataInsert = [
-                    "walletAddress" => $request->walletAddress,
-                    "userId" => $currentuserid,
-                    "amountBTC" => $request->withdrawAmount,
-                    "detail" => json_encode($resultGiven)
-                ];
-                
-                $dataInsert = Withdraw::creat($dataInsert);
-                
-                if($dataInsert == 1) {
-                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_withdraw') );
-                    //update btc amount _> DB
-                    $btc = (double) $account->getBalance()->getAmount();
-                    
-                    UserCoin::where('userId', '=',$currentuserid)
-                    ->update(['btcCoinAmount' => $btc]);
-                    
-                    return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
-                } else {
-                    //Không kết nối được DB
-                    $session->set( 'errorMessage', trans('adminlte_lang::wallet.error_db') );
-                    return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
-                }
-            } catch (\Exception $e) {
-                //lỗi không thực hiện được giao dịch trên coinbase
-                $request->session()->flash('errorMessage', $e->getMessage() );
                 return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
             }
         }else{ 
             return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
         }
-        
     }
     
     /** 
