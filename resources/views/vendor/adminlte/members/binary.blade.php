@@ -73,60 +73,57 @@
 	<script>
 		var tmpl = window.JST["assets/templates/tree-node.html"],
           leafTmpl = window.JST["assets/templates/tree-node-leaf.html"];
-  $( document ).ready(function() {
-    getTree();
-    $('#refresh-tree').on('click', function() {
-      selectedNodeID = root;
-      getTree(null, function(err) {
-        if (err) console.log(err);
-      })
-    });
-    $('#go-up').on('click', function() {
-      if (parentNode >= root) {
-        selectedNodeID = parentNode;
-        getTree(parentNode, function(err) {
-          if (err) console.log(err);
-        })
-      }
-    });
-  });
-
-  var root = 400,
-          selectedNodeID = 400,
-          parentNode = null;
-  var drawTree = function(data) {
-    var chart_config = {
-      chart: {
-        container: "#tree-container",
-
-        connectors: {
-          type: 'step',
-          style: {
-            stroke: '#bbb'
-          }
-        },
-        node: {
-          HTMLclass: 'tree-node',
-        },
-        siblingSeparation: 1,
-        subTeeSeparation: 1,
-        levelSeparation: 40
-
-      },
-      nodeStructure: data,
-    }
-    new Treant( chart_config, function() {
-      $('.tree-node').on('click', function(e) {
-        var id = $(this).attr('id');
-        if (id) {
-          selectedNodeID = id;
-          getTree(id, function(err) {
-            if (err) console.log(err);
-          })
+        var root = {{ Auth::user()->id }},
+            selectedNodeID = {{ Auth::user()->id }},
+            parentNode = {{ Auth::user()->id }};
+        $( document ).ready(function() {
+            getTree();
+            $('#refresh-tree').on('click', function() {
+                selectedNodeID = root;
+                getTree(null, function(err) {
+                    if (err) console.log(err);
+                })
+            });
+            $('#go-up').on('click', function() {
+                if (parentNode >= root) {
+                    selectedNodeID = parentNode;
+                    getTree(parentNode, function(err) {
+                        if (err) console.log(err);
+                    })
+                }
+            });
+        });
+        var drawTree = function(data) {
+            var chart_config = {
+            chart: {
+                    container: "#tree-container",
+                    connectors: {
+                        type: 'step',
+                        style: {
+                            stroke: '#bbb'
+                        }
+                    },
+                    node: {
+                        HTMLclass: 'tree-node',
+                    },
+                    siblingSeparation: 1,
+                    subTeeSeparation: 1,
+                    levelSeparation: 40
+                },
+                nodeStructure: data,
+            }
+            new Treant( chart_config, function() {
+            $('.tree-node').on('click', function(e) {
+                    var id = $(this).attr('id');
+                    if (id) {
+                        selectedNodeID = id;
+                        getTree(id, function(err) {
+                            if (err) console.log(err);
+                        })
+                    }
+                })
+            });
         }
-      })
-    });
-  }
 
   var getTree = function(id, cb) {
     $.ajax({
