@@ -34,7 +34,6 @@ class MemberController extends Controller
                                 'u'     => $user->name,
                                 'totalMembers'     => $user->userData->totalMembers,
                                 'packageId'     => $user->userData->packageId,
-                                'packageName'     => $user->userData->package->name,
                                 'loyaltyId'     => $user->userData->loyaltyId,
                                 'leg'     => $user->userData->leftRight == 'left' ? 1 : $user->userData->leftRight == 'right' ? 2 : 0,
                                 'pkg'     => 2000,
@@ -54,7 +53,6 @@ class MemberController extends Controller
                             'u'     => $user->name,
                             'totalMembers'     => $user->userData->totalMembers,
                             'packageId'     => $user->userData->packageId,
-                            'packageName'     => $user->userData->package->name,
                             'loyaltyId'     => $user->userData->loyaltyId,
                             'leg'     => $user->userData->leftRight == 'left' ? 1 : $user->userData->leftRight == 'right' ? 2 : 0,
                             'pkg'     => 2000,
@@ -201,23 +199,28 @@ class MemberController extends Controller
         return view('adminlte::members.refferals')->with('users', $users);
     }
 	public function pushIntoTree(Request $request){
-        $currentuserid = Auth::user()->id;
         if($request->ajax()){
-            if(isset($request['userid']) && $request['userid'] > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
-                $user = User::findOrFail($request['userid']);
-                if($user && $user->refererId == $currentuserid){
-                    $userParent = User::findOrFail($currentuserid);
-                    $user->isBinary = 1;
-                    $user->lastUserIdLeft = $user->id;
-                    $user->lastUserIdRight = $user->id;
-                    $user->leftRight = $request['legpos'] == 1 ? 'left' : 'right';
-                    if($request['legpos'] == 1){
-                        $user->binaryUserId = $userParent->lastUserIdLeft;
-                    }else{
-                        $user->binaryUserId = $userParent->lastUserIdRight;
+            if(isset($request->userid) && $request->userid > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
+                $userData = UserData::findOrFail($request->userid);
+                if($userData && $userData->refererId == Auth::user()->id && $userData->isBinary !== 1){
+                    $userData->isBinary = 1;
+                    $userData->lastUserIdLeft = $userData->userId;
+                    $userData->lastUserIdRight = $userData->userId;
+                    $userData->leftRight = $request['legpos'] == 1 ? 'left' : 'right';
+                    $lastUserIdLeft = $lastUserIdRight = Auth::user()->id;
+                    if(Auth::user()->userData && Auth::user()->userData->lastUserIdLeft && Auth::user()->userData->lastUserIdLeft > 0){
+                        $lastUserIdLeft = Auth::user()->userData->lastUserIdLeft;
                     }
-                    $user->save();
-                    User::bonusBinary($user->id, $user->refererId, $user->packageId, $user->binaryUserId, $request['legpos']);
+                    if(Auth::user()->userData && Auth::user()->userData->lastUserIdRight && Auth::user()->userData->lastUserIdRight > 0){
+                        $lastUserIdRight = Auth::user()->userData->lastUserIdRight;
+                    }
+                    if($request['legpos'] == 1){
+                        $userData->binaryUserId = $lastUserIdLeft;
+                    }else{
+                        $userData->binaryUserId = $lastUserIdRight;
+                    }
+                    $userData->save();
+                    User::bonusBinary($userData->userId, $userData->refererId, $userData->packageId, $userData->binaryUserId, $request['legpos']);
 
                     return response()->json(['status'=>1]);
                 }
