@@ -129,6 +129,7 @@ return [
     'bitgo_password' => env('BITGO_PASSWORD'),
     'bitgo_hook' => env('BITGO_HOOK'),
     'fee_withRaw' => 0.0005,
+    'enable_captcha' => true,
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
