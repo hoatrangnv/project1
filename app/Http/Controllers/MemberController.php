@@ -101,7 +101,7 @@ class MemberController extends Controller
 		if($request->ajax()){
 			if(isset($request['id']) && $request['id'] > 0){
                 $user = User::findOrFail($request['id']);
-                if($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid) {
+                if($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid || $currentuserid == $user->id) {
                     $fields = [
                         'lvl' => 0,
                         'id' => $user->id,
