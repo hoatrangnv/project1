@@ -24,6 +24,16 @@
         <div></div>
     @endif
     
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
@@ -32,7 +42,7 @@
                     {{ Form::open(array('url' => 'wallets/btcwithdraw')) }}
                     <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                            {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm', 'placeholder' => "Bitcoin amount E.g. 0.1")) }}
+                            {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm', 'step' => '0.1', 'placeholder' => "Bitcoin amount E.g. 0.1")) }}
                     </div>
                     <br>
                     <div class="input-group">
