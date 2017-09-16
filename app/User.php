@@ -110,13 +110,15 @@ class User extends Authenticatable
         }
     }
     public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0){// Hoa hong truc tiep F1 -> F3 log
-        $fields = [
-            'userId'     => $userId,
-            'partnerId'     => $partnerId,
-            'generation'     => $packageId,
-            'amount'     => $amount,
-        ];
-        BonusFastStart::create($fields);
+        if($userId > 0){
+            $fields = [
+                'userId'     => $userId,
+                'partnerId'     => $partnerId,
+                'generation'     => $packageId,
+                'amount'     => $amount,
+            ];
+            BonusFastStart::create($fields);
+        }
     }
     public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos){
         $user = UserData::findOrFail($binaryUserId);
