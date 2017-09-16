@@ -119,29 +119,31 @@ class User extends Authenticatable
         $user = UserData::findOrFail($binaryUserId);
         $package = Package::findOrFail($packageId);
         $clpCoinAmount = 0;
-        if($package) {
-            $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
-            $priceA = 0;
-            if ($packageOld) {
-                $priceA = $packageOld->price;
+        if($user){
+            if($package) {
+                $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
+                $priceA = 0;
+                if ($packageOld) {
+                    $priceA = $packageOld->price;
+                }
+                $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
             }
-            $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
-        }
-        if ($legpos == 1){
-            $user->totalBonusLeft = $user->totalBonusLeft + $clpCoinAmount;
-            $user->lastUserIdLeft = $userId;
-            $user->leftMembers = $user->leftMembers + 1;
-        }else{
-            $user->totalBonusRight = $user->totalBonusRight + $clpCoinAmount;
-            $user->lastUserIdRight = $userId;
-            $user->rightMembers = $user->rightMembers + 1;
-        }
-        $user->totalMembers = $user->totalMembers + 1;
-        $user->save();
-        self::bonusBinaryWeek($binaryUserId, $clpCoinAmount, $legpos);
-        self::bonusLoyaltyUser($userId, $partnerId, $legpos);
-        if($partnerId != $binaryUserId) {
-            User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos);
+            if ($legpos == 1){
+                $user->totalBonusLeft = $user->totalBonusLeft + $clpCoinAmount;
+                $user->lastUserIdLeft = $userId;
+                $user->leftMembers = $user->leftMembers + 1;
+            }else{
+                $user->totalBonusRight = $user->totalBonusRight + $clpCoinAmount;
+                $user->lastUserIdRight = $userId;
+                $user->rightMembers = $user->rightMembers + 1;
+            }
+            $user->totalMembers = $user->totalMembers + 1;
+            $user->save();
+            //self::bonusBinaryWeek($binaryUserId, $clpCoinAmount, $legpos);
+            //self::bonusLoyaltyUser($userId, $partnerId, $legpos);
+            if($partnerId != $binaryUserId) {
+                User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos);
+            }
         }
     }
     public static function bonusBinaryWeek($binaryUserId = 0, $packageToken = 0, $legpos){
