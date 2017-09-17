@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPasswords;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'status', 'refererId', 'firstname', 'lastname', 'phone', 'is2fa', 'google2fa_secret', 'password', 'address', 'address2', 'city', 'state', 'postal_code', 'country', 'birthday', 'passport'
+        'name', 'email', 'status', 'active', 'refererId', 'firstname', 'lastname', 'phone', 'is2fa', 'google2fa_secret', 'password', 'address', 'address2', 'city', 'state', 'postal_code', 'country', 'birthday', 'passport'
     ];
 
     /**
@@ -42,15 +43,18 @@ class User extends Authenticatable
     public function userLoyatys() {
         return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
     }
-    public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $level = 1, $clpCoinAmount = 0){// Hoa hong truc tiep F1 -> F3
+
+    public static function investBonus($userId = 0, $refererId = 0, $oldPackageId = 0, $packageId = 0, $level = 1) {// Faststart Bonus F1 -> F3
         $package = Package::findOrFail($packageId);
         if($package && $level == 1){
-            $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
+            //$packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
+            $packageOld = Package::find($oldPackageId);
+            $user->userData->packageId;
             $priceA = 0;
             if($packageOld){
                 $priceA = $packageOld->price;
             }
-            $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
+            $clpCoinAmount = ($package->price - $priceA) / \App\Package::Tygia;
             $userCoin = UserCoin::findOrFail($userId);
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $clpCoinAmount;
             $userCoin->save();
