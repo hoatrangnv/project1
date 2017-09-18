@@ -8,7 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Auth;
 use Session;
-use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController
 {
@@ -49,4 +48,5 @@ class Controller extends BaseController
                         "message"       => $msg
         ] );
     }
+    
 }

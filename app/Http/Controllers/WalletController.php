@@ -18,8 +18,16 @@ use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
 
+use Log;
+
 class WalletController extends Controller
 {
+        
+    const USD = 1;
+    const BTC = 2;
+    const CLP = 3;
+    const REINVEST = 4;
+    const BTCUSD = "btcusd";
     
     public function __construct()
     {
@@ -31,20 +39,42 @@ class WalletController extends Controller
     }
     
     /** 
-     * 
+     * @author Huy NQ
      * @param Request $request
      * @return type
      */
     
-    public function usd(Request $request) {
+    public function usd( Request $request ) {
+        //get tỷ giá usd btc
+        
+        try {
+            $ch = curl_init(config('app.link_ty_gia').self::BTCUSD);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $dataCurrencyPair = curl_exec($ch);
+            curl_close($ch);
+        } catch (\Exception $ex) {
+            Log::error($ex->getTraceAsString());
+        }
+        
         $currentuserid = Auth::user()->id;
-        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',1)
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',self::USD)
        ->paginate();
+        
+        //Add thêm tỷ giá vào wallets
+        if(isset($dataCurrencyPair) && 
+                count( json_decode($dataCurrencyPair) ) > 0 ) {
+            
+            $wallets->currencyPair = json_decode($dataCurrencyPair);
+
+        } else {
+            Log::info("Không get được tỷ giá");
+        }
+        
         return view('adminlte::wallets.usd')->with('wallets', $wallets);
     }
     
     /**
-     * @author 
+     * @author Huy NQ
      * @param Request $request
      * @return type
      */

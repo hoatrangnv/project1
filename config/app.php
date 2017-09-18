@@ -134,6 +134,8 @@ return [
     'f2_bonus' => 0.02,
     'f3_bonus' => 0.01,
     'percent_reserve' => 0.4,
+    'link_ty_gia' => 'https://www.bitstamp.net/api/v2/ticker/',
+    
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
