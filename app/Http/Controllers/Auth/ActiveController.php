@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use URL;
 use App\Notifications\UserRegistered;
+use App\UserData;
 
 /**
  * Class RegisterController

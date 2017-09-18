@@ -1,10 +1,6 @@
 @extends('adminlte::layouts.member')
 
-@section('htmlheader_title')
-	{{ trans('adminlte_lang::member.header_title') }}
-@endsection
-
-@section('contentheader_description')
+@section('contentheader_title')
 	{{ trans('adminlte_lang::member.refferals') }}
 @endsection
 
@@ -16,6 +12,7 @@
 					
 				</div>
 				<div class="box-body" style="padding-top:0;">
+                                    <div class="table-responsive">
 					<table class="table table-bordered table-hover table-striped dataTable">
 						<tr>
 							<th>{{ trans('adminlte_lang::member.refferals_no') }}</th>
@@ -44,6 +41,7 @@
 							@endforeach
 						</tbody>
 					</table>
+                                    </div>
 				</div>
 			</div>
 		</div>

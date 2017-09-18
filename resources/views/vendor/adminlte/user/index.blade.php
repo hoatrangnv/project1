@@ -19,7 +19,8 @@
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <div class="result-set">
-                        <table class="table table-bordered table-striped table-hover" id="data-table">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover" id="data-table">
                             <thead>
                             <tr>
                                 <th>Id</th>
@@ -53,7 +54,7 @@
                             @endforeach
                             </tbody>
                         </table>
-
+                        </div>
                         <div class="text-center">
                             {{ $result->links() }}
                         </div>

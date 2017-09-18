@@ -1,12 +1,10 @@
 @extends('adminlte::layouts.member')
 
-@section('htmlheader_title')
-	{{ trans('adminlte_lang::wallet.header_title') }}
+@section('contentheader_title')
+	{{ trans('adminlte_lang::wallet.btc') }}
 @endsection
 
-@section('contentheader_description')
-	{{ trans('adminlte_lang::wallet.btctransfer') }}
-@endsection
+
 
 @section('main-content')
 	<div class="row">

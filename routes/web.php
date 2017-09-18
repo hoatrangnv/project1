@@ -18,6 +18,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('authenticator', 'Auth2FAController@index');
 
     Route::get('wallets/usd', 'WalletController@usd');
+    Route::post('wallets/usd', 'WalletController@usd');
+    Route::get('wallets/switchusdclp', 'WalletController@switchUSDCLP');
     Route::get('wallets/btc', 'WalletController@btc');
     Route::get('wallets/clp', 'WalletController@clp');
     Route::get('wallets/reinvest', 'WalletController@reinvest');
@@ -58,8 +60,16 @@ Route::group( ['middleware' => ['auth']], function() {
 });
 Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');
+
 /***------- TEST -------***/
 Route::get('ethereumtest', 'EthereumTestController@index');
+Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+
+Route::get('test-set-clp', 'TestController@showCLP')->name('test.showCLP');
+Route::post('setclp', 'TestController@setCLP')->name('test.setCLP');
+
+/***------- END TEST -------***/
 
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
 Route::get('reactive',"Auth\ActiveController@reactiveAccount");

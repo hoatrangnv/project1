@@ -1,10 +1,6 @@
 @extends('adminlte::layouts.member')
 
-@section('htmlheader_title')
-	{{ trans('adminlte_lang::member.header_title') }}
-@endsection
-
-@section('contentheader_description')
+@section('contentheader_title')
 	{{ trans('adminlte_lang::member.binary') }}
 @endsection
 
