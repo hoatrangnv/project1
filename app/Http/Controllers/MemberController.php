@@ -104,6 +104,7 @@ class MemberController extends Controller
                 if($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid || $currentuserid == $user->id) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
+                    $weeklySale = self::getWeeklySale($user->id);
                     $fields = [
                         'lvl' => 0,
                         'id' => $user->id,
@@ -112,10 +113,9 @@ class MemberController extends Controller
                         'childLeftId' => $childLeft ? $childLeft->userId : 0,
                         'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
-                        'weeklySale' => self::getWeeklySale($user->id),
+                        'left'     => $weeklySale['left'],
+                        'right'     => $weeklySale['right'],
                         'pkg' => 2000,
-                        'left' => self::getWeeklySale($user->id, 'left'),
-                        'right' => self::getWeeklySale($user->id, 'right'),
                         'lMembers' => $user->userData->leftMembers,
                         'rMembers' => $user->userData->rightMembers,
                     ];
@@ -131,6 +131,7 @@ class MemberController extends Controller
                 $user = User::findOrFail($currentuserid);
                 $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                 $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
+                $weeklySale = self::getWeeklySale($user->id);
                 $fields = [
                     'lvl'     => 0,
                     'id'     => $user->id,
@@ -139,10 +140,10 @@ class MemberController extends Controller
                     'childLeftId' => $childLeft ? $childLeft->userId : 0,
                     'childRightId' => $childRight ? $childRight->userId : 0,
                     'level'     => 0,
-                    'weeklySale'     => self::getWeeklySale($user->id),
+                    'weeklySale'     => $weeklySale['total'],
+                    'left'     => $weeklySale['left'],
+                    'right'     => $weeklySale['right'],
                     'pkg'     => 2000,
-                    'left'     => self::getWeeklySale($user->id, 'left'),
-                    'right'     => self::getWeeklySale($user->id, 'right'),
                     'lMembers'     => $user->userData->leftMembers,
                     'rMembers'     => $user->userData->rightMembers,
                 ];
@@ -156,15 +157,18 @@ class MemberController extends Controller
 		return view('adminlte::members.binary');
     }
     function getWeeklySale($userId, $type = 'total'){
-        $weekYear = date('YW');
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+        if($weeked < 10)$weekYear = $year.'0'.$weeked;
         $week = BonusBinary::where('userId', '=', $userId)->where('weekYear', '=', $weekYear)->first();
-        if($type == 'left') {
-            return $week ? $week->leftNew : 0;
-        }elseif($type == 'right'){
-            return $week ? $week->rightNew : 0;
-        }else{
-            return $week ? $week->leftNew + $week->rightNew : 0;
+        $result = ['left'=>0, 'right'=>0, 'total'=>0];
+        if($week){
+            $result['left'] = $week->leftNew;
+            $result['right'] = $week->rightNew;
+            $result['total'] = $week->leftNew + $week->rightNew;
         }
+        return $result;
     }
     function getBinaryChildren($userId, $level = 0){
         $currentuserid = Auth::user()->id;
@@ -174,17 +178,22 @@ class MemberController extends Controller
             $UserDatas = UserData::where('binaryUserId', '=', $userId)->where('status', 1)->get();
             foreach ($UserDatas as $user) {
                 if($user->refererId == $currentuserid || $user->binaryUserId == $currentuserid) {
+                    $childLeft = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'left')->first();
+                    $childRight = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'right')->first();
+                    $weeklySale = self::getWeeklySale($user->user->id);
                     $field = [
                         'pos' => $user->leftRight == 'left' ? 1 : 2,
                         'lvl' => $level,
                         'id' => $user->user->id,
                         'name' => $user->user->name,
                         'parentID' => $user->binaryUserId,
+                        'childLeftId' => $childLeft ? $childLeft->userId : 0,
+                        'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
-                        'weeklySale' => self::getWeeklySale($user->user->id),
-                        'pkg' => 2000,
-                        'left' => self::getWeeklySale($user->user->id, 'left'),
-                        'right' => self::getWeeklySale($user->user->id, 'right'),
+                        'weeklySale'     => $weeklySale['total'],
+                        'left'     => $weeklySale['left'],
+                        'right'     => $weeklySale['right'],
+                        'pkg'     => 2000,
                         'lMembers' => $user->leftMembers,
                         'rMembers' => $user->rightMembers,
                     ];

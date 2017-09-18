@@ -15,6 +15,13 @@
 			<div class="box box-info">
 				<div class="box-body">
 					<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+						{{ Form::label('pack_id', trans('adminlte_lang::package.pack_id')+':',  array('class' => 'col-sm-2 control-label')) }}
+						<div class="col-sm-10">
+							{{ Form::text('pack_id', null, array('class' => 'form-control input-sm')) }}
+							<small class="text-danger">{{ $errors->first('pack_id') }}</small>
+						</div>
+					</div>
+					<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 						{{ Form::label('name', trans('adminlte_lang::package.name')+':',  array('class' => 'col-sm-2 control-label')) }}
 						<div class="col-sm-10">
 							{{ Form::text('name', null, array('class' => 'form-control input-sm')) }}
