@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'header_title'           	=> 'Wallet',
+    'header_title'           	=> 'USD Wallet',
     'usd'                       => 'USD Wallet',
     'btc'                       => 'BTC Wallet',
     'clp'                       => 'CLP Wallet',

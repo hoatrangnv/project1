@@ -1,10 +1,6 @@
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
-    Wallet
-@endsection
-
-@section('contentheader_description')
     {{ trans('adminlte_lang::wallet.btc') }}
 @endsection
 
