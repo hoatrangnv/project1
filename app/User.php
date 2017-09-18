@@ -426,5 +426,15 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswords($token));
     }
+    
+    public static function getCLPUSDRate(){       
+        return 1;    
+    
+    }    
+    
+    public static function getCLPBTCRate(){        
+        return 1;    
+        
+    }
 }
 

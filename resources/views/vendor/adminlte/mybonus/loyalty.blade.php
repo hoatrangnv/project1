@@ -1,6 +1,6 @@
 @extends('adminlte::layouts.member')
 
-@section('htmlheader_title')
+@section('contentheader_title')
 	{{ trans('adminlte_lang::mybonus.header_title') }}
 @endsection
 

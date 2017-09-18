@@ -1,6 +1,6 @@
 @extends('adminlte::layouts.member')
 
-@section('htmlheader_title')
+@section('contentheader_title')
 	{{ trans('adminlte_lang::wallet.header_title') }}
 @endsection
 
