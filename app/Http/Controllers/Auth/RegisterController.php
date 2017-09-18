@@ -101,7 +101,7 @@ class RegisterController extends Controller
             'phone'    => 'required',
             'terms'    => 'required',
             'country'    => 'required|not_in:0',
-            'g-recaptcha-response'=>'required|captcha',
+            'g-recaptcha-response'=> config('app.enable_captcha') ? 'required|captcha' : '',
         ]);
     }
     
