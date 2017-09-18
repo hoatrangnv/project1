@@ -18,17 +18,17 @@ return [
     'clptransfer'           	=> 'CLP Coin Transfer',
     'create_bitcoin'           	=> 'Create Bitcoin address',
     'create_clpcoin'           	=> 'Create CLPcoin address',
-
+    'tranfer_to_clp'            => 'Transer to CLP',
 	
 	
-	
+	'amount'                => 'Amount',
     'wallet_no'           	=> 'No',
     'wallet_date'           	=> 'Date/time',
     'wallet_type'           	=> 'Type',
     'wallet_in'           	=> 'In',
     'wallet_out'           	=> 'Out',
     'wallet_info'           	=> 'Info',
-
+    
     'btn_withdraw'           	=> 'Withdraw',
     'bnt_otp'           	=> 'Request OTP',
 

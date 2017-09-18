@@ -87,15 +87,153 @@
                         <center><h3 class="box-title" style="font-size:20px">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b></h3></center>
                         <center><h5 class="box-title" style="font-size:10px">( Tính trong tuần hiện tại )</h5></center>
 
-                        <center><h3 class="box-title" style="font-size:20px">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['totalF1User']}}</b></h3></center>
+                        <center><h3 class="box-title" style="font-size:20px">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ Auth::user()->userData->totalBonusLeft + Auth::user()->userData->totalBonusRight }}</b></h3></center>
                         <center><h5 class="box-title" style="font-size:10px">( Từ khi tham gia )</h5></center>
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="box box-solid div-center">{{ trans('adminlte_lang::home.f1_left') }}<br><span style="font-size:10px">( List bạc - diamond )</span></div>
+                                <table class="table table-bordered table-hover table-striped dataTable">
+                                    <tbody>
+                                        <tr>
+                                            <td>Silver</td>
+                                            <td>
+                                                <?php
+                                                    $lstSilverUser = [];
+                                                    $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isSilver', 1)->where('leftRight', '=', 'left')->get();
+                                                    foreach ($loyaltyUsers as $loyaltyUser){
+                                                        $lstSilverUser[] = $loyaltyUser->user->name;
+                                                    }
+                                                    echo implode(', ', $lstSilverUser);
+                                                ;?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gold</td>
+                                            <td>
+                                                <?php
+                                                $lstGoldUser = [];
+                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isGold', 1)->where('leftRight', '=', 'left')->get();
+                                                foreach ($loyaltyUsers as $loyaltyUser){
+                                                    $lstGoldUser[] = $loyaltyUser->user->name;
+                                                }
+                                                echo implode(', ', $lstGoldUser);
+                                                ;?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pear</td>
+                                            <td>
+                                                <?php
+                                                $lstPearUser = [];
+                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isPear', 1)->where('leftRight', '=', 'left')->get();
+                                                foreach ($loyaltyUsers as $loyaltyUser){
+                                                    $lstPearUser[] = $loyaltyUser->user->name;
+                                                }
+                                                echo implode(', ', $lstPearUser);
+                                                ;?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Emerald</td>
+                                            <td>
+                                                <?php
+                                                $lstEmeraldUser = [];
+                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isEmerald', 1)->where('leftRight', '=', 'left')->get();
+                                                foreach ($loyaltyUsers as $loyaltyUser){
+                                                    $lstEmeraldUser[] = $loyaltyUser->user->name;
+                                                }
+                                                echo implode(', ', $lstEmeraldUser);
+                                                ;?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Diamond</td>
+                                            <td>
+                                                <?php
+                                                $lstDiamondUser = [];
+                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isDiamond', 1)->where('leftRight', '=', 'left')->get();
+                                                foreach ($loyaltyUsers as $loyaltyUser){
+                                                    $lstDiamondUser[] = $loyaltyUser->user->name;
+                                                }
+                                                echo implode(', ', $lstDiamondUser);
+                                                ;?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="col-md-6">
                                 <div class="box box-solid div-center">{{ trans('adminlte_lang::home.f1_right') }}<br><span style="font-size:10px">( List bạc - diamond )</span></div>
+                                <table class="table table-bordered table-hover table-striped dataTable">
+                                    <tbody>
+                                    <tr>
+                                        <td>Silver</td>
+                                        <td>
+                                            <?php
+                                            $lstSilverUser = [];
+                                            $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isSilver', 1)->where('leftRight', '=', 'right')->get();
+                                            foreach ($loyaltyUsers as $loyaltyUser){
+                                                $lstSilverUser[] = $loyaltyUser->user->name;
+                                            }
+                                            echo implode(', ', $lstSilverUser);
+                                            ;?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gold</td>
+                                        <td>
+                                            <?php
+                                            $lstGoldUser = [];
+                                            $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isGold', 1)->where('leftRight', '=', 'right')->get();
+                                            foreach ($loyaltyUsers as $loyaltyUser){
+                                                $lstGoldUser[] = $loyaltyUser->user->name;
+                                            }
+                                            echo implode(', ', $lstGoldUser);
+                                            ;?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pear</td>
+                                        <td>
+                                            <?php
+                                            $lstPearUser = [];
+                                            $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isPear', 1)->where('leftRight', '=', 'right')->get();
+                                            foreach ($loyaltyUsers as $loyaltyUser){
+                                                $lstPearUser[] = $loyaltyUser->user->name;
+                                            }
+                                            echo implode(', ', $lstPearUser);
+                                            ;?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Emerald</td>
+                                        <td>
+                                            <?php
+                                            $lstEmeraldUser = [];
+                                            $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isEmerald', 1)->where('leftRight', '=', 'right')->get();
+                                            foreach ($loyaltyUsers as $loyaltyUser){
+                                                $lstEmeraldUser[] = $loyaltyUser->user->name;
+                                            }
+                                            echo implode(', ', $lstEmeraldUser);
+                                            ;?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Diamond</td>
+                                        <td>
+                                            <?php
+                                            $lstDiamondUser = [];
+                                            $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isDiamond', 1)->where('leftRight', '=', 'right')->get();
+                                            foreach ($loyaltyUsers as $loyaltyUser){
+                                                $lstDiamondUser[] = $loyaltyUser->user->name;
+                                            }
+                                            echo implode(', ', $lstDiamondUser);
+                                            ;?>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="row">

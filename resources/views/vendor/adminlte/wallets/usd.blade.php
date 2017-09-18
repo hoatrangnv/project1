@@ -14,35 +14,33 @@
           <!-- Widget: user widget style 1 -->
           <div class="box box-widget widget-user">
             <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-aqua-active">
-              <h3 class="widget-user-username">Alexander Pierce</h3>
-              <h5 class="widget-user-desc">Founder &amp; CEO</h5>
-            </div>
-            <div class="widget-user-image">
-              <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Avatar">
-            </div>
             <div class="box-footer">
               <div class="row">
-                <div class="col-sm-4 border-right">
+                  <div class="col-sm-3 border-right" style="text-align: center">
+                      <div class="description-header" style="margin-top: 6px">  
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
+                    </div>
+                  <!-- /.description-block -->
+                </div>  
+                <div class="col-sm-3 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">3,200</h5>
-                    <span class="description-text">SALES</span>
+                    <h5 class="description-header">
+                        @isset($wallets->currencyPair){{ $wallets->currencyPair->last/10 }}$ @endisset
+                    </h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-                <div class="col-sm-4 border-right">
+                <div class="col-sm-3 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">13,000</h5>
-                    <span class="description-text">FOLLOWERS</span>
+                    <h5 class="description-header">0.1b /</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                   <div class="description-block">
-                    <h5 class="description-header">35</h5>
-                    <span class="description-text">PRODUCTS</span>
+                    <h5 class="description-header">500CLP</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -54,39 +52,29 @@
           <!-- /.widget-user -->
         </div>
         <!-- /.col -->
-        <div class="col-md-4">
+        <div class="col-md-5">
           <!-- Widget: user widget style 1 -->
           <div class="box box-widget widget-user">
             <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-aqua-active">
-              <h3 class="widget-user-username">Alexander Pierce</h3>
-              <h5 class="widget-user-desc">Founder &amp; CEO</h5>
-            </div>
-            <div class="widget-user-image">
-              <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Avatar">
-            </div>
             <div class="box-footer">
               <div class="row">
-                <div class="col-sm-4 border-right">
+                <div class="col-sm-3 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">3,200</h5>
-                    <span class="description-text">SALES</span>
+                    <h5 class="description-header">1 CLP =</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-                <div class="col-sm-4 border-right">
+                <div class="col-sm-6 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">13,000</h5>
-                    <span class="description-text">FOLLOWERS</span>
+                    <h5 class="description-header">0.0000043 BTC =</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                   <div class="description-block">
-                    <h5 class="description-header">35</h5>
-                    <span class="description-text">PRODUCTS</span>
+                    <h5 class="description-header">1000 $</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -98,45 +86,12 @@
           <!-- /.widget-user -->
         </div>
         <!-- /.col -->
-        <div class="col-md-4">
+        <div class="col-md-2">
           <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user">
+          <div class="box box-widget widget-user" style="text-align: center">
             <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-black" style="background: url('../dist/img/photo1.png') center center;">
-              <h3 class="widget-user-username">Elizabeth Pierce</h3>
-              <h5 class="widget-user-desc">Web Designer</h5>
-            </div>
-            <div class="widget-user-image">
-              <img class="img-circle" src="../dist/img/user3-128x128.jpg" alt="User Avatar">
-            </div>
             <div class="box-footer">
-              <div class="row">
-                <div class="col-sm-4 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header">3,200</h5>
-                    <span class="description-text">SALES</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-4 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header">13,000</h5>
-                    <span class="description-text">FOLLOWERS</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-4">
-                  <div class="description-block">
-                    <h5 class="description-header">35</h5>
-                    <span class="description-text">PRODUCTS</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
+                <button class="btn btn-success">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button>
             </div>
           </div>
           <!-- /.widget-user -->

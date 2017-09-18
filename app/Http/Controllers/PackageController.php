@@ -54,12 +54,14 @@ class PackageController extends Controller
                 if($user->userData->packageId < $value){
                     $package = Package::find($value);
                     if($package){
-                        $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
+                        //$packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
+                        $packageOld = Package::find($user->userData->packageId);
                         $priceA = 0;
                         if($packageOld){
                             $priceA = $packageOld->price;
                         }
-                        $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
+                        $clpCoinAmount = ($package->price - $priceA) / \App\Package::Tygia;
+                        //$clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
                         if($user->userCoin->clpCoinAmount >= $clpCoinAmount){
                             return true;
                         }
@@ -69,8 +71,9 @@ class PackageController extends Controller
             });
             $this->validate($request, [
                     'packageId' => 'required|not_in:0|packageCheck',
-                ],['packageId.package_check' => 'CLP Coin not money buy package']);
+                ],['packageId.package_check' => trans('adminlte_lang::package.buypackage.downgrade')]);
             $userData = UserData::findOrFail($currentuserid);
+            $oldPackageId = (int) $userData->packageId;
             if($userData->packageId == 0 || $userData->packageId == null){
                 $userData->packageDate = date('Y-m-d H:i:s');
             }
@@ -78,10 +81,10 @@ class PackageController extends Controller
             $userData->status = 1;
             $userData->save();
 
-            User::investBonus($user->id, $user->refererId, $request['packageId']);
+            User::investBonus($user->id, $user->refererId, $oldPackageId, $request['packageId']);
             return redirect()->route('packages.invest')
                 ->with('flash_message',
-                    'Buy package successfully.');
+                    trans('adminlte_lang::package.buypackage.success'));
         }
         $packages = Package::all();
         $lstPackSelect = array();

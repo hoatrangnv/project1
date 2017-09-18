@@ -12,5 +12,10 @@ return [
     'token'                  	=> 'Token',
     'replication'                 => 'Replication times',
     'action'                 	=> 'Action',
-
+    'buypackage' => [
+        'downgrade' => 'You can not downgrade your package',
+        'upgrade_success' => 'You have upgraded successfully',
+        'fail' => 'You don\'t have enough money',
+        'success' => 'Buy package successfully.',
+    ],
 ];
