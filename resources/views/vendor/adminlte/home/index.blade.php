@@ -4,15 +4,6 @@
     {{ trans('adminlte_lang::home.dashboard') }}
 @endsection
 
-@section('contentheader_description')
-    {{ trans('adminlte_lang::home.statistical') }}
-    <style type="text/css">
-        .div-center{
-            text-align: center;
-        }
-    </style>
-@endsection
-
 @section('main-content')
     <div class="row">
         <div class="col-xs-12">
@@ -84,15 +75,13 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <center><h3 class="box-title" style="font-size:20px">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b></h3></center>
-                        <center><h5 class="box-title" style="font-size:10px">( Tính trong tuần hiện tại )</h5></center>
+                        <center><h3 class="box-title" style="font-size:18px; font-weight: bold;">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b></h3></center>
 
-                        <center><h3 class="box-title" style="font-size:20px">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ Auth::user()->userData->totalBonusLeft + Auth::user()->userData->totalBonusRight }}</b></h3></center>
-                        <center><h5 class="box-title" style="font-size:10px">( Từ khi tham gia )</h5></center>
+                        <center><h3 class="box-title" style="font-size:18px; font-weight: bold;">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ Auth::user()->userData->totalBonusLeft + Auth::user()->userData->totalBonusRight }}</b></h3></center>
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="box box-solid div-center">{{ trans('adminlte_lang::home.f1_left') }}<br><span style="font-size:10px">( List bạc - diamond )</span></div>
+                                <div class="box-solid div-center" style="margin-bottom: 5px; font-weight: bold;">{{ trans('adminlte_lang::home.f1_left') }}</div>
                                 <table class="table table-bordered table-hover table-striped dataTable">
                                     <tbody>
                                         <tr>
@@ -164,7 +153,7 @@
                                 </table>
                             </div>
                             <div class="col-md-6">
-                                <div class="box box-solid div-center">{{ trans('adminlte_lang::home.f1_right') }}<br><span style="font-size:10px">( List bạc - diamond )</span></div>
+                                <div class="div-center" style="margin-bottom: 5px; font-weight: bold;">{{ trans('adminlte_lang::home.f1_right') }}</div>
                                 <table class="table table-bordered table-hover table-striped dataTable">
                                     <tbody>
                                     <tr>
