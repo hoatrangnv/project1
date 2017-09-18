@@ -5,22 +5,22 @@
     <section class="sidebar">
 
         <!-- Sidebar user panel (optional) -->
-        @if (! Auth::guest())
+<!--        @if (! Auth::guest())
             <div class="user-panel">
                 <div class="pull-left image">
-                    <!-- <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" /> -->
+                     <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" /> 
                 </div>
                 <div class="pull-left info">
                     <p>{{ Auth::user()->name }}</p>
-                    <!-- Status -->
+                     Status 
                     <a href="#"><i class="fa fa-circle text-success"></i> {{ trans('adminlte_lang::message.online') }}</a>
                 </div>
             </div>
-        @endif
+        @endif-->
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
-            <!-- <li class="header" hide>{{ trans('adminlte_lang::message.header') }}</li> -->
+             <li class="header" ></li> 
             <!-- Optionally, you can add icons to the links -->
             <li {{ Request::is('home') ? 'class=active' : '' }}><a href="{{ url('home') }}"><i class='fa fa-home'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
             <li {{ Request::is('packages/invest') ? 'class=active' : '' }}><a href="{{ url('packages/invest') }}"><i class='fa fa-gift'></i> <span>Investment Packages</span></a></li>
