@@ -44,7 +44,7 @@ class User extends Authenticatable
         return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
     }
 
-    public static function investBonus($userId = 0, $refererId = 0, $oldPackageId = 0, $packageId = 0, $level = 1) {// Faststart Bonus F1 -> F3
+    public static function investBonus($userId = 0, $refererId = 0, $oldPackageId = 0, $packageId = 0) {// Faststart Bonus F1 -> F3
         $package = Package::findOrFail($packageId);
         if($package && $level == 1){
             //$packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
@@ -59,6 +59,8 @@ class User extends Authenticatable
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $clpCoinAmount;
             $userCoin->save();
         }
+
+        //Calculate Faststart Bonus
         if($refererId > 0){
             $packageBonus = 0;
             if($package){
@@ -119,7 +121,7 @@ class User extends Authenticatable
             $fields = [
                 'userId'     => $userId,
                 'partnerId'     => $partnerId,
-                'generation'     => $packageId,
+                'generation'     => $packageId,  //Sao generation lai la packageID
                 'amount'     => $amount,
             ];
             BonusFastStart::create($fields);
