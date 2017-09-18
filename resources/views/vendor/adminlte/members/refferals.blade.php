@@ -12,6 +12,7 @@
 					
 				</div>
 				<div class="box-body" style="padding-top:0;">
+                                    <div class="table-responsive">
 					<table class="table table-bordered table-hover table-striped dataTable">
 						<tr>
 							<th>{{ trans('adminlte_lang::member.refferals_no') }}</th>
@@ -40,6 +41,7 @@
 							@endforeach
 						</tbody>
 					</table>
+                                    </div>
 				</div>
 			</div>
 		</div>

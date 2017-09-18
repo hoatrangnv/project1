@@ -130,7 +130,8 @@
                         <!--/<a href="{{ url('wallets/buysellclp') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_clp') }}</a>-->
                 </div>
                 <div class="box-body" style="padding-top:0;">
-                    <table class="table table-bordered table-hover table-striped dataTable">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped dataTable">
                         <tr>
                             <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
                             <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
@@ -168,6 +169,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                     <div class="text-center">
                             {{ $wallets->links() }}
                     </div>
