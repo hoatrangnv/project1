@@ -96,6 +96,7 @@
                         <input type="text" value="{{ $referrerName }}" name="referrerName" id="referrerName" class="form-control" placeholder="Username Sponsor">
                         <span class="help-block" id="refererNameError"></span>
                     </div>
+                    @if (Config::get('app.enable_captcha'))
                     <div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">
                         {!! app('captcha')->display()!!}
                         @if ($errors->has('g-recaptcha-response'))
@@ -104,6 +105,7 @@
                             </span>
                         @endif
                     </div>
+                    @endif
                     <div class="row">
                         <div class="col-xs-7 form-group has-feedback{{ $errors->has('terms') ? ' has-error' : '' }}">
                             <label>
