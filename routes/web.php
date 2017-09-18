@@ -18,6 +18,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('authenticator', 'Auth2FAController@index');
 
     Route::get('wallets/usd', 'WalletController@usd');
+    Route::post('wallets/usd', 'WalletController@usd');
+    Route::get('wallets/switchusdclp', 'WalletController@switchUSDCLP');
     Route::get('wallets/btc', 'WalletController@btc');
     Route::get('wallets/clp', 'WalletController@clp');
     Route::get('wallets/reinvest', 'WalletController@reinvest');

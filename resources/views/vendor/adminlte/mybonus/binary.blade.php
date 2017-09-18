@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
-	{{ trans('adminlte_lang::mybonus.binary') }}
+	{{ trans('adminlte_lang::mybonus.header_title') }}
 @endsection
 
 @section('main-content')

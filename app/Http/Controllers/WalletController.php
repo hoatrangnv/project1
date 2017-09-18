@@ -29,6 +29,9 @@ class WalletController extends Controller
     const REINVEST = 4;
     const BTCUSD = "btcusd";
     
+    const USDCLP = "UsdToClp";
+    const CLPUSD = "ClptoUsd";
+    
     public function __construct()
     {
         $this->middleware('auth');
@@ -45,8 +48,18 @@ class WalletController extends Controller
      */
     
     public function usd( Request $request ) {
-        //get tỷ giá usd btc
         
+        //tranfer if request post
+        if($request->isMethod('post')) {
+            $this->validate($request, [
+                'usd'=>'required|numeric',
+                'clp'=>'required|numeric'
+            ]);
+            //action
+            
+        }
+        
+        //get tỷ giá usd btc
         try {
             $ch = curl_init(config('app.link_ty_gia').self::BTCUSD);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -73,6 +86,31 @@ class WalletController extends Controller
         return view('adminlte::wallets.usd')->with('wallets', $wallets);
     }
     
+    /** 
+     * @author Huy NQ
+     * @param Request $request
+     */
+    public function switchUSDCLP(Request $request) {
+        //if have get rq
+        if( $request->method( 'get' ) ) {
+            if( is_numeric( $request->value ) ){
+                
+                if($request->value == 0){
+                    $data = 0;
+                    $this->responseSuccess( $data );
+                }
+                
+                if($request->type ===  self::USDCLP){
+                    $data = $request->value * ( USER::getCLPUSDRate() );
+                    return $this->responseSuccess( $data );
+                } else {
+                    $data = $request->value * ( 1/USER::getCLPUSDRate() );
+                    return $this->responseSuccess( $data );
+                }  
+            }
+        }
+    }
+
     /**
      * @author Huy NQ
      * @param Request $request
@@ -233,7 +271,7 @@ class WalletController extends Controller
     }
     
     /** 
-     * 
+     * @author 
      * @param Request $request
      * @return type
      */
@@ -249,7 +287,7 @@ class WalletController extends Controller
     }
     
     /** 
-     * 
+     * @author 
      * @return type
      */
     
