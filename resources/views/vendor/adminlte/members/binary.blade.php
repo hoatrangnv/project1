@@ -13,11 +13,21 @@
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-body" style="padding-top:0;">
+                    <div style="margin-top: 15px;text-align:center;">
+                        <center>
+                            <button class="btn btn-info btn-xs" type="button" id="refresh-tree" style="margin-bottom: 5px;"><i class="fa fa-step-backward rotate90"></i> Go Top</button><br>
+                            <button class="btn btn-info btn-xs" type="button" id="go-up"><i class="fa fa-play rotate120 "></i> Go Up</button>
+                        </center>
+                    </div>
 					<div class="chart" id="tree-container"></div>
-					<div style="position:absolute; right: 0; top: 0; padding: 20px">
-						<button class="btn btn-success btn-xs" type="button" style="float:right; margin-left: 5px" id="refresh-tree"><i class="fa fa-refresh"></i> Refresh</button>
-						<button class="btn btn-info btn-xs" type="button" style="float:right" id="go-up"><i class="fa fa-arrow-circle-up"></i> Go Up</button>
-					</div>
+                    <div class="pull-left">
+                        <button class="btn btn-info btn-xs" type="button" id="go-endleft"><i class="fa fa-fast-forward rotate90"></i></button>
+                        <button class="btn btn-info btn-xs" type="button" id="go-left" style="margin-left: 5px;"><i class="fa fa-step-forward rotate90"></i></button>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-info btn-xs" type="button" id="go-right" style="margin-right: 5px;"><i class="fa fa-step-forward rotate90"></i></button>
+                        <button class="btn btn-info btn-xs" type="button" id="go-endright"><i class="fa fa-fast-forward rotate90"></i></button>
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -62,6 +72,20 @@
 	  .tree-node p {
 		margin-bottom: 3px;
 	  }
+      .rotate90 {
+          -webkit-transform:rotate(90deg);
+          -moz-transform:rotate(90deg);
+          -o-transform:rotate(90deg);
+          /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
+          -ms-transform:rotate(90deg);
+      }
+      .rotate120 {
+          -webkit-transform:rotate(30deg);
+          -moz-transform:rotate(30deg);
+          -o-transform:rotate(30deg);
+          /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
+          -ms-transform:rotate(30deg);
+      }
 	</style>
 	<link rel="stylesheet" href="{{ asset('/css/jstree.css') }}" />
 	<link rel="stylesheet" href="https://app.landcoin.co/libs/treant/Treant.css" />
@@ -75,7 +99,12 @@
           leafTmpl = window.JST["assets/templates/tree-node-leaf.html"];
         var root = {{ Auth::user()->id }},
             selectedNodeID = {{ Auth::user()->id }},
-            parentNode = {{ Auth::user()->id }};
+            parentNode = {{ Auth::user()->id }},
+            endLeft = {{ Auth::user()->userData->lastUserIdLeft }},
+            endRight = {{ Auth::user()->userData->lastUserIdRight }},
+            childLeftId = 0,
+            childRightId = 0
+             ;
         $( document ).ready(function() {
             getTree();
             $('#refresh-tree').on('click', function() {
@@ -88,6 +117,38 @@
                 if (parentNode >= root) {
                     selectedNodeID = parentNode;
                     getTree(parentNode, function(err) {
+                        if (err) console.log(err);
+                    })
+                }
+            });
+            $('#go-left').on('click', function() {
+                if (childLeftId > 0) {
+                    selectedNodeID = childLeftId;
+                    getTree(childLeftId, function(err) {
+                        if (err) console.log(err);
+                    })
+                }
+            });
+            $('#go-right').on('click', function() {
+                if (childRightId > 0) {
+                    selectedNodeID = childRightId;
+                    getTree(childRightId, function(err) {
+                        if (err) console.log(err);
+                    })
+                }
+            });
+            $('#go-endleft').on('click', function() {
+                if (endLeft > 0) {
+                    selectedNodeID = endLeft;
+                    getTree(endLeft, function(err) {
+                        if (err) console.log(err);
+                    })
+                }
+            });
+            $('#go-endright').on('click', function() {
+                if (endRight > 0) {
+                    selectedNodeID = endRight;
+                    getTree(endRight, function(err) {
                         if (err) console.log(err);
                     })
                 }
@@ -136,6 +197,8 @@
       if (!data.err) {
         var nodeLevel = 0;
         parentNode = data.parentID;
+        childLeftId = data.childLeftId;
+          childRightId = data.childRightId;
         function fillTree(node) {
           if (node.lvl < 3) {
             if (!node.children) node.children=[];

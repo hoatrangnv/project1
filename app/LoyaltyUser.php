@@ -14,4 +14,7 @@ class LoyaltyUser extends Model
         parent::__construct($attributes);
         $this->setTable('users_loyalty');
     }
+    public function user() {
+        return $this->hasOne(User::class, 'id', 'userId');
+    }
 }

@@ -39,6 +39,9 @@ class User extends Authenticatable
     public function userCoin() {
         return $this->hasOne(UserCoin::class, 'userId', 'id');
     }
+    public function userLoyatys() {
+        return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
+    }
     public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $level = 1, $clpCoinAmount = 0){// Hoa hong truc tiep F1 -> F3
         $package = Package::findOrFail($packageId);
         if($package && $level == 1){
@@ -55,23 +58,23 @@ class User extends Authenticatable
         if($refererId > 0){
             $packageBonus = 0;
             if($package){
-                $user = UserData::find($refererId);
-                if($user){
+                $userData = UserData::find($refererId);
+                if($userData){
                     if($level == 1){//F1
                         $packageBonus = $clpCoinAmount * 0.1;
-                        $user->totalBonus = $user->totalBonus + $packageBonus;
-                        $user->save();
+                        $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                        $userData->save();
                     }elseif($level == 2){//F2
-                        if($user->package->price >= 1000){
+                        if($userData->package->price >= 1000){
                             $packageBonus = $clpCoinAmount * 0.02;
-                            $user->totalBonus = $user->totalBonus + $packageBonus;
-                            $user->save();
+                            $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                            $userData->save();
                         }
                     }elseif($level == 3){//F3
-                        if($user->package->price >= 5000){
+                        if($userData->package->price >= 5000){
                             $packageBonus = $clpCoinAmount * 0.01;
-                            $user->totalBonus = $user->totalBonus + $packageBonus;
-                            $user->save();
+                            $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                            $userData->save();
                         }
                     }
                     $userCoin = UserCoin::find($refererId);
@@ -85,7 +88,7 @@ class User extends Authenticatable
                             'walletType' => 1,//usd
                             'type' => 4,//bonus f1
                             'inOut' => 'in',
-                            'userId' => $user->id,
+                            'userId' => $userData->userId,
                             'amount' => $usdAmount,
                         ];
                         Wallet::create($fieldUsd);
@@ -93,27 +96,30 @@ class User extends Authenticatable
                             'walletType' => 4,//reinvest
                             'type' => 4,//bonus f1
                             'inOut' => 'in',
-                            'userId' => $user->id,
+                            'userId' => $userData->userId,
                             'amount' => $reinvestAmount,
                         ];
                         Wallet::create($fieldInvest);
                     }
                     if($level < 3){
-                        self::investBonusFastStart($user->refererId, $userId, $packageId, $packageBonus);
-                        self::investBonus($userId, $user->refererId, $packageId, ($level + 1), $clpCoinAmount);
+                        if($packageBonus > 0)
+                            self::investBonusFastStart($userData->userId, $userId, $packageId, $packageBonus);
+                        self::investBonus($userId, $userData->refererId, $packageId, ($level + 1), $clpCoinAmount);
                     }
                 }
             }
         }
     }
     public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0){// Hoa hong truc tiep F1 -> F3 log
-        $fields = [
-            'userId'     => $userId,
-            'partnerId'     => $partnerId,
-            'generation'     => $packageId,
-            'amount'     => $amount,
-        ];
-        BonusFastStart::create($fields);
+        if($userId > 0){
+            $fields = [
+                'userId'     => $userId,
+                'partnerId'     => $partnerId,
+                'generation'     => $packageId,
+                'amount'     => $amount,
+            ];
+            BonusFastStart::create($fields);
+        }
     }
     public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos){
         $user = UserData::findOrFail($binaryUserId);
