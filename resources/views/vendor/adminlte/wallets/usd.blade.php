@@ -24,7 +24,9 @@
                 </div>  
                 <div class="col-sm-3 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">500$ /</h5>
+                    <h5 class="description-header">
+                        @isset($wallets->currencyPair){{ $wallets->currencyPair->last/10 }}$ @endisset
+                    </h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
