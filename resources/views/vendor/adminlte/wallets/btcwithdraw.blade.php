@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
-	{{ trans('adminlte_lang::wallet.header_title') }}
+	{{ trans('adminlte_lang::wallet.btc') }}
 @endsection
 
 @section('contentheader_description')

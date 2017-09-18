@@ -8,7 +8,7 @@
         @if (! Auth::guest())
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" />
+                    <!-- <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" /> -->
                 </div>
                 <div class="pull-left info">
                     <p>{{ Auth::user()->name }}</p>
@@ -67,7 +67,6 @@
                         <ul class="treeview-menu">
                             <li class="{{ Request::segment(2) === 'btc' ? 'active' : null }}"><a href="{{ url('wallets/btc') }}">{{ trans('adminlte_lang::default.side_wallet_btc') }}</a></li>
                             <li class="{{ Request::segment(2) === 'btcwithdraw' ? 'active' : null }}"><a href="{{ url('wallets/btcwithdraw') }}">WithDraw</a></li>
-                            <li class="{{ Request::segment(2) === 'buysellclp' ? 'active' : null }}"><a href="{{ url('wallets/buysellclp') }}">BuySellClp</a></li>
                         </ul>
                     </li>
                     <li class="{{ Request::segment(2) === 'clp' ? 'active' : null }}"><a href="{{ url('wallets/clp') }}">{{ trans('adminlte_lang::default.side_wallet_clp') }}</a></li>

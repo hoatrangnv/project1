@@ -1,12 +1,9 @@
 @extends('adminlte::layouts.app')
 
-@section('htmlheader_title')
+@section('contentheader_title')
 	{{ trans('adminlte_lang::package.header_title') }}
 @endsection
 
-@section('contentheader_description')
-	{{ trans('adminlte_lang::package.manager') }}
-@endsection
 
 @section('main-content')
 	<div class="row">
