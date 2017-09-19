@@ -21,7 +21,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('wallets/usd', 'Wallet\UsdWalletController@usdWallet');
     Route::get('wallets/switchusdclp', 'Wallet\UsdWalletController@switchUSDCLP');
     
-    Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet');
+    Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet')->name('wallet.btc');
     Route::get('wallets/clp', 'WalletController@clp');
     Route::get('wallets/reinvest', 'WalletController@reinvest');
     Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');

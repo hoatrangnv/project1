@@ -97,8 +97,6 @@ class WithDrawController extends Controller
        
         $currentuserid = Auth::user()->id;
         $user = UserCoin::findOrFail($currentuserid);
-        $withdraws = Withdraw::where('userId', '=',$currentuserid)
-                        ->get();
         //send coin if request post
         if ( $request->isMethod('post') ) {
             //validate
@@ -148,27 +146,26 @@ class WithDrawController extends Controller
 
                         UserCoin::where('userId', '=',$currentuserid)
                         ->update(['btcCoinAmount' => $btc]);
-
-                        return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                        return redirect()->route('wallet.btc');
                     } else {
                         //Không kết nối được DB
                         Log::warning( "Error when insert DB !" );
                         $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_db') );
-                        return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                        return redirect()->route('wallet.btc');
                     }
                 } catch (\Exception $e) {
                     //lỗi không thực hiện được giao dịch trên coinbase ghi vào LOG
                     Log::error( $e->getTraceAsString() );
                     $request->session()->flash('errorMessage', "Không thực hiện chuyển tiền được trên CoinBase" );
-                    return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                    return redirect()->route('wallet.btc');
                 }   
             }else {
                 //nếu không đủ tiền thì báo lỗi
                 $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
-                return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+                return redirect()->route('wallet.btc');
             }
         }else{ 
-            return view('adminlte::wallets.btcwithdraw')->with('withdraws', $withdraws); 
+            return redirect()->route('wallet.btc');
         }
     }
    
