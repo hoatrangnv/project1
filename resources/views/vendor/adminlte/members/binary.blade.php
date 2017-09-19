@@ -57,6 +57,7 @@
 		}
 	  }
 	  .tree-node:hover {
+    cursor: pointer;
 		background-color: #f5f5f5;
 	  }
 	  .tree-node img {
