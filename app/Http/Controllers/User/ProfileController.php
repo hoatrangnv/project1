@@ -5,7 +5,7 @@
  * https://github.com/laravel/framework/blob/5.3/src/Illuminate/Auth/Console/stubs/make/controllers/HomeController.stub
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -14,6 +14,7 @@ use App\User;
 use Auth;
 use Session;
 use Hash;
+use App\Http\Controllers\Controller;
 
 /**
  * Class ProfileController

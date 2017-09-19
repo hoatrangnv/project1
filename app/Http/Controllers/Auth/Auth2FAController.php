@@ -5,7 +5,7 @@
  * https://github.com/laravel/framework/blob/5.3/src/Illuminate/Auth/Console/stubs/make/controllers/HomeController.stub
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ use Auth;
 use Session;
 use Storage;
 use Google2FA;
-
+use App\Http\Controllers\Controller;
 
 class Auth2FAController extends Controller
 {

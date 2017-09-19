@@ -36,8 +36,8 @@ class SendmailController extends Controller
     public function sendMail(){
         
         $dataSendMail = [
-            'mail_to' => 'huydk1@gmail.com',
-            'name'    => 'huydk'
+            'mail_to' => '?@gmail.com',
+            'name'    => '?'
         ];
 
         try {
