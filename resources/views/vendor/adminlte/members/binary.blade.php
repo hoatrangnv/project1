@@ -11,8 +11,8 @@
 				<div class="box-body" style="padding-top:0;">
                     <div style="margin-top: 15px;text-align:center;">
                         <center>
-                            <button class="btn btn-info btn-xs" type="button" id="refresh-tree" style="margin-bottom: 5px;"><i class="fa fa-step-backward rotate90"></i> Go Top</button><br>
-                            <button class="btn btn-info btn-xs" type="button" id="go-up"><i class="fa fa-play rotate120 "></i> Go Up</button>
+                            <button class="btn btn-info btn-xs" type="button" id="refresh-tree" style="margin-bottom: 5px;"><i class="fa fa-step-backward rotate90"></i></button><br>
+                            <button class="btn btn-info btn-xs" type="button" id="go-up"><i class="fa fa-play rotate120 "></i></button>
                         </center>
                     </div>
 					<div class="chart" id="tree-container"></div>
@@ -66,7 +66,7 @@
 		border-radius: 50%;
 	  }
 	  .tree-node p {
-		margin-bottom: 3px;
+		margin-bottom: 2px;
 	  }
       .rotate90 {
           -webkit-transform:rotate(90deg);

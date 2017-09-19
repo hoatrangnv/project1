@@ -4,15 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Package extends Model
+class UserPackage extends Model
 {
-    const Tygia = 1;
+    protected $primaryKey = null;
     protected $fillable = [
-		'name', 'thumb', 'price', 'pack_id', 'bonus'
+		'userId', 'packageId', 'amount_increase', 'buy_date', 'release_date'
 	];
     
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
-        $this->setTable('packages');
+        $this->setTable('user_packages');
     }
 }

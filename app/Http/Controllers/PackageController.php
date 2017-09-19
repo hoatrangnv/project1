@@ -34,16 +34,16 @@ class PackageController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name'=>'required|unique:packages',
-            'price'=>'required|unique:packages',
-            'token'=>'required',
+                'name'=>'required|unique:packages',
+                'price'=>'required|integer|unique:packages',
+                'pack_id'=>'required|integer|unique:packages',
             ]
         );
-        $package = Package::create($request->only('name', 'price', 'token'));
-		
+        $package = Package::create($request->only('pack_id', 'name', 'price', 'token'));
+
         return redirect()->route('packages.index')
             ->with('flash_message',
-             'Packages '. $package->name.' added!');
+                'Packages '. $package->name.' added!');
     }
     public function invest(Request $request){
         $currentuserid = Auth::user()->id;
@@ -54,14 +54,12 @@ class PackageController extends Controller
                 if($user->userData->packageId < $value){
                     $package = Package::find($value);
                     if($package){
-                        //$packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
-                        $packageOld = Package::find($user->userData->packageId);
-                        $priceA = 0;
-                        if($packageOld){
-                            $priceA = $packageOld->price;
+                        $packageOldId = $user->userData->packageId;
+                        $usdCoinAmount = $package->price;
+                        if($packageOldId > 0){
+                            $usdCoinAmount = $usdCoinAmount - $user->userData->package->price;
                         }
-                        $clpCoinAmount = ($package->price - $priceA) / \App\Package::Tygia;
-                        //$clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
+                        $clpCoinAmount = $usdCoinAmount / User::getCLPUSDRate();
                         if($user->userCoin->clpCoinAmount >= $clpCoinAmount){
                             return true;
                         }
@@ -70,21 +68,38 @@ class PackageController extends Controller
                 return false;
             });
             $this->validate($request, [
-                    'packageId' => 'required|not_in:0|packageCheck',
-                ],['packageId.package_check' => trans('adminlte_lang::package.buypackage.downgrade')]);
+                'packageId' => 'required|not_in:0|packageCheck',
+            ],['packageId.package_check' => 'CLP Coin not money buy package']);
+            $amount_increase = $packageOldId = 0;
             $userData = UserData::findOrFail($currentuserid);
-            $oldPackageId = (int) $userData->packageId;
-            if($userData->packageId == 0 || $userData->packageId == null){
-                $userData->packageDate = date('Y-m-d H:i:s');
-            }
+            $packageOldId = $userData->packageId;
+
+            $userData->packageDate = date('Y-m-d H:i:s');
             $userData->packageId = $request['packageId'];
             $userData->status = 1;
             $userData->save();
 
-            User::investBonus($user->id, $user->refererId, $oldPackageId, $request['packageId']);
+            $package = Package::findOrFail($request->packageId);
+            if($package)$amount_increase = $package->price;
+            if($packageOldId > 0){
+                $amount_increase = $package->price - $userData->package->price;
+            }
+            UserPackage::create([
+                'userId' => $currentuserid,
+                'packageId' => $userData->packageId,
+                'amount_increase' => $amount_increase,
+                'buy_date' => date('Y-m-d H:i:s'),
+                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 180 days"))
+            ]);
+
+            $userCoin = $user->userCoin;
+            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - ($amount_increase / User::getCLPUSDRate());
+            $userCoin->save();
+
+            User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
             return redirect()->route('packages.invest')
                 ->with('flash_message',
-                    trans('adminlte_lang::package.buypackage.success'));
+                    'Buy package successfully.');
         }
         $packages = Package::all();
         $lstPackSelect = array();
@@ -106,18 +121,18 @@ class PackageController extends Controller
     {
         $package = Package::findOrFail($id);
         $this->validate($request, [
-				'name'=>'required|unique:packages,name,'.$id,
-				'price'=>'required|integer|unique:packages,price,'.$id,
-				'token'=>'required',
+                'name'=>'required|unique:packages,name,'.$id,
+                'price'=>'required|integer|unique:packages,price,'.$id,
+                'pack_id'=>'required|integer|unique:packages,pack_id,'.$id,
             ]
         );
 
-        $input = $request->only(['name', 'price', 'token']);
+        $input = $request->only(['pack_id', 'name', 'price', 'token']);
         $package->fill($input)->save();
-		
+
         return redirect()->route('packages.index')
             ->with('flash_message',
-             'Package '. $package->name.' updated!');
+                'Package '. $package->name.' updated!');
     }
     public function destroy($id)
     {
@@ -126,6 +141,6 @@ class PackageController extends Controller
 
         return redirect()->route('Packages.index')
             ->with('flash_message',
-             'Package deleted!');
+                'Package deleted!');
     }
 }

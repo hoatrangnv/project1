@@ -23,6 +23,9 @@ class UserData extends Model
     public function user() {
         return $this->hasOne(User::class, 'id', 'userId');
     }
+    public function userCoin() {
+        return $this->hasOne(UserCoin::class, 'userId', 'userId');
+    }
     public function package() {
         return $this->hasOne(Package::class, 'id', 'packageId');
     }

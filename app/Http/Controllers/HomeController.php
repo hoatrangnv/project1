@@ -74,8 +74,12 @@ class HomeController extends Controller
     */
     private function newF1InWeek($value='')
     {
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+        if($weeked < 10)$weekYear = $year.'0'.$weeked;
         try {
-            $data =  BonusBinary::where('userId',Auth::user()->id)
+            $data =  BonusBinary::where('userId',Auth::user()->id)->where('weekYear', $weekYear)
                 ->get();
             if(count($data) > 0){
                 $data['total']   = $data[0]->leftNew + $data[0]->rightNew;

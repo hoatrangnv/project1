@@ -18,6 +18,7 @@
 				<div class="box-body" style="padding-top:0;">
 					<table class="table table-bordered table-hover table-striped dataTable">
 						<tr>
+							<th>{{ trans('adminlte_lang::package.pack_id') }}</th>
 							<th>{{ trans('adminlte_lang::package.name') }}</th>
 							<th>{{ trans('adminlte_lang::package.price') }}</th>
 							<th>{{ trans('adminlte_lang::package.token') }}</th>
@@ -28,9 +29,10 @@
 						<tbody>
 							 @foreach ($packages as $package)
 							<tr>
+								<td>{{ $package->pack_id }}</td>
 								<td>{{ $package->name }}</td>
-								<td>${{ $package->price }}</td>
-								<td>{{ number_format($package->price* \App\Package::Tygia) }}</td>
+								<td>${{ number_format($package->price) }}</td>
+								<td>{{ number_format($package->price / \App\User::getCLPUSDRate()) }}</td>
 								@can('edit_packages')
 									<td class="text-center">
 										@include('shared._actions', [
