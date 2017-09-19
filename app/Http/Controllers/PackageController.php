@@ -46,6 +46,8 @@ class PackageController extends Controller
                 'Packages '. $package->name.' added!');
     }
     public function invest(Request $request){
+        $currentuserid = Auth::user()->id;
+        $user = User::findOrFail($currentuserid);
         if ($request->isMethod('post')) {
             Validator::extend('packageCheck', function ($attribute, $value) {
                 $user = Auth::user();
@@ -78,7 +80,9 @@ class PackageController extends Controller
             $userData->save();
 
             $package = Package::findOrFail($request->packageId);
-            if($package)$amount_increase = $package->price;
+            if ($package) {
+                $amount_increase = $package->price;
+            }
             if($packageOldId > 0){
                 $amount_increase = $package->price - $userData->package->price;
             }
