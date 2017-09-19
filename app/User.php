@@ -42,45 +42,40 @@ class User extends Authenticatable
     public function userLoyatys() {
         return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
     }
-    public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $level = 1, $clpCoinAmount = 0){// Hoa hong truc tiep F1 -> F3
-        $package = Package::findOrFail($packageId);
-        if($package && $level == 1){
-            $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
-            $priceA = 0;
-            if($packageOld){
-                $priceA = $packageOld->price;
-            }
-            $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
-            $userCoin = UserCoin::findOrFail($userId);
-            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $clpCoinAmount;
-            $userCoin->save();
-        }
+    public static function getCLPUSDRate(){
+        return 1;
+    }
+    public static function getCLPBTCRate(){
+        return 1;
+    }
+    public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0, $level = 1){// Hoa hong truc tiep F1 -> F3
         if($refererId > 0){
             $packageBonus = 0;
+            $package = Package::findOrFail($packageId);
             if($package){
                 $userData = UserData::find($refererId);
                 if($userData){
                     if($level == 1){//F1
-                        $packageBonus = $clpCoinAmount * 0.1;
+                        $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f1_pay');
                         $userData->totalBonus = $userData->totalBonus + $packageBonus;
                         $userData->save();
                     }elseif($level == 2){//F2
-                        if($userData->package->price >= 1000){
-                            $packageBonus = $clpCoinAmount * 0.02;
+                        if($userData->package->pack_id >= 3){
+                            $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f2_pay');
                             $userData->totalBonus = $userData->totalBonus + $packageBonus;
                             $userData->save();
                         }
                     }elseif($level == 3){//F3
-                        if($userData->package->price >= 5000){
-                            $packageBonus = $clpCoinAmount * 0.01;
+                        if($userData->package->pack_id >= 5){
+                            $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f3_pay');
                             $userData->totalBonus = $userData->totalBonus + $packageBonus;
                             $userData->save();
                         }
                     }
-                    $userCoin = UserCoin::find($refererId);
+                    $userCoin = $userData->userCoin;
                     if($userCoin && $packageBonus > 0){
-                        $usdAmount = ($packageBonus * 0.6);
-                        $reinvestAmount = ($packageBonus * 0.4);
+                        $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
+                        $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay'));
                         $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
                         $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
                         $userCoin->save();
@@ -103,8 +98,8 @@ class User extends Authenticatable
                     }
                     if($level < 3){
                         if($packageBonus > 0)
-                            self::investBonusFastStart($userData->userId, $userId, $packageId, $packageBonus);
-                        self::investBonus($userId, $userData->refererId, $packageId, ($level + 1), $clpCoinAmount);
+                            self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus);
+                        self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
                     }
                 }
             }
@@ -123,36 +118,31 @@ class User extends Authenticatable
     }
     public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos){
         $user = UserData::findOrFail($binaryUserId);
-        $package = Package::findOrFail($packageId);
-        $clpCoinAmount = 0;
+        $usdCoinAmount = 0;
         if($user){
-            if($package) {
-                $packageOld = Package::where('price', '<', $package->price)->orderBy('price', 'desc')->first();
-                $priceA = 0;
-                if ($packageOld) {
-                    $priceA = $packageOld->price;
-                }
-                $clpCoinAmount = ($package->price - $priceA) * \App\Package::Tygia;
+            $userPackage = UserPackage::where('userId', $userId)->where('packageId', $packageId)->latest();
+            if($userPackage){
+                $usdCoinAmount = $userPackage->amount_increase;
             }
             if ($legpos == 1){
-                $user->totalBonusLeft = $user->totalBonusLeft + $clpCoinAmount;
+                $user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
                 $user->lastUserIdLeft = $userId;
                 $user->leftMembers = $user->leftMembers + 1;
             }else{
-                $user->totalBonusRight = $user->totalBonusRight + $clpCoinAmount;
+                $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
                 $user->lastUserIdRight = $userId;
                 $user->rightMembers = $user->rightMembers + 1;
             }
             $user->totalMembers = $user->totalMembers + 1;
             $user->save();
-            //self::bonusBinaryWeek($binaryUserId, $clpCoinAmount, $legpos);
-            //self::bonusLoyaltyUser($userId, $partnerId, $legpos);
-            if($partnerId != $binaryUserId) {
+            self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
+            self::bonusLoyaltyUser($userId, $partnerId, $legpos);
+            if($user->binaryUserId > 0 && $partnerId != $binaryUserId) {
                 User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos);
             }
         }
     }
-    public static function bonusBinaryWeek($binaryUserId = 0, $packageToken = 0, $legpos){
+    public static function bonusBinaryWeek($binaryUserId = 0, $usdCoinAmount = 0, $legpos){
         $weeked = date('W');
         $year = date('Y');
         $weekYear = $year.$weeked;
@@ -160,9 +150,9 @@ class User extends Authenticatable
         $week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
         if($week && $week->id > 0){
             if($legpos == 1){
-                $week->leftNew = $week->leftNew + $packageToken;
+                $week->leftNew = $week->leftNew + $usdCoinAmount;
             }else{
-                $week->rightNew = $week->rightNew + $packageToken;
+                $week->rightNew = $week->rightNew + $usdCoinAmount;
             }
             $week->save();
         }else{
@@ -191,10 +181,10 @@ class User extends Authenticatable
                     $week['leftOpen'] = 0;
                 }
                 if($legpos == 1){
-                    $fields['leftNew'] = $packageToken;
+                    $fields['leftNew'] = $usdCoinAmount;
                     $fields['rightNew'] = 0;
                 }else{
-                    $fields['rightNew'] = $packageToken;
+                    $fields['rightNew'] = $usdCoinAmount;
                     $fields['leftNew'] = 0;
                 }
                 BonusBinary::create($fields);
@@ -208,10 +198,10 @@ class User extends Authenticatable
                 $fields['leftOpen'] = 0;
                 $fields['rightOpen'] = 0;
                 if($legpos == 1){
-                    $fields['leftNew'] = $packageToken;
+                    $fields['leftNew'] = $usdCoinAmount;
                     $fields['rightNew'] = 0;
                 }else{
-                    $fields['rightNew'] = $packageToken;
+                    $fields['rightNew'] = $usdCoinAmount;
                     $fields['leftNew'] = 0;
                 }
                 BonusBinary::create($fields);
@@ -237,7 +227,7 @@ class User extends Authenticatable
                 $totalf1Right += $package->price * $user->num;
             }
         }
-        if($totalf1Left >= 50000 && $totalf1Right >= 50000){
+        if($totalf1Left >= config('cryptolanding.loyalty_upgrate_silver') && $totalf1Right >= config('cryptolanding.loyalty_upgrate_silver')){
             $isSilver = 1;
         }
         $isGold = self::getBonusLoyaltyUser($userId, 'gold');
@@ -254,8 +244,8 @@ class User extends Authenticatable
             'isDiamond'     => $isDiamond,
             'refererId'     => $refererId,
         ];
-        if(LoyaltyUser::where('userId', '=',$userId)->count()){
-            $loyaltyUser = LoyaltyUser::where('userId', '=',$userId)->first();
+        if(LoyaltyUser::where('userId', '=', $userId)->count()){
+            $loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
             $loyaltyUser->f1Left = $totalf1Left;
             $loyaltyUser->f1Right = $totalf1Right;
             if($loyaltyUser->isSilver==0)
@@ -290,14 +280,14 @@ class User extends Authenticatable
                 return 1;
             }
         }elseif($type == 'emerald'){
-            $countLeft = LoyaltyUser::where('refererId', '=',$userId)->where('isPear', 1)->where('leftRight', '=', 'left')->count();
-            $countRight = LoyaltyUser::where('refererId', '=',$userId)->where('isPear', 1)->where('leftRight', '=', 'right')->count();
+            $countLeft = LoyaltyUser::where('refererId', '=', $userId)->where('isPear', 1)->where('leftRight', '=', 'left')->count();
+            $countRight = LoyaltyUser::where('refererId', '=', $userId)->where('isPear', 1)->where('leftRight', '=', 'right')->count();
             if($countLeft >= 2 && $countRight >= 2){
                 return 1;
             }
         }elseif($type == 'diamond'){
-            $countLeft = LoyaltyUser::where('refererId', '=',$userId)->where('isEmerald', 1)->where('leftRight', '=', 'left')->count();
-            $countRight = LoyaltyUser::where('refererId', '=',$userId)->where('isEmerald', 1)->where('leftRight', '=', 'right')->count();
+            $countLeft = LoyaltyUser::where('refererId', '=', $userId)->where('isEmerald', 1)->where('leftRight', '=', 'left')->count();
+            $countRight = LoyaltyUser::where('refererId', '=', $userId)->where('isEmerald', 1)->where('leftRight', '=', 'right')->count();
             if($countLeft >= 3 && $countRight >= 3){
                 return 1;
             }
@@ -310,8 +300,8 @@ class User extends Authenticatable
             $userData = $user->userData;
             $price = $userData->package->price;
             $bonus = $userData->package->bonus;
-            $usdAmount = (($price * $bonus)*0.6);
-            $reinvestAmount = (($price * $bonus)*0.4);
+            $usdAmount = (($price * $bonus) * config('cryptolanding.usd_bonus_pay'));
+            $reinvestAmount = (($price * $bonus) * config('cryptolanding.reinvest_bonus_pay'));
             $userCoin = $user->userCoin;
             $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
             $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
@@ -365,18 +355,18 @@ class User extends Authenticatable
             $bonus = 0;
             $userPackage = $binary->userData->package;
             if (self::checkBinaryCount($binary->userId, 1)) {
-                if ($userPackage->price == 100) {
-                    $bonus = $settled * 0.05;
-                } elseif ($userPackage->price == 500) {
-                    $bonus = $settled * 0.06;
-                } elseif ($userPackage->price == 1000) {
-                    $bonus = $settled * 0.07;
-                } elseif ($userPackage->price == 2000) {
-                    $bonus = $settled * 0.08;
-                } elseif ($userPackage->price == 5000) {
-                    $bonus = $settled * 0.09;
-                } elseif ($userPackage->price == 10000) {
-                    $bonus = $settled * 0.1;
+                if ($userPackage->pack_id == 1) {
+                    $bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
+                } elseif ($userPackage->pack_id == 2) {
+                    $bonus = $settled * config('cryptolanding.binary_bonus_2_pay');
+                } elseif ($userPackage->pack_id == 3) {
+                    $bonus = $settled * config('cryptolanding.binary_bonus_3_pay');
+                } elseif ($userPackage->pack_id == 4) {
+                    $bonus = $settled * config('cryptolanding.binary_bonus_4_pay');
+                } elseif ($userPackage->pack_id == 5) {
+                    $bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
+                } elseif ($userPackage->pack_id == 6) {
+                    $bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
                 }
             }
             $binary->settled = $settled;
@@ -388,7 +378,7 @@ class User extends Authenticatable
                     'type' => 5,//bonus week
                     'inOut' => 'in',
                     'userId' => $binary->userId,
-                    'amount' => ($bonus*0.6),
+                    'amount' => ($bonus * config('cryptolanding.usd_bonus_pay')),
                 ];
                 Wallet::create($fieldUsd);
                 $fieldInvest = [
@@ -396,7 +386,7 @@ class User extends Authenticatable
                     'type' => 5,//bonus week
                     'inOut' => 'in',
                     'userId' => $binary->userId,
-                    'amount' => ($bonus*0.4),
+                    'amount' => ($bonus * config('cryptolanding.reinvest_bonus_pay')),
                 ];
                 Wallet::create($fieldInvest);
             }
