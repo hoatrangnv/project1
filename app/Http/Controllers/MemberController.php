@@ -20,15 +20,16 @@ class MemberController extends Controller
        return view('adminlte::members.genealogy');
     }
 	
-	public function genealogy(Request $request){
+	public function genealogy(Request $request)
+    {
 		if($request->ajax()){
-			if(isset($request['action'])){
-				if($request['action'] == 'getUser'){
-					if(isset($request['username']) && $request['username'] != ''){
+			if(isset($request['action'])) {
+				if($request['action'] == 'getUser') {
+					if(isset($request['username']) && $request['username'] != '') {
                         $currentuserid = Auth::user()->id;
                         $user = User::where('name', '=', $request['username'])->where('active', 1)->first();
                         //$userData = UserData::where('userId', '=', $user->id)->first();
-                        if($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid){
+                        if($user) {
                             $fields = [
                                 'id'     => $user->id,
                                 'u'     => $user->name,
@@ -41,10 +42,10 @@ class MemberController extends Controller
                                 'dmc'     => 3,
                                 'l'     => 'Rookie',
                             ];
-                        }else{
+                        } else {
                             return response()->json(['err'=>1]);
                         }
-					}else{
+					} else {
                         $currentuserid = Auth::user()->id;
                         $user = User::findOrFail($currentuserid);
                        // $userData = UserData::where('userId', '=', $user->id)->first();
@@ -62,14 +63,14 @@ class MemberController extends Controller
                         ];
 					}
                     return response()->json($fields);
-				}elseif($request['action'] == 'getChildren'){
+				} elseif ($request['action'] == 'getChildren') {
                     $currentuserid = Auth::user()->id;
                     $fields = array();
                     if(isset($request['id']) && $request['id'] > 0){
                         $userDatas = UserData::where('refererId', '=', $request['id'])->get();
                         $fields = array();
                         foreach ($userDatas as $userData) {
-                            if($userData->user->active == 1 && ($userData->refererId == $currentuserid || $userData->binaryUserId == $currentuserid)) {
+                            if($userData->user->active == 1) {
                                 $fields[] = [
                                     'id' => $userData->userId,
                                     'u' => $userData->user->name,
@@ -86,10 +87,10 @@ class MemberController extends Controller
                         }
                     }
                     return response()->json($fields);
-				}else{
+				} else {
                     return response()->json(['err'=>1]);
                 }
-			}else{
+			} else {
                 return response()->json(['err'=>1]);
             }
 		}
