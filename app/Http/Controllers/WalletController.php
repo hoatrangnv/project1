@@ -17,7 +17,7 @@ use Coinbase\Wallet\Resource\Transaction;
 use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
-
+use App\Package;
 use Log;
 
 class WalletController extends Controller
@@ -49,7 +49,23 @@ class WalletController extends Controller
         $currentuserid = Auth::user()->id;
         $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',3)
        ->paginate();
-        return view('adminlte::wallets.clp')->with('wallets', $wallets);
+        
+        //get Packgage
+        $currentuserid = Auth::user()->id;
+        $user = User::findOrFail($currentuserid);
+        $packages = Package::all();
+        $lstPackSelect = array();
+        foreach ($packages as $package){
+            $lstPackSelect[$package->id] = $package->name;
+        }
+        
+        return view('adminlte::wallets.clp', ['packages' => $packages, 
+            'user' => $user, 
+            'lstPackSelect' => $lstPackSelect, 
+            'wallets'=> $wallets
+        ]);
+        
+//        return view('adminlte::wallets.clp')->with('wallets', $wallets);
     }
     
     /**

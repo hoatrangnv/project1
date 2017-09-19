@@ -46,8 +46,6 @@ class PackageController extends Controller
                 'Packages '. $package->name.' added!');
     }
     public function invest(Request $request){
-        $currentuserid = Auth::user()->id;
-        $user = User::findOrFail($currentuserid);
         if ($request->isMethod('post')) {
             Validator::extend('packageCheck', function ($attribute, $value) {
                 $user = Auth::user();
@@ -97,16 +95,10 @@ class PackageController extends Controller
             $userCoin->save();
 
             User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
-            return redirect()->route('packages.invest')
+            return redirect()->route('wallet.clp')
                 ->with('flash_message',
                     'Buy package successfully.');
         }
-        $packages = Package::all();
-        $lstPackSelect = array();
-        foreach ($packages as $package){
-            $lstPackSelect[$package->id] = $package->name;
-        }
-        return view('adminlte::package.invest', ['packages' => $packages, 'user' => $user, 'lstPackSelect' => $lstPackSelect]);
     }
     public function show($id)
     {
