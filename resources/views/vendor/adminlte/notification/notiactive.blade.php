@@ -6,6 +6,15 @@
 
 @section('content')
     <body class="hold-transition login-page">
-       Có một email active đã được gửi vào hòm thư của bạn . Hãy mở hòm mail của bạn và active tài khoản trước khi đăng nhập !
+    <div id="app">
+        <div class="login-box" style="width: 580px;">
+            <div class="login-logo">
+                <a href="{{ url('/home') }}"><b>CLP</b></a>
+            </div>
+            <div class="login-box-body">
+            {{ trans('adminlte_lang::email.active_email')}}
+            </div>
+        </div>
+    </div>
     </body>
 @endsection
