@@ -23,7 +23,6 @@
              <li class="header" ></li> 
             <!-- Optionally, you can add icons to the links -->
             <li {{ Request::is('home') ? 'class=active' : '' }}><a href="{{ url('home') }}"><i class='fa fa-home'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
-            <li {{ Request::is('packages/invest') ? 'class=active' : '' }}><a href="{{ url('packages/invest') }}"><i class='fa fa-gift'></i> <span>Investment Packages</span></a></li>
             <li class="treeview{{ Request::segment(1) === 'members' ? ' active' : null }}">
                 <a href="#">
                     <i class='fa fa-address-book'></i> <span>{{ trans('adminlte_lang::default.side_member') }}</span>

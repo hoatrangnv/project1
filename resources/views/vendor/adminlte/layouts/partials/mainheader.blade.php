@@ -131,17 +131,6 @@
                                 </p>
                             </li>
                             <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="col-xs-4 text-center">
-                                    <a href="#">{{ trans('adminlte_lang::message.followers') }}</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a href="#">{{ trans('adminlte_lang::message.sales') }}</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a href="#">{{ trans('adminlte_lang::message.friends') }}</a>
-                                </div>
-                            </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
