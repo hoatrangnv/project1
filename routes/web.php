@@ -6,27 +6,28 @@ Auth::routes();
 Route::get('users/search',"UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::resource('users', 'UserController');
-    Route::resource('roles', 'RoleController');
-    Route::resource('posts', 'PostController');
-    Route::get('members/genealogy', 'MemberController@genealogy');
-    Route::get('members/binary', 'MemberController@binary');
-    Route::get('members/refferals', 'MemberController@refferals');
-    Route::get('members/pushIntoTree', 'MemberController@pushIntoTree');
-    Route::resource('members', 'MemberController');
-    Route::get('authenticator', 'Auth2FAController@index');
-    Route::post('authenticator', 'Auth2FAController@index');
+    Route::resource('users', 'User\UserController');
+    Route::resource('roles', 'User\RoleController');
+    Route::resource('posts', 'User\PostController');
+    Route::get('members/genealogy', 'User\MemberController@genealogy');
+    Route::get('members/binary', 'User\MemberController@binary');
+    Route::get('members/refferals', 'User\MemberController@refferals');
+    Route::get('members/pushIntoTree', 'User\MemberController@pushIntoTree');
+    Route::resource('members', 'User\MemberController');
+    Route::get('authenticator', 'Auth\Auth2FAController@index');
+    Route::post('authenticator', 'Auth\Auth2FAController@index');
 
-    Route::get('wallets/usd', 'WalletController@usd');
-    Route::post('wallets/usd', 'WalletController@usd');
-    Route::get('wallets/switchusdclp', 'WalletController@switchUSDCLP');
-    Route::get('wallets/btc', 'WalletController@btc');
+    Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet');
+    Route::post('wallets/usd', 'Wallet\UsdWalletController@usdWallet');
+    Route::get('wallets/switchusdclp', 'Wallet\UsdWalletController@switchUSDCLP');
+    
+    Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet');
     Route::get('wallets/clp', 'WalletController@clp');
     Route::get('wallets/reinvest', 'WalletController@reinvest');
-    Route::get('wallets/deposit', 'WalletController@deposit');
+    Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
 
-    Route::get('wallets/btcwithdraw', 'WalletController@btcwithdraw');
-    Route::post('wallets/btcwithdraw', 'WalletController@btcwithdraw');
+    Route::get('wallets/btcwithdraw', 'Wallet\WithDrawController@btcWithDraw');
+    Route::post('wallets/btcwithdraw', 'Wallet\WithDrawController@btcWithDraw');
 
     Route::get('wallets/buyclp', 'WalletController@buyclp');
     Route::post('wallets/buyclp', 'WalletController@buyclp');
@@ -77,4 +78,3 @@ Route::post('reactive',"Auth\ActiveController@reactiveAccount");
 Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
-Route::get('test',"TestController@test");

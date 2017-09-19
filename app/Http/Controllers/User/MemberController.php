@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\UserData;
 use Illuminate\Http\Request;
@@ -9,6 +9,7 @@ use App\User;
 use App\BonusBinary;
 use Auth;
 use Session;
+use App\Http\Controllers\Controller;
 
 class MemberController extends Controller
 {
