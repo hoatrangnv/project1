@@ -105,8 +105,6 @@
 					width: "100%",
 					fixedHeader: false,
 					resizable: true,
-					draggable: true,
-					stateful: true
 				}
 			});
 			var to = false;

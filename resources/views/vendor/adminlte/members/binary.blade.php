@@ -35,11 +35,11 @@
 	  .node-name { font-weight: bold; padding: 3px 0; text-overflow: ellipsis;overflow: hidden;}
 	  .tree-node {
 		padding: 0;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;
+		-webkit-border-radius: 30px;
+		-moz-border-radius: 30px;
+		border-radius: 33px;
 		background-color: #ffffff;
-		border: 1px solid #bbb;
+		border: 1px solid #222d32;
 		width: 12%;
 		font-size: 10px;
 		text-align: center;
@@ -57,6 +57,7 @@
 		}
 	  }
 	  .tree-node:hover {
+    cursor: pointer;
 		background-color: #f5f5f5;
 	  }
 	  .tree-node img {
@@ -84,15 +85,16 @@
       }
 	</style>
 	<link rel="stylesheet" href="{{ asset('/css/jstree.css') }}" />
-	<link rel="stylesheet" href="https://app.landcoin.co/libs/treant/Treant.css" />
+	<link rel="stylesheet" href="{{ asset('/css/Treant.css') }}" />
 	
-	<script src="https://app.landcoin.co/libs/treant/vendor/raphael.js"></script>
-	<script src="https://app.landcoin.co/libs/treant/Treant.js"></script>
-	<script src="https://app.landcoin.co/jst.js"></script>
+  <script src="{{ asset('/js/raphael.js') }}"></script>
+  <script src="{{ asset('/js/Treant.js') }}"></script>
+	<script src="{{ asset('/js/jst.js') }}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script>
 	<script>
 		var tmpl = window.JST["assets/templates/tree-node.html"],
           leafTmpl = window.JST["assets/templates/tree-node-leaf.html"];
+
         var root = {{ Auth::user()->id }},
             selectedNodeID = {{ Auth::user()->id }},
             parentNode = {{ Auth::user()->id }},
@@ -218,7 +220,7 @@
 
         }
         function rebuild(node) {
-          node.text={username: node.name, pkg: node.weeklySale<0?'':'WS:' + node.weeklySale, leginfo: node.weeklySale < 0?'':'L:' + node.left + ' R:' + node.right, level: node.level, lMembers: node.lMembers, rMembers: node.rMembers};
+          node.text={username: node.name, pkg: node.weeklySale<0?'':'BV:' + node.weeklySale, leginfo: node.weeklySale < 0?'':'L:' + node.left + ' R:' + node.right, level: node.level, lMembers: node.lMembers, rMembers: node.rMembers};
           if (node.lvl == 3) {
             node.innerHTML = leafTmpl(node.text);
           } else {
