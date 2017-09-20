@@ -33,7 +33,7 @@
     @endif
     
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-5">
           <!-- Widget: user widget style 1 -->
           <div class="box box-widget widget-user">
             <!-- Add the bg color to the header using any of the bg-* classes -->
@@ -48,7 +48,7 @@
                 <div class="col-sm-3 border-right">
                   <div class="description-block">
                     <h5 class="description-header rate-usd-btc">
-                        @isset($wallets->currencyPair){{ $wallets->currencyPair->last/10 }}$ @endisset
+                        @isset($wallets->currencyPair){{ $wallets->currencyPair }} $/ @endisset
                     </h5>
                   </div>
                   <!-- /.description-block -->
@@ -56,14 +56,14 @@
                 <!-- /.col -->
                 <div class="col-sm-3 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">0.1b /</h5>
+                    <h5 class="description-header btc">{{ $wallets->currencyBtc }} BTC/ </h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-3">
                   <div class="description-block">
-                    <h5 class="description-header">500CLP</h5>
+                    <h5 class="description-header clp">{{ $wallets->currencyClp }}CLP</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -83,21 +83,33 @@
               <div class="row">
                 <div class="col-sm-3 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">1 CLP =</h5>
+                    <h5 class="description-header">1 CLP</h5>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <div class="col-sm-1 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">=</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-                <div class="col-sm-6 border-right">
+                <div class="col-sm-3 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">0.0000043 BTC =</h5>
+                    <h5 class="description-header clpbtc">{{ $wallets->rateClpBtc }} BTC</h5>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <div class="col-sm-1 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">=</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-3">
                   <div class="description-block">
-                    <h5 class="description-header">1000 $</h5>
+                    <h5 class="description-header clpusd">{{ $wallets->rateClpUsd }} $</h5>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -283,8 +295,13 @@
                     
                 },
                 success : function(result){
+                    console.log(result);
                     //update
-                    $(".rate-usd-btc").html(JSON.parse(result).last/10 + "$");
+                    $(".rate-usd-btc").html(result.result.usd + " $/");
+                    $(".btc").html( result.result.btc + " BTC/");
+                    $(".clp").html(result.result.clp + " CLP");
+                    $(".clpusd").html(result.result.clpusd + " $");
+                    $(".clpbtc").html(result.result.clpbtc + " BTC");
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     alert("some error");

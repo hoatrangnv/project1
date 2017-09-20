@@ -65,8 +65,15 @@ class UsdWalletController extends Controller
         if(isset($dataCurrencyPair) && 
                 count( json_decode($dataCurrencyPair) ) > 0 ) {
             
-            $wallets->currencyPair = json_decode($dataCurrencyPair);
+            $wallets->currencyPair = Auth()->user()->usercoin->usdAmount ;
             
+            $wallets->currencyBtc = round( $wallets->currencyPair / 
+                json_decode($dataCurrencyPair)->last , 4);
+            
+            $wallets->currencyClp = $wallets->currencyPair / User::getCLPUSDRate() ;
+            
+            $wallets->rateClpBtc = User::getCLPBTCRate();
+            $wallets->rateClpUsd = User::getCLPUSDRate();
         } else {
             Log::info("Không get được tỷ giá");
         }
@@ -151,6 +158,25 @@ class UsdWalletController extends Controller
         } catch (\Exception $ex) {
             Log::error($ex->getTraceAsString());
         }
+    }
+    
+    public function getDataWallet() {
+        //get số liệu 
+        $dataCurrencyPair = $this->getRateUSDBTC();
+        
+        $data["usd"] =  Auth()->user()->usercoin->usdAmount ;
+        
+        $data["btc"] = round( $data["usd"] / 
+                json_decode($dataCurrencyPair)->last , 4);
+        
+        $data["clp"] = $data["usd"] / 
+                User::getCLPUSDRate();
+        
+        $data["clpbtc"] = User::getCLPBTCRate();
+        
+        $data["clpusd"] = User::getCLPUSDRate();
+        
+        return $this->responseSuccess($data);
     }
     
     /** 
