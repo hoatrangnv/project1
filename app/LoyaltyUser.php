@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LoyaltyUser extends Model
 {
+    public $timestamps = false;
     protected $fillable = [
 		'userId', 'isSilver', 'isGold', 'isPear', 'isEmerald', 'isDiamond', 'f1Left', 'f1Right'
 	];
