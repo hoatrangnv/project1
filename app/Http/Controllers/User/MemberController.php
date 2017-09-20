@@ -177,7 +177,7 @@ class MemberController extends Controller
         if($level < 4){
             $UserDatas = UserData::where('binaryUserId', '=', $userId)->where('status', 1)->get();
             foreach ($UserDatas as $user) {
-                if($user->refererId == $currentuserid || $user->binaryUserId == $currentuserid) {
+                //if($user->refererId == $currentuserid || $user->binaryUserId == $currentuserid) {
                     $childLeft = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->user->id);
@@ -202,7 +202,7 @@ class MemberController extends Controller
                         $field['children'] = $children;
                     }
                     $fields[] = $field;
-                }
+                //}
             }
         }
         return $fields;
