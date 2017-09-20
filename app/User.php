@@ -120,7 +120,7 @@ class User extends Authenticatable
         $user = UserData::findOrFail($binaryUserId);
         $usdCoinAmount = 0;
         if($user){
-            $userPackage = UserPackage::where('userId', $userId)->where('packageId', $packageId)->latest();
+            $userPackage = UserPackage::where('userId', $userId)->where('packageId', $packageId)->first();
             if($userPackage){
                 $usdCoinAmount = $userPackage->amount_increase;
             }
@@ -211,10 +211,9 @@ class User extends Authenticatable
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){
         $loyaltyBonus = array('silver' => 5000, 'gold' => 10000, 'pear' => 20000, 'emerald' => 50000, 'diamond' => 100000);
         $leftRight = $legpos == 1 ? 'left' : 'right';
-        $users = User::where('refererId', '=',$userId)
-            //->where('leftRight', '=',$leftRight)
-            ->groupBy('packageId, leftRight')
-            ->selectRaw('packageId, count(id) as num')
+        $users = UserData::where('refererId', '=',$userId)
+            ->groupBy(['packageId', 'leftRight'])
+            ->selectRaw('packageId, count(*) as num')
             ->get();
         $totalf1Left = $totalf1Right = 0;
         $isSilver = 0;
@@ -293,6 +292,9 @@ class User extends Authenticatable
             }
         }
         return 0;
+    }
+    public static function pushIntoTree(){
+
     }
     public static function bonusDay(){
         $lstUser = User::where('active', '=', 1)->where('status', '=', 1)->get();
