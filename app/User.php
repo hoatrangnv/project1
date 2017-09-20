@@ -217,13 +217,16 @@ class User extends Authenticatable
             ->get();
         $totalf1Left = $totalf1Right = 0;
         $isSilver = 0;
-
         foreach ($users as $user) {
-            $package = Package::findOrFail($user->packageId);
-            if($user->leftRight == 'left'){
-                $totalf1Left += $package->price * $user->num;
-            }else{
-                $totalf1Right += $package->price * $user->num;
+            if($user->packageId > 0){
+                $package = Package::findOrFail($user->packageId);
+                if($package){
+                    if($user->leftRight == 'left'){
+                        $totalf1Left += $package->price * $user->num;
+                    }else{
+                        $totalf1Right += $package->price * $user->num;
+                    }
+                }
             }
         }
         if($totalf1Left >= config('cryptolanding.loyalty_upgrate_silver') && $totalf1Right >= config('cryptolanding.loyalty_upgrate_silver')){
