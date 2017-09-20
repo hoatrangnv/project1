@@ -28,13 +28,13 @@ class MemberController extends Controller
 				if($request['action'] == 'getUser') {
 					if(isset($request['username']) && $request['username'] != '') {
                         $currentuserid = Auth::user()->id;
-                        $user = User::where('name', '=', $request['username'])->where('active', 1)->first();
+                        $user = User::where('name', '=', $request['username'])->first();
                         //$userData = UserData::where('userId', '=', $user->id)->first();
                         if($user) {
                             $fields = [
                                 'id'     => $user->id,
                                 'u'     => $user->name,
-                                'totalMembers'     => $user->userData->totalMembers,
+                                'totalMembers'     => UserData::where('refererId', $currentuserid)->count(),
                                 'packageId'     => $user->userData->packageId,
                                 'loyaltyId'     => $user->userData->loyaltyId,
                                 'leg'     => $user->userData->leftRight == 'left' ? 1 : $user->userData->leftRight == 'right' ? 2 : 0,
@@ -53,7 +53,7 @@ class MemberController extends Controller
                         $fields = [
                             'id'     => $user->id,
                             'u'     => $user->name,
-                            'totalMembers'     => $user->userData->totalMembers,
+                            'totalMembers'     => UserData::where('refererId', $currentuserid)->count(),
                             'packageId'     => $user->userData->packageId,
                             'loyaltyId'     => $user->userData->loyaltyId,
                             'leg'     => $user->userData->leftRight == 'left' ? 1 : $user->userData->leftRight == 'right' ? 2 : 0,
@@ -68,23 +68,21 @@ class MemberController extends Controller
                     $currentuserid = Auth::user()->id;
                     $fields = array();
                     if(isset($request['id']) && $request['id'] > 0){
-                        $userDatas = UserData::where('refererId', '=', $request['id'])->get();
+                        $userDatas = UserData::where('refererId', $request['id'])->get();
                         $fields = array();
                         foreach ($userDatas as $userData) {
-                            if($userData->user->active == 1) {
-                                $fields[] = [
-                                    'id' => $userData->userId,
-                                    'u' => $userData->user->name,
-                                    'totalMembers' => $userData->totalMembers,
-                                    'packageId' => $userData->packageId,
-                                    'loyaltyId' => $userData->loyaltyId,
-                                    'leg' => $userData->leftRight == 'left' ? 1 : $userData->leftRight == 'right' ? 2 : 0,
-                                    'pkg' => 2000,
-                                    'ws' => self::getWeeklySale($userData->userId),
-                                    'dmc' => 3,
-                                    'l' => 'Rookie',
-                                ];
-                            }
+                            $fields[] = [
+                                'id' => $userData->userId,
+                                'u' => $userData->user->name,
+                                'totalMembers' => UserData::where('refererId', $userData->userId)->count(),
+                                'packageId' => $userData->packageId,
+                                'loyaltyId' => $userData->loyaltyId,
+                                'leg' => $userData->leftRight == 'left' ? 1 : $userData->leftRight == 'right' ? 2 : 0,
+                                'pkg' => 2000,
+                                'ws' => self::getWeeklySale($userData->userId),
+                                'dmc' => 3,
+                                'l' => 'Rookie',
+                            ];
                         }
                     }
                     return response()->json($fields);

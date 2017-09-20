@@ -66,7 +66,7 @@
 											id: user.id,
 											children: user.dmc?true:false,
 											icon: "/img/jstree/user.png",
-											state: {opened: false}
+											state: {opened: parseInt(user.totalMembers) > 0 ? false : true}
 										});
 									}
 									cb(children);
