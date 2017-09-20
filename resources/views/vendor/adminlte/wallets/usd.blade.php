@@ -318,7 +318,7 @@
                     $(".clpbtc").html(result.result.clpbtc + " BTC");
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    alert("some error");
+                    //alert("some error");
                 },
                 complete: function(){
                   
