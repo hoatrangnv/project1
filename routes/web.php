@@ -20,7 +20,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet');
     Route::post('wallets/usd', 'Wallet\UsdWalletController@usdWallet');
     Route::get('wallets/switchusdclp', 'Wallet\UsdWalletController@switchUSDCLP');
-    Route::get('wallets/getrateusdbtc', 'Wallet\UsdWalletController@getRateUSDBTC');
+    Route::get('wallets/getrateusdbtc', 'Wallet\UsdWalletController@getDataWallet');
     
     Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet')->name('wallet.btc');
     Route::get('wallets/getbtccoin',"Wallet\BtcWalletController@getBtcCoin");
