@@ -137,9 +137,9 @@ class User extends Authenticatable
             $user->save();
             self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
             self::bonusLoyaltyUser($userId, $partnerId, $legpos);
-            //if($user->binaryUserId > 0 && $partnerId != $binaryUserId) {
+            if($user->binaryUserId > 0 && $partnerId != $binaryUserId) {
                 User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos);
-            //}
+            }
         }
     }
     public static function bonusBinaryWeek($binaryUserId = 0, $usdCoinAmount = 0, $legpos){
