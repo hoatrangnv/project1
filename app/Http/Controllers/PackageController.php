@@ -73,9 +73,10 @@ class PackageController extends Controller
             $amount_increase = $packageOldId = 0;
             $userData = UserData::findOrFail($currentuserid);
             $packageOldId = $userData->packageId;
+            $packageOldPrice = $userData->package->price;
 
             $userData->packageDate = date('Y-m-d H:i:s');
-            $userData->packageId = $request['packageId'];
+            $userData->packageId = $request->packageId;
             $userData->status = 1;
             $userData->save();
 
@@ -84,7 +85,7 @@ class PackageController extends Controller
                 $amount_increase = $package->price;
             }
             if($packageOldId > 0){
-                $amount_increase = $package->price - $userData->package->price;
+                $amount_increase = $package->price - $packageOldPrice;
             }
             UserPackage::create([
                 'userId' => $currentuserid,
@@ -94,7 +95,7 @@ class PackageController extends Controller
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 180 days"))
             ]);
 
-            $userCoin = $user->userCoin;
+            $userCoin = $userData->userCoin;
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - ($amount_increase / User::getCLPUSDRate());
             $userCoin->save();
 

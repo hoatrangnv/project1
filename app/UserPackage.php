@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserPackage extends Model
 {
     protected $primaryKey = null;
+    public $incrementing = false;
     protected $fillable = [
 		'userId', 'packageId', 'amount_increase', 'buy_date', 'release_date'
 	];
