@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\AuthPermissionCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Notifications\UpdateBtcCoin;
 
 class Kernel extends ConsoleKernel
 {
@@ -25,8 +26,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        /** 
+         * run every
+         */
+        $stringCronTab = "* * * * * *";
+        try {
+            $schedule->call(function () {
+                UpdateBtcCoin::UpdateBtcCoinAmount();
+            })->cron($stringCronTab);
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
     }
 
     /**

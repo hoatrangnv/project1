@@ -46,13 +46,10 @@
                                 <h1 class="m"><i class="fa fa-bitcoin"></i><span id="btc-balance" class="btcCoin">{{ Auth()->user()->userCoin->btcCoinAmount }}</span></h1>
                                 <h3 class="font-extra-bold m-xs text-success">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <button type="button" class="ladda-button btn btn-primary btn-block waves-effect" id="getBtccoin" data-style="zoom-in"><span class="ladda-label">Refresh</span><span class="ladda-spinner"></span></button>
-                                        </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <button type="button" data-toggle="modal" data-target="#deposit" class="ladda-button btn btn-primary btn-block waves-effect" data-style="zoom-in"><span class="ladda-label">Deposit</span><span class="ladda-spinner"></span></button>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <button type="button" data-toggle="modal" data-target="#withdraw" class="ladda-button btn btn-primary btn-block waves-effect" id="getBtccoin" data-style="zoom-in"><span class="ladda-label">WithDraw</span><span class="ladda-spinner"></span></button>
                                         </div>
                                     </div>
@@ -183,6 +180,9 @@
         <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
             
 	<script>
+            var getBtcCoin = setInterval(function(){
+                getBtccoin();
+            },{{ config("app.time_interval")}});
             //get wallet code and render code to qrcode
             $.ajax({
                 url: "{{ url('wallets/deposit') }}?action=btc",
@@ -201,12 +201,12 @@
                     $(".wallet-address").html(data.err);
                 }
             });
-       
-            $('#getBtccoin').on('click', function () {
+            
+            function getBtccoin(){
                 $.get( "getbtccoin", function( data ) {
-                  $( ".btcCoin" ).html( data );
+                    $( ".btcCoin" ).html( data );
                 });
-            });
-
+            };
+            
 	</script>
 @endsection

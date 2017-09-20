@@ -47,7 +47,7 @@
                 </div>  
                 <div class="col-sm-3 border-right">
                   <div class="description-block">
-                    <h5 class="description-header">
+                    <h5 class="description-header rate-usd-btc">
                         @isset($wallets->currencyPair){{ $wallets->currencyPair->last/10 }}$ @endisset
                     </h5>
                   </div>
@@ -219,6 +219,10 @@
     <!-- /.modal -->
     <script>
         
+        var getRateBtcUsd = setInterval(function(){ 
+            updateRateBtcUsd(); 
+        }, {{ config("app.time_interval")}});
+        
         $( ".switch-USD-to-CLP" ).keyup(function() {
             var value = $(this).val();
             var type = "UsdToClp";
@@ -266,6 +270,30 @@
             });
             
           
+        }
+        
+        function updateRateBtcUsd(){
+            $.ajax({
+                beforeSend: function(){
+                  // Handle the beforeSend event
+                },
+                url:"getrateusdbtc",
+                type:"get",
+                data : {
+                    
+                },
+                success : function(result){
+                    //update
+                    $(".rate-usd-btc").html(JSON.parse(result).last/10 + "$");
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                },
+                complete: function(){
+                  
+                }
+                // ......
+            });
         }
     </script>
 @endsection

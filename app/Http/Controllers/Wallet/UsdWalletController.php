@@ -141,7 +141,7 @@ class UsdWalletController extends Controller
      * @author Huy NQ
      * @return type json
      */
-    private function getRateUSDBTC() {
+    public function getRateUSDBTC() {
         try {
             $ch = curl_init(config('app.link_ty_gia').self::BTCUSD);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
