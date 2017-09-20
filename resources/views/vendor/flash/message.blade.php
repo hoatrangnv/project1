@@ -25,3 +25,7 @@
 @endforeach
 
 {{ session()->forget('flash_notification') }}
+@if(Session::has('flash_message'))
+    <p class="alert alert-info">{{ Session::get('flash_message') }}</p>
+@endif
+
