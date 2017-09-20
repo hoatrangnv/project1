@@ -20,8 +20,11 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet');
     Route::post('wallets/usd', 'Wallet\UsdWalletController@usdWallet');
     Route::get('wallets/switchusdclp', 'Wallet\UsdWalletController@switchUSDCLP');
+    Route::get('wallets/getrateusdbtc', 'Wallet\UsdWalletController@getRateUSDBTC');
     
     Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet')->name('wallet.btc');
+    Route::get('wallets/getbtccoin',"Wallet\BtcWalletController@getBtcCoin");
+    
     Route::get('wallets/clp', 'WalletController@clp')->name('wallet.clp');
     Route::get('wallets/reinvest', 'WalletController@reinvest');
     Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
@@ -40,7 +43,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('wallets/buysellclp', 'WalletController@buysellclp');
 
-    Route::get('wallets/getbtccoin',"WalletController@getBtcCoin");
+  
 
     Route::get('mybonus/faststart', 'MyBonusController@faststart');
     Route::get('mybonus/binary', 'MyBonusController@binary');
@@ -78,3 +81,4 @@ Route::post('reactive',"Auth\ActiveController@reactiveAccount");
 Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
+Route::get('test',"TestController@test");

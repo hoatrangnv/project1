@@ -48,7 +48,7 @@ class BtcWalletController extends Controller
         return view('adminlte::wallets.btc')->with('wallets', $wallets);
     }
     
-        /** 
+    /** 
      * @author 
      * @param Request $request
      * @return type
@@ -62,5 +62,16 @@ class BtcWalletController extends Controller
             }
         }
         die();
+    }
+    
+    /**
+     * @author Huy Nq
+     * @param Request $request
+     * @return type
+     */
+    public function getBtcCoin(Request $request){
+        if($request->ajax()){
+            return Auth()->user()->userCoin->btcCoinAmount;
+        }
     }
 }
