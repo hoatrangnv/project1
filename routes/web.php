@@ -58,7 +58,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('profile','User\ProfileController@index');
     Route::post('profile/changepassword','User\ProfileController@changePassword');
     Route::get('profile/switchauthen','User\ProfileController@switchTwoFactorAuthen');
-    Route::resource('profile', 'ProfileController');
+    Route::resource('profile', 'User\ProfileController');
 
 
 });
