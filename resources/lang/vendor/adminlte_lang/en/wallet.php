@@ -38,9 +38,15 @@ return [
 'withdraw_amountBTC'           	=> 'Amount(BTC)',
     'withdraw_fee'           	=> 'Withdrawal Fee',
     'withdraw_status'           => 'Status',
-    'error_not_enough'          => 'Số tiền chuyển không đủ và hãy cập nhật lại tài khoản ví để tiếp tục thực hiện giao dịch',
-    'success_withdraw'          => 'Đã cập nhật giao dịch thành công!',
-    'error_db'                  => 'Lỗi kết nối với DATABASE',
-
-
+    'error_not_enough'          => 'Not enough Money!',
+    'success_withdraw'          => 'Update transition success!',
+    'error_db'                  => 'Error conection DATABASE',
+    'fast_start_type' => 'Fast start bonus',
+    'interest' => 'Interest',
+    'binary' => 'Binary bonus',
+    'ltoyalty' => 'Ltoyalty bonus',
+    'usd_clp_type' => 'Tranfer USD to CLP',
+    'reinvest_clp_type' => 'Tranfer Reinvest to CLP',
+    'btc_clp_type' => 'Tranfer BTC to CLP',
+    'clp_btc_type' => 'Tranfer CLP to BTC',
 ];
