@@ -22,4 +22,6 @@ return [
 	'loyalty_pear_amount' => 20000,
 	'loyalty_emerald_amount' => 50000,
 	'loyalty_diamond_amount' => 100000,
+
+    'loyalty_bonus' => array('silver' => 5000, 'gold' => 10000, 'pear' => 20000, 'emerald' => 50000, 'diamond' => 100000),
 ];

@@ -47,7 +47,7 @@ class BtcWalletController extends Controller
      */
     public function btcWallet(Request $request){
         $currentuserid = Auth::user()->id;
-        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',2)
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::BTC_WALLET)
                             //->take(10)
             ->paginate();
         return view('adminlte::wallets.btc')->with('wallets', $wallets);

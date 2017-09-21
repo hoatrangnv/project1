@@ -42,12 +42,25 @@ class User extends Authenticatable
     public function userLoyatys() {
         return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
     }
+
+    /**
+    * update: giangdt 21/09
+    *  
+    * Return rate CLP by USD ( 1 CLP = ? USD)
+    */
     public static function getCLPUSDRate(){
         return 1.12;
     }
+
+    /**
+    * update: giangdt 21/09
+    *  
+    * Return rate CLP by BTC ( 1 CLP = ? BTC)
+    */
     public static function getCLPBTCRate(){
-        return 0.12;
+        return 0.00025;
     }
+
     public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0, $level = 1){// Hoa hong truc tiep F1 -> F3
         if($refererId > 0){
             $packageBonus = 0;
@@ -60,13 +73,13 @@ class User extends Authenticatable
                         $userData->totalBonus = $userData->totalBonus + $packageBonus;
                         $userData->save();
                     }elseif($level == 2){//F2
-                        if($userData->package->pack_id >= 3){
+                        if(isset($userData->package->pack_id) &&  $userData->package->pack_id >= 3){
                             $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f2_pay');
                             $userData->totalBonus = $userData->totalBonus + $packageBonus;
                             $userData->save();
                         }
                     }elseif($level == 3){//F3
-                        if($userData->package->pack_id >= 5){
+                        if(isset($userData->package->pack_id) && $userData->package->pack_id >= 5){
                             $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f3_pay');
                             $userData->totalBonus = $userData->totalBonus + $packageBonus;
                             $userData->save();
@@ -74,43 +87,52 @@ class User extends Authenticatable
                     }
                     $userCoin = $userData->userCoin;
                     if($userCoin && $packageBonus > 0){
+                        //Get info of user
+                        $user = Auth::user();
+
                         $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
                         $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay'));
                         $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
                         $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
                         $userCoin->save();
                         $fieldUsd = [
-                            'walletType' => 1,//usd
-                            'type' => 4,//bonus f1
-                            'inOut' => 'in',
+                            'walletType' => Wallet::USD_WALLET,//usd
+                            'type' => Wallet::FAST_START_TYPE,//bonus f1
+                            'inOut' => Wallet::IN,
                             'userId' => $userData->userId,
                             'amount' => $usdAmount,
+                            'note'   => $user->name . ' ' .  trans('adminlte_lang::wallet.register_package')
                         ];
                         Wallet::create($fieldUsd);
                         $fieldInvest = [
-                            'walletType' => 4,//reinvest
-                            'type' => 4,//bonus f1
-                            'inOut' => 'in',
+                            'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                            'type' => Wallet::FAST_START_TYPE,//bonus f1
+                            'inOut' => Wallet::IN,
                             'userId' => $userData->userId,
                             'amount' => $reinvestAmount,
+                            'note'   => $user->name . ' ' . trans('adminlte_lang::wallet.register_package')
                         ];
                         Wallet::create($fieldInvest);
                     }
-                    if($level < 3){
+
+                    if($level <= 3){
                         if($packageBonus > 0)
-                            self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus);
+                            self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
+                    }
+
+                    if($level < 3){
                         self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
                     }
                 }
             }
         }
     }
-    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0){// Hoa hong truc tiep F1 -> F3 log
+    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0, $level = 1){// Hoa hong truc tiep F1 -> F3 log
         if($userId > 0){
             $fields = [
                 'userId'     => $userId,
                 'partnerId'     => $partnerId,
-                'generation'     => $packageId,
+                'generation'     => $level,
                 'amount'     => $amount,
             ];
             BonusFastStart::create($fields);
@@ -210,7 +232,7 @@ class User extends Authenticatable
         }
     }
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){
-        $loyaltyBonus = array('silver' => 5000, 'gold' => 10000, 'pear' => 20000, 'emerald' => 50000, 'diamond' => 100000);
+
         $leftRight = $legpos == 1 ? 'left' : 'right';
         $users = UserData::where('refererId', '=',$userId)
             ->groupBy(['packageId', 'leftRight'])
@@ -233,6 +255,7 @@ class User extends Authenticatable
         if($totalf1Left >= config('cryptolanding.loyalty_upgrate_silver') && $totalf1Right >= config('cryptolanding.loyalty_upgrate_silver')){
             $isSilver = 1;
         }
+        $loyaltyBonus = config('cryptolanding.loyalty_bonus');
         $isGold = self::getBonusLoyaltyUser($userId, 'gold');
         $isPear = self::getBonusLoyaltyUser($userId, 'pear');
         $isEmerald = self::getBonusLoyaltyUser($userId, 'emerald');
@@ -251,16 +274,35 @@ class User extends Authenticatable
             $loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
             $loyaltyUser->f1Left = $totalf1Left;
             $loyaltyUser->f1Right = $totalf1Right;
-            if($loyaltyUser->isSilver==0)
+            if($loyaltyUser->isSilver==0){
                 $loyaltyUser->isSilver = $isSilver;
-            if($loyaltyUser->isGold==0)
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['silver']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['silver'], 'silver');
+            }
+            if($loyaltyUser->isGold==0){
                 $loyaltyUser->isGold = $isGold;
-            if($loyaltyUser->isPear==0)
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['gold']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['gold'], 'gold');
+            }
+
+            if($loyaltyUser->isPear==0){
                 $loyaltyUser->isPear = $isPear;
-            if($loyaltyUser->isEmerald==0)
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['pear']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['pear'], 'pear');
+            }
+
+            if($loyaltyUser->isEmerald==0){
                 $loyaltyUser->isEmerald = $isEmerald;
-            if($loyaltyUser->isDiamond==0)
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['emerald']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['emerald'], 'emerald');
+            }
+
+            if($loyaltyUser->isDiamond==0){
                 $loyaltyUser->isDiamond = $isDiamond;
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['diamond']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['diamond'], 'diamond');
+            }
+
             $loyaltyUser->save();
         }else{
             $fields['f1Left'] = $totalf1Left;
@@ -268,6 +310,27 @@ class User extends Authenticatable
 
             LoyaltyUser::create($fields);
         }
+
+    }
+    public static function bonusLoyaltyCal($userId, $amount, $type){
+        $fieldUsd = [
+            'walletType' => Wallet::USD_WALLET,//usd
+            'type' => Wallet::LOYALTY_TYPE,//bonus f1
+            'inOut' => Wallet::IN,
+            'userId' => $userId,
+            'amount' => $amount,
+            'note' => $type,
+        ];
+        Wallet::create($fieldUsd);
+        $fieldInvest = [
+            'walletType' => Wallet::REINVEST_WALLET,//reinvest
+            'type' => Wallet::LOYALTY_TYPE,//bonus f1
+            'inOut' => Wallet::IN,
+            'userId' => $userId,
+            'amount' => $amount,
+            'note' => $type,
+        ];
+        Wallet::create($fieldInvest);
     }
     public static function getBonusLoyaltyUser($userId, $type){
         if($type == 'gold') {
@@ -297,37 +360,38 @@ class User extends Authenticatable
         }
         return 0;
     }
-    public static function pushIntoTree(){
 
-    }
     public static function bonusDay(){
         $lstUser = User::where('active', '=', 1)->where('status', '=', 1)->get();
         foreach($lstUser as $user){
             $userData = $user->userData;
             $price = $userData->package->price;
             $bonus = $userData->package->bonus;
-            $usdAmount = (($price * $bonus) * config('cryptolanding.usd_bonus_pay'));
-            $reinvestAmount = (($price * $bonus) * config('cryptolanding.reinvest_bonus_pay'));
+            $usdAmount = $price * $bonus;
+            /* REMOVE - Because interest only tranfer to USD wallet */
+            //$reinvestAmount = (($price * $bonus) * config('cryptolanding.reinvest_bonus_pay'));
             $userCoin = $user->userCoin;
             $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
-            $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+            /* REMOVE - Because interest only tranfer to USD wallet */
+            //$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
             $userCoin->save();
             $fieldUsd = [
-                'walletType' => 1,//usd
-                'type' => 3,//bonus day
-                'inOut' => 'in',
+                'walletType' => Wallet::USD_WALLET,//usd
+                'type' => Wallet::INTEREST_TYPE,//bonus day
+                'inOut' => Wallet::IN,
                 'userId' => $user->id,
-                'amount' => $usdAmount,
+                'amount' => $usdAmount
             ];
             Wallet::create($fieldUsd);
-            $fieldInvest = [
-                'walletType' => 4,//reinvest
-                'type' => 3,//bonus day
-                'inOut' => 'in',
-                'userId' => $user->id,
-                'amount' => $reinvestAmount,
-            ];
-            Wallet::create($fieldInvest);
+            /* REMOVE - Because interest only tranfer to USD wallet */
+            // $fieldInvest = [
+            //     'walletType' => 4,//reinvest
+            //     'type' => 3,//bonus day
+            //     'inOut' => 'in',
+            //     'userId' => $user->id,
+            //     'amount' => $reinvestAmount,
+            // ];
+            // Wallet::create($fieldInvest);
         }
     }
     public static function bonusBinaryWeekCron(){
@@ -380,17 +444,17 @@ class User extends Authenticatable
             $binary->save();
             if($bonus > 0){
                 $fieldUsd = [
-                    'walletType' => 1,//usd
-                    'type' => 5,//bonus week
-                    'inOut' => 'in',
+                    'walletType' => Wallet::USD_WALLET,//usd
+                    'type' =>  Wallet::BINARY_TYPE,//bonus week
+                    'inOut' => Wallet::IN,
                     'userId' => $binary->userId,
                     'amount' => ($bonus * config('cryptolanding.usd_bonus_pay')),
                 ];
                 Wallet::create($fieldUsd);
                 $fieldInvest = [
-                    'walletType' => 4,//reinvest
-                    'type' => 5,//bonus week
-                    'inOut' => 'in',
+                    'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                    'type' => Wallet::BINARY_TYPE,//bonus week
+                    'inOut' => Wallet::IN,
                     'userId' => $binary->userId,
                     'amount' => ($bonus * config('cryptolanding.reinvest_bonus_pay')),
                 ];
