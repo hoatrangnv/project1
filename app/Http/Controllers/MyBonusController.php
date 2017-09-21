@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Package;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\UserData;
 use App\BonusFastStart;
 use App\BonusBinary;
 use App\LoyaltyUser;
@@ -70,7 +72,7 @@ class MyBonusController extends Controller
 
     }
     public function loyalty(){
-        $loyaltyBonus = array('silver' => 5000, 'gold' => 10000, 'pear' => 20000, 'emerald' => 50000, 'diamond' => 100000);
+        $loyaltyBonus = config('cryptolanding.loyalty_bonus');
         $currentuserid = Auth::user()->id;
         $loyaltyUser = LoyaltyUser::find($currentuserid);
         $loyaltyUserData = array();

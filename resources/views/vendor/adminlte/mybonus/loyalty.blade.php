@@ -28,6 +28,8 @@
 						<tbody>
 							<tr>
 								<td>{{ trans('adminlte_lang::mybonus.value') }}</td>
+								<td>{{ $loyaltyUser->f1Left }}</td>
+								<td>{{ $loyaltyUser->f1Right }}</td>
 								<td></td>
 								<td></td>
 								<td>{{ $loyaltyUser->isSilver == 1 ? trans('adminlte_lang::mybonus.silver') : '' }}</td>
