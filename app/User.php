@@ -87,6 +87,9 @@ class User extends Authenticatable
                     }
                     $userCoin = $userData->userCoin;
                     if($userCoin && $packageBonus > 0){
+                        //Get info of user
+                        $user = Auth::user();
+
                         $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
                         $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay'));
                         $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
@@ -98,6 +101,7 @@ class User extends Authenticatable
                             'inOut' => Wallet::IN,
                             'userId' => $userData->userId,
                             'amount' => $usdAmount,
+                            'note'   => $user->name . ' ' .  trans('adminlte_lang::wallet.register_package')
                         ];
                         Wallet::create($fieldUsd);
                         $fieldInvest = [
@@ -106,24 +110,29 @@ class User extends Authenticatable
                             'inOut' => Wallet::IN,
                             'userId' => $userData->userId,
                             'amount' => $reinvestAmount,
+                            'note'   => $user->name . ' ' . trans('adminlte_lang::wallet.register_package')
                         ];
                         Wallet::create($fieldInvest);
                     }
-                    if($level < 3){
+
+                    if($level =< 3){
                         if($packageBonus > 0)
-                            self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus);
+                            self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
+                    }
+
+                    if($level < 3){
                         self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
                     }
                 }
             }
         }
     }
-    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0){// Hoa hong truc tiep F1 -> F3 log
+    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0, $level = 1){// Hoa hong truc tiep F1 -> F3 log
         if($userId > 0){
             $fields = [
                 'userId'     => $userId,
                 'partnerId'     => $partnerId,
-                'generation'     => $packageId,
+                'generation'     => $level,
                 'amount'     => $amount,
             ];
             BonusFastStart::create($fields);
@@ -371,7 +380,7 @@ class User extends Authenticatable
                 'type' => Wallet::INTEREST_TYPE,//bonus day
                 'inOut' => Wallet::IN,
                 'userId' => $user->id,
-                'amount' => $usdAmount,
+                'amount' => $usdAmount
             ];
             Wallet::create($fieldUsd);
             /* REMOVE - Because interest only tranfer to USD wallet */

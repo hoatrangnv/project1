@@ -19,7 +19,7 @@ return [
     'create_bitcoin'           	=> 'Create Bitcoin address',
     'create_clpcoin'           	=> 'Create CLPcoin address',
     'tranfer_to_clp'            => 'Transer to CLP',
-	
+    'register_package'            => 'Register Package',
 	
 	'amount'                => 'Amount',
     'wallet_no'           	=> 'No',
@@ -44,7 +44,7 @@ return [
     'fast_start_type' => 'Fast start bonus',
     'interest' => 'Interest',
     'binary' => 'Binary bonus',
-    'ltoyalty' => 'Ltoyalty bonus',
+    'loyalty' => 'Loyalty bonus',
     'usd_clp_type' => 'Tranfer USD to CLP',
     'reinvest_clp_type' => 'Tranfer Reinvest to CLP',
     'btc_clp_type' => 'Tranfer BTC to CLP',
