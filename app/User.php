@@ -60,13 +60,13 @@ class User extends Authenticatable
                         $userData->totalBonus = $userData->totalBonus + $packageBonus;
                         $userData->save();
                     }elseif($level == 2){//F2
-                        if($userData->package->pack_id >= 3){
+                        if(isset($userData->package->pack_id) &&  $userData->package->pack_id >= 3){
                             $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f2_pay');
                             $userData->totalBonus = $userData->totalBonus + $packageBonus;
                             $userData->save();
                         }
                     }elseif($level == 3){//F3
-                        if($userData->package->pack_id >= 5){
+                        if(isset($userData->package->pack_id) && $userData->package->pack_id >= 5){
                             $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f3_pay');
                             $userData->totalBonus = $userData->totalBonus + $packageBonus;
                             $userData->save();

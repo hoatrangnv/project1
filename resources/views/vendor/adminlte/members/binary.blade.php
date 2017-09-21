@@ -267,7 +267,7 @@
                                         weeklySale: -1,
                                         avatarURL: 'default-avatar',
                                         children: [],
-                                        pos: 2,
+                                        pos: 1,
                                         level: 0,
                                         lMembers: 0,
                                         rMembers: 0
@@ -280,7 +280,7 @@
                                         weeklySale: -1,
                                         avatarURL: 'default-avatar',
                                         children: [],
-                                        pos: 1,
+                                        pos: 2,
                                         level: 0,
                                         lMembers: 0,
                                         rMembers: 0
