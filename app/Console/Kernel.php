@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 UpdateBtcCoin::UpdateBtcCoinAmount();
-            })->cron($stringCronTab);
+            })->everyMinute();
         } catch (\Exception $ex) {
             Log::info($ex);
         }

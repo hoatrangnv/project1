@@ -65,7 +65,6 @@ class WalletController extends Controller
             'wallets'=> $wallets
         ]);
         
-//        return view('adminlte::wallets.clp')->with('wallets', $wallets);
     }
     
     /**

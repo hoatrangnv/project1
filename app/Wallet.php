@@ -20,7 +20,10 @@ class Wallet extends Model
     const REINVEST_WALLET = 4;
 
 
-    // Bonus Type
+    /**
+     * Bonus Type
+     */
+    
     // Fast start bonus
     const FAST_START_TYPE = 1;
     // Lãi <=> Intervest
@@ -37,7 +40,10 @@ class Wallet extends Model
     const BTC_CLP_TYPE = 7;
     // Tranfer Clp to Btc
     const CLP_BTC_TYPE = 8;
-    
+    // WithDraw BTC
+    const WITH_DRAW_BTC_TYPE = 9;
+    // Withdraw CLP
+    const WITH_DRAW_CLP_TYPE = 10;
     //inOut 
     const IN = "in" ;
     

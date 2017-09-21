@@ -43,10 +43,10 @@ class User extends Authenticatable
         return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
     }
     public static function getCLPUSDRate(){
-        return 1;
+        return 1.12;
     }
     public static function getCLPBTCRate(){
-        return 1;
+        return 0.12;
     }
     public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0, $level = 1){// Hoa hong truc tiep F1 -> F3
         if($refererId > 0){
