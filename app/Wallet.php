@@ -21,20 +21,21 @@ class Wallet extends Model
 
 
     // Bonus Type
+    // Fast start bonus
     const FAST_START_TYPE = 1;
-
+    // Lãi <=> Intervest
     const INTEREST_TYPE = 2;
-
+    // Binary bonus <=> hoa hồng cân nhánh
     const BINARY_TYPE = 3;
-
+    // Ltoyalty bonus
     const LTOYALTY_TYPE = 4;
-
+    // Tranfer Usd to Clp
     const USD_CLP_TYPE = 5;
-
+    // Tranfer ReInvest to Clp
     const REINVEST_CLP_TYPE = 6;
-
+    // Tranfer Btc to Clp
     const BTC_CLP_TYPE = 7;
-
+    // Tranfer Clp to Btc
     const CLP_BTC_TYPE = 8;
     
     //inOut 

@@ -73,7 +73,7 @@ class PackageController extends Controller
             $amount_increase = $packageOldId = 0;
             $userData = UserData::findOrFail($currentuserid);
             $packageOldId = $userData->packageId;
-            $packageOldPrice = $userData->package->price;
+            $packageOldPrice = isset($userData->package->price) ? $userData->package->price : 0;
 
             $userData->packageDate = date('Y-m-d H:i:s');
             $userData->packageId = $request->packageId;
