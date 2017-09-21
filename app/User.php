@@ -115,7 +115,7 @@ class User extends Authenticatable
                         Wallet::create($fieldInvest);
                     }
 
-                    if($level =< 3){
+                    if($level <= 3){
                         if($packageBonus > 0)
                             self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
                     }
