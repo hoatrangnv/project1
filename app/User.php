@@ -210,7 +210,7 @@ class User extends Authenticatable
         }
     }
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){
-        $loyaltyBonus = array('silver' => 5000, 'gold' => 10000, 'pear' => 20000, 'emerald' => 50000, 'diamond' => 100000);
+
         $leftRight = $legpos == 1 ? 'left' : 'right';
         $users = UserData::where('refererId', '=',$userId)
             ->groupBy(['packageId', 'leftRight'])
@@ -233,6 +233,7 @@ class User extends Authenticatable
         if($totalf1Left >= config('cryptolanding.loyalty_upgrate_silver') && $totalf1Right >= config('cryptolanding.loyalty_upgrate_silver')){
             $isSilver = 1;
         }
+        $loyaltyBonus = config('cryptolanding.loyalty_bonus');
         $isGold = self::getBonusLoyaltyUser($userId, 'gold');
         $isPear = self::getBonusLoyaltyUser($userId, 'pear');
         $isEmerald = self::getBonusLoyaltyUser($userId, 'emerald');
@@ -251,16 +252,35 @@ class User extends Authenticatable
             $loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
             $loyaltyUser->f1Left = $totalf1Left;
             $loyaltyUser->f1Right = $totalf1Right;
-            if($loyaltyUser->isSilver==0)
+            if($loyaltyUser->isSilver==0){
                 $loyaltyUser->isSilver = $isSilver;
-            if($loyaltyUser->isGold==0)
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['silver']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['silver'], 'silver');
+            }
+            if($loyaltyUser->isGold==0){
                 $loyaltyUser->isGold = $isGold;
-            if($loyaltyUser->isPear==0)
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['gold']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['gold'], 'gold');
+            }
+
+            if($loyaltyUser->isPear==0){
                 $loyaltyUser->isPear = $isPear;
-            if($loyaltyUser->isEmerald==0)
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['pear']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['pear'], 'pear');
+            }
+
+            if($loyaltyUser->isEmerald==0){
                 $loyaltyUser->isEmerald = $isEmerald;
-            if($loyaltyUser->isDiamond==0)
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['emerald']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['emerald'], 'emerald');
+            }
+
+            if($loyaltyUser->isDiamond==0){
                 $loyaltyUser->isDiamond = $isDiamond;
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['diamond']))
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['diamond'], 'diamond');
+            }
+
             $loyaltyUser->save();
         }else{
             $fields['f1Left'] = $totalf1Left;
@@ -268,6 +288,27 @@ class User extends Authenticatable
 
             LoyaltyUser::create($fields);
         }
+
+    }
+    public static function bonusLoyaltyCal($userId, $amount, $type){
+        $fieldUsd = [
+            'walletType' => Wallet::USD_WALLET,//usd
+            'type' => Wallet::LTOYALTY_TYPE,//bonus f1
+            'inOut' => Wallet::IN,
+            'userId' => $userId,
+            'amount' => $amount,
+            'note' => $type,
+        ];
+        Wallet::create($fieldUsd);
+        $fieldInvest = [
+            'walletType' => Wallet::REINVEST_WALLET,//reinvest
+            'type' => Wallet::LTOYALTY_TYPE,//bonus f1
+            'inOut' => Wallet::IN,
+            'userId' => $userId,
+            'amount' => $amount,
+            'note' => $type,
+        ];
+        Wallet::create($fieldInvest);
     }
     public static function getBonusLoyaltyUser($userId, $type){
         if($type == 'gold') {
@@ -297,9 +338,7 @@ class User extends Authenticatable
         }
         return 0;
     }
-    public static function pushIntoTree(){
 
-    }
     public static function bonusDay(){
         $lstUser = User::where('active', '=', 1)->where('status', '=', 1)->get();
         foreach($lstUser as $user){
