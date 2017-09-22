@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BonusBinary extends Model
 {
     protected $fillable = [
-		'userId', 'weeked', 'year', 'leftNew', 'rightNew', 'leftOpen', 'rightOpen', 'settled', 'bonus', 'weekYear'
+		'userId', 'weeked', 'year', 'leftNew', 'rightNew', 'leftOpen', 'rightOpen', 'settled', 'bonus', 'weekYear', 'bonus_tmp'
 	];
 	public function __construct(array $attributes = [])
     {
