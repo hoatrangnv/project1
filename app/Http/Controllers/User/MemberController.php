@@ -101,7 +101,8 @@ class MemberController extends Controller
 		if($request->ajax()){
 			if(isset($request['id']) && $request['id'] > 0){
                 $user = User::find($request['id']);
-                if($user && ($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid || $currentuserid == $user->id)) {
+                //if($user && ($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid || $currentuserid == $user->id)) {
+                if($user) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);
