@@ -116,7 +116,6 @@ class User extends Authenticatable
             }
             if($userData)
                 self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
-            //self::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
             self::bonusBinaryThisWeek($refererId);
         }
     }
@@ -132,6 +131,7 @@ class User extends Authenticatable
         }
     }
     public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos){
+        $userRoot = UserData::find($userId);
         $user = UserData::find($binaryUserId);
         $usdCoinAmount = 0;
         if($user){
@@ -141,11 +141,11 @@ class User extends Authenticatable
             }
             if ($legpos == 1){
                 $user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
-                $user->lastUserIdLeft = $userId;
+                $user->lastUserIdLeft = $userRoot ? $userRoot->lastUserIdLeft : $userId;
                 $user->leftMembers = $user->leftMembers + 1;
             }else{
                 $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
-                $user->lastUserIdRight = $userId;
+                $user->lastUserIdRight = $userRoot ? $userRoot->lastUserIdRight : $userId;
                 $user->rightMembers = $user->rightMembers + 1;
             }
             $user->totalMembers = $user->totalMembers + 1;
@@ -234,6 +234,7 @@ class User extends Authenticatable
         if($weeked < 10)$weekYear = $year.'0'.$weeked;
         $binary = BonusBinary::where('weekYear', '=', $weekYear)->where('userId', '=', $userId)->first();
         //foreach ($lstBinary as $binary) {
+        if($binary){
             $leftOver = $binary->leftOpen + $binary->leftNew;
             $rightOver = $binary->rightOpen + $binary->rightNew;
             if ($leftOver >= $rightOver) {
@@ -261,6 +262,8 @@ class User extends Authenticatable
             $binary->settled = $settled;
             $binary->bonus_tmp = $bonus;
             $binary->save();
+        }
+
         //}
     }
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){

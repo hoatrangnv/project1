@@ -221,8 +221,10 @@ class MemberController extends Controller
                 $userData = UserData::find($request->userid);
                 if($userData && $userData->refererId == Auth::user()->id && $userData->isBinary !== 1){
                     $userData->isBinary = 1;
-                    $userData->lastUserIdLeft = $userData->userId;
-                    $userData->lastUserIdRight = $userData->userId;
+                    if($userData->lastUserIdLeft == 0)
+                        $userData->lastUserIdLeft = $userData->userId;
+                    if($userData->lastUserIdRight == 0)
+                        $userData->lastUserIdRight = $userData->userId;
                     $userData->leftRight = $request['legpos'] == 1 ? 'left' : 'right';
                     $lastUserIdLeft = $lastUserIdRight = Auth::user()->id;
                     if(Auth::user()->userData && Auth::user()->userData->lastUserIdLeft && Auth::user()->userData->lastUserIdLeft > 0){
