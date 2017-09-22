@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPasswords;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -151,7 +152,8 @@ class User extends Authenticatable
             self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
             self::bonusLoyaltyUser($userId, $partnerId, $legpos);
             //if($user->binaryUserId > 0 && $partnerId != $binaryUserId) {
-            if($user->binaryUserId > 0 || $user->refererId > 0) {
+            //if($user->binaryUserId > 0 || $user->refererId > 0) {
+            if($user->binaryUserId > 0) {    
                 User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos);
             }
         }
