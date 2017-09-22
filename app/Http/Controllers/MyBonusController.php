@@ -34,14 +34,16 @@ class MyBonusController extends Controller
     public function binaryCalculatorBonus(Request $request){
 	    $totalBonus = 0;
         $currentuserid = Auth::user()->id;
-        $user = User::findOrFail($currentuserid);
-        $totalBonusPercent = self::binaryCalculatorBonusPercent($user->packageId);
-        $weeked = date('W');
-        $year = date('Y');
-        $weekYear = $year.$weeked;
-        if($weeked < 10)$weekYear = $year.'0'.$weeked;
-        $binary = BonusBinary::where('userId', '=',$currentuserid)->where('weekYear', '=',$weekYear)->get();
-        $totalBonus = round($totalBonusPercent * $binary->settled);
+        $user = User::find($currentuserid);
+        if($user){
+            $totalBonusPercent = self::binaryCalculatorBonusPercent($user->packageId);
+            $weeked = date('W');
+            $year = date('Y');
+            $weekYear = $year.$weeked;
+            if($weeked < 10)$weekYear = $year.'0'.$weeked;
+            $binary = BonusBinary::where('userId', '=',$currentuserid)->where('weekYear', '=',$weekYear)->get();
+            $totalBonus = round($totalBonusPercent * $binary->settled);
+        }
         return $totalBonus;
     }
     function binaryCalculatorBonusPercent($packageId = 1){

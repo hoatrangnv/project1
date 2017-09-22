@@ -48,7 +48,7 @@ class MemberController extends Controller
                         }
 					} else {
                         $currentuserid = Auth::user()->id;
-                        $user = User::findOrFail($currentuserid);
+                        $user = Auth::user();
                        // $userData = UserData::where('userId', '=', $user->id)->first();
                         $fields = [
                             'id'     => $user->id,
@@ -100,8 +100,8 @@ class MemberController extends Controller
         $currentuserid = Auth::user()->id;
 		if($request->ajax()){
 			if(isset($request['id']) && $request['id'] > 0){
-                $user = User::findOrFail($request['id']);
-                if($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid || $currentuserid == $user->id) {
+                $user = User::find($request['id']);
+                if($user && ($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid || $currentuserid == $user->id)) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);
@@ -128,7 +128,7 @@ class MemberController extends Controller
                     return response()->json(['err'=>1]);
                 }
 			}else{
-                $user = User::findOrFail($currentuserid);
+                $user = Auth::user();
                 $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                 $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                 $weeklySale = self::getWeeklySale($user->id);
@@ -218,7 +218,7 @@ class MemberController extends Controller
 	public function pushIntoTree(Request $request){
         if($request->ajax()){
             if(isset($request->userid) && $request->userid > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
-                $userData = UserData::findOrFail($request->userid);
+                $userData = UserData::find($request->userid);
                 if($userData && $userData->refererId == Auth::user()->id && $userData->isBinary !== 1){
                     $userData->isBinary = 1;
                     $userData->lastUserIdLeft = $userData->userId;

@@ -61,8 +61,7 @@ class BtcWalletController extends Controller
     public static function deposit(Request $request){
         if($request->ajax()) {
             if(isset($request['action']) && $request['action'] == 'btc') {
-                $currentuserid = Auth::user()->id;
-                $user = UserCoin::findOrFail($currentuserid);
+                $user = Auth::user()->userCoin;
                 return response()->json(array('walletAddress' => $user->walletAddress));
             }
         }
@@ -86,34 +85,27 @@ class BtcWalletController extends Controller
      * @return type
      */
     public function tranferBtcClp(Request $request){
-
         $currentuserid = Auth::user()->id;
-        $user = UserCoin::findOrFail($currentuserid);
+        $userCoin = Auth::user()->userCoin;
         $walletAdmin = config("app.btc_wallet_admin");
-        
         if ( $request->isMethod('post') ) {
             //validate
             $this->validate($request, [
                 'btcAmount'=>'required|numeric',
                 'clpAmount'=>'required|numeric'
             ]);
-            
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn 
-            // số tiền chuyển đi thì thực hiện giao dịch 
-            
-            if ( UserCoin::findOrFail($currentuserid)->btcCoinAmount - config('app.fee_withRaw') > 
+            // số tiền chuyển đi thì thực hiện giao dịch
+            if ( $userCoin->btcCoinAmount - config('app.fee_withRaw') >
                     $request->btcAmount ) {
-                
                 //Config API key
                 $configuration = Configuration::apiKey( 
                         config('app.coinbase_key'), 
                         config('app.coinbase_secret') );
             
                 $client = Client::create($configuration);
-                
                 //quy đổi sang clp cho user
                 $newClpUser = $request->btcAmount / User::getCLPBTCRate() + $user->clpCoinAmount;
-                
                 $transaction = Transaction::send([
                     'toBitcoinAddress' => $walletAdmin,
                     'amount'           => new Money($request->btcAmount, CurrencyCode::BTC),
@@ -133,13 +125,11 @@ class BtcWalletController extends Controller
                             "amountBTC" => $request->btcAmount,
                             "detail" => json_encode($resultGiven)
                         ];
-                        $dataInsert = Withdraw::creat($dataInsert);
-
+                        $dataInsert = Withdraw::create($dataInsert);
                         if($dataInsert == 1) {
                             $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_withdraw') );
                             //update btc amount của user sau khi chuyển
                             $btc = (double) $account->getBalance()->getAmount();
-                            
                             UserCoin::where('userId', '=',$currentuserid)
                             ->update([
                                 'btcCoinAmount' => $btc,

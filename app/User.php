@@ -228,8 +228,8 @@ class User extends Authenticatable
         $year = date('Y');
         $weekYear = $year.$weeked;
         if($weeked < 10)$weekYear = $year.'0'.$weeked;
-        $lstBinary = BonusBinary::where('weekYear', '=', $weekYear)->where('userId', '=', $userId)->get();
-        foreach ($lstBinary as $binary) {
+        $binary = BonusBinary::where('weekYear', '=', $weekYear)->where('userId', '=', $userId)->first();
+        //foreach ($lstBinary as $binary) {
             $leftOver = $binary->leftOpen + $binary->leftNew;
             $rightOver = $binary->rightOpen + $binary->rightNew;
             if ($leftOver >= $rightOver) {
@@ -257,7 +257,7 @@ class User extends Authenticatable
             $binary->settled = $settled;
             $binary->bonus_tmp = $bonus;
             $binary->save();
-        }
+        //}
     }
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){
         $leftRight = $legpos == 1 ? 'left' : 'right';
@@ -441,12 +441,12 @@ class User extends Authenticatable
             $leftOver = $binary->leftOpen + $binary->leftNew;
             $rightOver = $binary->rightOpen + $binary->rightNew;
             if ($leftOver >= $rightOver) {
-                $leftOpen = 0;
-                $rightOpen = $leftOver - $rightOver;
+                $leftOpen = $leftOver - $rightOver;
+                $rightOpen = 0;
                 $settled = $rightOver;
             } else {
-                $leftOpen = $rightOver - $leftOver;
-                $rightOpen = 0;
+                $leftOpen = 0;
+                $rightOpen = $rightOver - $leftOver;
                 $settled = $leftOver;
             }
             $bonus = 0;
@@ -502,8 +502,8 @@ class User extends Authenticatable
 
     }
     public static function checkBinaryCount($userId, $packageId){
-        $countLeft = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight', '>', 'left')->count();
-        $countRight = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight', '>', 'right')->count();
+        $countLeft = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight',  'left')->count();
+        $countRight = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight',  'right')->count();
         if($countLeft >= 3 && $countRight >= 3){
             return true;
         }
