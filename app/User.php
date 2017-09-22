@@ -111,26 +111,26 @@ class User extends Authenticatable
                     Wallet::create($fieldInvest);
                 }
                 if($packageBonus > 0)
-                    self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus);
+                    self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
             }
             if($userData)
                 self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
             self::bonusBinaryThisWeek($refererId);
         }
     }
-    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0){// Hoa hong truc tiep F1 -> F3 log
+    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0, $level = 1){// Hoa hong truc tiep F1 -> F3 log
         if($userId > 0){
             $fields = [
                 'userId'     => $userId,
                 'partnerId'     => $partnerId,
-                'generation'     => $packageId,
+                'generation'     => $level,
                 'amount'     => $amount,
             ];
             BonusFastStart::create($fields);
         }
     }
     public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos){
-        $user = UserData::findOrFail($binaryUserId);
+        $user = UserData::find($binaryUserId);
         $usdCoinAmount = 0;
         if($user){
             $userPackage = UserPackage::where('userId', $userId)->where('packageId', $packageId)->first();
@@ -269,7 +269,7 @@ class User extends Authenticatable
         $isSilver = 0;
         foreach ($users as $user) {
             if($user->packageId > 0){
-                $package = Package::findOrFail($user->packageId);
+                $package = Package::find($user->packageId);
                 if($package){
                     if($user->leftRight == 'left'){
                         $totalf1Left += $package->price * $user->num;
