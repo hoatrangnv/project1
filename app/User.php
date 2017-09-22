@@ -116,6 +116,7 @@ class User extends Authenticatable
             }
             if($userData)
                 self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
+            //self::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
             self::bonusBinaryThisWeek($refererId);
         }
     }
@@ -150,7 +151,8 @@ class User extends Authenticatable
             $user->totalMembers = $user->totalMembers + 1;
             $user->save();
             self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
-            self::bonusLoyaltyUser($userId, $partnerId, $legpos);
+            self::bonusLoyaltyUser($user->userId, $user->refererId, $legpos);
+            //self::bonusLoyaltyUser($userId, $partnerId, $legpos);
             //if($user->binaryUserId > 0 && $partnerId != $binaryUserId) {
             //if($user->binaryUserId > 0 || $user->refererId > 0) {
             if($user->binaryUserId > 0) {    
@@ -263,9 +265,9 @@ class User extends Authenticatable
     }
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){
         $leftRight = $legpos == 1 ? 'left' : 'right';
-        $users = UserData::where('refererId', '=',$userId)
+        $users = UserData::where('refererId', '=', $userId)
             ->groupBy(['packageId', 'leftRight'])
-            ->selectRaw('packageId, count(*) as num')
+            ->selectRaw('packageId, leftRight, count(*) as num')
             ->get();
         $totalf1Left = $totalf1Right = 0;
         $isSilver = 0;
@@ -347,7 +349,7 @@ class User extends Authenticatable
             'type' => Wallet::LTOYALTY_TYPE,//bonus f1
             'inOut' => Wallet::IN,
             'userId' => $userId,
-            'amount' => $amount,
+            'amount' => $amount * config("cryptolanding.usd_bonus_pay"),
             'note' => $type,
         ];
         Wallet::create($fieldUsd);
@@ -356,7 +358,7 @@ class User extends Authenticatable
             'type' => Wallet::LTOYALTY_TYPE,//bonus f1
             'inOut' => Wallet::IN,
             'userId' => $userId,
-            'amount' => $amount,
+            'amount' => $amount * config("cryptolanding.reinvest_bonus_pay"),
             'note' => $type,
         ];
         Wallet::create($fieldInvest);

@@ -44,7 +44,7 @@ class ClpWalletController extends Controller {
         
         //get Packgage
         $currentuserid = Auth::user()->id;
-        $user = User::findOrFail($currentuserid);
+        $user = Auth::user();
         $packages = Package::all();
         $lstPackSelect = array();
         foreach ($packages as $package){

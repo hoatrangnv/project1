@@ -52,7 +52,7 @@ class WalletController extends Controller
         
         //get Packgage
         $currentuserid = Auth::user()->id;
-        $user = User::findOrFail($currentuserid);
+        $user = Auth::user();
         $packages = Package::all();
         $lstPackSelect = array();
         foreach ($packages as $package){
@@ -100,7 +100,7 @@ class WalletController extends Controller
 
             $amount = $request->get('amount');
 
-            $userCoin = UserCoin::findOrFail($currentuserid);
+            $userCoin = Auth::user()->userCoin;
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + ($tygia * $amount);
             $userCoin->usdAmount = $userCoin->usdAmount - $amount;
             $userCoin->save();
@@ -135,12 +135,12 @@ class WalletController extends Controller
      */
     public function buyclpbybtc(Request $request){
         $currentuserid = Auth::user()->id;
-        $user = User::findOrFail($currentuserid);
+        $user = Auth::user();
         $tygia = 1;
         if ($request->isMethod('post')) {
             Validator::extend('btcCoinAmount', function ($attribute, $value) {
                 $currentuserid = Auth::user()->id;
-                $userCoin = UserCoin::findOrFail($currentuserid);
+                $userCoin = Auth::user()->userCoin;
                 if ($userCoin->btcCoinAmount < $value)
                     return false;
                 return true;
@@ -150,7 +150,7 @@ class WalletController extends Controller
             ]);
             $amount = $request->get('amount');
 
-            $userCoin = UserCoin::findOrFail($currentuserid);
+            $userCoin = Auth::user()->userCoin;
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + ($tygia*$amount);
             $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $amount;
             $userCoin->save();
@@ -184,12 +184,12 @@ class WalletController extends Controller
      */
     public function sellclpbybtc(Request $request){
         $currentuserid = Auth::user()->id;
-        $user = User::findOrFail($currentuserid);
+        $user = Auth::user();
         $tygia = 1;
         if ($request->isMethod('post')) {
             Validator::extend('clpCoinAmount', function ($attribute, $value) {
                 $currentuserid = Auth::user()->id;
-                $userCoin = UserCoin::findOrFail($currentuserid);
+                $userCoin = Auth::user()->userCoin;
                 if ($userCoin->clpCoinAmount < $value)
                     return false;
                 return true;
@@ -199,7 +199,7 @@ class WalletController extends Controller
             ]);
             $amount = $request->get('amount');
 
-            $userCoin = UserCoin::findOrFail($currentuserid);
+            $userCoin = Auth::user()->userCoin;
             $userCoin->btcCoinAmount = $userCoin->btcCoinAmount + ($tygia*$amount);
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amount;
             $userCoin->save();
@@ -232,7 +232,7 @@ class WalletController extends Controller
      */
     public function buysellclp(){
         $currentuserid = Auth::user()->id;
-        $user = User::findOrFail($currentuserid);
+        $user = Auth::user();
         $tygia = 1;
         return view('adminlte::wallets.buysellclp')->with(compact('user', 'tygia'));
     }

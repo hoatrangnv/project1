@@ -238,7 +238,7 @@ class MemberController extends Controller
                     }
                     $userData->save();
                     User::bonusBinary($userData->userId, $userData->refererId, $userData->packageId, $userData->binaryUserId, $request['legpos']);
-
+                    User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
                     return response()->json(['status'=>1]);
                 }
             }

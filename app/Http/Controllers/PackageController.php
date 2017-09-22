@@ -100,6 +100,12 @@ class PackageController extends Controller
             $userCoin->save();
 
             User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
+
+            if(in_array($userData->leftRight, ['left', 'right']))
+                User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
+            if($userData->binaryUserId > 0 && in_array($userData->leftRight, ['left', 'right'])){
+                User::bonusBinary($userData->userId, $userData->refererId, $userData->packageId, $userData->binaryUserId, $userData->leftRight);
+            }
             return redirect()->route('wallet.clp')
                 ->with('flash_message',
                     'Buy package successfully.');
