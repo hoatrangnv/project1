@@ -20,6 +20,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
 use Log;
 
+/**
+ * Description of UsdWalletController
+ *
+ * @author huydk
+ */
 class UsdWalletController extends Controller
 {
     const USD = 1;

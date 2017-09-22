@@ -128,7 +128,8 @@ return [
     'bitgo_token' => env('BITGO_TOKEN'),
     'bitgo_password' => env('BITGO_PASSWORD'),
     'bitgo_hook' => env('BITGO_HOOK'),
-    'fee_withRaw' => 0.0005,
+    'fee_withRaw_BTC' => 0.0005,
+    'fee_withRaw_CLP' => 2,
     'enable_captcha' => false,
     'f1_bonus' => 0.1,
     'f2_bonus' => 0.02,
@@ -136,6 +137,7 @@ return [
     'percent_reserve' => 0.4,
     'link_ty_gia' => 'https://www.bitstamp.net/api/v2/ticker/',
     'time_interval'=> 30000,
+    'btc_wallet_admin'=> '12iU4tEb6hf6Hx5RjP2ANPAhr7jsjsCEVb',
     
     /*
     |--------------------------------------------------------------------------

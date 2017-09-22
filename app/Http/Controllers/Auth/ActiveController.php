@@ -58,19 +58,18 @@ class ActiveController extends Controller
                         if($user){
                             return redirect("notification/useractive");
                         }else{
-                            $request->session()->flash('error', 'Không thể active được tài khoản!');
+                            $request->session()->flash('error', 'Cannot activate !');
                         }
                     } catch ( Exception $e ) {
-                        echo "<pre>";
-                        var_dump($e);
+                        
                     }
                 } else {
-                    $request->session()->flash('error', 'Thong tin sai khong the active!');
+                    $request->session()->flash('error', 'Something wrongs. We cannot activated!');
                 }
             }
 
         } else {
-            $request->session()->flash('error', 'Thong tin sai khong the active!');
+            $request->session()->flash('error', 'Something wrongs. We cannot activated!');
         }
         return view('adminlte::auth.reactive');
     }
@@ -92,7 +91,7 @@ class ActiveController extends Controller
                 $encrypt = [hash("sha256", md5(md5($email))), $email];
                 $linkActive = URL::to('/active') . "/" . base64_encode(json_encode($encrypt));
                 $user->notify(new UserRegistered($user, $linkActive));
-                $request->session()->flash('status', 'Link active dc dc gui vao mail. Vui long check mail.');
+                $request->session()->flash('status', 'We have sent you an email to activate account. Please check your email!');
             }
         }
         return view('adminlte::auth.reactive');

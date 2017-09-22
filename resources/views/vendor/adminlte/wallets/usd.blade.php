@@ -151,9 +151,9 @@
                             <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
                             <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
                             <th>{{ trans('adminlte_lang::wallet.wallet_type') }}</th>
-                            <th>{{ trans('adminlte_lang::wallet.amount') }}</th>
                             <th>{{ trans('adminlte_lang::wallet.wallet_in') }}</th>
                             <th>{{ trans('adminlte_lang::wallet.wallet_out') }}</th>
+                            <th>{{ trans('adminlte_lang::wallet.wallet_info') }}</th>
                         </tr>
                         <tbody>
                             @foreach ($wallets as $key => $wallet)
@@ -168,7 +168,7 @@
                                     @elseif($wallet->type == Wallet::BINARY_TYPE)
                                         {{ trans('adminlte_lang::wallet.binary') }}
                                     @elseif($wallet->type == Wallet::LTOYALTY_TYPE)
-                                        {{ trans('adminlte_lang::wallet.ltoyalty') }}
+                                        {{ trans('adminlte_lang::wallet.loyalty') }}
                                     @elseif($wallet->type == Wallet::USD_CLP_TYPE)
                                         {{ trans('adminlte_lang::wallet.usd_clp_type') }}
                                     @elseif($wallet->type == Wallet::REINVEST_CLP_TYPE)
@@ -179,16 +179,17 @@
                                         {{ trans('adminlte_lang::wallet.clp_btc_type') }}
                                     @endif
                                 </td>
-                                <td>{{ $wallet->amount }}</td>
                                 <td>
                                     @if($wallet->inOut=='in')
-                                    <span class="glyphicon glyphicon-log-in text-primary"></span>
+                                        {{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='out')
-                                            <span class="glyphicon glyphicon-log-out text-danger"></span>
+                                        {{ $wallet->amount }}
                                     @endif
+                                </td>
+                                <td>
                                 </td>
                                 
                             </tr>

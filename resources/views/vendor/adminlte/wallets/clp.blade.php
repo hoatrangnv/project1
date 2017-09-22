@@ -30,6 +30,7 @@
                        class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
                     <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#buy-package">Buy
                         package</a>
+                    <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <table class="table table-bordered table-hover table-striped dataTable">
@@ -105,7 +106,46 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
+    <!--withdrawa modal-->
+    {{ Form::open(array('url' => 'wallets/clpwithdraw'))}}
+    <div class="modal fade" id="withdraw" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">WithRaw</h4>
+          </div>
+          <div class="modal-body">
+                <div class="box no-border">
+                    <div class="box-body" style="padding-top:0;">
+                        <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
+                                {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm', 'placeholder' => "Bitcoin address E.g. 1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v")) }}
+                        </div>
+                        <br>
+                        <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "OTP Code E.g. 123456")) }}
+                        </div>
+                    </div>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            {{ Form::submit(trans('adminlte_lang::wallet.btn_withdraw'), array('class' => 'btn btn-primary')) }}
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>  
+    {{ Form::close() }}
     <script>
         var packageId = {{ Auth::user()->userData->packageId }};
         var packageIdPick = packageId;

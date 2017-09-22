@@ -43,14 +43,17 @@
                         <div class="card box">
                             <div class="card-body text-center h-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-                                <h1 class="m"><i class="fa fa-bitcoin"></i><span id="btc-balance" class="btcCoin">{{ Auth()->user()->userCoin->btcCoinAmount }}</span></h1>
+                                <h1 class="m"><i class="fa fa-btc"></i> <span id="btc-balance" class="btcCoin">{{ Auth()->user()->userCoin->btcCoinAmount }}</span></h1>
                                 <h3 class="font-extra-bold m-xs text-success">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <button type="button" data-toggle="modal" data-target="#deposit" class="ladda-button btn btn-primary btn-block waves-effect" data-style="zoom-in"><span class="ladda-label">Deposit</span><span class="ladda-spinner"></span></button>
+                                        <div class="col-md-4">
+                                            <button type="button" data-toggle="modal" data-target="#deposit" class="ladda-button btn btn-primary btn-block waves-effect" data-style="zoom-in"><span class="ladda-label">{{trans("adminlte_lang::wallet.deposit")}}</span><span class="ladda-spinner"></span></button>
                                         </div>
-                                        <div class="col-md-6">
-                                            <button type="button" data-toggle="modal" data-target="#withdraw" class="ladda-button btn btn-primary btn-block waves-effect" id="getBtccoin" data-style="zoom-in"><span class="ladda-label">WithDraw</span><span class="ladda-spinner"></span></button>
+                                        <div class="col-md-4">
+                                            <button type="button" data-toggle="modal" data-target="#withdraw" class="ladda-button btn btn-primary btn-block waves-effect" id="getBtccoin" data-style="zoom-in"><span class="ladda-label">{{trans("adminlte_lang::wallet.withdraw")}}</span><span class="ladda-spinner"></span></button>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" data-toggle="modal" data-target="#tranfer" class="ladda-button btn btn-primary btn-block waves-effect" data-style="zoom-in"><span class="ladda-label">{{trans("adminlte_lang::wallet.transfer")}}</span><span class="ladda-spinner"></span></button>
                                         </div>
                                     </div>
                                 </h3>
@@ -137,7 +140,8 @@
           </div>
           <!-- /.modal-dialog -->
         </div>
-        <!--Withdraw modal-->
+                    
+        <!--withdrawa modal-->
         {{ Form::open(array('url' => 'wallets/btcwithdraw'))}}
         <div class="modal fade" id="withdraw" style="display: none;">
           <div class="modal-dialog">
@@ -151,12 +155,12 @@
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                                    {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm', 'step' => '0.1', 'placeholder' => "Bitcoin amount E.g. 0.1")) }}
+                                    <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                                    {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
-                                    <span class="input-group-addon">@</span>
+                                <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
                                     {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm', 'placeholder' => "Bitcoin address E.g. 1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v")) }}
                             </div>
                             <br>
@@ -177,6 +181,48 @@
           <!-- /.modal-dialog -->
         </div>  
         {{ Form::close() }}
+        
+        <!--Tranfer modal-->
+        <div class="modal fade" id="tranfer" style="display: none;">
+        {{ Form::open(array('url' => 'wallets/btctranfer')) }}
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}</h4>
+              </div>
+              <div class="modal-body">
+                    <div class="box no-border">
+                        <div class="box-body" style="padding-top:0;"><em style="color:red">*</em>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                            </div>
+                            <em style="color:red">*</em>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC', 'step' => '0.0001','placeholder' => "CLP Amount")) }}
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "OTP Code E.g. 123456")) }}
+                            </div>
+                        </div>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary')) }}
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        {{ Form::close() }}
+        </div>  
+       
         <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
             
 	<script>
@@ -201,12 +247,60 @@
                     $(".wallet-address").html(data.err);
                 }
             });
-            
+
             function getBtccoin(){
                 $.get( "getbtccoin", function( data ) {
                     $( ".btcCoin" ).html( data );
                 });
             };
+
+            //Switch Btc and Clp
             
+            $(".switch-BTC-to-CLP").on('keyup change mousewheel', function (){
+                var value = $(this).val();
+                var type = "BtcToClp";
+                //send
+                var result = switchChange(value,type);
+            });
+
+            $( ".switch-CLP-to-BTC" ).on('keyup change mousewheel', function() {
+                var value = $(this).val();
+                var type = "ClpToBtc";
+                //send
+                var result = switchChange(value,type);
+            });
+
+
+            function switchChange(value,type){
+                $.ajax({
+                    beforeSend: function(){
+                      // Handle the beforeSend event
+                    },
+                    url:"switchbtcclp",
+                    type:"get",
+                    data : {
+                        type: type,
+                        value: value
+                    },
+                    success : function(result){
+                        if( type == "BtcToClp" ){
+                            if(result.success) {
+                                $(".switch-CLP-to-BTC").val(result.result);
+                            }
+                        } else {
+                            if(result.success) {
+                                $(".switch-BTC-to-CLP").val(result.result); 
+                            }
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("some error");
+                    },
+                    complete: function(){
+
+                    }
+                    // ......
+                });
+            }
 	</script>
 @endsection
