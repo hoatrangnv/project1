@@ -41,7 +41,7 @@ desired effect
     @include('adminlte::layouts.partials.mainheader')
 
     @include('adminlte::layouts.partials.sidebar')
-    @include('adminlte::layouts.partials.sidebar')
+    
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -52,7 +52,97 @@ desired effect
         <section class="content">
             @include('flash::message')
             <!-- Your Page Content Here -->
-            @yield('main-content')
+            <div class="row" >
+                <div class="col-md-9" >
+                    @yield('main-content')
+                </div>
+                <div class="col-md-3">
+                    <div class="box box-danger row">
+                        <div class="box-header with-border">
+                           <h3 class="box-title">Crypto news</h3>
+
+                           <div class="box-tools pull-right">
+                               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                               </button>
+                               <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                               </button>
+                           </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding" style="">
+
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer text-center" style="">
+                           <a href="javascript:void(0)" class="uppercase">View more</a>
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <div class="box box-danger row">
+                        <div class="box-header with-border">
+                          <h3 class="box-title">Blockchain news</h3>
+
+                          <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding" style="">
+
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer text-center" style="">
+                          <a href="javascript:void(0)" class="uppercase">View more</a>
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <div class="box box-danger row">
+                        <div class="box-header with-border">
+                           <h3 class="box-title">CLP news</h3>
+
+                           <div class="box-tools pull-right">
+                               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                               </button>
+                               <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                               </button>
+                           </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding" style="">
+
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer text-center" style="">
+                          <a href="javascript:void(0)" class="uppercase">View more</a>
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <div class="box box-danger row">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">P2P news</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding" style="">
+                            
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer text-center" style="">
+                          <a href="javascript:void(0)" class="uppercase">View more</a>
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                </div>
+            </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 
