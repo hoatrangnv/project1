@@ -112,24 +112,24 @@ class UserController extends Controller
         ]);
 
         // Get the user
-        $user = User::findOrFail($id);
+        $user = User::find($id);
+        if ($user){
+            $user->fill($request->except('roles', 'permissions', 'password'));
+            if($request->get('password')) {
+                $user->password = bcrypt($request->get('password'));
+            }
+            $this->syncPermissions($request, $user);
 
-        // Update user
-        $user->fill($request->except('roles', 'permissions', 'password'));
+            $user->save();
 
-        // check for password change
-        if($request->get('password')) {
-            $user->password = bcrypt($request->get('password'));
+            flash()->success('User has been updated.');
+
+            return redirect()->route('users.index');
+        }else{
+            return redirect()->route('users.index')
+                ->with('error',
+                    'User not update!');
         }
-
-        // Handle the user roles
-        $this->syncPermissions($request, $user);
-
-        $user->save();
-
-        flash()->success('User has been updated.');
-
-        return redirect()->route('users.index');
     }
 
     /**
@@ -146,7 +146,7 @@ class UserController extends Controller
             return redirect()->back();
         }
 
-        if( User::findOrFail($id)->delete() ) {
+        if( User::find($id)->delete() ) {
             flash()->success('User has been deleted');
         } else {
             flash()->success('User not deleted');

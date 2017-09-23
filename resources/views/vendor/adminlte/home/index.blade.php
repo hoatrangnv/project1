@@ -77,7 +77,7 @@
                     <div class="box-body">
                         <center><h3 class="box-title" style="font-size:18px; font-weight: bold;">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b></h3></center>
 
-                        <center><h3 class="box-title" style="font-size:18px; font-weight: bold;">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ Auth::user()->userData->totalBonusLeft + Auth::user()->userData->totalBonusRight }}</b></h3></center>
+                        <center><h3 class="box-title" style="font-size:18px; font-weight: bold;">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['totalF1Sale'] }}</b></h3></center>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -236,12 +236,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="box box-solid div-center">
-                                    {{ trans('adminlte_lang::home.f1_left_tichluy') }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{$data['totalF1UserLeft']}}</b>
+                                    {{ trans('adminlte_lang::home.f1_left_tichluy') }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{$data['leftOpen']}}</b>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="box box-solid div-center">
-                                    {{ trans('adminlte_lang::home.f1_right_tichluy') }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{$data['totalF1UserRight']}}</b>
+                                    {{ trans('adminlte_lang::home.f1_right_tichluy') }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{$data['rightOpen']}}</b>
                                 </div>
                             </div>
                         </div>
@@ -254,7 +254,7 @@
                 <div class="col-md-6">
                   <div class="box box-solid">
                     <div class="box-header with-border">
-                      <center><h3 class="box-title" style="font-size:30px;font-weight: bold;">{{ trans('adminlte_lang::home.trang_thai_dau_tu') }}</h3></center>
+                      <center><h3 class="box-title" style="font-size:30px;font-weight: bold;">{{ trans('adminlte_lang::home.investment_status') }}</h3></center>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

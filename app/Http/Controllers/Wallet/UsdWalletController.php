@@ -95,7 +95,7 @@ class UsdWalletController extends Controller
     private function tranferUSDCLP($usd, $clp, $request){
         //Kq sau khi tính 
         $valueAfterTranfer = [];
-        $user = UserCoin::findOrFail( Auth::user()->id );
+        $user = Auth::user()->userCoin;
 
         try {
             //action trừ tiền USD và Cộng CLP của user Trong bảng UserCoin

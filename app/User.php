@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPasswords;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -111,26 +112,27 @@ class User extends Authenticatable
                     Wallet::create($fieldInvest);
                 }
                 if($packageBonus > 0)
-                    self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus);
+                    self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
             }
             if($userData)
                 self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
             self::bonusBinaryThisWeek($refererId);
         }
     }
-    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0){// Hoa hong truc tiep F1 -> F3 log
+    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0, $level = 1){// Hoa hong truc tiep F1 -> F3 log
         if($userId > 0){
             $fields = [
                 'userId'     => $userId,
                 'partnerId'     => $partnerId,
-                'generation'     => $packageId,
+                'generation'     => $level,
                 'amount'     => $amount,
             ];
             BonusFastStart::create($fields);
         }
     }
     public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos){
-        $user = UserData::findOrFail($binaryUserId);
+        $userRoot = UserData::find($userId);
+        $user = UserData::find($binaryUserId);
         $usdCoinAmount = 0;
         if($user){
             $userPackage = UserPackage::where('userId', $userId)->where('packageId', $packageId)->first();
@@ -139,19 +141,21 @@ class User extends Authenticatable
             }
             if ($legpos == 1){
                 $user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
-                $user->lastUserIdLeft = $userId;
+                $user->lastUserIdLeft = $userRoot ? $userRoot->lastUserIdLeft : $userId;
                 $user->leftMembers = $user->leftMembers + 1;
             }else{
                 $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
-                $user->lastUserIdRight = $userId;
+                $user->lastUserIdRight = $userRoot ? $userRoot->lastUserIdRight : $userId;
                 $user->rightMembers = $user->rightMembers + 1;
             }
             $user->totalMembers = $user->totalMembers + 1;
             $user->save();
             self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
-            self::bonusLoyaltyUser($userId, $partnerId, $legpos);
+            self::bonusLoyaltyUser($user->userId, $user->refererId, $legpos);
+            //self::bonusLoyaltyUser($userId, $partnerId, $legpos);
             //if($user->binaryUserId > 0 && $partnerId != $binaryUserId) {
-            if($user->binaryUserId > 0 || $user->refererId > 0) {
+            //if($user->binaryUserId > 0 || $user->refererId > 0) {
+            if($user->binaryUserId > 0) {    
                 User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos);
             }
         }
@@ -228,8 +232,9 @@ class User extends Authenticatable
         $year = date('Y');
         $weekYear = $year.$weeked;
         if($weeked < 10)$weekYear = $year.'0'.$weeked;
-        $lstBinary = BonusBinary::where('weekYear', '=', $weekYear)->where('userId', '=', $userId)->get();
-        foreach ($lstBinary as $binary) {
+        $binary = BonusBinary::where('weekYear', '=', $weekYear)->where('userId', '=', $userId)->first();
+        //foreach ($lstBinary as $binary) {
+        if($binary){
             $leftOver = $binary->leftOpen + $binary->leftNew;
             $rightOver = $binary->rightOpen + $binary->rightNew;
             if ($leftOver >= $rightOver) {
@@ -258,18 +263,20 @@ class User extends Authenticatable
             $binary->bonus_tmp = $bonus;
             $binary->save();
         }
+
+        //}
     }
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){
         $leftRight = $legpos == 1 ? 'left' : 'right';
-        $users = UserData::where('refererId', '=',$userId)
+        $users = UserData::where('refererId', '=', $userId)
             ->groupBy(['packageId', 'leftRight'])
-            ->selectRaw('packageId, count(*) as num')
+            ->selectRaw('packageId, leftRight, count(*) as num')
             ->get();
         $totalf1Left = $totalf1Right = 0;
         $isSilver = 0;
         foreach ($users as $user) {
             if($user->packageId > 0){
-                $package = Package::findOrFail($user->packageId);
+                $package = Package::find($user->packageId);
                 if($package){
                     if($user->leftRight == 'left'){
                         $totalf1Left += $package->price * $user->num;
@@ -345,7 +352,7 @@ class User extends Authenticatable
             'type' => Wallet::LTOYALTY_TYPE,//bonus f1
             'inOut' => Wallet::IN,
             'userId' => $userId,
-            'amount' => $amount,
+            'amount' => $amount * config("cryptolanding.usd_bonus_pay"),
             'note' => $type,
         ];
         Wallet::create($fieldUsd);
@@ -354,7 +361,7 @@ class User extends Authenticatable
             'type' => Wallet::LTOYALTY_TYPE,//bonus f1
             'inOut' => Wallet::IN,
             'userId' => $userId,
-            'amount' => $amount,
+            'amount' => $amount * config("cryptolanding.reinvest_bonus_pay"),
             'note' => $type,
         ];
         Wallet::create($fieldInvest);
@@ -441,12 +448,12 @@ class User extends Authenticatable
             $leftOver = $binary->leftOpen + $binary->leftNew;
             $rightOver = $binary->rightOpen + $binary->rightNew;
             if ($leftOver >= $rightOver) {
-                $leftOpen = 0;
-                $rightOpen = $leftOver - $rightOver;
+                $leftOpen = $leftOver - $rightOver;
+                $rightOpen = 0;
                 $settled = $rightOver;
             } else {
-                $leftOpen = $rightOver - $leftOver;
-                $rightOpen = 0;
+                $leftOpen = 0;
+                $rightOpen = $rightOver - $leftOver;
                 $settled = $leftOver;
             }
             $bonus = 0;
@@ -502,8 +509,8 @@ class User extends Authenticatable
 
     }
     public static function checkBinaryCount($userId, $packageId){
-        $countLeft = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight', '>', 'left')->count();
-        $countRight = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight', '>', 'right')->count();
+        $countLeft = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight',  'left')->count();
+        $countRight = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight',  'right')->count();
         if($countLeft >= 3 && $countRight >= 3){
             return true;
         }

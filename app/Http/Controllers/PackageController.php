@@ -47,8 +47,8 @@ class PackageController extends Controller
     }
     public function invest(Request $request){
         $currentuserid = Auth::user()->id;
-        $user = User::findOrFail($currentuserid);
-        if ($request->isMethod('post')) {
+        $user = Auth::user();
+        if ($user && $request->isMethod('post')) {
             Validator::extend('packageCheck', function ($attribute, $value) {
                 $user = Auth::user();
                 if($user->userData->packageId < $value){
@@ -71,7 +71,7 @@ class PackageController extends Controller
                 'packageId' => 'required|not_in:0|packageCheck',
             ],['packageId.package_check' => 'CLP Coin not money buy package']);
             $amount_increase = $packageOldId = 0;
-            $userData = UserData::findOrFail($currentuserid);
+            $userData = $user->userData;
             $packageOldId = $userData->packageId;
             $packageOldPrice = isset($userData->package->price) ? $userData->package->price : 0;
 
@@ -80,7 +80,7 @@ class PackageController extends Controller
             $userData->status = 1;
             $userData->save();
 
-            $package = Package::findOrFail($request->packageId);
+            $package = Package::find($request->packageId);
             if ($package) {
                 $amount_increase = $package->price;
             }
@@ -100,6 +100,12 @@ class PackageController extends Controller
             $userCoin->save();
 
             User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
+
+            if(in_array($userData->leftRight, ['left', 'right']))
+                User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
+            if($userData->binaryUserId > 0 && in_array($userData->leftRight, ['left', 'right'])){
+                User::bonusBinary($userData->userId, $userData->refererId, $userData->packageId, $userData->binaryUserId, $userData->leftRight);
+            }
             return redirect()->route('wallet.clp')
                 ->with('flash_message',
                     'Buy package successfully.');
@@ -111,33 +117,45 @@ class PackageController extends Controller
     }
     public function edit($id)
     {
-        $package = Package::findOrFail($id);
+        $package = Package::find($id);
         return view('adminlte::package.edit', compact('package'));
     }
     public function update(Request $request, $id)
     {
-        $package = Package::findOrFail($id);
-        $this->validate($request, [
-                'name'=>'required|unique:packages,name,'.$id,
-                'price'=>'required|integer|unique:packages,price,'.$id,
-                'pack_id'=>'required|integer|unique:packages,pack_id,'.$id,
-            ]
-        );
+        $package = Package::find($id);
+        if($package) {
+            $this->validate($request, [
+                    'name' => 'required|unique:packages,name,' . $id,
+                    'price' => 'required|integer|unique:packages,price,' . $id,
+                    'pack_id' => 'required|integer|unique:packages,pack_id,' . $id,
+                ]
+            );
 
-        $input = $request->only(['pack_id', 'name', 'price', 'token']);
-        $package->fill($input)->save();
+            $input = $request->only(['pack_id', 'name', 'price', 'token']);
+            $package->fill($input)->save();
 
-        return redirect()->route('packages.index')
-            ->with('flash_message',
-                'Package '. $package->name.' updated!');
+            return redirect()->route('packages.index')
+                ->with('flash_message',
+                    'Package ' . $package->name . ' updated!');
+        }else{
+            return redirect()->route('Packages.index')
+                ->with('error',
+                    'Package not update!');
+        }
     }
     public function destroy($id)
     {
-        $package = Package::findOrFail($id);
-        $package->delete();
+        $package = Package::find($id);
+        if($package){
+            $package->delete();
+            return redirect()->route('Packages.index')
+                ->with('flash_message',
+                    'Package deleted!');
+        }else{
+            return redirect()->route('Packages.index')
+                ->with('error',
+                    'Package not delete!');
+        }
 
-        return redirect()->route('Packages.index')
-            ->with('flash_message',
-                'Package deleted!');
     }
 }

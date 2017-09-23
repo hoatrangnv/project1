@@ -12,7 +12,10 @@ use App\UserData;
 use App\BonusBinary;
 use App\Package;
 use App\UserCoin;
+use App\UserPackage;
 use Auth;
+use Log;
+use DB;
 
 /**
  * Class HomeController
@@ -41,12 +44,11 @@ class HomeController extends Controller
         try {
             $data = [];
             //Tong doanh so and ben trai and ben phai
-            $totalF1User              = $this->totalF1();
-            $data['totalF1User']      = $totalF1User->totalBonus;
-            $data['totalF1UserLeft']  = $totalF1User->totalBonusLeft;
-            $data['totalF1UserRight'] = $totalF1User->totalBonusRight;
+            $data['newF1InWeek']      = $this->getF1CurrentWeek();
+            $data['totalF1Sale']   = $this->getF1TotalSale();
+            
             //Goi Packgade id
-            $data['package'] = $totalF1User->packageId;
+            $data['package'] = UserData::findOrFail(Auth::user()->id)->packageId;
 
             if( count( Package::where('id',$data['package'])->get() ) == 0 ){
                 $data['value'] = 0;
@@ -56,15 +58,17 @@ class HomeController extends Controller
 
             //Doanh so F1 moi
             $newF1InWeek = $this->newF1InWeek();
-            $data['newF1InWeek'] = $newF1InWeek['total'];
+            //$data['newF1InWeek'] = $newF1InWeek['total'];
             $data['leftNew']     = $newF1InWeek['leftNew'];
             $data['rightNew']    = $newF1InWeek['rightNew'];
+            $data['leftOpen']    = $newF1InWeek['leftOpen'];
+            $data['rightOpen']   = $newF1InWeek['rightOpen'];
             //Get số lương coin trong tài khoản
             $data['coin'] = $this->getInfoCoin();
             return view('adminlte::home.index')->with('data', $data);
         } catch (Exception $e) {
             //Debug
-            echo $e->gettraceasstring();
+            Log:: $e->gettraceasstring();
         }
     }
 
@@ -85,34 +89,84 @@ class HomeController extends Controller
                 $data['total']   = $data[0]->leftNew + $data[0]->rightNew;
                 $data['leftNew'] = $data[0]->leftNew;
                 $data['rightNew']= $data[0]->rightNew;
+                $data['leftOpen']= $data[0]->leftOpen;
+                $data['rightOpen']= $data[0]->rightOpen;
             }else{
                 $data['total'] = 0;
                 $data['leftNew'] = 0;
                 $data['rightNew'] = 0;
+                $data['leftOpen']= 0;
+                $data['rightOpen']= 0;
             }
             return $data;
         } catch (Exception $e) {
-            echo $e->gettraceasstring();
+            Log::error( $e->gettraceasstring() );
         }
     }
 
     /*
     *Author huynq
-    *Tong doanh so F1 tu khi tham gia and trai and phai
+    * Tong doanh so F1 tu khi tham gia and trai and phai
     */
-    private function totalF1($value='')
+    private function getF1CurrentWeek($value='')
     {
         try {
-            $data = UserData::where('userId',Auth::user()->id)
-                ->get();
+            $data = UserData::where('refererId', Auth::user()->id)
+                ->pluck('userId');
             if ($data) {
-                return $data[0];
+                $firstDayThisWeek = date("Y-m-d 00:00:00", strtotime('monday this week'));
+
+                $amount = 0;
+                foreach( $data as $userId ) {
+                    // Get current week package from table user_packages
+                    $pakages = UserPackage::where('userId', $userId)->where('buy_date', '>',  $firstDayThisWeek)
+                    ->get();
+                    
+                    foreach ($pakages as $package) {
+                        $amount += $package->amount_increase;
+                    }
+                }
+
+                //
+                return $amount;
             }else{
                 //Debug
-                var_dump("Khong ton tai value");
+                Log::error('Cannot get user with userid = ' . Auth::user()->id);
             }
         } catch (Exception $e) {
-            echo ($e->gettraceasstring());
+            Log::error($e->gettraceasstring());
+        }
+    }
+
+    /**
+    * @Author GiangDT
+    * Total F1 from beginning day
+    */
+    private function getF1TotalSale()
+    {
+        try {
+            $data = UserData::where('refererId', Auth::user()->id)
+                ->pluck('userId');
+            if ($data) {
+
+                $amount = 0;
+                foreach( $data as $userId ) {
+                    // Get current week package from table user_packages
+                    $pakages = UserPackage::where('userId', $userId)->get();
+                    
+                    foreach ($pakages as $package) {
+                        $amount += $package->amount_increase;
+                    }
+                }
+
+                //
+                return $amount;
+            }else{
+                //Debug
+                Log::error('Cannot get user with userid = ' . Auth::user()->id);
+            }
+        } catch (Exception $e) {
+            Log::error($e->gettraceasstring());
         }
     }
 

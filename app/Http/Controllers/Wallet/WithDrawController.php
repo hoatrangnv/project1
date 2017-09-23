@@ -101,7 +101,7 @@ class WithDrawController extends Controller
     public function btcWithDraw( Request $request ) {
        
         $currentuserid = Auth::user()->id;
-        $user = UserCoin::findOrFail($currentuserid);
+        $user = Auth::user()->userCoin;
         
         //send coin if request post
         if ( $request->isMethod('post') ) {
@@ -115,7 +115,7 @@ class WithDrawController extends Controller
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn 
             // số tiền chuyển đi thì thực hiện giao dịch 
             
-            if ( UserCoin::findOrFail($currentuserid)->btcCoinAmount - config('app.fee_withRaw_BTC') > 
+            if ( $user->btcCoinAmount - config('app.fee_withRaw_BTC') >
                     $request->withdrawAmount ) {
                 
                  //Config API key
@@ -147,7 +147,7 @@ class WithDrawController extends Controller
                             "status" => 0
                         ];
                     
-                        $dataInsertWithdraw = Withdraw::creat($dataInsert);
+                        $dataInsertWithdraw = Withdraw::create($dataInsert);
                         $request->session()->flash('errorMessage', "Không thực hiện chuyển tiền được trên CoinBase" );
                         return redirect()->route('wallet.btc'); 
                     }
@@ -165,7 +165,7 @@ class WithDrawController extends Controller
                         "status" => 1
                     ];
                     
-                    $dataInsertWithdraw = Withdraw::creat($dataInsert);
+                    $dataInsertWithdraw = Withdraw::create($dataInsert);
                     //insert wallet
                     $dataInsertWallet = [
                         "walletType" => Wallet::BTC_WALLET,
@@ -175,7 +175,7 @@ class WithDrawController extends Controller
                         "amount" => $request->withdrawAmount,
                         "inOut" => "out"
                     ];
-                    $dataInsertWallet = Wallet::creat($dataInsertWallet);
+                    $dataInsertWallet = Wallet::create($dataInsertWallet);
                             
                     if( $dataInsertWithdraw == 1 && $dataInsertWallet == 1 ) {
                         $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_withdraw') );
@@ -222,7 +222,7 @@ class WithDrawController extends Controller
 //              'withdrawOPT'=>'required|min:6'
             ]); 
             
-            if( UserCoin::findOrFail($currentuserid)->btcCoinAmount - config('app.fee_withRaw_CLP') > 
+            if( Auth::user()->userCoin->btcCoinAmount - config('app.fee_withRaw_CLP') >
                     $request->withdrawAmount ) {
                 $link = "http://99.193.6.228:3080/api/withdraw/0xF0f36cC52938A6A4377c6d3B838A9df5A2c28651/1";
             
@@ -257,7 +257,7 @@ class WithDrawController extends Controller
                                 "status" => 1
                             ];
 
-                            $dataInsertWithdraw = Withdraw::creat($dataInsert);
+                            $dataInsertWithdraw = Withdraw::create($dataInsert);
                             //insert wallet
                             $dataInsertWallet = [
                                 "walletType" => Wallet::CLP_WALLET,
@@ -267,7 +267,7 @@ class WithDrawController extends Controller
                                 "amount" => $request->withdrawAmount,
                                 "inOut" => "out"
                             ];
-                            $dataInsertWallet = Wallet::creat($dataInsertWallet);
+                            $dataInsertWallet = Wallet::create($dataInsertWallet);
 
                             $updateClpCoin = UserCoin::where("userId",$request->withdrawAmount)->update([ "clpCoinAmount" => $newClpCoinAmount]);
                             $request->session()->flash( 'succeesMessage', trans('adminlte_lang::wallet.success') );
@@ -283,7 +283,7 @@ class WithDrawController extends Controller
                                 "status" => 0
                             ];
 
-                            $dataInsertWithdraw = Withdraw::creat($dataInsert);
+                            $dataInsertWithdraw = Withdraw::create($dataInsert);
                             $request->session()->flash( 'succeesError', trans('adminlte_lang::wallet.error') );
                         }
                     }
