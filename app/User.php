@@ -155,8 +155,9 @@ class User extends Authenticatable
         if($user){
             // Lay package trong UserPackage nhu chi dung khi trong CASE upgrade
             // Phai lay packageid trong user_datas
-            \Log::info('userId:' . $user->userId);
-            
+            \Log::info('userRoot:' . $userId);
+            \Log::info('binaryUserId:' . $binaryUserId);
+            \Log::info('legpos:' . $legpos);
             if($isUpgrade == true) 
             {
                 // If $userRoot already in binary tree
@@ -177,6 +178,7 @@ class User extends Authenticatable
             } 
             elseif($userRoot->totalMembers == 0) 
             {
+                \Log::info('userRoot:' . $userId . ' has totalMember: ' .  $userRoot->totalMembers);
                 // If $userRoot don't have own tree
                 $userPackage = Package::where('pack_id', $packageId)->first();
                 $usdCoinAmount = isset($userPackage->price) ? $userPackage->price : 0;
@@ -188,6 +190,9 @@ class User extends Authenticatable
                     //$userRoot always have lastUserIdLeft, lastUserIdRight > 0 ( = userid or #userid )
                     $user->lastUserIdLeft = $userRoot->lastUserIdLeft;
                     $user->leftMembers = $user->leftMembers + 1;
+
+                    \Log::info('$user:' . $user->userId . ' has totalBonusLeft: ' .  $user->totalBonusLeft);
+                    \Log::info('$user:' . $user->userId . ' has leftMembers: ' .  $user->leftMembers);
                 }else{
                     //Total sale on right
                     $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
@@ -213,22 +218,22 @@ class User extends Authenticatable
                     //$user->lastUserIdLeft = $userRoot ? $userRoot->lastUserIdLeft : $userId;
                     //$userRoot always have lastUserIdLeft, lastUserIdRight > 0 ( = userid or #userid )
                     $user->lastUserIdLeft = $userRoot->lastUserIdLeft;
-                    $user->leftMembers = $user->leftMembers + $userRoot->leftMembers;
+                    $user->leftMembers = $user->leftMembers + $userRoot->totalMembers + 1;
                 }else{
                     //Total sale on right
                     $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
                     //$user->lastUserIdRight = $userRoot ? $userRoot->lastUserIdRight : $userId;
                     $user->lastUserIdRight = $userRoot->lastUserIdRight;
-                    $user->rightMembers = $user->rightMembers + $userRoot->rightMembers;
+                    $user->rightMembers = $user->rightMembers + $userRoot->totalMembers + 1;
                 }
 
-                $user->totalMembers = $user->totalMembers +  $userRoot->totalMembers;
+                $user->totalMembers = $user->totalMembers +  $userRoot->totalMembers + 1;
             }
 
             $user->save();
 
             \Log::info('usdCoinAmount:' . $usdCoinAmount);
-            \Log::info('legpos:' . $legpos);
+            
 
 
             //Caculate binary bonus for up level of $userRoot in binary tree
@@ -700,9 +705,7 @@ class User extends Authenticatable
             \Log::error('Running bonusDayCron has error: ' . date('Y-m-d') .$e->getMessage());
             //throw new \Exception("Running bonusDayCron has error");
         }
-    }
-
-    
+    }    
 
     public function sendPasswordResetNotification($token)
     {

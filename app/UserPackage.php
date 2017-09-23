@@ -9,7 +9,7 @@ class UserPackage extends Model
     protected $primaryKey = null;
     public $incrementing = false;
     protected $fillable = [
-		'userId', 'packageId', 'amount_increase', 'buy_date', 'release_date'
+		'userId', 'packageId', 'amount_increase', 'buy_date', 'release_date', 'weekYear'
 	];
     
     public function __construct(array $attributes = []) {

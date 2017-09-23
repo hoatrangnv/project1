@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\BonusBinary;
+use App\UserPackage;
 use Auth;
 use Session;
 use App\Http\Controllers\Controller;
@@ -101,7 +102,7 @@ class MemberController extends Controller
 		if($request->ajax()){
 			if(isset($request['id']) && $request['id'] > 0){
                 $user = User::find($request['id']);
-                if($user && ($user->userData->refererId == $currentuserid || $user->userData->binaryUserId == $currentuserid || $currentuserid == $user->id)) {
+                if($user) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);
@@ -113,6 +114,7 @@ class MemberController extends Controller
                         'childLeftId' => $childLeft ? $childLeft->userId : 0,
                         'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
+                        'weeklySale'     => self::getBV($user->id),
                         'left'     => $weeklySale['left'],
                         'right'     => $weeklySale['right'],
                         'pkg' => 2000,
@@ -140,7 +142,7 @@ class MemberController extends Controller
                     'childLeftId' => $childLeft ? $childLeft->userId : 0,
                     'childRightId' => $childRight ? $childRight->userId : 0,
                     'level'     => 0,
-                    'weeklySale'     => $weeklySale['total'],
+                    'weeklySale'     => self::getBV($user->id),
                     'left'     => $weeklySale['left'],
                     'right'     => $weeklySale['right'],
                     'pkg'     => 2000,
@@ -157,6 +159,28 @@ class MemberController extends Controller
 		return view('adminlte::members.binary');
     }
 
+    // Get BV - personal week sale
+    function getBV($userId){
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+        if($weeked < 10)$weekYear = $year.'0'.$weeked;
+
+        $package = UserPackage::where('userId', $userId)
+                            ->where('weekYear', '=', $weekYear)
+                            ->groupBy(['userId'])
+                            ->selectRaw('sum(amount_increase) as totalValue')
+                            ->get()
+                            ->first();
+        $BV = 0;
+        if($package) 
+        {
+            $BV = $package->totalValue;
+        }
+
+        return $BV;
+    }
+
     function getWeeklySale($userId, $type = 'total'){
         $weeked = date('W');
         $year = date('Y');
@@ -164,11 +188,11 @@ class MemberController extends Controller
         if($weeked < 10)$weekYear = $year.'0'.$weeked;
         $week = BonusBinary::where('userId', '=', $userId)->where('weekYear', '=', $weekYear)->first();
         $result = ['left'=>0, 'right'=>0, 'total'=>0];
-        
+
         if($week){
-            $result['left'] = $week->leftNew;
-            $result['right'] = $week->rightNew;
-            $result['total'] = $week->leftNew + $week->rightNew;
+            $result['left'] = $week->leftNew + $week->leftOpen;
+            $result['right'] = $week->rightNew + $week->rightOpen;
+            //$result['total'] = $week->leftNew + $week->rightNew;
         }
 
         return $result;
@@ -194,7 +218,7 @@ class MemberController extends Controller
                         'childLeftId' => $childLeft ? $childLeft->userId : 0,
                         'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
-                        'weeklySale'     => $weeklySale['total'],
+                        'weeklySale'     =>  self::getBV($user->user->id),
                         'left'     => $weeklySale['left'],
                         'right'     => $weeklySale['right'],
                         'pkg'     => 2000,

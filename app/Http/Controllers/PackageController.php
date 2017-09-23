@@ -94,12 +94,20 @@ class PackageController extends Controller
                 $amount_increase = $package->price - $packageOldPrice;
             }
 
+            //Get weekYear
+            $weeked = date('W');
+            $year = date('Y');
+            $weekYear = $year.$weeked;
+
+            if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
             UserPackage::create([
                 'userId' => $currentuserid,
                 'packageId' => $userData->packageId,
                 'amount_increase' => $amount_increase,
                 'buy_date' => date('Y-m-d H:i:s'),
-                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 180 days"))
+                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 180 days")),
+                'weekYear' => $weekYear,
             ]);
 
             $userCoin = $userData->userCoin;
