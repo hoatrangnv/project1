@@ -9,6 +9,7 @@
         "acacha/admin-lte-template-laravel": "^5.0",
         "anhskohbo/no-captcha": "^2.4",
         "bacon/bacon-qr-code": "~1.0",
+        "barryvdh/laravel-debugbar": "~2.4",
         "coinbase/coinbase": "^2.5",
         "laracasts/flash": "^3.0",
         "laravel/framework": "5.4.*",

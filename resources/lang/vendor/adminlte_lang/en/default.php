@@ -30,8 +30,9 @@ return [
 	'action'                 => 'Action',
 	'email' 					=> 'email',
 	'password' 					=> 'password',
-        'news' => 'News',
-        'manage'=> 'Manage',
-        'add'=> 'Add',
-    
+    'news' 						=> 'News',
+    'manage'					=> 'Manage',
+    'add'						=> 'Add',
+	'welcome' 					=> 'Welcome',
+	'loyalty'					=> 'Loyalty',
 ];

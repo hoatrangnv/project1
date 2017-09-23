@@ -10,35 +10,25 @@ namespace App\Http\Controllers;
 use App\Notification;
 use App\UserCoin;
 use Illuminate\Contracts\Logging\Log;
+use App\User;
+
 /**
  * Description of TestController
  *
- * @author huydk
+ * @author giangdt
  */
 class TestController {
     //put your code here
-    function test($param = null) {
+    function testInterest($param = null) {
         //Get Notification
-        $dataNotApproved = Notification::where("status",0)->get();
-        
-        //Action
-        if( count($dataNotApproved) > 0 ) {
-           foreach ($dataNotApproved as $key => $value) {
-               
-                $temp = json_decode($value->data);
-                
-                $result = UserCoin::where('accountCoinBase', $temp->account->id)
-                       ->update([
-                           'btcCoinAmount' => 
-                            $temp->additional_data->amount->amount
-                               ]);
-                if($result == 1) {
-                    Notification::where("id",$value->id)
-                        ->update(['status' => 1]);
-                }
+        User::bonusDayCron();
+        echo "Return bonus day for user successfully!";
+    }
 
-           }
-       }
+    function testBinary($param = null) {
+        //Get Notification
+        User::bonusBinaryWeekCron();
+        echo "Return binary bonus this week for user successfully!";
     }
     
 }
