@@ -115,5 +115,6 @@ return [
     */
 
     'attributes' => [],
+    'isTypeCategory' => 'The :Not a type category'
 
 ];

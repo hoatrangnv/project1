@@ -7,8 +7,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class News extends Model
 {
-    //
+    
     use SoftDeletes;
+    /** 
+     *Define category 
+     */
+    const CRYPTO = 1 ;
+    const BLOCKCHAIN = 2;
+    const CLP = 3;
+    const P2P = 4;
     
     /**
      * The table associated with the model.
@@ -30,7 +37,16 @@ class News extends Model
      * @var array
      */
     protected $fillable = [
-       
+        'id',
+        'title',
+        'category_id',
+        'image',
+        'short_desc',
+        'desc',
+        'public_at',
+        'created_by',
+        'priority',
+        'views'
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -40,4 +56,10 @@ class News extends Model
     protected $hidden = [
         
     ];
+    
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->setTable('news');
+    }
 }

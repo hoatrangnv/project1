@@ -15,11 +15,13 @@
             <h4>Warning!</h4>
             <p>{!! session("errorMessage") !!}</p>
         </div>
+        {{ session()->forget('errorMessage') }}
     @elseif ( session()->has("successMessage") )
         <div class="callout callout-success">
-            <h4>Success!</h4>
+            <h4>Success</h4>
             <p>{!! session("successMessage") !!}</p>
         </div>
+        {{ session()->forget('successMessage') }}
     @else
         <div></div>
     @endif

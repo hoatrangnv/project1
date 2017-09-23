@@ -19,11 +19,12 @@ class CreateNewsTable extends Migration
         Schema::create('news', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->smallInteger('category')->nullable();
+            $table->smallInteger('category_id')->nullable();
             $table->string('image')->nullable();
             $table->text('short_desc')->nullable();
             $table->text('desc')->nullable();
             $table->dateTime('public_at')->nullable();
+            $table->integer('created_by')->unsigned();
             $table->integer('priority')->unsigned()->default(0);
             $table->bigInteger('views')->nullable();
             $table->timestamps();

@@ -6,6 +6,7 @@
             <name>cryptolending</name>
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>elseif</word>
             <word>php</word>
             <word>Tranfer</word>
         </spellchecker-wordlist>
