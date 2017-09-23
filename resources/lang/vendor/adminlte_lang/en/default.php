@@ -30,4 +30,6 @@ return [
 	'action'                 => 'Action',
 	'email' 					=> 'email',
 	'password' 					=> 'password',
+	'welcome' => 'Welcome',
+	'loyalty' => 'Loyalty',
 ];

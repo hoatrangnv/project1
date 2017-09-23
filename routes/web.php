@@ -75,8 +75,9 @@ Route::get('ethereumtest', 'EthereumTestController@index');
 Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
 Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
-Route::get('test-set-clp', 'TestController@showCLP')->name('test.showCLP');
-Route::post('setclp', 'TestController@setCLP')->name('test.setCLP');
+Route::get('test-binary', 'TestController@testBinary');
+Route::get('test-interest',"TestController@testInterest");
+
 
 /***------- END TEST -------***/
 
@@ -86,4 +87,3 @@ Route::post('reactive',"Auth\ActiveController@reactiveAccount");
 Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
-Route::get('test',"TestController@test");
