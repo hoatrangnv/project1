@@ -436,7 +436,7 @@ class User extends Authenticatable
 
             if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
-            $week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
+            $week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
             // Yes => update L-Open, R-Open
             if($week && $week->id > 0) {
                 $week->leftOpen = $leftOpen;
@@ -579,7 +579,9 @@ class User extends Authenticatable
             'amount' => $amount * config("cryptolanding.usd_bonus_pay"),
             'note' => $type,
         ];
+
         Wallet::create($fieldUsd);
+
         $fieldInvest = [
             'walletType' => Wallet::REINVEST_WALLET,//reinvest
             'type' => Wallet::LTOYALTY_TYPE,//bonus f1
@@ -588,6 +590,7 @@ class User extends Authenticatable
             'amount' => $amount * config("cryptolanding.reinvest_bonus_pay"),
             'note' => $type,
         ];
+        
         Wallet::create($fieldInvest);
     }
 

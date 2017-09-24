@@ -46,7 +46,6 @@ class UsdWalletController extends Controller
      * @param Request $request
      * @return type
      */
-    
     public function usdWallet( Request $request ) {
         //tranfer if request post
         if($request->isMethod('post')) {
@@ -63,7 +62,7 @@ class UsdWalletController extends Controller
         
         //get dữ liệu bảng hiển thị trên site
         $currentuserid = Auth::user()->id;
-        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',self::USD)
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::USD_WALLET)
        ->paginate();
         
         //Add thêm tỷ giá vào $wallets
@@ -80,10 +79,54 @@ class UsdWalletController extends Controller
             $wallets->rateClpBtc = User::getCLPBTCRate();
             $wallets->rateClpUsd = User::getCLPUSDRate();
         } else {
-            Log::info("Không get được tỷ giá");
+            Log::info("Cannot get rate");
         }
         
         return view('adminlte::wallets.usd')->with('wallets', $wallets);
+    }
+
+    /** 
+     * @author GiangDT
+     * @param Request $request
+     * @return type
+     */
+    public function reinvestWallet( Request $request ) {
+        //tranfer if request post
+        if($request->isMethod('post')) {
+            $this->validate($request, [
+                'usd'=>'required|numeric',
+                'clp'=>'required|numeric'
+            ]);
+            //Tranfer
+            $this->tranferUSDCLP($request->usd, $request->clp, $request);
+        }
+        
+        //get tỷ giá usd btc
+        $dataCurrencyPair = $this->getRateUSDBTC();
+        
+        //get dữ liệu bảng hiển thị trên site
+        $currentuserid = Auth::user()->id;
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::REINVEST_WALLET)
+       ->paginate();
+        
+        //Add thêm tỷ giá vào $wallets
+        if(isset($dataCurrencyPair) && 
+                count( json_decode($dataCurrencyPair) ) > 0 ) {
+            
+            $wallets->currencyPair = Auth()->user()->usercoin->reinvestAmount ;
+            
+            $wallets->currencyBtc = round( $wallets->currencyPair / 
+                json_decode($dataCurrencyPair)->last , 4);
+            
+            $wallets->currencyClp = $wallets->currencyPair / User::getCLPUSDRate() ;
+            
+            $wallets->rateClpBtc = User::getCLPBTCRate();
+            $wallets->rateClpUsd = User::getCLPUSDRate();
+        } else {
+            Log::info("Cannot get rate");
+        }
+        
+        return view('adminlte::wallets.reinvest')->with('wallets', $wallets);
     }
     
     /**

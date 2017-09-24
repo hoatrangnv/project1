@@ -3,7 +3,19 @@
 @section('contentheader_title')
     {{ trans('adminlte_lang::home.dashboard') }}
 @endsection
+<style type="text/css">
+    .box-solid .box-title{
+        font-size: 18px;
+        text-transform: uppercase;
+        margin-top: 0;
+        padding: 7px 10px;
+        text-align: center;
+    }
 
+
+    
+
+</style>
 @section('main-content')
     <div class="row">
         <div class="col-xs-12">
@@ -12,25 +24,27 @@
                     <div class="row">
                         <div class="col-lg-3 col-xs-6">
                           <!-- small box -->
-                          <div class="small-box bg-aqua" style="height: 80px">
+                          <div class="small-box bg-aqua">
                             <div class="inner">
                                 <center>
                                     <p style="font-size:20px">{{ trans('adminlte_lang::home.btc_wallet') }}</p>
                                     <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->btcCoinAmount }}</h4>
                                 </center>
                             </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                           </div>
                         </div>
                         <!-- /.col -->
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
-                            <div class="small-box bg-green"  style="height: 80px">
+                            <div class="small-box bg-green">
                                 <div class="inner">
                                     <center>
                                         <p style="font-size:20px">{{ trans('adminlte_lang::home.clp_wallet') }}</p>
                                         <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->clpCoinAmount }}</h4>
                                     </center>
                                 </div>
+                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- /.col -->
@@ -40,25 +54,27 @@
 
                         <div class="col-lg-3 col-xs-6">
                           <!-- small box -->
-                          <div class="small-box bg-yellow" style="height: 80px">
+                          <div class="small-box bg-yellow">
                             <div class="inner">
                                 <center>
                                     <p style="font-size:20px">{{ trans('adminlte_lang::home.usd_wallet') }}</p>
                                     <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->usdAmount }}</h4>
                                 </center>
                             </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                           </div>
                         </div>
                         <!-- /.col -->
                         <div class="col-lg-3 col-xs-6">
                           <!-- small box -->
-                          <div class="small-box bg-red" style="height: 80px">
+                          <div class="small-box bg-red">
                             <div class="inner">
                                 <center>
                                     <p style="font-size:20px">{{ trans('adminlte_lang::home.re_invest_wallet') }}</p>
                                     <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->reinvestAmount }}</h4>
                                 </center>
                             </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                           </div>
                         </div>
                         <!-- /.col -->
@@ -71,13 +87,13 @@
                 <div class="col-md-6">
                   <div class="box box-solid">
                     <div class="box-header with-border">
-                        <center><h3 class="box-title" style="font-size:30px;font-weight: bold;">{{ trans('adminlte_lang::home.statistical_bussiness') }}</h3></center>
+                        <center><h3 class="box-title">{{ trans('adminlte_lang::home.statistical_bussiness') }}</h3></center>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <center><h3 class="box-title" style="font-size:18px; font-weight: bold;">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b></h3></center>
+                        <center><h3 class="box-title">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b></h3></center>
 
-                        <center><h3 class="box-title" style="font-size:18px; font-weight: bold;">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['totalF1Sale'] }}</b></h3></center>
+                        <center><h3 class="box-title">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['totalF1Sale'] }}</b></h3></center>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -254,34 +270,26 @@
                 <div class="col-md-6">
                   <div class="box box-solid">
                     <div class="box-header with-border">
-                      <center><h3 class="box-title" style="font-size:30px;font-weight: bold;">{{ trans('adminlte_lang::home.investment_status') }}</h3></center>
+                      <center><h3 class="box-title">{{ trans('adminlte_lang::home.investment_status') }}</h3></center>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <center>
                             <div class="row">
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;">{{ trans('adminlte_lang::home.your_pack') }}</h3></div>
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->package ? Auth::user()->userData->package->name : '' }}</h3></div>
+                                <div class="col-md-6"><h3 class="">{{ trans('adminlte_lang::home.your_pack') }}</h3></div>
+                                <div class="col-md-6"><span class="">{{ Auth::user()->userData->package ? Auth::user()->userData->package->name : '' }}</span></div>
                             </div>
-                        </center>
-                        <center>
                             <div class="row">
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px">{{ trans('adminlte_lang::home.value') }}</h3></div>
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->package ? '$'.Auth::user()->userData->package->price : '' }}</h3></div>
+                                <div class="col-md-6"><h3 class="">{{ trans('adminlte_lang::home.value') }}</h3></div>
+                                <div class="col-md-6"><h3 class="">{{ Auth::user()->userData->package ? '$'.Auth::user()->userData->package->price : '' }}</h3></div>
                             </div>
-                        </center>
-                        <center>
                             <div class="row">
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;">{{ trans('adminlte_lang::home.active') }}</h3></div>
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate)) : '' }}</h3></div>
+                                <div class="col-md-6"><h3 class="">{{ trans('adminlte_lang::home.active') }}</h3></div>
+                                <div class="col-md-6"><h3 class="" >{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate)) : '' }}</h3></div>
                             </div>
-                        </center>
-                        <center>
                             <div class="row">
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;">{{ trans('adminlte_lang::home.release') }}</h3></div>
-                                <div class="col-md-6"><h3 class="box-title" style="font-size:20px;font-weight: bold;">{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate ."+ 180 days")) : '' }}</h3></div>
+                                <div class="col-md-6"><h3 class="">{{ trans('adminlte_lang::home.release') }}</h3></div>
+                                <div class="col-md-6"><h3 class="" >{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate ."+ 180 days")) : '' }}</h3></div>
                             </div>
-                        </center>
                     </div>
                     <!-- /.box-body -->
                   </div>

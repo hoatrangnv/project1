@@ -24,6 +24,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/getrateusdbtc', 'Wallet\UsdWalletController@getDataWallet');
     Route::post('wallets/btcwithdraw', 'Wallet\WithDrawController@btcWithDraw');
 
+    //Re-invest WALLET
+    Route::get('wallets/reinvest', 'Wallet\UsdWalletController@reinvestWallet');
+
     //BTC WALLET
     Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet')->name('wallet.btc');
     Route::get('wallets/getbtccoin',"Wallet\BtcWalletController@getBtcCoin");
@@ -35,7 +38,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
 
-    Route::get('wallets/reinvest', 'WalletController@reinvest');
+    
 
     Route::get('wallets/buyclp', 'WalletController@buyclp');
     Route::post('wallets/buyclp', 'WalletController@buyclp');

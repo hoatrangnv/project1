@@ -14,8 +14,9 @@ return [
     'refferals_id'           	=> 'Id',
     'refferals_username'           	=> 'Username',
     'refferals_fullname'           	=> 'Full name',
-    'refferals_package'           	=> 'Package',
-    'refferals_more'           	=> 'More',
+    'refferals_package'           	=> 'Member',
+    'refferals_more'           	=> 'Detail',
+    'refferals_loyalty'            => 'Loyalty',
 
 
 ];

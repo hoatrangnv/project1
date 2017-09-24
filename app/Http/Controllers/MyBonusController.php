@@ -76,7 +76,7 @@ class MyBonusController extends Controller
     public function loyalty(){
         $loyaltyBonus = config('cryptolanding.loyalty_bonus');
         $currentuserid = Auth::user()->id;
-        $loyaltyUser = LoyaltyUser::find($currentuserid);
+        $loyaltyUser = LoyaltyUser::where('userId', $currentuserid)->get()->first();
         $loyaltyUserData = array();
         if($loyaltyUser){
             $loyaltyUserData = array(
