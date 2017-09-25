@@ -41,7 +41,7 @@ desired effect
     @include('adminlte::layouts.partials.mainheader')
 
     @include('adminlte::layouts.partials.sidebar')
-    @include('adminlte::layouts.partials.sidebar')
+    
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -52,7 +52,21 @@ desired effect
         <section class="content">
             @include('flash::message')
             <!-- Your Page Content Here -->
-            @yield('main-content')
+            <div class="row" >
+                @if ( !Session::has('not_show_news') )
+                <div class="col-md-9" >
+                    @yield('main-content')
+                </div>
+                <div class="col-md-3">
+                    @include('adminlte::news.display')
+                </div>
+                @else
+                <div class="col-md-12" >
+                    @yield('main-content')
+                </div>
+                {{ session()->forget('not_show_news') }}
+                @endif
+            </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 
@@ -62,7 +76,6 @@ desired effect
 
 </div><!-- ./wrapper -->
 </div>
-
 
 </body>
 </html>

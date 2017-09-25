@@ -45,6 +45,10 @@ class PackageController extends Controller
             ->with('flash_message',
                 'Packages '. $package->name.' added!');
     }
+
+    /**
+    * Buy package action( upgrade package)
+    */
     public function invest(Request $request){
         $currentuserid = Auth::user()->id;
         $user = Auth::user();
@@ -67,9 +71,11 @@ class PackageController extends Controller
                 }
                 return false;
             });
+
             $this->validate($request, [
                 'packageId' => 'required|not_in:0|packageCheck',
             ],['packageId.package_check' => 'CLP Coin not money buy package']);
+
             $amount_increase = $packageOldId = 0;
             $userData = $user->userData;
             $packageOldId = $userData->packageId;
@@ -87,44 +93,63 @@ class PackageController extends Controller
             if($packageOldId > 0){
                 $amount_increase = $package->price - $packageOldPrice;
             }
+
+            //Get weekYear
             $weeked = date('W');
             $year = date('Y');
             $weekYear = $year.$weeked;
-            if($weeked < 10)$weekYear = $year.'0'.$weeked;
+
+            if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
             UserPackage::create([
                 'userId' => $currentuserid,
                 'packageId' => $userData->packageId,
                 'amount_increase' => $amount_increase,
                 'buy_date' => date('Y-m-d H:i:s'),
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 180 days")),
-                'weekYear' => $weekYear
+                'weekYear' => $weekYear,
             ]);
 
             $userCoin = $userData->userCoin;
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - ($amount_increase / User::getCLPUSDRate());
             $userCoin->save();
 
+            // Calculate fast start bonus
             User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
 
-            if(in_array($userData->leftRight, ['left', 'right']))
-                User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
-            if($userData->binaryUserId > 0 && in_array($userData->leftRight, ['left', 'right'])){
-                User::bonusBinary($userData->userId, $userData->refererId, $userData->packageId, $userData->binaryUserId, $userData->leftRight);
+            // Case: User already in tree and then upgrade package => re-caculate loyalty
+            /* REMOVE: because User::bonusBinary below already calculate */
+            // if(in_array($userData->leftRight, ['left', 'right']))
+            //     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
+
+            // Case: User already in tree and then upgrade package => re-caculate binary bonus
+            if($userData->binaryUserId > 0 && in_array($userData->leftRight, ['left', 'right'])) {
+                $leftRight = $userData->leftRight == 'left' ? 1 : 2;
+                User::bonusBinary($userData->userId, 
+                                $userData->refererId, 
+                                $userData->packageId, 
+                                $userData->binaryUserId, 
+                                $leftRight,
+                                true
+                            );
             }
+
             return redirect()->route('wallet.clp')
-                ->with('flash_message',
-                    'Buy package successfully.');
+                            ->with('flash_message','Buy package successfully.');
         }
     }
+
     public function show($id)
     {
         return redirect('packages');
     }
+
     public function edit($id)
     {
         $package = Package::find($id);
         return view('adminlte::package.edit', compact('package'));
     }
+
     public function update(Request $request, $id)
     {
         $package = Package::find($id);

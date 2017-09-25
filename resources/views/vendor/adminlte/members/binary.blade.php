@@ -3,6 +3,17 @@
 @section('contentheader_title')
     {{ trans('adminlte_lang::member.binary') }}
 @endsection
+<style type="text/css">
+    .binary-control {
+        padding: 10px 10px !important;
+        min-width: 56px !important;
+        height: 30px !important;
+    }
+
+    .binary-control i{
+        font-size: 10px !important;
+    }
+</style>
 
 @section('main-content')
     <div class="row">
@@ -11,24 +22,24 @@
                 <div class="box-body" style="padding-top:0;">
                     <div style="margin-top: 15px;text-align:center;">
                         <center>
-                            <button class="btn btn-info btn-xs" type="button" id="refresh-tree"
+                            <button class="btn btn-app btn-xs binary-control" type="button" id="refresh-tree"
                                     style="margin-bottom: 5px;"><i class="fa fa-step-backward rotate90"></i></button>
-                            <br>
-                            <button class="btn btn-info btn-xs" type="button" id="go-up"><i
-                                        class="fa fa-play rotate120 "></i></button>
+                            
                         </center>
+                        <center><button class="btn btn-app btn-xs binary-control" type="button" id="go-up"><i
+                                        class="fa fa-play rotate120 "></i></button></center>
                     </div>
                     <div class="chart" id="tree-container"></div>
                     <div class="pull-left">
-                        <button class="btn btn-info btn-xs" type="button" id="go-endleft"><i
+                        <button class="btn btn-app btn-xs binary-control" type="button" id="go-endleft"><i
                                     class="fa fa-fast-forward rotate90"></i></button>
-                        <button class="btn btn-info btn-xs" type="button" id="go-left" style="margin-left: 5px;"><i
+                        <button class="btn btn-app btn-xs binary-control" type="button" id="go-left" style="margin-left: 5px;"><i
                                     class="fa fa-step-forward rotate90"></i></button>
                     </div>
                     <div class="pull-right">
-                        <button class="btn btn-info btn-xs" type="button" id="go-right" style="margin-right: 5px;"><i
+                        <button class="btn btn-app btn-xs binary-control" type="button" id="go-right" style="margin-right: 5px;"><i
                                     class="fa fa-step-forward rotate90"></i></button>
-                        <button class="btn btn-info btn-xs" type="button" id="go-endright"><i
+                        <button class="btn btn-app btn-xs binary-control" type="button" id="go-endright"><i
                                     class="fa fa-fast-forward rotate90"></i></button>
                     </div>
                 </div>

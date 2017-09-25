@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Validator::extend('isTypeCategory', function($attribute, $value, $parameters, $validator) {
+            if( $value == 1 || $value == 2 || $value == 3 || $value ==4 ){
+                return true;
+            }
+                return false;
+        });
     }
 
     /**

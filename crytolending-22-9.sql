@@ -381,6 +381,7 @@ CREATE TABLE `user_packages` (
   `amount_increase` int(10) NOT NULL,
   `buy_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `release_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `withdraw` tinyint(1) DEFAULT '0',
   KEY `userId` (`userId`) USING BTREE,
   KEY `packageId` (`packageId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
