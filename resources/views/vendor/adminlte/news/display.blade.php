@@ -1,4 +1,8 @@
-
+<?php 
+    use App\Http\Controllers\News\DisplayNewsController as News;
+    
+    dd(News::getNewsDataDisplay());
+?>
     <div class="box box-danger row">
     <div class="box-header with-border">
        <h3 class="box-title">Crypto news</h3>

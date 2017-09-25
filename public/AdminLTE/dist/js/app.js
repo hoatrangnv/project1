@@ -470,8 +470,12 @@ function _init() {
           && !$('body').hasClass('control-sidebar-open')) {
           //Open the sidebar
           _this.open(sidebar, o.slide);
+          //save vao session
+          document.cookie = "open=1";
         } else {
           _this.close(sidebar, o.slide);
+          //save vao session
+          document.cookie = "open=0";
         }
       });
 

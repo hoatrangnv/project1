@@ -14,6 +14,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     
+    var $ct = 1;
+    
     public function __construct(){
         $this->middleware(function ($request, $next) {
             if (Auth::user() && Auth::user()->is2fa) {

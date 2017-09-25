@@ -32,8 +32,9 @@ desired effect
 <script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/AdminLTE/bower_components/fastclick/lib/fastclick.js"></script>
-<script src="/AdminLTE/dist/js/adminlte.min.js"></script>
+<!--<script src="/AdminLTE/dist/js/adminlte.min.js"></script>-->
 <script src="/AdminLTE/dist/js/demo.js"></script>
+<script src="/AdminLTE/dist/js/app.js"></script>
 <body class="skin-blue sidebar-mini">
 <div>
     <div class="wrapper">
@@ -53,29 +54,24 @@ desired effect
             @include('flash::message')
             <!-- Your Page Content Here -->
             <div class="row" >
-                @if ( !Session::has('not_show_news') )
-                <div class="col-md-9" >
-                    @yield('main-content')
-                </div>
-                <div class="col-md-3">
-                    @include('adminlte::news.display')
-                </div>
-                @else
-                <div class="col-md-12" >
-                    @yield('main-content')
-                </div>
-                {{ session()->forget('not_show_news') }}
-                @endif
+               @yield('main-content')
             </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
-
+    
     @include('adminlte::layouts.partials.controlsidebar')
 
     @include('adminlte::layouts.partials.footer')
+    
 
-</div><!-- ./wrapper -->
+ 
+
+    </div><!-- ./wrapper -->
 </div>
-
+    <script>
+        $("a").find("data-toggle='control-sidebar'").click(function() {
+            alert("123");
+        })
+    </script>
 </body>
 </html>
