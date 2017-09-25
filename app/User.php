@@ -161,12 +161,8 @@ class User extends Authenticatable
         $user = UserData::find($binaryUserId);
         $usdCoinAmount = 0;
 
-        if($user){
-            // Lay package trong UserPackage nhu chi dung khi trong CASE upgrade
-            // Phai lay packageid trong user_datas
-            \Log::info('userRoot:' . $userId);
-            \Log::info('binaryUserId:' . $binaryUserId);
-            \Log::info('legpos:' . $legpos);
+        if($user)
+        {
             if($isUpgrade == true) 
             {
                 // If $userRoot already in binary tree
@@ -187,7 +183,6 @@ class User extends Authenticatable
             } 
             elseif($userRoot->totalMembers == 0) 
             {
-                \Log::info('userRoot:' . $userId . ' has totalMember: ' .  $userRoot->totalMembers);
                 // If $userRoot don't have own tree
                 $userPackage = Package::where('pack_id', $packageId)->first();
                 $usdCoinAmount = isset($userPackage->price) ? $userPackage->price : 0;
@@ -200,8 +195,6 @@ class User extends Authenticatable
                     $user->lastUserIdLeft = $userRoot->lastUserIdLeft;
                     $user->leftMembers = $user->leftMembers + 1;
 
-                    \Log::info('$user:' . $user->userId . ' has totalBonusLeft: ' .  $user->totalBonusLeft);
-                    \Log::info('$user:' . $user->userId . ' has leftMembers: ' .  $user->leftMembers);
                 }else{
                     //Total sale on right
                     $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
@@ -241,18 +234,13 @@ class User extends Authenticatable
 
             $user->save();
 
-            \Log::info('usdCoinAmount:' . $usdCoinAmount);
-            
-
 
             //Caculate binary bonus for up level of $userRoot in binary tree
             self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
 
             //Caculate loyalty bonus for up level of $userRoot in binary tree
             self::bonusLoyaltyUser($user->userId, $user->refererId, $legpos);
-            //self::bonusLoyaltyUser($userId, $partnerId, $legpos);
-            //if($user->binaryUserId > 0 && $partnerId != $binaryUserId) {
-            //if($user->binaryUserId > 0 || $user->refererId > 0) {
+            
             if($user->binaryUserId > 0) {    
                 User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos, $isUpgrade);
             }
