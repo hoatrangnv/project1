@@ -258,7 +258,7 @@
                             <tbody>
                                 <tr>
                                     <td class="label-td">Sponsor id</td>
-                                    <td>{{ Auth::user()->id }}</td>
+                                    <td>{{ Auth::user()->uid }}</td>
                                 </tr>
                                 <tr>
                                     <td class="label-td">Sponsor username</td>
@@ -332,7 +332,7 @@
                        <table class="table no-margin">
                             <tr>
                                 <td class="label-td">My Refenal link</td>
-                                <td><input type="text" name="postal_code" value="{{ url('register') }}?referrer={{ Auth::user()->id }}" class="form-control input-sm" disabled></td>
+                                <td><input type="text" name="postal_code" value="{{ url('register') }}?referrer={{ Auth::user()->uid }}" class="form-control input-sm" disabled></td>
                             </tr> 
                             <tr>
                                 <td class="label-td">My Banner</td>

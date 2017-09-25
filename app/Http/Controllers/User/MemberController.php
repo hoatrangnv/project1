@@ -34,6 +34,7 @@ class MemberController extends Controller
                         if($user) {
                             $fields = [
                                 'id'     => $user->id,
+                                'uid'     => $user->uid,
                                 'u'     => $user->name,
                                 'totalMembers'     => UserData::where('refererId', $currentuserid)->count(),
                                 'packageId'     => $user->userData->packageId,
@@ -53,6 +54,7 @@ class MemberController extends Controller
                        // $userData = UserData::where('userId', '=', $user->id)->first();
                         $fields = [
                             'id'     => $user->id,
+                            'uid'     => $user->uid,
                             'u'     => $user->name,
                             'totalMembers'     => UserData::where('refererId', $currentuserid)->count(),
                             'packageId'     => $user->userData->packageId,
@@ -74,6 +76,7 @@ class MemberController extends Controller
                         foreach ($userDatas as $userData) {
                             $fields[] = [
                                 'id' => $userData->userId,
+                                'uid'     => $userData->user->uid,
                                 'u' => $userData->user->name,
                                 'totalMembers' => UserData::where('refererId', $userData->userId)->count(),
                                 'packageId' => $userData->packageId,

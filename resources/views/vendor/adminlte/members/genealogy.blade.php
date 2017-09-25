@@ -54,7 +54,7 @@
 										var user = data[i];
 										children.push({
 											//text: user.id +' '+ user.u + ' (' + user.dmc + ')',
-											text: user.id +' '+ user.u,
+											text: user.uid +' '+ user.u,
 											data: {
 												username: user.id +' '+ user.u,
                                                 packageId: user.packageId,
@@ -73,7 +73,7 @@
 								} else {
 									var user = data;
 									cb([{
-										text: user.id +' '+ user.u,
+										text: user.uid +' '+ user.u,
 										data: {
 											username: user.id +' '+ user.u,
                                             packageId: user.packageId,
