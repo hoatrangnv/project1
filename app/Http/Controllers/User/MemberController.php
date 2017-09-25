@@ -173,7 +173,6 @@ class MemberController extends Controller
         $year = date('Y');
         $weekYear = $year.$weeked;
         if($weeked < 10)$weekYear = $year.'0'.$weeked;
-
         $package = UserPackage::where('userId', $userId)
                             ->where('weekYear', '=', $weekYear)
                             ->groupBy(['userId'])

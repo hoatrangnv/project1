@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Requests;
+use App\UserData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\User;
@@ -42,7 +43,8 @@ class ProfileController extends Controller
     {
         $lstCountry = config('cryptolanding.lstCountry');
         $lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
-        return view('adminlte::profile.index', compact('lstCountry'));
+        $sponsor = UserData::where('refererId', Auth::user()->id)->first();
+        return view('adminlte::profile.index', compact('lstCountry', 'sponsor'));
     }
     public function update(Request $request, $id)
     {
