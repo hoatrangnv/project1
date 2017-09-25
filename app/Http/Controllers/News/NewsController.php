@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\News;
 use Log;
 use Auth;
+use Session;
 
 /**
  * Description of NewsController
@@ -20,18 +21,16 @@ use Auth;
  */
 class NewsController extends Controller{
     
-    public function __construct(){
-//        $this->middleware('auth');
-        $this->middleware(function ($request, $next) {
-            $this->check($request);
-            return $next($request);
-        });
+    public function __construct(Request $request){
+        $this->middleware('auth');
     }
     
     public function check($request){
-        if(News::find($request->id)->created_by == 
+        if(News::find($request->id)->created_by != 
                Auth::user()->id){
-            return redirect("home");
+            if(!$this->isAdmin()){
+                header('Location: '."/home");
+            }
         }
     }
     /** 
@@ -108,7 +107,7 @@ class NewsController extends Controller{
      * @return type
      */
     public function newEdit(Request $request ,$id) {
-//        $this->check($request);
+        $this->check($request);
         if ( $request->isMethod("put") ) {
             
             $this->validate($request, [
@@ -150,6 +149,7 @@ class NewsController extends Controller{
      * @return type
      */
     public function newDelete(Request $request ,$id) {
+        $this->check($request);
         if( $request->isMethod("get") ){
             //delete
             $del = News::where('id', $id)->delete(); 
