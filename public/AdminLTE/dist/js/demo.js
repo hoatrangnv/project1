@@ -347,23 +347,4 @@ $(function () {
 
   $('[data-toggle="tooltip"]').tooltip()
   
-  $(".sidebar-toggle").click(function(){
-        
-        if( $(window).width() > 767 ) {
-            if( !$("body").hasClass("sidebar-collapse") ) {
-                $("body").addClass("sidebar-collapse");
-            } else {
-                $("body").removeClass("sidebar-collapse");
-            }
-        }else{
-            if( !$("body").hasClass("sidebar-open") ) {
-                $("body").addClass("sidebar-open");
-            } else {
-                $("body").removeClass("sidebar-open");
-            }
-        }
-       
-        
-        
-  })
 })

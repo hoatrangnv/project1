@@ -6,6 +6,21 @@
 @endsection
 
 @section('main-content')
+    @if ( session()->has("errorMessage") )
+        <div class="callout callout-danger">
+            <h4>Warning!</h4>
+            <p>{!! session("errorMessage") !!}</p>
+        </div>
+        {{ session()->forget('errorMessage') }}
+    @elseif ( session()->has("successMessage") )
+        <div class="callout callout-success">
+            <h4>Success</h4>
+            <p>{!! session("successMessage") !!}</p>
+        </div>
+        {{ session()->forget('successMessage') }}
+    @else
+        <div></div>
+    @endif
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -33,7 +48,10 @@
                             @endif
                         </td>
                         <td>{!! $new->short_desc !!}</td>
-                        <td><a href="/news/edit/{{ $new->id }}" class="btn btn-default glyphicon glyphicon-edit">Edit</a></td>
+                        <td>
+                            <a href="/news/edit/{{ $new->id }}" class="btn btn-default glyphicon glyphicon-edit">Edit</a>
+                            <a href="/news/delete/{{ $new->id }}" class="btn btn-default glyphicon glyphicon-trash">Delete</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

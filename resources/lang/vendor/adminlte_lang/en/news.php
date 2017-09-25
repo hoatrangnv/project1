@@ -10,5 +10,11 @@ return  [
     'add' => 'Add a new',
     'add_button' => 'Add',
     'success' => 'Added a post !',
-    'error' => 'Not add a post !'
+    'error' => 'Not add a post !',
+    'edit' => 'Edit a new',
+    'save_button'=> 'Save',
+    'success_update' => 'Update success!',
+    'error_update' => 'Not update a post !',
+    'success_delete' => 'Delete success !',
+    'error_delete'=> 'Delete error',
 ];

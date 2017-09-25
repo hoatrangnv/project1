@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         /** 
-         * run every
+         * run every 30s update notification
          */
         $stringCronTab = "* * * * * *";
         try {

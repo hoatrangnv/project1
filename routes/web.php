@@ -66,10 +66,13 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('profile', 'User\ProfileController');
     
     //News
-    Route::get('news/manage','News\NewsController@newManagent');
+    Route::get('news/manage','News\NewsController@newManagent')->name('news.manage');
     Route::get('news/add','News\NewsController@newAdd');
     Route::post('news/add','News\NewsController@newAdd');
     Route::get('news/edit/{id}','News\NewsController@newEdit');
+    Route::put('news/edit/{id}','News\NewsController@newEdit');
+    Route::get('news/delete/{id}','News\NewsController@newDelete');
+    Route::get('news/detail/{id}','News\DisplayNewsController@displayDetailNews');
 
 });
 Route::get('getnotification','GetNotificationController@getNotification');
