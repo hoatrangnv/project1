@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'status', 'active', 'refererId', 'firstname', 'lastname', 'phone', 'is2fa', 'google2fa_secret', 'password', 'address', 'address2', 'city', 'state', 'postal_code', 'country', 'birthday', 'passport'
+        'name', 'email', 'status', 'active', 'refererId', 'firstname', 'lastname', 'phone', 'is2fa', 'google2fa_secret', 'password', 'address', 'address2', 'city', 'state', 'postal_code', 'country', 'birthday', 'passport', 'uid'
     ];
 
     /**
@@ -41,6 +41,9 @@ class User extends Authenticatable
     public function userCoin() {
         return $this->hasOne(UserCoin::class, 'userId', 'id');
     }
+    public function userLoyaty() {
+        return $this->hasOne(LoyaltyUser::class, 'userId', 'id');
+    }
     public function userLoyatys() {
         return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
     }
@@ -61,7 +64,13 @@ class User extends Authenticatable
     public static function getCLPBTCRate(){
         return 0.00025;
     }
-
+    public static function getUid(){
+        $uid = mt_rand(1001, 999999);
+        if(User::where('uid', $uid)->count()){
+            $uid = self::getUid();
+        }
+        return $uid;
+    }
     /**
     * Calculate fast start bonus
     */

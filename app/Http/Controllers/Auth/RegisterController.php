@@ -205,6 +205,7 @@ class RegisterController extends Controller
                 'accountCoinBase' => $accountWallet['accountId'],
                 'status' => 0,
                 'activeCode' => md5($data['email']),
+                'uid' => User::getUid(),
                 'google2fa_secret' => Google2FA::generateSecretKey(16)
             ];
             if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {
@@ -233,4 +234,5 @@ class RegisterController extends Controller
             var_dump($e->getmessage());
         }
     }
+
 }
