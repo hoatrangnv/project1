@@ -21,12 +21,15 @@
 							<th>{{ trans('adminlte_lang::member.refferals_fullname') }}</th>
 							<th>{{ trans('adminlte_lang::member.refferals_package') }}</th>
 							<th>{{ trans('adminlte_lang::member.refferals_more') }}</th>
-							<th>{{ trans('adminlte_lang::default.action') }}</th>
+							<th>{{ trans('adminlte_lang::member.refferals_loyalty') }}</th>
 						</tr>
 						<tbody>
+							@php
+								$i = 1
+							@endphp
 							@foreach ($users as $userData)
 							<tr>
-								<td></td>
+								<td>{{ $i++ }}</td>
 								<td>{{ $userData->userId }}</td>
 								<td>{{ $userData->user->name }}</td>
 								<td>{{ $userData->user->name }}</td>

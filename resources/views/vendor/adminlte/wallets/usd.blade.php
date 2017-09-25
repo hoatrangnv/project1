@@ -1,13 +1,38 @@
-<?php 
-    use App\Wallet;
-?>
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
 	{{ trans('adminlte_lang::wallet.header_title') }}
 @endsection
 
-
+<style>
+    .box-widget .wallet-title{
+        padding: 0;
+        text-align: left;
+        max-width: 50px;
+    }
+    .box-widget  .wallet-amount{
+        padding: 0;
+        text-align: left;
+    }
+    .box-widget  .wallet-amount .description-block{
+        text-align: left;
+    }
+    .content .widget-user .box-footer{
+        padding: 15px 0;
+    }
+    .widget-user .btn-success{
+        float: right;
+        margin-right: 15px;    
+    }
+    .box .box-footer  .border-right{
+        border: none;
+    }
+    @media only screen and (max-width: 500px) {
+        .content .widget-user .box-footer{
+            padding: 15px 0px 15px 15px;
+        }
+    }
+</style>
 @section('main-content')
 
     <!--    captrue error-->
@@ -38,19 +63,19 @@
     @endif
     
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-12">
           <!-- Widget: user widget style 1 -->
           <div class="box box-widget widget-user">
             <!-- Add the bg color to the header using any of the bg-* classes -->
             <div class="box-footer">
-              <div class="row">
-                  <div class="col-sm-1 border-right" style="text-align: center">
+              <div class="rows">
+                  <div class="col-xs-1 border-right wallet-title" style="text-align: center">
                       <div class="description-header" style="margin-top: 6px">  
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
                     </div>
                   <!-- /.description-block -->
                 </div>  
-                <div class="col-sm-3 border-right">
+                <div class="col-xs-3 border-right wallet-amount">
                   <div class="description-block">
                     <h5 class="description-header rate-usd-btc">
                         @isset($wallets->currencyPair){{ $wallets->currencyPair }} $ @endisset
@@ -58,80 +83,11 @@
                   </div>
                   <!-- /.description-block -->
                 </div>
-                <!-- /.col -->
-                <div class="col-sm-5 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header btc">{{ $wallets->currencyBtc }} BTC </h5>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-3">
-                  <div class="description-block">
-                    <h5 class="description-header clp">{{ $wallets->currencyClp }}CLP</h5>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
+               
                 <!-- /.col -->
               </div>
               <!-- /.row -->
-            </div>
-          </div>
-          <!-- /.widget-user -->
-        </div>
-        <!-- /.col -->
-        <div class="col-md-5">
-          <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="box-footer">
-              <div class="row">
-                <div class="col-sm-3 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header">1 CLP</h5>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <div class="col-sm-1 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header">=</h5>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-3 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header clpbtc">{{ $wallets->rateClpBtc }} BTC</h5>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <div class="col-sm-1 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header">=</h5>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-3">
-                  <div class="description-block">
-                    <h5 class="description-header clpusd">{{ $wallets->rateClpUsd }} $</h5>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-            </div>
-          </div>
-          <!-- /.widget-user -->
-        </div>
-        <!-- /.col -->
-        <div class="col-md-2">
-          <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user" style="text-align: center">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="box-footer">
-                <button class="btn btn-success" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button>
+              <button class="btn btn-success" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button>
             </div>
           </div>
           <!-- /.widget-user -->
@@ -163,21 +119,21 @@
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $wallet->created_at }}</td> 
                                 <td>
-                                    @if($wallet->type == Wallet::FAST_START_TYPE)
+                                    @if($wallet->type == App\Wallet::FAST_START_TYPE)
                                         {{ trans('adminlte_lang::wallet.fast_start_type') }}
-                                    @elseif($wallet->type == Wallet::INTEREST_TYPE )
+                                    @elseif($wallet->type == App\Wallet::INTEREST_TYPE )
                                         {{ trans('adminlte_lang::wallet.interest') }}
-                                    @elseif($wallet->type == Wallet::BINARY_TYPE)
+                                    @elseif($wallet->type == App\Wallet::BINARY_TYPE)
                                         {{ trans('adminlte_lang::wallet.binary') }}
-                                    @elseif($wallet->type == Wallet::LTOYALTY_TYPE)
+                                    @elseif($wallet->type == App\Wallet::LTOYALTY_TYPE)
                                         {{ trans('adminlte_lang::wallet.loyalty') }}
-                                    @elseif($wallet->type == Wallet::USD_CLP_TYPE)
+                                    @elseif($wallet->type == App\Wallet::USD_CLP_TYPE)
                                         {{ trans('adminlte_lang::wallet.usd_clp_type') }}
-                                    @elseif($wallet->type == Wallet::REINVEST_CLP_TYPE)
+                                    @elseif($wallet->type == App\Wallet::REINVEST_CLP_TYPE)
                                         {{ trans('adminlte_lang::wallet.reinvest_clp_type') }}
-                                    @elseif($wallet->type == Wallet::BTC_CLP_TYPE)
+                                    @elseif($wallet->type == App\Wallet::BTC_CLP_TYPE)
                                         {{ trans('adminlte_lang::wallet.btc_clp_type') }}
-                                    @elseif($wallet->type == Wallet::CLP_BTC_TYPE)
+                                    @elseif($wallet->type == App\Wallet::CLP_BTC_TYPE)
                                         {{ trans('adminlte_lang::wallet.clp_btc_type') }}
                                     @endif
                                 </td>

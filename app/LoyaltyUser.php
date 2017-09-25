@@ -8,7 +8,7 @@ class LoyaltyUser extends Model
 {
     public $timestamps = false;
     protected $fillable = [
-		'userId', 'isSilver', 'isGold', 'isPear', 'isEmerald', 'isDiamond', 'f1Left', 'f1Right'
+		'userId', 'isSilver', 'isGold', 'isPear', 'isEmerald', 'isDiamond', 'f1Left', 'f1Right', 'refererId', 'leftRight'
 	];
 	public function __construct(array $attributes = [])
     {

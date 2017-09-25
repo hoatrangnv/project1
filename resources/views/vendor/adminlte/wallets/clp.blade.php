@@ -88,7 +88,7 @@
                         </tr>
                         <tbody>
                         @foreach ($packages as $package)
-                            <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->id }}">
+                            <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
                                 <td>{{ $package->name }}</td>
                                 <td>${{ $package->price }}</td>
                             </tr>

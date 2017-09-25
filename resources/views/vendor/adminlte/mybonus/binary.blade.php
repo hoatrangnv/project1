@@ -23,6 +23,7 @@
 							<th>{{ trans('adminlte_lang::mybonus.rover') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.settled') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.bonus') }}</th>
+							<th>Tempo Bonus</th>
 							<th>{{ trans('adminlte_lang::mybonus.reinvest') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.transfer_withdraw') }}</th>
 						</tr>
@@ -38,6 +39,7 @@
 								<td>{{ $binary->rightOpen + $binary->rightNew }}</td>
 								<td>{{ $binary->settled }}</td>
 								<td>{{ $binary->bonus }}</td>
+								<td>{{ $binary->bonus_tmp }}</td>
 								<td>{{ $binary->bonus > 0 ? round($binary->bonus*40/100) : '' }}</td>
 								<td>{{ $binary->bonus > 0 ? round($binary->bonus*60/100) : '' }}</td>
 							</tr>
