@@ -139,6 +139,7 @@
                                 <div class="pull-right">
                                     <a href="{{ url('/logout') }}" class="btn btn-default btn-flat" id="logout"
                                        onclick="event.preventDefault();
+                                                doLogout();
                                                  document.getElementById('logout-form').submit();">
                                         {{ trans('adminlte_lang::message.signout') }}
                                     </a>
@@ -156,9 +157,14 @@
 
                 <!-- Control Sidebar Toggle Button -->
                 <li>
-                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-arrows-h"></i></a>
                 </li>
             </ul>
         </div>
     </nav>
 </header>
+<script>
+    function doLogout(){
+         document.cookie = "open=1";
+    }
+</script>

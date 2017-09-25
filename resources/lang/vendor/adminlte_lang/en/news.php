@@ -17,4 +17,8 @@ return  [
     'error_update' => 'Not update a post !',
     'success_delete' => 'Delete success !',
     'error_delete'=> 'Delete error',
+    'crypto_news' => 'Crypto News',
+    'blockchain_news'=> 'Blockchain News',
+    'clp_news'=> 'CLP News',
+    'p2p_news'=> 'P2P News'
 ];

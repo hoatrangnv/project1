@@ -21,14 +21,30 @@ use Auth;
 
 class DisplayNewsController extends Controller{
     
+    //list catgory
+    var $category;
+        
     public function __construct(){
         $this->middleware('auth');
+        
+        $this->category = [
+            1 => trans('adminlte_lang::news.crypto_news'),
+            2 => trans('adminlte_lang::news.blockchain_news'),
+            3 => trans('adminlte_lang::news.clp_news'),
+            4 => trans('adminlte_lang::news.p2p_news')
+        ];
     }  
     
+    /** 
+     * 
+     * @param type $id
+     * @return type
+     */
     public function displayDetailNews($id){
-        
-        return view('adminlte::news.detail');
+        $data = News::find($id);
+        return view('adminlte::news.detail',['data'=>$data]);
     }
+    
     /** 
      * @author Huynq
      * @return type
@@ -59,7 +75,7 @@ class DisplayNewsController extends Controller{
         return News::where("category_id",$type)
                 ->orderBy('id','DESC')
                 ->limit($limit)
-                ->get(['id','desc']);
+                ->get(['id','title','short_desc']);
         
     }
     

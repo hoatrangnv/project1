@@ -30,7 +30,6 @@ class NewsController extends Controller{
      */
     public function newManagent(Request $request) {
         $news=News::paginate(5);
-        $request->session()->flash( 'not_show_news' , true);
         return view('adminlte::news.manage',compact('news'))->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -66,7 +65,6 @@ class NewsController extends Controller{
                         trans("adminlte_lang::news.error") );
             }
         }
-        $request->session()->flash( 'not_show_news' , true);
         return view('adminlte::news.add');
     }
     
@@ -132,7 +130,6 @@ class NewsController extends Controller{
         $dataNew = News::withTrashed()
                 ->where('id',$id)->first();
         
-        $request->session()->flash( 'not_show_news' , true);
         return view('adminlte::news.edit',["news"=>$dataNew]);
     }
     
