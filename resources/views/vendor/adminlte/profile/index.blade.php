@@ -86,7 +86,7 @@
                             <tbody>
                                 <tr>
                                     <td class="label-td">My id</td>
-                                    <td>{{ Auth::user()->id }}</td>
+                                    <td>{{ Auth::user()->uid }}</td>
                                 </tr>
                                 <tr>
                                     <td class="label-td">Username</td>
@@ -153,7 +153,7 @@
                             <tbody>
                             <tr>
                                 <td class="label-td">My id</td>
-                                <td>{{ Auth::user()->id }}</td>
+                                <td>{{ Auth::user()->uid }}</td>
                             </tr>
                             <tr>
                                 <td class="label-td">Username</td>
@@ -258,23 +258,23 @@
                             <tbody>
                                 <tr>
                                     <td class="label-td">Sponsor id</td>
-                                    <td>{{ Auth::user()->uid }}</td>
+                                    <td>{{ $sponsor->uid }}</td>
                                 </tr>
                                 <tr>
                                     <td class="label-td">Sponsor username</td>
-                                    <td>{{ Auth::user()->name }}</td>
+                                    <td>{{ $sponsor->name }}</td>
                                 </tr> 
                                 <tr>
                                     <td class="label-td">Email</td>
-                                    <td>{{ Auth::user()->email }}</td>
+                                    <td>{{ $sponsor->email }}</td>
                                 </tr>
                                 <tr>
                                     <td class="label-td">Phone Number</td>
-                                    <td>{{ Auth::user()->phone }}</td>
+                                    <td>{{ $sponsor->phone }}</td>
                                 </tr>
                                 <tr>
                                     <td class="label-td">Country</td>
-                                    <td>{{ isset($lstCountry[Auth::user()->country]) ? $lstCountry[Auth::user()->country] : '' }}</td>
+                                    <td>{{ isset($lstCountry[$sponsor->country]) ? $lstCountry[$sponsor->country] : '' }}</td>
                                 </tr>
                             </tbody>
                          </table>
@@ -296,10 +296,6 @@
                             <tbody>
                                 <tr>
                                     <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalChangePassword">Change Password</button></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td> <button type="submit" class="btn btn-primary">Transaction Password</button></td>
                                     <td></td>
                                 </tr>
                                 <tr >
