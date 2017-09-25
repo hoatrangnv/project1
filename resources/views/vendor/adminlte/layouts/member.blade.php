@@ -68,10 +68,5 @@ desired effect
 
     </div><!-- ./wrapper -->
 </div>
-    <script>
-        $("a").find("data-toggle='control-sidebar'").click(function() {
-            alert("123");
-        })
-    </script>
 </body>
 </html>

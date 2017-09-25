@@ -138,6 +138,10 @@ return [
     'link_ty_gia' => 'https://www.bitstamp.net/api/v2/ticker/',
     'time_interval'=> 30000,
     'btc_wallet_admin'=> '12iU4tEb6hf6Hx5RjP2ANPAhr7jsjsCEVb',
+    'news_crypto' => 3,
+    'news_blockchain' => 3,
+    'news_clp' => 3,
+    'news_p2p' => 3,
     
     /*
     |--------------------------------------------------------------------------
@@ -197,7 +201,6 @@ return [
 		Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -250,7 +253,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 		'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
         'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
-    ],
+
+        ],
 
 ];

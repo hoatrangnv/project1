@@ -21,7 +21,7 @@ use Auth;
 
 class DisplayNewsController extends Controller{
     
-    //list catgory
+    //list category
     var $category;
         
     public function __construct(){
@@ -36,7 +36,7 @@ class DisplayNewsController extends Controller{
     }  
     
     /** 
-     * 
+     * @author Huynq
      * @param type $id
      * @return type
      */
@@ -53,13 +53,13 @@ class DisplayNewsController extends Controller{
         
         $data = [];
         
-        $data["crypto_news"] = self::getDataDisplayWithCategory(News::CRYPTO, 3);
+        $data["crypto_news"] = self::getDataDisplayWithCategory(News::CRYPTO, config("app.news_crypto"));
         
-        $data["blockchain_news"] = self::getDataDisplayWithCategory(News::BLOCKCHAIN, 3);
+        $data["blockchain_news"] = self::getDataDisplayWithCategory(News::BLOCKCHAIN, config("app.news_blockchain"));
         
-        $data["clp_news"] =  self::getDataDisplayWithCategory(News::CLP, 3);
+        $data["clp_news"] =  self::getDataDisplayWithCategory(News::CLP, config("app.news_clp"));
         
-        $data["p2p_news"] = self::getDataDisplayWithCategory(News::P2P, 3);
+        $data["p2p_news"] = self::getDataDisplayWithCategory(News::P2P, config("app.news_p2p"));
         
         return $data;
     }

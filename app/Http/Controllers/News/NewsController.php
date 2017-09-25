@@ -21,9 +21,19 @@ use Auth;
 class NewsController extends Controller{
     
     public function __construct(){
-        $this->middleware('auth');
+//        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            $this->check($request);
+            return $next($request);
+        });
     }
     
+    public function check($request){
+        if(News::find($request->id)->created_by == 
+               Auth::user()->id){
+            return redirect("home");
+        }
+    }
     /** 
      * @author huynq
      * @return type
@@ -98,7 +108,7 @@ class NewsController extends Controller{
      * @return type
      */
     public function newEdit(Request $request ,$id) {
-        
+//        $this->check($request);
         if ( $request->isMethod("put") ) {
             
             $this->validate($request, [
