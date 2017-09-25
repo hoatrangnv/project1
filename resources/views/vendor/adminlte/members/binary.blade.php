@@ -20,6 +20,21 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body" style="padding-top:0;">
+                    <div class="col-xs-4" style="padding-left: 0; padding-top: 15px;position: absolute;">
+                        {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
+                        <div class="col-xs-6" style="padding-left: 0;">
+                            {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose a user'], ['placeholder' => 'Choose a user']) }}
+                        </div>
+                        <div class="col-xs-6 hide" style="padding-left: 0;" id="push_into">
+                            {!! Form::radio('legpos','1') !!} Push into left leg
+                            <br>
+                            {!! Form::radio('legpos','2') !!} Push into right leg
+                            <br>
+                            {!! Form::button('Push into tree', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit']) !!}
+
+                        </div>
+                        {!! Form::close() !!}
+                    </div>
                     <div style="margin-top: 15px;text-align:center;">
                         <center>
                             <button class="btn btn-app btn-xs binary-control" type="button" id="refresh-tree"
@@ -52,23 +67,19 @@
             margin: 5px auto;
             width: auto;
         }
-
         .Treant > .node {
         }
-
         .Treant > p {
             font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
             font-weight: bold;
             font-size: 12px;
         }
-
         .node-name {
             font-weight: bold;
             padding: 3px 0;
             text-overflow: ellipsis;
             overflow: hidden;
         }
-
         .tree-node {
             padding: 0;
             -webkit-border-radius: 30px;
@@ -81,36 +92,30 @@
             text-align: center;
             height: 60px;
         }
-
         @media only screen and (max-width: 1024px) {
             .tree-node {
                 font-size: 8px;
             }
         }
-
         @media only screen and (max-width: 768px) {
             .tree-node {
                 font-size: 6px;
                 height: 50px;
             }
         }
-
         .tree-node:hover {
             cursor: pointer;
             background-color: #f5f5f5;
         }
-
         .tree-node img {
             margin: 5px 10px 0 5px;
             width: 30px;
             height: 30px;
             border-radius: 50%;
         }
-
         .tree-node p {
             margin-bottom: 2px;
         }
-
         .rotate90 {
             -webkit-transform: rotate(90deg);
             -moz-transform: rotate(90deg);
@@ -118,7 +123,6 @@
             /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
             -ms-transform: rotate(90deg);
         }
-
         .rotate120 {
             -webkit-transform: rotate(30deg);
             -moz-transform: rotate(30deg);
@@ -135,6 +139,34 @@
     <script src="{{ asset('/js/jst.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script>
     <script>
+        $(document).ready(function(){
+            $('#userSelect').on('change', function () {
+                var selectId = parseInt($("#userSelect option:selected").val());
+                if(selectId > 0){
+                    $('#push_into').removeClass('hide');
+                }else{
+                    $('#push_into').addClass('hide');
+                    $('input[name="legpos"]:checked').each(function(){
+                        $(this).prop('checked', false);
+                    });
+                }
+            });
+            $('#btn_submit').on('click', function () {
+                if($("#userSelect option:selected").length == 0){
+                    alert('You choose a user.');
+                    return false;
+                }else if($('input[name="legpos"]:checked').length == 0) {
+                    alert('You choose push into leg.');
+                    return false;
+                }else{
+                    if (confirm("Are you sure?")) {
+                        $('#pushIntoTreeForm').submit();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        });
         var tmpl = window.JST["assets/templates/tree-node.html"],
             leafTmpl = window.JST["assets/templates/tree-node-leaf.html"];
 

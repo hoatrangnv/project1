@@ -156,7 +156,12 @@ class MemberController extends Controller
                 return response()->json($fields);
 			}
         }
-		return view('adminlte::members.binary');
+        $lstUsers = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->where('isBinary', '!=', 1)->get();
+        $lstUserSelect = array('0'=> 'Choose a user');
+        foreach ($lstUsers as $userData){
+            $lstUserSelect[$userData->userId] = $userData->user->name;
+        }
+		return view('adminlte::members.binary')->with('lstUserSelect', $lstUserSelect);
     }
 
     // Get BV - personal week sale
@@ -244,14 +249,13 @@ class MemberController extends Controller
         return view('adminlte::members.refferals')->with('users', $users);
     }
 	public function pushIntoTree(Request $request){
-        if($request->ajax()){
-            if(isset($request->userid) && $request->userid > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
-
+        //if($request->ajax()){
+        if($request->isMethod('post')){
+            if(isset($request->userid) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
                 //Get user that is added to tree
-                $userData = UserData::find($request->userid);
+                $userData = UserData::find($request->userSelect);
                 if($userData && $userData->refererId == Auth::user()->id && $userData->isBinary !== 1) {
                     $userData->isBinary = 1;
-
                     if($userData->lastUserIdLeft == 0) $userData->lastUserIdLeft = $userData->userId;
                     if($userData->lastUserIdRight == 0) $userData->lastUserIdRight = $userData->userId;
 
@@ -290,12 +294,13 @@ class MemberController extends Controller
 
                     //Calculate loyalty
                     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
-
-                    return response()->json(['status'=>1]);
+                    return redirect('members.binary')
+                        ->with('flash_message','Push into tree successfully.');
+                    //return response()->json(['status'=>1]);
                 }
             }
         }
-        return response()->json(['err'=>1]);
+        return redirect('members.binary')->with('error','Push into tree error.');
     }
 	public function show($id)
     {
