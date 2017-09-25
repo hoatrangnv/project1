@@ -82,9 +82,9 @@
         }
         .tree-node {
             padding: 0;
-            -webkit-border-radius: 30px;
-            -moz-border-radius: 30px;
-            border-radius: 33px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
             background-color: #ffffff;
             border: 1px solid #222d32;
             width: 12%;

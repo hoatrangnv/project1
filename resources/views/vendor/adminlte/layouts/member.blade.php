@@ -53,7 +53,7 @@ desired effect
         <section class="content">
             @include('flash::message')
             <!-- Your Page Content Here -->
-            <div class="row" >
+            <div class="rows" >
                @yield('main-content')
             </div>
         </section><!-- /.content -->

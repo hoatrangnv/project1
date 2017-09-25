@@ -391,8 +391,6 @@ class User extends Authenticatable
                 $settled = $leftOver;
             }
 
-            $settled = $binary->settled;
-
             $bonus = 0;
             $userPackage = $binary->userData->package;
             if (self::checkBinaryCount($binary->userId, 1)) {

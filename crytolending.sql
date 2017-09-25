@@ -138,12 +138,12 @@ CREATE TABLE `packages` (
 -- ----------------------------
 -- Records of packages
 -- ----------------------------
-INSERT INTO `packages` VALUES ('1', 'vip 1', '2017-08-16 07:06:07', '2017-09-18 04:14:44', null, '100', '0.1', '1');
-INSERT INTO `packages` VALUES ('2', 'vip 2', '2017-08-16 07:06:33', '2017-09-18 04:14:48', null, '500', '0.2', '2');
-INSERT INTO `packages` VALUES ('3', 'vip 3', '2017-08-16 07:58:10', '2017-09-18 04:14:55', null, '1000', '0.3', '3');
-INSERT INTO `packages` VALUES ('4', 'vip 4', null, null, null, '2000', '0.4', '4');
-INSERT INTO `packages` VALUES ('5', 'vip 5', null, null, null, '5000', '0.5', '5');
-INSERT INTO `packages` VALUES ('6', 'vip 6', null, null, null, '10000', '0.6', '6');
+INSERT INTO `packages` VALUES ('1', 'tiny', '2017-08-16 07:06:07', '2017-09-18 04:14:44', null, '100', '0.001', '1');
+INSERT INTO `packages` VALUES ('2', 'small', '2017-08-16 07:06:33', '2017-09-18 04:14:48', null, '500', '0.002', '2');
+INSERT INTO `packages` VALUES ('3', 'medium', '2017-08-16 07:58:10', '2017-09-18 04:14:55', null, '1000', '0.003', '3');
+INSERT INTO `packages` VALUES ('4', 'large', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '2000', '0.004', '4');
+INSERT INTO `packages` VALUES ('5', 'huge', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '5000', '0.005', '5');
+INSERT INTO `packages` VALUES ('6', 'angel', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '10000', '0.006', '6');
 
 -- ----------------------------
 -- Table structure for password_resets
@@ -280,7 +280,7 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'nam hong', 'namhong1983@gmail.com', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Nguyen', 'Hong', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '', null, null, null);
+INSERT INTO `users` VALUES ('1', 'admin', 'giangitman@gmail.com', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Nguyen', 'Hong', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '', null, null, null);
 
 -- ----------------------------
 -- Table structure for users_loyalty
@@ -333,7 +333,7 @@ CREATE TABLE `user_coins` (
 -- ----------------------------
 -- Records of user_coins
 -- ----------------------------
-INSERT INTO `user_coins` VALUES ('1', '1GGmXKpWxhnewFshqw7fKKdnMEAf7wjzSy', 'c9750047-5a1e-57aa-95ca-f72a7bd721cc', '0.6', '500', '300.5', '220.2350001', null);
+INSERT INTO `user_coins` VALUES ('1', 'admin', 'admin', '0', '0', '0', '0', null);
 
 -- ----------------------------
 -- Table structure for user_datas
@@ -382,6 +382,7 @@ CREATE TABLE `user_packages` (
   `buy_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `release_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `withdraw` tinyint(1) DEFAULT '0',
+  `weekYear` int(10) NOT NULL,
   KEY `userId` (`userId`) USING BTREE,
   KEY `packageId` (`packageId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -430,5 +431,22 @@ CREATE TABLE `withdraws` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Records of withdraws
+-- Table structure for `news`
 -- ----------------------------
+DROP TABLE IF EXISTS `news`;
+CREATE TABLE `news` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category_id` smallint(6) DEFAULT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `short_desc` text COLLATE utf8mb4_unicode_ci,
+  `desc` text COLLATE utf8mb4_unicode_ci,
+  `public_at` datetime DEFAULT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `priority` int(10) unsigned NOT NULL DEFAULT '0',
+  `views` bigint(20) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

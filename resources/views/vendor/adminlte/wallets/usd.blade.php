@@ -4,35 +4,6 @@
 	{{ trans('adminlte_lang::wallet.header_title') }}
 @endsection
 
-<style>
-    .box-widget .wallet-title{
-        padding: 0;
-        text-align: left;
-        max-width: 50px;
-    }
-    .box-widget  .wallet-amount{
-        padding: 0;
-        text-align: left;
-    }
-    .box-widget  .wallet-amount .description-block{
-        text-align: left;
-    }
-    .content .widget-user .box-footer{
-        padding: 15px 0;
-    }
-    .widget-user .btn-success{
-        float: right;
-        margin-right: 15px;    
-    }
-    .box .box-footer  .border-right{
-        border: none;
-    }
-    @media only screen and (max-width: 500px) {
-        .content .widget-user .box-footer{
-            padding: 15px 0px 15px 15px;
-        }
-    }
-</style>
 @section('main-content')
 
     <!--    captrue error-->
@@ -65,42 +36,30 @@
     <div class="row">
         <div class="col-md-12">
           <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user">
+          <div class="box">
             <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="box-footer">
-              <div class="rows">
-                  <div class="col-xs-1 border-right wallet-title" style="text-align: center">
-                      <div class="description-header" style="margin-top: 6px">  
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
-                    </div>
-                  <!-- /.description-block -->
-                </div>  
-                <div class="col-xs-3 border-right wallet-amount">
-                  <div class="description-block">
-                    <h5 class="description-header rate-usd-btc">
-                        @isset($wallets->currencyPair){{ $wallets->currencyPair }} $ @endisset
-                    </h5>
-                  </div>
-                  <!-- /.description-block -->
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped wallet-table">
+                        <tr>
+                            <th class="icon-wallet">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
+                            </th>
+                            <th class="wallet-amount">@isset($wallets->currencyPair)<i class="fa fa-usd" aria-hidden="true"></i>{{ $wallets->currencyPair }}  @endisset</th>
+                            <th><button class="btn bg-olive" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button></th>
+                        </tr>
+                    </table>
                 </div>
-               
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-              <button class="btn btn-success" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button>
-            </div>
           </div>
           <!-- /.widget-user -->
         </div>
         <!-- /.col -->
     </div>
-    
+    </div>
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                        <!--a href="{{ route('packages.invest') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_package') }}</a-->
-                        <!--/<a href="{{ url('wallets/buysellclp') }}" class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.buy_clp') }}</a>-->
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <div class="table-responsive">
@@ -204,86 +163,86 @@
     <!-- /.modal -->
     <script>
         
-        var getRateBtcUsd = setInterval(function(){ 
-            updateRateBtcUsd(); 
-        }, {{ config("app.time_interval")}});
+        // var getRateBtcUsd = setInterval(function(){ 
+        //     updateRateBtcUsd(); 
+        // }, {{ config("app.time_interval")}});
         
-        $( ".switch-USD-to-CLP" ).keyup(function() {
-            var value = $(this).val();
-            var type = "UsdToClp";
-            //send
-            var result = switchChange(value,type);
-        });
+        // $( ".switch-USD-to-CLP" ).keyup(function() {
+        //     var value = $(this).val();
+        //     var type = "UsdToClp";
+        //     //send
+        //     var result = switchChange(value,type);
+        // });
         
-        $( ".switch-CLP-to-USD" ).keyup(function() {
-            var value = $(this).val();
-            var type = "ClpToUsd";
-            //send
-            var result = switchChange(value,type);
-        });
+        // $( ".switch-CLP-to-USD" ).keyup(function() {
+        //     var value = $(this).val();
+        //     var type = "ClpToUsd";
+        //     //send
+        //     var result = switchChange(value,type);
+        // });
         
         
-        function switchChange(value,type){
-            $.ajax({
-                beforeSend: function(){
-                  // Handle the beforeSend event
-                },
-                url:"switchusdclp",
-                type:"get",
-                data : {
-                    type: type,
-                    value: value
-                },
-                success : function(result){
-                    if( type == "UsdToClp" ){
-                        if(result.success) {
-                            $(".switch-CLP-to-USD").val(result.result);
-                        }
-                    } else {
-                        if(result.success) {
-                            $(".switch-USD-to-CLP").val(result.result); 
-                        }
-                    }
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    alert("some error");
-                },
-                complete: function(){
+        // function switchChange(value,type){
+        //     $.ajax({
+        //         beforeSend: function(){
+        //           // Handle the beforeSend event
+        //         },
+        //         url:"switchusdclp",
+        //         type:"get",
+        //         data : {
+        //             type: type,
+        //             value: value
+        //         },
+        //         success : function(result){
+        //             if( type == "UsdToClp" ){
+        //                 if(result.success) {
+        //                     $(".switch-CLP-to-USD").val(result.result);
+        //                 }
+        //             } else {
+        //                 if(result.success) {
+        //                     $(".switch-USD-to-CLP").val(result.result); 
+        //                 }
+        //             }
+        //         },
+        //         error: function(XMLHttpRequest, textStatus, errorThrown) {
+        //             alert("some error");
+        //         },
+        //         complete: function(){
                   
-                }
-                // ......
-            });
+        //         }
+        //         // ......
+        //     });
             
           
-        }
+        // }
         
-        function updateRateBtcUsd(){
-            $.ajax({
-                beforeSend: function(){
-                  // Handle the beforeSend event
-                },
-                url:"getrateusdbtc",
-                type:"get",
-                data : {
+        // function updateRateBtcUsd(){
+        //     $.ajax({
+        //         beforeSend: function(){
+        //           // Handle the beforeSend event
+        //         },
+        //         url:"getrateusdbtc",
+        //         type:"get",
+        //         data : {
                     
-                },
-                success : function(result){
-                    console.log(result);
-                    //update
-                    $(".rate-usd-btc").html(result.result.usd + " $");
-                    $(".btc").html( result.result.btc + " BTC");
-                    $(".clp").html(result.result.clp + " CLP");
-                    $(".clpusd").html(result.result.clpusd + " $");
-                    $(".clpbtc").html(result.result.clpbtc + " BTC");
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    //alert("some error");
-                },
-                complete: function(){
+        //         },
+        //         success : function(result){
+        //             console.log(result);
+        //             //update
+        //             $(".rate-usd-btc").html(result.result.usd + " $");
+        //             $(".btc").html( result.result.btc + " BTC");
+        //             $(".clp").html(result.result.clp + " CLP");
+        //             $(".clpusd").html(result.result.clpusd + " $");
+        //             $(".clpbtc").html(result.result.clpbtc + " BTC");
+        //         },
+        //         error: function(XMLHttpRequest, textStatus, errorThrown) {
+        //             //alert("some error");
+        //         },
+        //         complete: function(){
                   
-                }
-                // ......
-            });
-        }
+        //         }
+        //         // ......
+        //     });
+        // }
     </script>
 @endsection
