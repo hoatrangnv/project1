@@ -48,7 +48,7 @@ class ActiveController extends Controller
                 $request->session()->flash('error', 'Link Active Account expired!');
             }else{
                 //kiem tra va update kich hoat tk
-                if ( $data[0] = hash( "sha256", md5( md5( $data[1] ) ) ) ) {
+                if ( $data[0] == hash( "sha256", md5( md5( $data[1] ) ) ) ) {
                     try {
                         $user = User::where( 'email', '=', $data[1] )->first();
                         $user->active = 1;
