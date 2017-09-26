@@ -90,12 +90,34 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <center><h3 class="box-title">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b>
+<!--                            <center><h3 class="box-title">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b>
                                 </h3></center>
 
                             <center><h3 class="box-title">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['totalF1Sale'] }}</b>
-                                </h3></center>
-
+                                </h3></center>-->
+                            <div>
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <h3 class="box-title">{{ trans('adminlte_lang::home.sale_f1') }}
+                                                </h3>
+                                            </td>
+                                            <td>
+                                                <b>{{ $data['newF1InWeek']}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><h3 class="box-title">{{ trans('adminlte_lang::home.total_sale_f1') }}
+                                            </h3>
+                                            </td>
+                                            <td>
+                                                <b>{{ $data['totalF1Sale'] }}</b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="box-solid div-center"
@@ -245,14 +267,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="box box-solid div-center">{{ trans('adminlte_lang::home.f1_left_new') }}
-                                        &nbsp;&nbsp;&nbsp;&nbsp;<b>{{$data['leftNew']}}</b></div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="box box-solid div-center">{{ trans('adminlte_lang::home.f1_right_new') }}
-                                        &nbsp;&nbsp;&nbsp;&nbsp;<b>{{$data['rightNew']}}</b></div>
-                                </div>
+                                
                             </div>
                             <div class="row">
                                 <div class="col-md-6">

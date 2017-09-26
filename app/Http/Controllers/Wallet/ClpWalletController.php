@@ -12,7 +12,6 @@ use App\UserCoin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Package;
-
 use App\User;
 use App\Wallet;
 use App\Withdraw;
@@ -37,7 +36,6 @@ class ClpWalletController extends Controller {
      * @return type
      */
     public function clpWallet() {
-        
         $currentuserid = Auth::user()->id;
         $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',3)
        ->paginate();

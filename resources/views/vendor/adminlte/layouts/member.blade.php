@@ -45,7 +45,7 @@ desired effect
     
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="min-height: 0px !important;">
 
         @include('adminlte::layouts.partials.contentheader')
 

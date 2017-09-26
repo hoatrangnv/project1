@@ -23,14 +23,39 @@
         </div>
     @endif
     <div class="row">
+        <div class="col-md-12">
+          <!-- Widget: user widget style 1 -->
+            <div class="box">
+                <!-- Add the bg color to the header using any of the bg-* classes -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped wallet-table">
+                            <tbody>
+                                <tr>
+                                    <th class="icon-wallet">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
+                                    </th>
+                                    <th class="wallet-amount"><i class="fa fa-money" aria-hidden="true"></i>{{ Auth()->user()->userCoin->clpCoinAmount }}  </th>
+                                    <th>
+                                    <a href="{{ url('wallets/buysellclp') }}" class="btn bg-olive">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
+                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#buy-package">Buy package</a>
+                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
+                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.widget-user -->
+            </div>
+        <!-- /.col -->
+        </div>
+    </div>
+    <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <a href="{{ url('wallets/buysellclp') }}"
-                       class="btn btn-sm btn-success">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
-                    <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#buy-package">Buy
-                        package</a>
-                    <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <table class="table table-bordered table-hover table-striped dataTable">
@@ -146,6 +171,41 @@
       <!-- /.modal-dialog -->
     </div>  
     {{ Form::close() }}
+    <!--Deposit modal-->
+        <div class="modal fade" id="deposit" style="display: none;">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Deposit</h4>
+              </div>
+              <div class="modal-body">
+                    <div class="col-lg-12">
+                        <div class="card box">
+                            <div class="card-heading  b-b b-light" style="text-align: center">
+                                <h2>Deposit to your wallet</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group" style="text-align: center">
+                                    <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your BTC Wallet address</h5>
+                                    <h6 class="wallet-address"></h6>
+                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">BTC Wallet link</h5>
+                                    <a class="link-blockchain" href="" target="_blank">blockchain</a>, <a class="link-blockexplorer" href="" target="_blank">blockexplorer</a>
+                                    <center><div id="qrcode" style="padding-bottom: 10px;"></div></center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
     <script>
         var packageId = {{ Auth::user()->userData->packageId }};
         var packageIdPick = packageId;
@@ -170,6 +230,24 @@
                     alert('You cant not this package');
                 }
             });
+        });
+        
+        $.ajax({
+            url: "{{ url('wallets/deposit') }}?action=clp",
+        }).done(function(data) {
+            if (!data.err) {
+                $(".wallet-address").html(data.walletAddress);
+                $(".link-blockchain").attr("href","https://blockchain.info/address/"+data.walletAddress);
+                $(".link-blockexplorer").attr("href","https://blockexplorer.com/address/"+data.walletAddress);
+                var qrcode = new QRCode(document.getElementById("qrcode"), {
+                    text: data.walletAddress,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            } else {
+                $(".wallet-address").html(data.err);
+            }
         });
     </script>
 @endsection
