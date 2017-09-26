@@ -100,3 +100,4 @@ Route::post('reactive',"Auth\ActiveController@reactiveAccount");
 Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
+Route::any('confirmWithdraw',"Wallet\WithDrawController@confirmWithdraw");
