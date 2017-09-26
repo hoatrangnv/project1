@@ -17,6 +17,7 @@ class News extends Model
     const CLP = 3;
     const P2P = 4;
     
+    public $timestamps = true;
     /**
      * The table associated with the model.
      *
@@ -46,7 +47,10 @@ class News extends Model
         'public_at',
         'created_by',
         'priority',
-        'views'
+        'views',
+        "created_at",
+        "updated_at",
+        "deleted_at"
     ];
     /**
      * The attributes that should be hidden for arrays.

@@ -167,54 +167,54 @@
         //     updateRateBtcUsd(); 
         // }, {{ config("app.time_interval")}});
         
-        // $( ".switch-USD-to-CLP" ).keyup(function() {
-        //     var value = $(this).val();
-        //     var type = "UsdToClp";
-        //     //send
-        //     var result = switchChange(value,type);
-        // });
+        $( ".switch-USD-to-CLP" ).keyup(function() {
+             var value = $(this).val();
+             var type = "UsdToClp";
+             //send
+             var result = switchChange(value,type);
+        });
         
-        // $( ".switch-CLP-to-USD" ).keyup(function() {
-        //     var value = $(this).val();
-        //     var type = "ClpToUsd";
-        //     //send
-        //     var result = switchChange(value,type);
-        // });
+        $( ".switch-CLP-to-USD" ).keyup(function() {
+             var value = $(this).val();
+            var type = "ClpToUsd";
+            //send
+           var result = switchChange(value,type);
+        });
         
         
-        // function switchChange(value,type){
-        //     $.ajax({
-        //         beforeSend: function(){
-        //           // Handle the beforeSend event
-        //         },
-        //         url:"switchusdclp",
-        //         type:"get",
-        //         data : {
-        //             type: type,
-        //             value: value
-        //         },
-        //         success : function(result){
-        //             if( type == "UsdToClp" ){
-        //                 if(result.success) {
-        //                     $(".switch-CLP-to-USD").val(result.result);
-        //                 }
-        //             } else {
-        //                 if(result.success) {
-        //                     $(".switch-USD-to-CLP").val(result.result); 
-        //                 }
-        //             }
-        //         },
-        //         error: function(XMLHttpRequest, textStatus, errorThrown) {
-        //             alert("some error");
-        //         },
-        //         complete: function(){
+        function switchChange(value,type){
+            $.ajax({
+                beforeSend: function(){
+                  // Handle the beforeSend event
+                },
+                url:"switchusdclp",
+                type:"get",
+                data : {
+                     type: type,
+                    value: value
+                },
+                success : function(result){
+                     if( type == "UsdToClp" ){
+                         if(result.success) {
+                             $(".switch-CLP-to-USD").val(result.result);
+                        }
+                    } else {
+                        if(result.success) {
+                            $(".switch-USD-to-CLP").val(result.result); 
+                        }
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                 },
+                complete: function(){
                   
-        //         }
-        //         // ......
-        //     });
+                 }
+                 // ......
+             });
             
           
-        // }
+        }
         
         // function updateRateBtcUsd(){
         //     $.ajax({

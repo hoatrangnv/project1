@@ -19,6 +19,8 @@ use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
 use App\Package;
 use Log;
+use App\Http\Controllers\Wallet\UsdWalletController as USDWallet;
+
 
 class WalletController extends Controller
 {
@@ -72,6 +74,15 @@ class WalletController extends Controller
      * @return type
      */
     public function reinvest(){
+        if($request->isMethod('post')) {
+            $this->validate($request, [
+                'usd'=>'required|numeric',
+                'clp'=>'required|numeric'
+            ]);
+            //Tranfer
+            $tranfer = new USDWallet();
+            $tranfer->tranferUSDCLP($usd, $clp, $request);
+        }
         $currentuserid = Auth::user()->id;
         $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::CLP_WALLET)
         ->paginate();
