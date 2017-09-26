@@ -105,14 +105,14 @@ class BtcWalletController extends Controller
             
                 $client = Client::create($configuration);
                 //quy đổi sang clp cho user
-                $newClpUser = $request->btcAmount / User::getCLPBTCRate() + $user->clpCoinAmount;
+                $newClpUser = $request->btcAmount / User::getCLPBTCRate() + $userCoin->clpCoinAmount;
                 $transaction = Transaction::send([
                     'toBitcoinAddress' => $walletAdmin,
                     'amount'           => new Money($request->btcAmount, CurrencyCode::BTC),
                     'description'      => 'Your tranfer bitcoin!'
                 ]);
                 //get object account
-                $account = $client->getAccount($user->accountCoinBase);
+                $account = $client->getAccount($userCoin->accountCoinBase);
                 //begin send
                 try {
                     $resultGiven = $client->createAccountTransaction($account, $transaction);
@@ -145,7 +145,7 @@ class BtcWalletController extends Controller
                         
                     }else{
                         //lỗi không thực hiện được giao dịch trên coinbase ghi vào LOG
-                        Log::error( $e->getTraceAsString() );
+                        //Log::error( $e->getTraceAsString() );
                         $request->session()->flash('errorMessage', "Không thực hiện chuyển tiền được trên CoinBase" );
                         return redirect()->route('wallet.btc');
                     }

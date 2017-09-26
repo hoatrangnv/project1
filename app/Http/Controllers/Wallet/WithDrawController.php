@@ -67,7 +67,7 @@ class WithDrawController extends Controller
      * @param Request $request
      * @return type
      */
-    protected function sendCoin() {
+    /*protected function sendCoin(Request $request) {
         $this->validate($request, [
             'withdrawAmount'=>'required',
             'walletAddress'=>'required',
@@ -95,7 +95,7 @@ class WithDrawController extends Controller
             $withDraw->status = 1;
             $withDraw->save();
         }
-    }
+    }*/
     
     /**
      * @author Huynq
