@@ -22,14 +22,18 @@ return [
     'sale_f1'                   => 'New F1 Sale',
     'total_sale_f1'             => 'Total F1 Sale',
     'f1_left'                   => 'Award F1 On Left',
-    'f1_left_new'               => 'Left Current Week Sale',
-    'f1_left_tichluy'           => 'Left Total Sale',
+    'f1_left_new'               => 'Current Week Sale',
+    'f1_left_tichluy'           => 'Total Sale',
     'f1_right'                  => 'Award F1 On Right',
-    'f1_right_new'              => 'Right Current Week Sale',
-    'f1_right_tichluy'          => 'Right Total Sale',
+    'f1_right_new'              => 'Current Week Sale',
+    'f1_right_tichluy'          => 'Total Sale',
     'investment_status'         => 'Investment Status',
     'your_pack'                 =>'Your pack',
     'value'                     =>'Value',
     'active'                    =>'Active',
-    'release'                   =>'Realease'
+    'release'                   =>'Realease',
+    'package'=>"Package",
+    'buy_date'=>"Buy date",
+    'release_date'=>"Release date",
+    'package_history'=>'Package History'
 ];
