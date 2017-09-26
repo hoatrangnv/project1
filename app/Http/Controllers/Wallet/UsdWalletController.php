@@ -129,7 +129,7 @@ class UsdWalletController extends Controller
      * @param type $clp
      * @param type $request
      */
-    private function tranferUSDCLP($usd, $clp, $request){
+    public function tranferUSDCLP($usd, $clp, $request){
         //Kq sau khi tính 
         $valueAfterTranfer = [];
         $user = Auth::user()->userCoin;

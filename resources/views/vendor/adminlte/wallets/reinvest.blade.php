@@ -5,38 +5,56 @@
 @endsection
 
 @section('main-content')
-    
-    <div class="row">
-        <div class="col-md-5">
-          <!-- Widget: user widget style 1 -->
-          <div class="box box-widget widget-user">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="box-footer">
-              <div class="row">
-                  <div class="col-sm-1 border-right" style="text-align: center">
-                      <div class="description-header" style="margin-top: 6px">  
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
-                    </div>
-                  <!-- /.description-block -->
-                </div>  
-                <div class="col-sm-3 border-right">
-                  <div class="description-block">
-                    <h5 class="description-header rate-usd-btc">
-                        @isset($wallets->currencyPair){{ $wallets->currencyPair }} $ @endisset
-                    </h5>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-               
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-              <button class="btn btn-success" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button>
-            </div>
-          </div>
-          <!-- /.widget-user -->
+    <!--    captrue error-->
+    @if ( session()->has("errorMessage") )
+        <div class="callout callout-danger">
+            <h4>Warning!</h4>
+            <p>{!! session("errorMessage") !!}</p>
         </div>
+        {{ session()->forget('errorMessage') }}
+    @elseif ( session()->has("successMessage") )
+        <div class="callout callout-success">
+            <h4>Success</h4>
+            <p>{!! session("successMessage") !!}</p>
+        </div>
+        {{ session()->forget('successMessage') }}
+    @else
+        <div></div>
+    @endif
+    
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Widget: user widget style 1 -->
+            <div class="box">
+              <!-- Add the bg color to the header using any of the bg-* classes -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped wallet-table">
+                            <tbody>
+                                <tr>
+                                    <th class="icon-wallet">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
+                                    </th>
+                                    <th class="wallet-amount"><i class="fa fa-usd" aria-hidden="true"></i>@isset($wallets->currencyPair){{ $wallets->currencyPair }}@endisset  </th>
+                                    <th><button class="btn bg-olive" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <!-- /.widget-user -->
+            </div>
         <!-- /.col -->
+        </div>
     </div>
 	<div class="row">
 		<div class="col-xs-12">
@@ -101,4 +119,94 @@
 			</div>
 		</div>
 	</div>
+ <!--fORM submit-->
+    <form class="form-horizontal" _lpchecked="1" method="post" action="">
+        <div class="modal fade" id="modal-default">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="box-body">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <div class="form-group">
+                                <label for="inputEmail3" class="col-sm-2 control-label">USD</label>
+
+                                <div class="col-sm-10">
+                                  <input type="number" step="0.01" class="form-control switch-USD-to-CLP" id="inputEmail3" name="usd" placeholder="USD" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword3" class="col-sm-2 control-label">CLP</label>
+
+                                <div class="col-sm-10">
+                                  <input type="number" step="0.000000001" class="form-control switch-CLP-to-USD" id="inputPassword3" name="clp" placeholder="CLP" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+              <!-- /.modal-content -->
+            </div>
+          <!-- /.modal-dialog -->
+        </div>
+    </form>
+    <!-- /.modal -->
+    <script>
+        $( ".switch-USD-to-CLP" ).keyup(function() {
+             var value = $(this).val();
+             var type = "UsdToClp";
+             //send
+             var result = switchChange(value,type);
+        });
+        
+        $( ".switch-CLP-to-USD" ).keyup(function() {
+             var value = $(this).val();
+            var type = "ClpToUsd";
+            //send
+           var result = switchChange(value,type);
+        });
+        
+        
+        function switchChange(value,type){
+            $.ajax({
+                beforeSend: function(){
+                  // Handle the beforeSend event
+                },
+                url:"switchusdclp",
+                type:"get",
+                data : {
+                     type: type,
+                    value: value
+                },
+                success : function(result){
+                     if( type == "UsdToClp" ){
+                         if(result.success) {
+                             $(".switch-CLP-to-USD").val(result.result);
+                        }
+                    } else {
+                        if(result.success) {
+                            $(".switch-USD-to-CLP").val(result.result); 
+                        }
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                 },
+                complete: function(){
+                  
+                 }
+                 // ......
+             });
+            
+          
+        }
+    </script>
 @endsection

@@ -26,6 +26,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     //Re-invest WALLET
     Route::get('wallets/reinvest', 'Wallet\UsdWalletController@reinvestWallet');
+    Route::post('wallets/reinvest', 'Wallet\UsdWalletController@reinvestWallet');
 
     //BTC WALLET
     Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet')->name('wallet.btc');
@@ -36,6 +37,7 @@ Route::group( ['middleware' => ['auth']], function() {
     
     //CLP WALLET
     Route::get('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
+    Route::post('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
 
     
