@@ -29,7 +29,7 @@
                                         <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->btcCoinAmount }}</h4>
                                     </center>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                <a href="#" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- /.col -->
@@ -42,7 +42,7 @@
                                         <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->clpCoinAmount }}</h4>
                                     </center>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                <a href="#" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- /.col -->
@@ -59,7 +59,7 @@
                                         <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->usdAmount }}</h4>
                                     </center>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                <a href="#" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- /.col -->
@@ -72,7 +72,7 @@
                                         <h4 style="font-size:20px;font-weight:bold">{{ Auth::user()->userCoin->reinvestAmount }}</h4>
                                     </center>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                <a href="#" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- /.col -->
@@ -103,7 +103,7 @@
                                     <table class="table table-bordered table-hover table-striped dataTable">
                                         <tbody>
                                         <tr>
-                                            <td>Silver</td>
+                                            <td>{{ trans('adminlte_lang::home.silver') }}</td>
                                             <td>
                                                 <?php
                                                 $lstSilverUser = [];
@@ -116,7 +116,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Gold</td>
+                                            <td>{{ trans('adminlte_lang::home.gold') }}</td>
                                             <td>
                                                 <?php
                                                 $lstGoldUser = [];
@@ -129,7 +129,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Pear</td>
+                                            <td>{{ trans('adminlte_lang::home.pear') }}</td>
                                             <td>
                                                 <?php
                                                 $lstPearUser = [];
@@ -142,7 +142,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Emerald</td>
+                                            <td>{{ trans('adminlte_lang::home.emerald') }}</td>
                                             <td>
                                                 <?php
                                                 $lstEmeraldUser = [];
@@ -155,7 +155,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Diamond</td>
+                                            <td>{{ trans('adminlte_lang::home.diamond') }}</td>
                                             <td>
                                                 <?php
                                                 $lstDiamondUser = [];
@@ -176,7 +176,7 @@
                                     <table class="table table-bordered table-hover table-striped dataTable">
                                         <tbody>
                                         <tr>
-                                            <td>Silver</td>
+                                            <td>{{ trans('adminlte_lang::home.silver') }}</td>
                                             <td>
                                                 <?php
                                                 $lstSilverUser = [];
@@ -189,7 +189,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Gold</td>
+                                            <td>{{ trans('adminlte_lang::home.gold') }}</td>
                                             <td>
                                                 <?php
                                                 $lstGoldUser = [];
@@ -202,7 +202,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Pear</td>
+                                            <td>{{ trans('adminlte_lang::home.pear') }}</td>
                                             <td>
                                                 <?php
                                                 $lstPearUser = [];
@@ -215,7 +215,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Emerald</td>
+                                            <td>{{ trans('adminlte_lang::home.emerald') }}</td>
                                             <td>
                                                 <?php
                                                 $lstEmeraldUser = [];
@@ -228,7 +228,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Diamond</td>
+                                            <td>{{ trans('adminlte_lang::home.diamond') }}</td>
                                             <td>
                                                 <?php
                                                 $lstDiamondUser = [];
