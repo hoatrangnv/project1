@@ -127,7 +127,6 @@
                                 <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" />
                                 <p>
                                     {{ Auth::user()->name }}
-                                    <small>{{ trans('adminlte_lang::message.login') }} Nov. 2012</small>
                                 </p>
                             </li>
                             <!-- Menu Body -->
@@ -157,7 +156,7 @@
 
                 <!-- Control Sidebar Toggle Button -->
                 <li>
-                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-arrows-h"></i></a>
+                    <a href="#" data-toggle="control-sidebar" class="clp-news"><i class="fa fa-newspaper-o"></i></a>
                 </li>
             </ul>
         </div>
