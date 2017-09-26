@@ -39,7 +39,7 @@ class ActiveController extends Controller
                 }
             } catch (Exception $e) {
                 echo "Error : ket noi";
-                die();    
+                die();
             }
             $count = User::where('email','=', $data[1])
                             ->where('updated_at','>', Carbon::now()->subDay(3))
