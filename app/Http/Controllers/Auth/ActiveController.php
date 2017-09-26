@@ -32,8 +32,8 @@ class ActiveController extends Controller
 
             //check neu da active roi va chua login hien thong bao da active kem link login
             try {
-                $activeUser = User::where('email', '=', $data[1])->firstOrFail();
-                if( $activeUser->active == 1 ) {
+                $activeUser = User::where('email', '=', $data[1])->first();
+                if($activeUser && $activeUser->active == 1 ) {
                     //chay sang trang thong bao
                     return redirect("notification/useractived");
                 }
