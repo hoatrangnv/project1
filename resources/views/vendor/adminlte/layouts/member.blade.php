@@ -9,31 +9,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     @include('adminlte::layouts.partials.htmlheader')
 @show
 
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to get the
-desired effect
-|---------------------------------------------------------|
-| SKINS         | skin-blue                               |
-|               | skin-black                              |
-|               | skin-purple                             |
-|               | skin-yellow                             |
-|               | skin-red                                |
-|               | skin-green                              |
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | fixed                                   |
-|               | layout-boxed                            |
-|               | layout-top-nav                          |
-|               | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
 <script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/AdminLTE/bower_components/fastclick/lib/fastclick.js"></script>
-<!--<script src="/AdminLTE/dist/js/adminlte.min.js"></script>-->
-<script src="/AdminLTE/dist/js/demo.js"></script>
 <script src="/AdminLTE/dist/js/app.js"></script>
 <body class="skin-blue sidebar-mini">
 <div>
@@ -53,7 +31,7 @@ desired effect
         <section class="content">
             @include('flash::message')
             <!-- Your Page Content Here -->
-            <div class="row" >
+            <div class="rows" >
                @yield('main-content')
             </div>
         </section><!-- /.content -->

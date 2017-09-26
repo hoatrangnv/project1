@@ -32,11 +32,11 @@ return [
     'r_level'           	=> 'R-Level',
     'complete'           	=> 'Complete',
     'value'           	=> 'Value',
-    'silver'           	=> 'Silver',
-    'gold'           	=> 'Gold',
-    'pear'           	=> 'Pear',
-    'emerald'           	=> 'Emerald',
-    'diamond'           	=> 'Diamond',
+    'silver'           	=> 'Broker',
+    'gold'           	=> 'Supervisor',
+    'pear'           	=> 'Manager',
+    'emerald'           	=> 'Executive',
+    'diamond'           	=> 'President',
 
 
 ];

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\BonusBinary;
 use App\UserPackage;
+use App\LoyaltyUser;
 use Auth;
 use Session;
 use App\Http\Controllers\Controller;
@@ -38,9 +39,8 @@ class MemberController extends Controller
                                 'u'     => $user->name,
                                 'totalMembers'     => UserData::where('refererId', $currentuserid)->count(),
                                 'packageId'     => $user->userData->packageId,
-                                'loyaltyId'     => $user->userData->loyaltyId,
+                                'loyaltyId'     => $this->getLoyalty($user->id),
                                 'leg'     => $user->userData->leftRight == 'left' ? 1 : ($user->userData->leftRight == 'right' ? 2 : 0),
-                                'pkg'     => 2000,
                                 'ws'     => self::getWeeklySale($user->id),
                                 'dmc'     => 3,
                                 'l'     => 'Rookie',
@@ -58,9 +58,8 @@ class MemberController extends Controller
                             'u'     => $user->name,
                             'totalMembers'     => UserData::where('refererId', $currentuserid)->count(),
                             'packageId'     => $user->userData->packageId,
-                            'loyaltyId'     => $user->userData->loyaltyId,
+                            'loyaltyId'     => $this->getLoyalty($user->id),
                             'leg'     => $user->userData->leftRight == 'left' ? 1 : ($user->userData->leftRight == 'right' ? 2 : 0),
-                            'pkg'     => 2000,
                             'ws'     => self::getWeeklySale($user->id),
                             'dmc'     => 3,
                             'l'     => 'Rookie',
@@ -82,7 +81,6 @@ class MemberController extends Controller
                                 'packageId' => $userData->packageId,
                                 'loyaltyId' => $userData->loyaltyId,
                                 'leg' => $userData->leftRight == 'left' ? 1 : ($userData->leftRight == 'right' ? 2 : 0),
-                                'pkg' => 2000,
                                 'ws' => self::getWeeklySale($userData->userId),
                                 'dmc' => 3,
                                 'l' => 'Rookie',
@@ -186,6 +184,23 @@ class MemberController extends Controller
         }
 
         return $BV;
+    }
+
+    // Get Loyalty
+    function getLoyalty($userId){
+        $userLoyalty = LoyaltyUser::where('userId', $userId)->get()->first();
+
+        $loyalty = 0;
+        if($userLoyalty) 
+        {
+            if($userLoyalty->isSilver == 1) $loyalty = 1;
+            if($userLoyalty->isGold == 1) $loyalty = 2;
+            if($userLoyalty->isPear == 1) $loyalty = 3;
+            if($userLoyalty->isEmerald == 1) $loyalty = 4;
+            if($userLoyalty->isDiamond == 1) $loyalty = 5;
+        }
+
+        return $loyalty;
     }
 
     function getWeeklySale($userId, $type = 'total'){

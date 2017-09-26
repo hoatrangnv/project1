@@ -51,5 +51,18 @@ class Controller extends BaseController
                         "message"       => $msg
         ] );
     }
-    
+    /**
+     * check admin
+     * @author Huynq
+     * @return boolean
+     */
+    public function isAdmin(){
+        if(config("app.admin_id") == Auth::user()->id) {
+            return true;
+        }else{
+            return false;
+        }
+        
+        return false;
+    }
 }
