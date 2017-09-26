@@ -11,9 +11,8 @@
         padding: 7px 10px;
         text-align: center;
     }
-
-
 </style>
+<link rel="stylesheet" type="text/css" href="css/home.css">
 @section('main-content')
     <div class="row">
         <div class="col-xs-12">
@@ -90,16 +89,11 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-<!--                            <center><h3 class="box-title">{{ trans('adminlte_lang::home.sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['newF1InWeek']}}</b>
-                                </h3></center>
-
-                            <center><h3 class="box-title">{{ trans('adminlte_lang::home.total_sale_f1') }}&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $data['totalF1Sale'] }}</b>
-                                </h3></center>-->
                             <div>
-                                <table class="table table-bordered table-hover table-striped">
+                                <table class="table table-bordered table-hover table-striped business-table">
                                     <tbody>
                                         <tr>
-                                            <td>
+                                            <td class="fl-right">
                                                 <h3 class="box-title">{{ trans('adminlte_lang::home.sale_f1') }}
                                                 </h3>
                                             </td>
@@ -108,8 +102,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><h3 class="box-title">{{ trans('adminlte_lang::home.total_sale_f1') }}
-                                            </h3>
+                                            <td class="fl-right">
+                                                <h3 class="box-title">{{ trans('adminlte_lang::home.total_sale_f1') }}
+                                                </h3>
                                             </td>
                                             <td>
                                                 <b>{{ $data['totalF1Sale'] }}</b>
@@ -191,6 +186,24 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                    <table class="table table-bordered table-hover table-striped award-table">
+                                        <tr>
+                                            <td>
+                                                {{ trans('adminlte_lang::home.f1_left_new') }}
+                                            </td>
+                                            <td>
+                                                <b>{{$data['leftNew']}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               {{ trans('adminlte_lang::home.f1_left_tichluy') }}
+                                            </td>
+                                            <td>
+                                                <b>{{$data['leftOpen']}}</b>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="div-center"
@@ -264,21 +277,24 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                            <div class="row">
-                                
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="box box-solid div-center">
-                                        {{ trans('adminlte_lang::home.f1_left_tichluy') }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{$data['leftOpen']}}</b>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="box box-solid div-center">
-                                        {{ trans('adminlte_lang::home.f1_right_tichluy') }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{$data['rightOpen']}}</b>
-                                    </div>
+                                    <table class="table table-bordered table-hover table-striped award-table">
+                                        <tr>
+                                            <td>
+                                                {{ trans('adminlte_lang::home.f1_right_new') }}
+                                            </td>
+                                            <td  class="right">
+                                                <b>{{$data['rightNew']}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               {{ trans('adminlte_lang::home.f1_right_tichluy') }}
+                                            </td>
+                                            <td  class="right">
+                                                <b>{{$data['rightOpen']}}</b>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -324,6 +340,40 @@
                         <!-- /.box-body -->
                     </div>
                     <!-- /.box -->
+                     <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <center><h3 class="box-title">{{ trans('adminlte_lang::home.package_history') }}</h3>
+                            </center>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered table-hover table-striped dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>{{ trans('adminlte_lang::home.package') }}</th>
+                                        <th>{{ trans('adminlte_lang::home.buy_date') }}</th>
+                                        <th>{{ trans('adminlte_lang::home.release_date') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach( $data["history_package"] as $package)
+                                        <tr>
+                                            <td>
+                                            {{ $package->name }}
+                                            </td>
+                                            <td>
+                                            {{  date("Y-m-d", strtotime($package->buy_date)) }}
+                                            </td>
+                                            <td>
+                                            {{  date("Y-m-d", strtotime($package->release_date)) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
                 </div>
                 <!-- /.col (right) -->
             </div>

@@ -1,0 +1,20 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 26, 2017, 5:22:17 PM
+    Author     : huydk
+*/
+.business-table td{
+    width: 50%;
+}
+
+.fl-right h3{
+    float: right;
+}
+
+.award-table .right {
+    width: 30%;
+}

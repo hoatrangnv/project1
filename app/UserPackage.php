@@ -3,7 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Auth;
+use DB;
 class UserPackage extends Model
 {
     protected $primaryKey = null;
@@ -15,5 +16,16 @@ class UserPackage extends Model
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
         $this->setTable('user_packages');
+    }
+    
+    public static function getHistoryPackage(){
+        $package = new UserPackage;
+        $tableName = $package->getTable();
+        $data = $package->select("packages.name","buy_date","release_date")
+                ->where("userId",Auth::user()->id)
+                ->join("packages","packages.id","=","$tableName.packageId")
+                ->get();
+                
+        return $data;
     }
 }
