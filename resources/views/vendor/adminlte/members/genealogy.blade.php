@@ -11,9 +11,9 @@
 				<div class="box-header">
 					<div class="col-sm-3 no-padding">
 						<div class="input-group input-group-sm">
-							<input type="text" class="form-control" id="search-input">
+							<input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
 							<span class="input-group-btn">
-								<button type="button" id="search-button" class="btn btn-primary btn-flat"><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
+								<button type="button" id="search-button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
 							</span>
 						</div>
 					</div>
