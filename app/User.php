@@ -234,7 +234,7 @@ class User extends Authenticatable
 
             $user->save();
 
-            $nextLegpos = isset($user->binaryUserId) ? $user->binaryUserId : -1;
+            $nextLegpos = isset($user->leftRight) ? $user->leftRight : -1;
 
             //Caculate binary bonus for up level of $userRoot in binary tree
             self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $nextLegpos);
@@ -402,7 +402,7 @@ class User extends Authenticatable
 
             //Bonus canot over maxout $35,000
             if($bonus > config('cryptolanding.bonus_maxout')) $bonus = config('cryptolanding.bonus_maxout');
-            
+
             $binary->bonus = $bonus;
             $binary->save();
 
