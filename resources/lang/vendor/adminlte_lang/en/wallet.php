@@ -18,7 +18,7 @@ return [
     'clptransfer'           	=> 'CLP Coin Transfer',
     'create_bitcoin'           	=> 'Create Bitcoin address',
     'create_clpcoin'           	=> 'Create CLPcoin address',
-    'tranfer_to_clp'            => 'Transer to CLP',
+    'tranfer_to_clp'            => 'Buy CLP',
     'register_package'            => 'Register Package',
 	
 	'amount'                => 'Amount',

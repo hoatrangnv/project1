@@ -136,6 +136,9 @@ class TestRegisterController extends Controller
             // if(!$accountWallet){
             //     return false;
             // }
+            //get userid from uid
+            $userReferer = User::where('uid', $data['refererId'])->get()->first();
+
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['name'],
@@ -144,11 +147,12 @@ class TestRegisterController extends Controller
                 'email'    => $data['name'] . '@gmail.com',
                 'phone'    => '0978788999',
                 'country'    => '704',
-                'refererId'    => isset($data['refererId']) ? $data['refererId'] : null,
+                'refererId'    => isset($userReferer->id) ? $userReferer->id : null,
                 'password' => bcrypt('12345678'),
                 'accountCoinBase' => 'test',
                 'active' => 1,
                 'activeCode' => 'test',
+                'uid' => User::getUid(),
                 'google2fa_secret' => 'test'
             ];
             if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {

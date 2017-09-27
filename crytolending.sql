@@ -260,7 +260,7 @@ CREATE TABLE `users` (
   `is2fa` tinyint(1) DEFAULT '0',
   `refererId` int(10) DEFAULT NULL,
   `google2fa_secret` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `active` tinyint(1) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -280,7 +280,7 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'henry@crytolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '', null, null, null);
+INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '', null, null, '1');
 
 -- ----------------------------
 -- Table structure for users_loyalty
@@ -367,7 +367,7 @@ CREATE TABLE `user_datas` (
 -- ----------------------------
 -- Records of user_datas
 -- ----------------------------
-INSERT INTO `user_datas` VALUES ('1', '0', '3', '2017-09-21 17:26:38', '\"1DUUCG9FtRgm9dkJi2YVnbxSz4ZoLL5sBD\"', '0af3e334-9dac-5b20-beab-9c45c79a9611', '0', '0', null, '2100', '600', '0', '3', '4', '1', '2', '3', '0', '1');
+INSERT INTO `user_datas` VALUES ('1', '0', '0', NULL, NULL, NULL, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
 
 -- ----------------------------
 -- Table structure for user_packages
@@ -379,8 +379,8 @@ CREATE TABLE `user_packages` (
   `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `amount_increase` int(10) NOT NULL,
-  `buy_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `release_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `buy_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `release_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `withdraw` tinyint(1) DEFAULT '0',
   `weekYear` int(10) NOT NULL,
   KEY `userId` (`userId`) USING BTREE,
