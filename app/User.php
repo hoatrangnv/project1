@@ -399,6 +399,10 @@ class User extends Authenticatable
             }
 
             $binary->settled = $settled;
+
+            //Bonus canot over maxout $35,000
+            if($bonus > config('cryptolanding.bonus_maxout')) $bonus = config('cryptolanding.bonus_maxout');
+            
             $binary->bonus = $bonus;
             $binary->save();
 
