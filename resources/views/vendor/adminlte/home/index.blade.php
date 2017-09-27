@@ -6,6 +6,7 @@
 
 @section('custome_css')
 <link rel="stylesheet" type="text/css" href="css/home.css">
+<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/css/bootstrap-notify.css">-->
 @endsection
 
 @section('main-content')
@@ -354,6 +355,7 @@
                                         <th>{{ trans('adminlte_lang::home.package') }}</th>
                                         <th>{{ trans('adminlte_lang::home.buy_date') }}</th>
                                         <th>{{ trans('adminlte_lang::home.release_date') }}</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -368,6 +370,11 @@
                                             <td>
                                             {{  date("Y-m-d", strtotime($package->release_date)) }}
                                             </td>
+                                            <td>
+                                                <button class="btn btn-xs bg-olive withdraw-package" 
+                                                        data-id="{{ $package->id }}"
+                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::wallet.withdraw') }}</button>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -379,8 +386,52 @@
                 </div>
                 <!-- /.col (right) -->
             </div>
+            
 
             <!-- end body -->
         </div>
     </div>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="errorwithdraw">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+    </div>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/js/bootstrap-notify.min.js"></script>-->
+    <script>
+        $('[data-toggle=confirmation]').confirmation({
+            rootSelector: '[data-toggle=confirmation]',
+            onConfirm: function() {
+                $.ajax({
+                    beforeSend: function(){
+                      // Handle the beforeSend event
+                    },
+                    url:"packages/withdraw",
+                    type:"post",
+                    data : {
+                        type: "withdraw",
+                        value: $(this).attr("data-id"),
+                        _token:  $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success : function(result){
+                        if(result.success){
+                            alert("success");
+                        }else{
+                            alert(result.message);
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("some error");
+                    },
+                    complete: function(){
+
+                    }
+                    // ......
+                });
+            },
+            onCancel: function() {
+               
+            }
+          });
+    </script>
 @endsection

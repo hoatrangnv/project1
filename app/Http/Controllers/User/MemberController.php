@@ -324,4 +324,10 @@ class MemberController extends Controller
 		echo $id;
         //return redirect('members/genealogy');
     }
+    
+    public function refferalsDetail($id){
+        $lstCountry = config('cryptolanding.lstCountry');
+        $lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
+        return view('adminlte::profile.subprofile', compact('lstCountry', 'id'));
+    }
 }
