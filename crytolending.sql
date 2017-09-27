@@ -178,6 +178,7 @@ CREATE TABLE `permissions` (
 -- ----------------------------
 -- Records of permissions
 -- ----------------------------
+
 INSERT INTO `permissions` VALUES ('1', 'view_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
 INSERT INTO `permissions` VALUES ('2', 'add_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
 INSERT INTO `permissions` VALUES ('3', 'edit_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
@@ -190,6 +191,12 @@ INSERT INTO `permissions` VALUES ('21', 'view_packages', 'web', '2017-09-14 04:2
 INSERT INTO `permissions` VALUES ('22', 'add_packages', 'web', '2017-09-14 04:24:27', '2017-09-14 04:24:27');
 INSERT INTO `permissions` VALUES ('23', 'edit_packages', 'web', '2017-09-14 04:24:27', '2017-09-14 04:24:27');
 INSERT INTO `permissions` VALUES ('24', 'delete_packages', 'web', '2017-09-14 04:24:27', '2017-09-14 04:24:27');
+INSERT INTO `permissions` VALUES ('25', 'view_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+INSERT INTO `permissions` VALUES ('26', 'add_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+INSERT INTO `permissions` VALUES ('27', 'edit_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+INSERT INTO `permissions` VALUES ('28', 'delete_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+
+
 
 -- ----------------------------
 -- Table structure for roles
@@ -228,6 +235,7 @@ CREATE TABLE `role_has_permissions` (
 -- ----------------------------
 -- Records of role_has_permissions
 -- ----------------------------
+
 INSERT INTO `role_has_permissions` VALUES ('1', '1');
 INSERT INTO `role_has_permissions` VALUES ('2', '1');
 INSERT INTO `role_has_permissions` VALUES ('3', '1');
@@ -240,6 +248,10 @@ INSERT INTO `role_has_permissions` VALUES ('21', '1');
 INSERT INTO `role_has_permissions` VALUES ('22', '1');
 INSERT INTO `role_has_permissions` VALUES ('23', '1');
 INSERT INTO `role_has_permissions` VALUES ('24', '1');
+INSERT INTO `role_has_permissions` VALUES ('25', '1');
+INSERT INTO `role_has_permissions` VALUES ('26', '1');
+INSERT INTO `role_has_permissions` VALUES ('27', '1');
+INSERT INTO `role_has_permissions` VALUES ('28', '1');
 
 -- ----------------------------
 -- Table structure for users

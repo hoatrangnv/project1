@@ -12,7 +12,7 @@ class BonusFastStart extends Model
 	public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->setTable('bonus_fastStart');
+        $this->setTable('bonus_faststart');
     }
     public function users() {
         return $this->hasOne(User::class, 'id', 'partnerId');
