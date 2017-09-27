@@ -44,10 +44,10 @@
     <div class="form-group @if ($errors->has('category')) has-error @endif">
         {!! Form::label('title', 'Category') !!}
         {!! Form::select('category',  array(
-            '1' => 'Crypto news', 
-            '2' => 'Blockchain news',
-            '3' => 'Clp news',
-            '4' => 'P2p news'
+            '1' => trans('adminlte_lang::news.crypto_news'), 
+            '2' => trans('adminlte_lang::news.blockchain_news'),
+            '3' => trans('adminlte_lang::news.clp_news'),
+            '4' => trans('adminlte_lang::news.p2p_news')
         ), $news->category_id, ['class' => 'form-control']) !!}
         @if ($errors->has('category')) <p class="help-block">{{ $errors->first('category') }}</p> @endif
     </div>
