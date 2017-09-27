@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.auth')
 
 @section('htmlheader_title')
-    Log in
+    {{ trans('adminlte_lang::message.login') }}
 @endsection
 
 @section('content')
@@ -18,7 +18,7 @@
 
                     <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
                         <input type="email" name="email" class="form-control" value="{{ old('email') }}"
-                               placeholder="{{ trans('adminlte_lang::default.email') }}">
+                               placeholder="{{ trans('adminlte_lang::message.email') }}">
                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                         @if ($errors->has('email'))
                             <span class="help-block">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-group has-feedback {{ $errors->has('password') ? 'has-error' : '' }}">
                         <input type="password" name="password" class="form-control"
-                               placeholder="{{ trans('adminlte_lang::default.password') }}">
+                               placeholder="{{ trans('adminlte_lang::message.password') }}">
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                         @if ($errors->has('password'))
                             <span class="help-block">
