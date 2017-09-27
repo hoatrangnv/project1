@@ -234,15 +234,16 @@ class User extends Authenticatable
 
             $user->save();
 
+            $nextLegpos = isset($user->binaryUserId) ? $user->binaryUserId : -1;
 
             //Caculate binary bonus for up level of $userRoot in binary tree
-            self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
+            self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $nextLegpos);
 
             //Caculate loyalty bonus for up level of $userRoot in binary tree
-            self::bonusLoyaltyUser($user->userId, $user->refererId, $legpos);
+            self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
             
             if($user->binaryUserId > 0) {    
-                User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos, $isUpgrade);
+                User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $nextLegpos, $isUpgrade);
             }
         }
     }
