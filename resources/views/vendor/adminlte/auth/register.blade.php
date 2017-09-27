@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.auth')
 
 @section('htmlheader_title')
-    Register
+    {{ trans('adminlte_lang::message.register') }}
 @endsection
 
 @section('content')

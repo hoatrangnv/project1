@@ -25,7 +25,6 @@ class MemberController extends Controller
 	
 	public function genealogy(Request $request)
     {
-        //User::updateUserGenealogy(2);
 		if($request->ajax()){
 			if(isset($request['action'])) {
 				if($request['action'] == 'getUser') {
@@ -269,7 +268,7 @@ class MemberController extends Controller
 	public function pushIntoTree(Request $request){
         //if($request->ajax()){
         if($request->isMethod('post')){
-            if(isset($request->userSelect) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
+            if(isset($request->userid) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
                 //Get user that is added to tree
                 $userData = UserData::find($request->userSelect);
                 if($userData && $userData->refererId == Auth::user()->id && $userData->isBinary !== 1) {

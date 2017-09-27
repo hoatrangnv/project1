@@ -57,15 +57,14 @@ class NewsController extends Controller{
             ]);
             //category ??
             
-            $dataInsert = [
-                'title' => $request->title,
-                'category_id' => $request->category,
-                'desc'  => $request->body,
-                'short_desc' => $this->shortDescription($request->body),
-                'created_by'=> Auth::user()->id
-            ];
+            $new = new News;
+            $new->title = $request->title;
+            $new->category_id = $request->category;
+            $new->desc = $request->body;
+            $new->short_desc = $this->shortDescription($request->body);
+            $new->created_by = Auth::user()->id;
             
-            if(News::insert($dataInsert)){
+            if($new->save()){
                 $request->session()->flash( 'successMessage', 
                         trans("adminlte_lang::news.success") );
             }else{

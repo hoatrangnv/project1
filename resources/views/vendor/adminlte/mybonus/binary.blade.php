@@ -47,6 +47,9 @@
 						</tbody>
 					</table>
 				</div>
+				<div class="text-center">
+                    {{ $binarys->links() }}
+                </div>
 			</div>
 		</div>
 	</div>

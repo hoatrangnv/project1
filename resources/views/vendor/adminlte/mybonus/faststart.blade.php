@@ -37,6 +37,9 @@
 						</tbody>
 					</table>
 				</div>
+				<div class="text-center">
+                     {{ $fastStarts->links() }}
+                </div>
 			</div>
 		</div>
 	</div>

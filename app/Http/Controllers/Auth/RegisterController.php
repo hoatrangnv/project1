@@ -192,6 +192,10 @@ class RegisterController extends Controller
             if(!$accountWallet){
                 return false;
             }*/
+            }
+            //get userid from uid
+            $userReferer = User::where('uid', $data['refererId'])->get()->first();
+
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['firstname'],
@@ -200,7 +204,7 @@ class RegisterController extends Controller
                 'email'    => $data['email'],
                 'phone'    => $data['phone'],
                 'country'    => $data['country'],
-                'refererId'    => isset($data['refererId']) ? $data['refererId'] : null,
+                'refererId'    => isset($userReferer->id) ? $userReferer->id : null,
                 'password' => bcrypt($data['password']),
                 //'accountCoinBase' => $accountWallet['accountId'],
                 'status' => 0,

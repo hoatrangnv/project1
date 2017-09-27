@@ -178,6 +178,7 @@ CREATE TABLE `permissions` (
 -- ----------------------------
 -- Records of permissions
 -- ----------------------------
+
 INSERT INTO `permissions` VALUES ('1', 'view_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
 INSERT INTO `permissions` VALUES ('2', 'add_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
 INSERT INTO `permissions` VALUES ('3', 'edit_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
@@ -190,6 +191,12 @@ INSERT INTO `permissions` VALUES ('21', 'view_packages', 'web', '2017-09-14 04:2
 INSERT INTO `permissions` VALUES ('22', 'add_packages', 'web', '2017-09-14 04:24:27', '2017-09-14 04:24:27');
 INSERT INTO `permissions` VALUES ('23', 'edit_packages', 'web', '2017-09-14 04:24:27', '2017-09-14 04:24:27');
 INSERT INTO `permissions` VALUES ('24', 'delete_packages', 'web', '2017-09-14 04:24:27', '2017-09-14 04:24:27');
+INSERT INTO `permissions` VALUES ('25', 'view_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+INSERT INTO `permissions` VALUES ('26', 'add_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+INSERT INTO `permissions` VALUES ('27', 'edit_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+INSERT INTO `permissions` VALUES ('28', 'delete_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+
+
 
 -- ----------------------------
 -- Table structure for roles
@@ -228,6 +235,7 @@ CREATE TABLE `role_has_permissions` (
 -- ----------------------------
 -- Records of role_has_permissions
 -- ----------------------------
+
 INSERT INTO `role_has_permissions` VALUES ('1', '1');
 INSERT INTO `role_has_permissions` VALUES ('2', '1');
 INSERT INTO `role_has_permissions` VALUES ('3', '1');
@@ -240,6 +248,10 @@ INSERT INTO `role_has_permissions` VALUES ('21', '1');
 INSERT INTO `role_has_permissions` VALUES ('22', '1');
 INSERT INTO `role_has_permissions` VALUES ('23', '1');
 INSERT INTO `role_has_permissions` VALUES ('24', '1');
+INSERT INTO `role_has_permissions` VALUES ('25', '1');
+INSERT INTO `role_has_permissions` VALUES ('26', '1');
+INSERT INTO `role_has_permissions` VALUES ('27', '1');
+INSERT INTO `role_has_permissions` VALUES ('28', '1');
 
 -- ----------------------------
 -- Table structure for users
@@ -260,7 +272,7 @@ CREATE TABLE `users` (
   `is2fa` tinyint(1) DEFAULT '0',
   `refererId` int(10) DEFAULT NULL,
   `google2fa_secret` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `active` tinyint(1) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -280,7 +292,7 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'giangitman@gmail.com', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Nguyen', 'Hong', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '', null, null, null);
+INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '', null, null, '1');
 
 -- ----------------------------
 -- Table structure for users_loyalty
@@ -367,7 +379,7 @@ CREATE TABLE `user_datas` (
 -- ----------------------------
 -- Records of user_datas
 -- ----------------------------
-INSERT INTO `user_datas` VALUES ('1', '0', '3', '2017-09-21 17:26:38', '\"1DUUCG9FtRgm9dkJi2YVnbxSz4ZoLL5sBD\"', '0af3e334-9dac-5b20-beab-9c45c79a9611', '0', '0', null, '2100', '600', '0', '3', '4', '1', '2', '3', '0', '1');
+INSERT INTO `user_datas` VALUES ('1', '0', '0', NULL, NULL, NULL, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
 
 -- ----------------------------
 -- Table structure for user_packages
@@ -379,8 +391,8 @@ CREATE TABLE `user_packages` (
   `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `amount_increase` int(10) NOT NULL,
-  `buy_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `release_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `buy_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `release_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `withdraw` tinyint(1) DEFAULT '0',
   `weekYear` int(10) NOT NULL,
   KEY `userId` (`userId`) USING BTREE,

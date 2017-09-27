@@ -1,0 +1,42 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 26, 2017, 5:22:17 PM
+    Author     : huydk
+*/
+.business-table td{
+    width: 50%;
+}
+
+.fl-right h3{
+    float: right;
+}
+
+.award-table .sale-right {
+    width: 40%;
+}
+
+.box-solid .box-title {
+    font-size: 18px;
+    text-transform: uppercase;
+    margin-top: 0;
+    padding: 7px 10px;
+    text-align: center;
+}
+
+.clp-dashboard .icon {
+	padding-top: 15px;
+	padding-right: 0px;
+	font-size: 78px;
+}
+
+.f1-sale { vertical-align: middle !important; font-size: 18px; }
+
+.loyalty { width: 30%; }
+
+/*.clp-dashboard .icon-clp {
+	padding-top: 16px;
+}*/

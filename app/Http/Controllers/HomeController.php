@@ -17,6 +17,7 @@ use Auth;
 use Log;
 use DB;
 
+
 /**
  * Class HomeController
  * @package App\Http\Controllers
@@ -65,6 +66,9 @@ class HomeController extends Controller
             $data['rightOpen']   = $newF1InWeek['rightOpen'];
             //Get số lương coin trong tài khoản
             $data['coin'] = $this->getInfoCoin();
+            //Get lịch sử package
+            $data['history_package'] = UserPackage::getHistoryPackage();
+            
             return view('adminlte::home.index')->with('data', $data);
         } catch (Exception $e) {
             //Debug
