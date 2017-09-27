@@ -19,4 +19,7 @@ class UserTreePermission extends Model
     public function userCoin() {
         return $this->hasOne(UserCoin::class, 'userId', 'userId');
     }
+    public function userData() {
+        return $this->hasOne(UserData::class, 'userId', 'userId');
+    }
 }

@@ -185,13 +185,13 @@ class RegisterController extends Controller
         //Tao acc vi
         try {
             //Tạo tk 
-            if($data['name']) {
+            /*if($data['name']) {
                 $accountWallet = $this->GenerateWallet(self::COINBASE,$data['name']);
             }
-            
+
             if(!$accountWallet){
                 return false;
-            }
+            }*/
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['firstname'],
@@ -202,7 +202,7 @@ class RegisterController extends Controller
                 'country'    => $data['country'],
                 'refererId'    => isset($data['refererId']) ? $data['refererId'] : null,
                 'password' => bcrypt($data['password']),
-                'accountCoinBase' => $accountWallet['accountId'],
+                //'accountCoinBase' => $accountWallet['accountId'],
                 'status' => 0,
                 'activeCode' => md5($data['email']),
                 'uid' => User::getUid(),
@@ -215,7 +215,7 @@ class RegisterController extends Controller
 
             //SAVE to User_datas
             $fields['userId'] = $user->id;
-            $fields['walletAddress'] = $accountWallet['walletAddress'];
+            //$fields['walletAddress'] = $accountWallet['walletAddress'];
             $userData = UserData::create($fields);
 
             //Luu thong tin ca nhan vao bang user_coin

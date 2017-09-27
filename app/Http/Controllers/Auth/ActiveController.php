@@ -17,6 +17,7 @@ use App\UserData;
  */
 class ActiveController extends Controller
 {
+    const COINBASE = 'coinbase';
     /*
     author huynq
     active Acc with email
@@ -29,11 +30,11 @@ class ActiveController extends Controller
 
         if ( strlen( $infoActive ) > 0 ){
             $data = json_decode( base64_decode( $infoActive ) );
-
             //check neu da active roi va chua login hien thong bao da active kem link login
             try {
                 $activeUser = User::where('email', '=', $data[1])->first();
                 if($activeUser && $activeUser->active == 1 ) {
+
                     //chay sang trang thong bao
                     return redirect("notification/useractived");
                 }
@@ -56,6 +57,17 @@ class ActiveController extends Controller
                         UserData::find($user->id )->update( ['active' => 1] );
                         //Active vaf redirect ve trang thong bao kem theo link login
                         if($user){
+                            if($data['name']) {
+                                $accountWallet = $this->GenerateWallet(self::COINBASE,$user->name);
+                            }
+                            if(!$accountWallet){
+                                return false;
+                            }
+                            $userCoin = $user->userCoin;
+                            $userCoin->accountCoinBase = $accountWallet['accountId'];
+                            $userCoin->walletAddress = $accountWallet['walletAddress'];
+                            $userCoin->save();
+                            User::updateUserGenealogy($user->id);
                             return redirect("notification/useractive");
                         }else{
                             $request->session()->flash('error', 'Cannot activate !');
@@ -72,6 +84,49 @@ class ActiveController extends Controller
             $request->session()->flash('error', 'Something wrongs. We cannot activated!');
         }
         return view('adminlte::auth.reactive');
+    }
+    private function GenerateWallet( $type, $name = null ) {
+        $data = [];
+        switch ($type) {
+            case "bitgo":
+                $bitgo = new BitGoSDK();
+                $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
+                $wallet = $bitgo->wallets();
+                //set mat khau mac dinh
+                $createWallet = $wallet->createWallet($data['email'],config('app.bitgo_password'),"keyternal");
+                $addressWallet = $idWallet = $createWallet['wallet']->getID();
+                //backup key ...
+                $backupKey = json_encode($createWallet);
+                //add hook ...
+                $wallet = $bitgo->wallets()->getWallet($idWallet);
+                $createWebhook = $wallet->createWebhook("transaction",config('app.bitgo_hook'));
+                return $data = [ 'idWallet' => $idWallet ];
+            case self::COINBASE:
+                // tạo acc ví cho tk
+                $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
+                $client = Client::create($configuration);
+                $account = new Account([
+                    'name' => $name
+                ]);
+                $client->createAccount($account);
+                $accountId = $account->getId();
+
+                // tạo địa chỉ ví || get địa chỉ ví
+                $account = $client->getAccount($accountId);
+                $address = new Address([
+                    'name' => $name
+                ]);
+                $client->createAccountAddress($account, $address);
+
+                $addressId = $client->getAccountAddresses($account);
+                $addresses = $client->getAccountAddress($account, $addressId->getFirstId());
+
+                $data = [ "accountId" => $accountId,
+                    "walletAddress" => $addresses->getAddress() ];
+                return $data;
+            default:
+                echo "chưa chọn lựa loại ví";
+        }
     }
     public function reactiveAccount(Request $request)
     {

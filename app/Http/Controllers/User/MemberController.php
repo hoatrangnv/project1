@@ -25,6 +25,7 @@ class MemberController extends Controller
 	
 	public function genealogy(Request $request)
     {
+        //User::updateUserGenealogy(2);
 		if($request->ajax()){
 			if(isset($request['action'])) {
 				if($request['action'] == 'getUser') {
@@ -268,7 +269,7 @@ class MemberController extends Controller
 	public function pushIntoTree(Request $request){
         //if($request->ajax()){
         if($request->isMethod('post')){
-            if(isset($request->userid) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
+            if(isset($request->userSelect) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
                 //Get user that is added to tree
                 $userData = UserData::find($request->userSelect);
                 if($userData && $userData->refererId == Auth::user()->id && $userData->isBinary !== 1) {
@@ -311,13 +312,15 @@ class MemberController extends Controller
 
                     //Calculate loyalty
                     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
-                    return redirect('members.binary')
+                    User::updateUserBinary($userData->userId);
+                    return redirect('members/binary')
                         ->with('flash_message','Push into tree successfully.');
                     //return response()->json(['status'=>1]);
                 }
             }
         }
-        return redirect('members.binary')->with('error','Push into tree error.');
+        $request->session()->flash('error', 'Push into tree error');
+        return redirect('members/binary');
     }
 	public function show($id)
     {
