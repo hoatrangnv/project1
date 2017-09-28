@@ -30,9 +30,13 @@ class MemberController extends Controller
 				if($request['action'] == 'getUser') {
 					if(isset($request['username']) && $request['username'] != '') {
                         $currentuserid = Auth::user()->id;
+                        $user = Auth::user();
+                        $lstGenealogyUser = [];
+                        if($userTreePermission = $user->userTreePermission)
+                            $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
                         $user = User::where('name', '=', $request['username'])->first();
                         //$userData = UserData::where('userId', '=', $user->id)->first();
-                        if($user) {
+                        if($user && $lstGenealogyUser && in_array($user->id, $lstGenealogyUser)) {
                             $fields = [
                                 'id'     => $user->id,
                                 'uid'     => $user->uid,
@@ -68,8 +72,12 @@ class MemberController extends Controller
                     return response()->json($fields);
 				} elseif ($request['action'] == 'getChildren') {
                     $currentuserid = Auth::user()->id;
+                    $user = Auth::user();
+                    $lstGenealogyUser = [];
+                    if($userTreePermission = $user->userTreePermission)
+                        $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
                     $fields = array();
-                    if(isset($request['id']) && $request['id'] > 0){
+                    if(isset($request['id']) && $request['id'] > 0 && $lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)){
                         $userDatas = UserData::where('refererId', $request['id'])->get();
                         $fields = array();
                         foreach ($userDatas as $userData) {
@@ -103,7 +111,10 @@ class MemberController extends Controller
 		if($request->ajax()){
 			if(isset($request['id']) && $request['id'] > 0){
                 $user = User::find($request['id']);
-                if($user) {
+                $lstBinaryUser = [];
+                if($userTreePermission = $user->userTreePermission)
+                    $lstBinaryUser = explode(',', $userTreePermission->binary);
+                if($user && $lstBinaryUser && in_array($request['id'], $lstBinaryUser)) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);

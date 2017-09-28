@@ -191,9 +191,9 @@ class UserController extends Controller
         $userName = $request->get('username', '');
         if($userId > 0 || $userName != ''){
             if($userId > 0)
-                $user = User::where('uid', $userId)->first();
+                $user = User::where('uid', $userId)->where('active', 1)->first();
             elseif($userName != '')
-                $user = User::where('name', '=', $userName)->first();
+                $user = User::where('name', '=', $userName)->where('active', 1)->first();
             if($user){
                 if($user->uid == 0 || $user->uid == null){
                     $user->uid = User::getUid();

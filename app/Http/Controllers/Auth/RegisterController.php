@@ -183,7 +183,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         //Tao acc vi
-        try {
+        //try {
             //Tạo tk 
             /*if($data['name']) {
                 $accountWallet = $this->GenerateWallet(self::COINBASE,$data['name']);
@@ -192,7 +192,7 @@ class RegisterController extends Controller
             if(!$accountWallet){
                 return false;
             }*/
-            }
+            //}
             //get userid from uid
             $userReferer = User::where('uid', $data['refererId'])->get()->first();
 
@@ -234,9 +234,9 @@ class RegisterController extends Controller
                 $user->notify(new UserRegistered($user, $linkActive));  
             }
             return $user;
-        } catch (Exception $e) {
+        /*} catch (Exception $e) {
             var_dump($e->getmessage());
-        }
+        }*/
     }
 
 }

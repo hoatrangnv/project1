@@ -41,6 +41,9 @@ class User extends Authenticatable
     public function userCoin() {
         return $this->hasOne(UserCoin::class, 'userId', 'id');
     }
+    public function userTreePermission() {
+        return $this->hasOne(UserTreePermission::class, 'userId', 'id');
+    }
     public function userLoyaty() {
         return $this->hasOne(LoyaltyUser::class, 'userId', 'id');
     }
