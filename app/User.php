@@ -41,6 +41,9 @@ class User extends Authenticatable
     public function userCoin() {
         return $this->hasOne(UserCoin::class, 'userId', 'id');
     }
+    public function userTreePermission() {
+        return $this->hasOne(UserTreePermission::class, 'userId', 'id');
+    }
     public function userLoyaty() {
         return $this->hasOne(LoyaltyUser::class, 'userId', 'id');
     }
@@ -234,15 +237,16 @@ class User extends Authenticatable
 
             $user->save();
 
+            $nextLegpos = isset($user->leftRight) ? $user->leftRight : -1;
 
             //Caculate binary bonus for up level of $userRoot in binary tree
-            self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
+            self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $nextLegpos);
 
             //Caculate loyalty bonus for up level of $userRoot in binary tree
-            self::bonusLoyaltyUser($user->userId, $user->refererId, $legpos);
+            self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
             
             if($user->binaryUserId > 0) {    
-                User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $legpos, $isUpgrade);
+                User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $nextLegpos, $isUpgrade);
             }
         }
     }
@@ -398,6 +402,10 @@ class User extends Authenticatable
             }
 
             $binary->settled = $settled;
+
+            //Bonus canot over maxout $35,000
+            if($bonus > config('cryptolanding.bonus_maxout')) $bonus = config('cryptolanding.bonus_maxout');
+
             $binary->bonus = $bonus;
             $binary->save();
 
@@ -709,5 +717,36 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswords($token));
     }
+
+    public static function updateUserGenealogy($refererId, $userId = 0){
+        if($userId == 0)$userId = $refererId;
+        $user = UserTreePermission::find($refererId);
+        if($user){
+            $user->genealogy = $user->genealogy .','.$userId;
+            $user->genealogy_total = $user->genealogy_total + 1;
+            $user->save();
+        }else{
+            UserTreePermission::create(['userId'=>$refererId, 'genealogy' => $userId, 'genealogy_total' => 1]);
+            $user = UserTreePermission::find($userId);
+        }
+        if($user->userData->refererId > 0)
+            self::updateUserGenealogy($user->userData->refererId, $userId);
+    }
+
+    public static function updateUserBinary($binaryUserId, $userId = 0){
+        if($userId == 0)$userId = $binaryUserId;
+        $user = UserTreePermission::find($binaryUserId);
+        if($user){
+            $user->binary = $user->binary .','.$userId;
+            $user->binary_total = $user->binary_total + 1;
+            $user->save();
+        }else{
+            UserTreePermission::create(['userId'=>$binaryUserId, 'binary' => $userId, 'binary_total' => 1]);
+            $user = UserTreePermission::find($userId);
+        }
+        if($user->userData && $user->userData->binaryUserId > 0)
+            self::updateUserBinary($user->userData->binaryUserId, $userId);
+    }
+
 }
 

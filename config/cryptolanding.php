@@ -3,6 +3,7 @@
 return [
 	'usd_bonus_pay' => 0.6,
 	'reinvest_bonus_pay' => 0.4,
+	'bonus_maxout' => 35000, //Binary bonus cannot over $35000
 	
 	'bonus_f1_pay' => 0.1,
 	'bonus_f2_pay' => 0.02,

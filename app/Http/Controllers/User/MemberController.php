@@ -30,9 +30,13 @@ class MemberController extends Controller
 				if($request['action'] == 'getUser') {
 					if(isset($request['username']) && $request['username'] != '') {
                         $currentuserid = Auth::user()->id;
+                        $user = Auth::user();
+                        $lstGenealogyUser = [];
+                        if($userTreePermission = $user->userTreePermission)
+                            $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
                         $user = User::where('name', '=', $request['username'])->first();
                         //$userData = UserData::where('userId', '=', $user->id)->first();
-                        if($user) {
+                        if($user && $lstGenealogyUser && in_array($user->id, $lstGenealogyUser)) {
                             $fields = [
                                 'id'     => $user->id,
                                 'uid'     => $user->uid,
@@ -68,8 +72,13 @@ class MemberController extends Controller
                     return response()->json($fields);
 				} elseif ($request['action'] == 'getChildren') {
                     $currentuserid = Auth::user()->id;
+                    $user = Auth::user();
+                    $lstGenealogyUser = [];
+                    if($userTreePermission = $user->userTreePermission)
+                        $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
+                    //dd($lstGenealogyUser);
                     $fields = array();
-                    if(isset($request['id']) && $request['id'] > 0){
+                    if(isset($request['id']) && $request['id'] > 0 && (($lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)) || $currentuserid == $request['id']) ){
                         $userDatas = UserData::where('refererId', $request['id'])->get();
                         $fields = array();
                         foreach ($userDatas as $userData) {
@@ -103,7 +112,10 @@ class MemberController extends Controller
 		if($request->ajax()){
 			if(isset($request['id']) && $request['id'] > 0){
                 $user = User::find($request['id']);
-                if($user) {
+                $lstBinaryUser = [];
+                if($userTreePermission = Auth::user()->userTreePermission)
+                    $lstBinaryUser = explode(',', $userTreePermission->binary);
+                if($user && (($lstBinaryUser && in_array($request['id'], $lstBinaryUser)) || Auth::user()->id == $request['id'])) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);
@@ -159,8 +171,10 @@ class MemberController extends Controller
         }
         $lstUsers = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->where('isBinary', '!=', 1)->get();
         $lstUserSelect = array('0'=> 'Choose a user');
-        foreach ($lstUsers as $userData){
-            $lstUserSelect[$userData->userId] = $userData->user->name;
+        if(Auth::user()->userData->binaryUserId > 0){
+            foreach ($lstUsers as $userData){
+                $lstUserSelect[$userData->userId] = $userData->user->name;
+            }
         }
 		return view('adminlte::members.binary')->with('lstUserSelect', $lstUserSelect);
     }
@@ -267,8 +281,8 @@ class MemberController extends Controller
     }
 	public function pushIntoTree(Request $request){
         //if($request->ajax()){
-        if($request->isMethod('post')){
-            if(isset($request->userSelect) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
+        if($request->isMethod('post') && Auth::user()->userData->binaryUserId > 0){
+            if(isset($request->userid) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
                 //Get user that is added to tree
                 $userData = UserData::find($request->userSelect);
                 if($userData && $userData->refererId == Auth::user()->id && $userData->isBinary !== 1) {
@@ -311,13 +325,15 @@ class MemberController extends Controller
 
                     //Calculate loyalty
                     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
+                    User::updateUserBinary($userData->userId);
                     return redirect('members/binary')
                         ->with('flash_message','Push into tree successfully.');
                     //return response()->json(['status'=>1]);
                 }
             }
         }
-        return redirect('members/binary')->with('error','Push into tree error.');
+        $request->session()->flash('error', 'Push into tree error');
+        return redirect('members/binary');
     }
 	public function show($id)
     {

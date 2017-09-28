@@ -2,6 +2,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/term-condition.html', function () {
+    return view('term');
+});
 Auth::routes();
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {

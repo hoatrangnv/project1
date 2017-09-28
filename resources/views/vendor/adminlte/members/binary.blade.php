@@ -13,6 +13,11 @@
     .binary-control i{
         font-size: 10px !important;
     }
+    @media screen and (min-width: 600px) {
+        #btn_submit_left, #btn_submit_right {
+            width:50%!important;
+        }
+    }
 </style>
 
 @section('main-content')
@@ -20,17 +25,16 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body" style="padding-top:0;">
-                    <div class="col-xs-4" style="padding-left: 0; padding-top: 15px;position: absolute;">
+                    <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
                         {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
-                        <div class="col-xs-6" style="padding-left: 0;">
+                        <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
                             {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose a user'], ['placeholder' => 'Choose a user']) }}
                         </div>
-                        <div class="col-xs-6 hide" style="padding-left: 0;" id="push_into">
-                            {!! Form::radio('legpos','1') !!} Push into left leg
+                        <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
+                            <input type="hidden" name="legpos" id="legpos" value="0">
+                            {!! Form::button('Push to Left', ['class' => 'btn btn-xs btn-info', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
                             <br>
-                            {!! Form::radio('legpos','2') !!} Push into right leg
-                            <br>
-                            {!! Form::button('Push into tree', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit']) !!}
+                            {!! Form::button('Push to Right', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
 
                         </div>
                         {!! Form::close() !!}
@@ -146,20 +150,29 @@
                     $('#push_into').removeClass('hide');
                 }else{
                     $('#push_into').addClass('hide');
-                    $('input[name="legpos"]:checked').each(function(){
-                        $(this).prop('checked', false);
-                    });
+                    $('#legpos').val('');
                 }
             });
-            $('#btn_submit').on('click', function () {
+            $('#btn_submit_left').on('click', function () {
                 if($("#userSelect option:selected").length == 0){
                     alert('You choose a user.');
                     return false;
-                }else if($('input[name="legpos"]:checked').length == 0) {
-                    alert('You choose push into leg.');
+                }else{
+                    if (confirm("Are you sure?")) {
+                        $('#legpos').val(1);
+                        $('#pushIntoTreeForm').submit();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            $('#btn_submit_right').on('click', function () {
+                if($("#userSelect option:selected").length == 0){
+                    alert('You choose a user.');
                     return false;
                 }else{
                     if (confirm("Are you sure?")) {
+                        $('#legpos').val(2);
                         $('#pushIntoTreeForm').submit();
                         return true;
                     }
