@@ -6,6 +6,9 @@
 
 @section('main-content')
     <style>
+        #myTable tbody tr:hover {
+            background-color: #f5f5f5!important;
+        }
         tr.selected {
             background-color: #5bc0de!important;
         }
@@ -162,19 +165,24 @@
                 <div class="modal-body">
                     <div id="msg_package"></div>
                     <table class="table" id="myTable">
-                        <tr>
+                        <thead>
+                        <tr id="table_th">
                             <th>{{ trans('adminlte_lang::package.name') }}</th>
                             <th>{{ trans('adminlte_lang::package.price') }}</th>
+                            <th>{{ trans('adminlte_lang::package.clp_coin') }}</th>
                         </tr>
+                        </thead>
                         <tbody>
                         @foreach ($packages as $package)
                             <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
                                 <td>{{ $package->name }}</td>
                                 <td>${{ $package->price }}</td>
+                                <td style="text-align: right;">{{ number_format($package->price / Auth::user()->getCLPUSDRate(), 2, '.', ',') }}</td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                    <a href="/term-condition.html" target="_blank">Term and condition</a>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="packageId" id="packageId" value="{{ Auth::user()->userData->packageId }}">
@@ -267,15 +275,19 @@
         $(document).ready(function () {
             $('#myTable tbody').on( 'click', 'tr', function () {
                 var _packageId = parseInt($(this).data('id'));
-                if(_packageId < packageId) {
-                    $('#msg_package').html("<div class='alert alert-danger'>You cant not downgrate package.</div>");
-                }else if(_packageId == packageId){
-                    $('#msg_package').html("<div class='alert alert-danger'>You purchased this package.</div>");
-                }else{
-                    $('#myTable tbody tr').removeClass('selected');
-                    $(this).addClass('selected');
-                    $("#packageId").val(_packageId);
-                    packageIdPick = _packageId;
+                if(_packageId >0) {
+                    if (_packageId < packageId) {
+                        $('#msg_package').html("<div class='alert alert-danger'>You cant not downgrate package.</div>");
+                    } else if (_packageId == packageId) {
+                        $('#msg_package').html("<div class='alert alert-danger'>You purchased this package.</div>");
+                    } else {
+                        $('#msg_package').html("");
+                        $('#myTable tbody tr').removeClass('selected');
+                        $('#table_th').removeClass('selected');
+                        $(this).addClass('selected');
+                        $("#packageId").val(_packageId);
+                        packageIdPick = _packageId;
+                    }
                 }
             });
             $('#btn_submit').on('click', function () {
