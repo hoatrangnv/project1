@@ -29,44 +29,45 @@ class MemberController extends Controller
 			if(isset($request['action'])) {
 				if($request['action'] == 'getUser') {
 					if(isset($request['username']) && $request['username'] != '') {
-                        $currentuserid = Auth::user()->id;
                         $user = Auth::user();
                         $lstGenealogyUser = [];
                         if($userTreePermission = $user->userTreePermission)
                             $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
-                        $user = User::where('name', '=', $request['username'])->first();
-                        //$userData = UserData::where('userId', '=', $user->id)->first();
-                        if($user && $lstGenealogyUser && in_array($user->id, $lstGenealogyUser)) {
+
+					    if(is_numeric($request['username'])){
+                            $user = User::where('uid', '=', $request['username'])->first();
+                            //dd($user);
+                        }else{
+                            $user = User::where('name', '=', $request['username'])->first();
+                        }
+
+                        if($user && $lstGenealogyUser && (in_array($user->id, $lstGenealogyUser) || $user->id == Auth::user()->id)) {
                             $fields = [
                                 'id'     => $user->id,
                                 'uid'     => $user->uid,
                                 'u'     => $user->name,
-                                'totalMembers'     => UserData::where('refererId', $currentuserid)->count(),
+                                'totalMembers' => $user->userTreePermission ? $user->userTreePermission->genealogy_total : 0,
                                 'packageId'     => $user->userData->packageId,
                                 'loyaltyId'     => $this->getLoyalty($user->id),
                                 'leg'     => $user->userData->leftRight == 'left' ? 1 : ($user->userData->leftRight == 'right' ? 2 : 0),
-                                'ws'     => self::getWeeklySale($user->id),
-                                'dmc'     => 3,
-                                'l'     => 'Rookie',
+                                'dmc' => $user->userTreePermission && $user->userTreePermission->genealogy_total ? 1 : 0,
+                                'generation'     => $user->fastStart ? $user->fastStart->max('generation') : 0,
                             ];
                         } else {
                             return response()->json(['err'=>1]);
                         }
 					} else {
-                        $currentuserid = Auth::user()->id;
                         $user = Auth::user();
-                       // $userData = UserData::where('userId', '=', $user->id)->first();
                         $fields = [
                             'id'     => $user->id,
                             'uid'     => $user->uid,
                             'u'     => $user->name,
-                            'totalMembers'     => UserData::where('refererId', $currentuserid)->count(),
+                            'totalMembers' => $user->userTreePermission ? $user->userTreePermission->genealogy_total : 0,
                             'packageId'     => $user->userData->packageId,
                             'loyaltyId'     => $this->getLoyalty($user->id),
                             'leg'     => $user->userData->leftRight == 'left' ? 1 : ($user->userData->leftRight == 'right' ? 2 : 0),
-                            'ws'     => self::getWeeklySale($user->id),
-                            'dmc'     => 3,
-                            'l'     => 'Rookie',
+                            'dmc' => 3,
+                            'generation'     => $user->fastStart ? $user->fastStart->max('generation') : 0,
                         ];
 					}
                     return response()->json($fields);
@@ -76,7 +77,6 @@ class MemberController extends Controller
                     $lstGenealogyUser = [];
                     if($userTreePermission = $user->userTreePermission)
                         $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
-                    //dd($lstGenealogyUser);
                     $fields = array();
                     if(isset($request['id']) && $request['id'] > 0 && (($lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)) || $currentuserid == $request['id']) ){
                         $userDatas = UserData::where('refererId', $request['id'])->get();
@@ -86,13 +86,12 @@ class MemberController extends Controller
                                 'id' => $userData->userId,
                                 'uid'     => $userData->user->uid,
                                 'u' => $userData->user->name,
-                                'totalMembers' => UserData::where('refererId', $userData->userId)->count(),
+                                'totalMembers' => $userData->userTreePermission ? $userData->userTreePermission->genealogy_total : 0,
                                 'packageId' => $userData->packageId,
                                 'loyaltyId' => $userData->loyaltyId,
                                 'leg' => $userData->leftRight == 'left' ? 1 : ($userData->leftRight == 'right' ? 2 : 0),
-                                'ws' => self::getWeeklySale($userData->userId),
-                                'dmc' => 3,
-                                'l' => 'Rookie',
+                                'dmc' => $userData->userTreePermission && $userData->userTreePermission->genealogy_total ? 1 : 0,
+                                'generation'     => $userData->fastStart ? $userData->fastStart->max('generation') : 0,
                             ];
                         }
                     }

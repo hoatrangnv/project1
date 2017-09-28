@@ -62,6 +62,7 @@
                                                 leg: user.leg,
                                                 loyaltyId: user.loyaltyId,
 												level: user.l,
+                                                generation: user.generation,
 											},
 											id: user.id,
 											children: user.dmc?true:false,
@@ -81,11 +82,12 @@
                                             leg: user.leg,
                                             loyaltyId: user.loyaltyId,
 											level: user.l,
+                                            generation: user.generation,
 										},
 										id: user.id,
 										children: user.dmc?true:false,
 										icon: "/img/jstree/user.png",
-										state: {opened: true}
+                                        state: {opened: parseInt(user.totalMembers) > 0 ? false : true}
 									}]);
 								}
 							}
@@ -101,6 +103,7 @@
 						{width: '5%', value: "packageId", header: "Active Package"},
 						{width: '5%', value: "leg", header: "Left/Right"},
 						{width: '5%', value: "loyaltyId", header: "Loyalty"},
+						{width: '5%', value: "generation", header: "Qualify"},
 					],
 					width: "100%",
 					fixedHeader: false,
