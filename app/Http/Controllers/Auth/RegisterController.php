@@ -19,6 +19,7 @@ use App\Notifications\UserRegistered;
 use App\UserData;
 use App\UserCoin;
 use URL;
+use Session;
 
 /**
  * Class RegisterController
@@ -185,13 +186,14 @@ class RegisterController extends Controller
         //Tao acc vi
         try {
             //Tạo tk 
-            if($data['name']) {
+            /*if($data['name']) {
                 $accountWallet = $this->GenerateWallet(self::COINBASE,$data['name']);
             }
-            
+
             if(!$accountWallet){
                 return false;
-            }
+            }*/
+            //}
             //get userid from uid
             $userReferer = User::where('uid', $data['refererId'])->get()->first();
 
@@ -205,7 +207,7 @@ class RegisterController extends Controller
                 'country'    => $data['country'],
                 'refererId'    => isset($userReferer->id) ? $userReferer->id : null,
                 'password' => bcrypt($data['password']),
-                'accountCoinBase' => $accountWallet['accountId'],
+                //'accountCoinBase' => $accountWallet['accountId'],
                 'status' => 0,
                 'activeCode' => md5($data['email']),
                 'uid' => User::getUid(),
@@ -218,7 +220,7 @@ class RegisterController extends Controller
 
             //SAVE to User_datas
             $fields['userId'] = $user->id;
-            $fields['walletAddress'] = $accountWallet['walletAddress'];
+            //$fields['walletAddress'] = $accountWallet['walletAddress'];
             $userData = UserData::create($fields);
 
             //Luu thong tin ca nhan vao bang user_coin
@@ -230,11 +232,15 @@ class RegisterController extends Controller
             if($user) {
                 $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
                 $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
-                $user->notify(new UserRegistered($user, $linkActive));  
+                $user->notify(new UserRegistered($user, $linkActive));
+
             }
+
             return $user;
         } catch (Exception $e) {
-            var_dump($e->getmessage());
+            Session()->flash('error', 'Register Account not successfully!');
+            \Log::error('Running RegisterController has error: ' . date('Y-m-d') .$e->getMessage());
+            //var_dump($e->getmessage());
         }
     }
 
