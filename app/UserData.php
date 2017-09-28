@@ -29,4 +29,7 @@ class UserData extends Model
     public function package() {
         return $this->hasOne(Package::class, 'id', 'packageId');
     }
+    public function userTreePermission() {
+        return $this->hasOne(UserTreePermission::class, 'userId', 'userId');
+    }
 }
