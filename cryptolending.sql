@@ -57,9 +57,20 @@ CREATE TABLE `bonus_faststart` (
   PRIMARY KEY (`id`,`partnerId`,`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
 -- ----------------------------
--- Records of bonus_faststart
+-- Table structure for notification
 -- ----------------------------
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE `notification` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `data` text NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=368 DEFAULT CHARSET=utf8;
+
 
 -- ----------------------------
 -- Table structure for migrations
