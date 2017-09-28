@@ -11,7 +11,7 @@ class UserTreePermission extends Model
     public $timestamps = false;
     protected $primaryKey = 'userId';
     protected $fillable = [
-        'userId', 'binary', 'genealogy'
+        'userId', 'binary', 'genealogy', 'binary_total', 'genealogy_total'
     ];
     public function user() {
         return $this->hasOne(User::class, 'id', 'userId');
