@@ -76,8 +76,9 @@ class MemberController extends Controller
                     $lstGenealogyUser = [];
                     if($userTreePermission = $user->userTreePermission)
                         $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
+                    //dd($lstGenealogyUser);
                     $fields = array();
-                    if(isset($request['id']) && $request['id'] > 0 && $lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)){
+                    if(isset($request['id']) && $request['id'] > 0 && (($lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)) || $currentuserid == $request['id']) ){
                         $userDatas = UserData::where('refererId', $request['id'])->get();
                         $fields = array();
                         foreach ($userDatas as $userData) {
@@ -112,9 +113,9 @@ class MemberController extends Controller
 			if(isset($request['id']) && $request['id'] > 0){
                 $user = User::find($request['id']);
                 $lstBinaryUser = [];
-                if($userTreePermission = $user->userTreePermission)
+                if($userTreePermission = Auth::user()->userTreePermission)
                     $lstBinaryUser = explode(',', $userTreePermission->binary);
-                if($user && $lstBinaryUser && in_array($request['id'], $lstBinaryUser)) {
+                if($user && (($lstBinaryUser && in_array($request['id'], $lstBinaryUser)) || Auth::user()->id == $request['id'])) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);
