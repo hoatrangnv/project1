@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\AuthPermissionCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Notifications\UpdateBtcCoin;
+use App\Notifications\AvailableAmountController as AvailableAmount;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,7 +27,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        /** 
+        /**
+         * @author Huynq 
          * run every 30s update notification
          */
         $stringCronTab = "* * * * * *";
@@ -35,6 +37,17 @@ class Kernel extends ConsoleKernel
                 UpdateBtcCoin::UpdateBtcCoinAmount();
             })->everyMinute();
         } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+        /** 
+         * @author Huynq
+         */
+        $stringCronTab = "* * * * * *";
+        try {
+            $schedule->call(function () {
+                AvailableAmount::getAvailableAmount();
+            })->daily();
+        } catch (Exception $ex) {
             Log::info($ex);
         }
     }

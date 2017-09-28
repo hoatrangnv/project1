@@ -195,9 +195,10 @@ class PackageController extends Controller
             $id = $request->value;
             
             $tempHistoryPackage = UserPackage::where("id",$id)
-                    ->first();
+                    ->max('release_date');
+                   
             //check userID and check withdraw
-            
+            dd($tempHistoryPackage);
             if($tempHistoryPackage->userId != Auth::user()->id
                     || $tempHistoryPackage->withdraw == 1){
                 $message = trans("adminlte_lang::home.package_withdrawn");
@@ -205,6 +206,7 @@ class PackageController extends Controller
             }
            
             $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+            //get release date của package cuối cùng
             $datetime2 = new DateTime($tempHistoryPackage->release_date);
             $interval = $datetime1->diff($datetime2);
             //compare

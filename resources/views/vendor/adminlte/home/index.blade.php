@@ -336,6 +336,16 @@
                                         <b>{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate ."+ 180 days")) : '' }}</b>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                       {{ trans('adminlte_lang::wallet.withdraw') }}
+                                    </td>
+                                    <td  class="right">
+                                        <button class="btn btn-default bg-olive withdraw-package" 
+                                                        data-id=""
+                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::wallet.withdraw') }}</button>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -355,7 +365,6 @@
                                         <th>{{ trans('adminlte_lang::home.package') }}</th>
                                         <th>{{ trans('adminlte_lang::home.buy_date') }}</th>
                                         <th>{{ trans('adminlte_lang::home.release_date') }}</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -369,11 +378,6 @@
                                             </td>
                                             <td>
                                             {{  date("Y-m-d", strtotime($package->release_date)) }}
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-xs bg-olive withdraw-package" 
-                                                        data-id="{{ $package->id }}"
-                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::wallet.withdraw') }}</button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -410,7 +414,6 @@
                     type:"post",
                     data : {
                         type: "withdraw",
-                        value: $(this).attr("data-id"),
                         _token:  $('meta[name="csrf-token"]').attr('content')
                     },
                     success : function(result){
