@@ -73,7 +73,7 @@ class ActiveController extends Controller
                             $request->session()->flash('error', 'Cannot activate !');
                         }
                     } catch ( Exception $e ) {
-                        
+
                     }
                 } else {
                     $request->session()->flash('error', 'Something wrongs. We cannot activated!');

@@ -19,6 +19,7 @@ use App\Notifications\UserRegistered;
 use App\UserData;
 use App\UserCoin;
 use URL;
+use Session;
 
 /**
  * Class RegisterController
@@ -183,7 +184,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         //Tao acc vi
-        //try {
+        try {
             //Tạo tk 
             /*if($data['name']) {
                 $accountWallet = $this->GenerateWallet(self::COINBASE,$data['name']);
@@ -231,12 +232,16 @@ class RegisterController extends Controller
             if($user) {
                 $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
                 $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
-                $user->notify(new UserRegistered($user, $linkActive));  
+                $user->notify(new UserRegistered($user, $linkActive));
+
             }
+
             return $user;
-        /*} catch (Exception $e) {
-            var_dump($e->getmessage());
-        }*/
+        } catch (Exception $e) {
+            Session()->flash('error', 'Register Account not successfully!');
+            \Log::error('Running RegisterController has error: ' . date('Y-m-d') .$e->getMessage());
+            //var_dump($e->getmessage());
+        }
     }
 
 }
