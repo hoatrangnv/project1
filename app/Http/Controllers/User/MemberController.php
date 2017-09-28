@@ -171,8 +171,10 @@ class MemberController extends Controller
         }
         $lstUsers = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->where('isBinary', '!=', 1)->get();
         $lstUserSelect = array('0'=> 'Choose a user');
-        foreach ($lstUsers as $userData){
-            $lstUserSelect[$userData->userId] = $userData->user->name;
+        if(Auth::user()->userData->binaryUserId > 0){
+            foreach ($lstUsers as $userData){
+                $lstUserSelect[$userData->userId] = $userData->user->name;
+            }
         }
 		return view('adminlte::members.binary')->with('lstUserSelect', $lstUserSelect);
     }
@@ -279,7 +281,7 @@ class MemberController extends Controller
     }
 	public function pushIntoTree(Request $request){
         //if($request->ajax()){
-        if($request->isMethod('post')){
+        if($request->isMethod('post') && Auth::user()->userData->binaryUserId > 0){
             if(isset($request->userid) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
                 //Get user that is added to tree
                 $userData = UserData::find($request->userSelect);

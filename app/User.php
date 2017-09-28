@@ -718,58 +718,35 @@ class User extends Authenticatable
         $this->notify(new ResetPasswords($token));
     }
 
-    public static function updateUserGenealogy($userId){
-        $user = UserTreePermission::find($userId);
-        //$lstUser = [$userId];
-        //$lstUser = array_merge($lstUser, self::userInGenealogy($userId));
-        $lstUser = self::userInGenealogy($userId);
-        $lstUserCount = count($lstUser);
-        $lstUser = implode(',', $lstUser);
+    public static function updateUserGenealogy($refererId, $userId = 0){
+        if($userId == 0)$userId = $refererId;
+        $user = UserTreePermission::find($refererId);
         if($user){
-            $user->genealogy = $lstUser;
-            $user->genealogy_total = $lstUserCount;
+            $user->genealogy = $user->genealogy .','.$userId;
+            $user->genealogy_total = $user->genealogy_total + 1;
             $user->save();
         }else{
-            UserTreePermission::create(['userId'=>$userId, 'genealogy' => $lstUser, 'genealogy_total' => $lstUserCount]);
+            UserTreePermission::create(['userId'=>$refererId, 'genealogy' => $userId, 'genealogy_total' => 1]);
             $user = UserTreePermission::find($userId);
         }
         if($user->userData->refererId > 0)
-            self::updateUserGenealogy($user->userData->refererId);
-    }
-    public static function userInGenealogy($userId){
-        $lstUser = UserData::where('refererId', $userId)->pluck('userId')->toArray();
-        if($lstUser){
-            foreach ($lstUser as $user){
-                $lstUser = array_merge($lstUser, self::userInGenealogy($user));
-            }
-        }
-        return $lstUser;
+            self::updateUserGenealogy($user->userData->refererId, $userId);
     }
 
-    public static function updateUserBinary($userId){
-        $user = UserTreePermission::find($userId);
-        $lstUser = self::userInBinary($userId);
-        $lstUserCount = count($lstUser);
-        $lstUser = implode(',', $lstUser);
+    public static function updateUserBinary($binaryUserId, $userId = 0){
+        if($userId == 0)$userId = $binaryUserId;
+        $user = UserTreePermission::find($binaryUserId);
         if($user){
-            $user->binary = $lstUser;
-            $user->binary_total = $lstUserCount;
+            $user->binary = $user->binary .','.$userId;
+            $user->binary_total = $user->binary_total + 1;
             $user->save();
         }else{
-            UserTreePermission::create(['userId'=>$userId, 'binary' => $lstUser, 'binary_total' => $lstUserCount]);
+            UserTreePermission::create(['userId'=>$binaryUserId, 'binary' => $userId, 'binary_total' => 1]);
             $user = UserTreePermission::find($userId);
         }
         if($user->userData && $user->userData->binaryUserId > 0)
-            self::updateUserBinary($user->userData->binaryUserId);
+            self::updateUserBinary($user->userData->binaryUserId, $userId);
     }
-    public static function userInBinary($userId){
-        $lstUser = UserData::where('binaryUserId', $userId)->pluck('userId')->toArray();
-        if($lstUser){
-            foreach ($lstUser as $user){
-                $lstUser = array_merge($lstUser, self::userInBinary($user));
-            }
-        }
-        return $lstUser;
-    }
+
 }
 
