@@ -7,7 +7,7 @@
 @section('contentheader_description')
     {{ trans('adminlte_lang::profile.my_profile') }}
     <style type="text/css">
-        .label-td{
+        /*.label-td{
             color: #333;
             font-weight: 700;
         }
@@ -58,14 +58,13 @@
           transform: translateX(26px);
         }
 
-        /* Rounded sliders */
         .two-authen .slider.round {
           border-radius: 34px;
         }
 
         .two-authen .slider.round:before {
           border-radius: 50%;
-        }
+        }*/
     </style>
 @endsection
 
@@ -302,16 +301,19 @@
                                     <td class="label-td">Two - Factor Authentication</td>
                                     <td class="two-authen"> 
                                         <label class="switch">
-                                            <input type="checkbox" id="switchAuthen" 
-                                            @if(Auth::user()->is2fa)
-                                                checked
-                                            @else
-                                                ''
-                                            @endif>
-                                            <span class="slider"></span>
+                                            <input type="checkbox" id="switchAuthen" {{ Auth::user()->is2fa ? 'checked' : '' }}>
                                         </label>
                                     </td>
                                 </tr>
+                                @if(!Auth::user()->is2fa)
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="qrcode">
+                                            <img src="{{ $google2faUrl }}">
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -397,7 +399,42 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div id="myModalOff2FA" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">OTP</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <div class="col-sm-8">
+                                    <div class="confirmSuccess" style="color:green"></div>
+                                    <div class="confirmError" style="color:red"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPasswordNew" class="col-sm-4 control-label label-td">OTP</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="codeOtp" placeholder="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" >
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="myModalOff2FA_check"><i class="fa fa-save"></i> Check</button>
+                    <button type="button" class="btn btn-default" id="myModalOff2FA_close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- js -->
+    <link href="/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
+    <script src="/bootstrap-switch/bootstrap-switch.js"></script>
     <script type="text/javascript">
         $(function() {
             //action Save Pass
@@ -439,31 +476,64 @@
                     });  
                 }
             });
-            //action switch authen two factor
-            $( "#switchAuthen" ).change(function(){
-                //send action
-                $.ajax({
-                    beforeSend : function (){
-                        $("#switchAuthen").attr("disabled", true); 
-                    },
-                    url : "profile/switchauthen",
-                    type : "get",
-                    success : function (result){
-                        console.log(result);
-                        if(result.success){
-                           alert("update thanh cong");
-                        }else{
-                           alert("update khong thanh cong");
-                        } 
+
+            $('#switchAuthen').bootstrapSwitch({
+                size: 'mini',
+                onSwitchChange: function (event, state) {
+                    if(!$("#switchAuthen").is(':checked')){//if on -> off
+                        var modal = $('#myModalOff2FA');
+                        modal.modal({backdrop: 'static'})
+                        modal.modal('show');
+                        $('#myModalOff2FA_check').click(function () {
+                            var codeOtp = $.trim($('#codeOtp').val());
+                            if( codeOtp !=''){
+                                $.ajax({
+                                    url : "profile/switchauthen",
+                                    data: {codeOtp: codeOtp, status:1},
+                                    type : "get",
+                                    success : function (result){
+                                        if(result.success){
+                                            modal.modal('hide');
+                                            $('#switchAuthen').bootstrapSwitch('state', false, false);
+                                            $("#switchAuthen").attr('checked', false);
+                                            location.href = '{{ url()->current() }}';
+                                        }else{
+                                            modal.find('.confirmError').text(result.msg);
+                                            $('#switchAuthen').bootstrapSwitch('state', true, true);
+                                            $("#switchAuthen").attr('checked', true);
+                                        }
+                                    }
+                                });
+                            }else{
+                                alert('Please input Opt.');
+                            }
+                        });
+                        $('#myModalOff2FA_close').click(function () {
+                            modal.modal('hide');
+                            $('#switchAuthen').bootstrapSwitch('state', true, true);
+                            $("#switchAuthen").attr('checked', true);
+                        });
+
+                    }else{//if off -> on
+                        $.ajax({
+                            url : "profile/switchauthen",
+                            data: {status:0},
+                            type : "get",
+                            success : function (result){
+                                if(result.success){
+                                    $('#switchAuthen').bootstrapSwitch('state', true, true);
+                                    $("#switchAuthen").attr('checked', true);
+                                    location.href = '{{ url()->current() }}';
+                                }else{
+                                    $('#switchAuthen').bootstrapSwitch('state', false, false);
+                                    $("#switchAuthen").attr('checked', false);
+                                }
+                            }
+                        });
                     }
-                })
-                .done(function(){
-                    $("#switchAuthen").removeAttr("disabled");
-                })
-                .fail(function(xhr, status, error){
-                    console.log("Co loi xay ra khi gui action switch òn off 2 way factor authen");
-                });  
-            });
+                }
+            })
+
             $('#personal_data_btn').click(function () {
                 $('#personal_data').hide();
                 $('#personal_data_input').removeClass('hide');
