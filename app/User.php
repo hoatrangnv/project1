@@ -44,6 +44,10 @@ class User extends Authenticatable
     public function userTreePermission() {
         return $this->hasOne(UserTreePermission::class, 'userId', 'id');
     }
+    public function fastStart() {
+        //return $this->belongsTo(BonusFastStart::class);
+        return $this->hasOne(BonusFastStart::class, 'userId', 'id');
+    }
     public function userLoyaty() {
         return $this->hasOne(LoyaltyUser::class, 'userId', 'id');
     }
