@@ -280,6 +280,24 @@
                     </div>
                 </div>
             </div>
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{ trans('adminlte_lang::profile.marketing') }}</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+               <div class="box-body">
+                   <div class="table-responsive">
+                       <table class="table no-margin">
+                            <tr>
+                                <td class="label-td">My Refenal link</td>
+                                <td><input type="text" name="postal_code" value="{{ url('register') }}?referrer={{ Auth::user()->uid }}" class="form-control input-sm" disabled></td>
+                            </tr> 
+                       </table>
+                   </div>
+               </div>
+            </div>
+            <!-- /.box -->
         </div>
         <div class="col-md-4">
             <!-- Horizontal Form -->
@@ -319,34 +337,7 @@
                     </div>
                 </div>
             </div>
-            <div class="box box-danger">
-                <div class="box-header with-border">
-                  <h3 class="box-title">{{ trans('adminlte_lang::profile.marketing') }}</h3>
-                </div>
-                <!-- /.box-header -->
-                <!-- form start -->
-               <div class="box-body">
-                   <div class="table-responsive">
-                       <table class="table no-margin">
-                            <tr>
-                                <td class="label-td">My Refenal link</td>
-                                <td><input type="text" name="postal_code" value="{{ url('register') }}?referrer={{ Auth::user()->uid }}" class="form-control input-sm" disabled></td>
-                            </tr> 
-                            <tr>
-                                <td class="label-td">My Banner</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td class="label-td" colspan="2"><button type="submit" class="btn btn-primary">Download Crypto Lending Presentation PDF</button></td>
-                            </tr>
-                            <tr>
-                                <td class="label-td" colspan="2"><button type="submit" class="btn btn-primary">Download Crypto Lending Presentation PPT</button></td>
-                            </tr>
-                       </table>
-                   </div>
-               </div>
-            </div>
-            <!-- /.box -->
+            
         </div>
     </div>
 

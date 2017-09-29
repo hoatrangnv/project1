@@ -384,7 +384,7 @@ CREATE TABLE `user_coins` (
   `usdAmount` double unsigned DEFAULT '0',
   `reinvestAmount` double unsigned DEFAULT '0',
   `backupKey` text COLLATE utf8mb4_unicode_ci,
-  `availableAmount` double DEFAULT NULL,
+  `availableAmount` double DEFAULT '0',
   UNIQUE KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
