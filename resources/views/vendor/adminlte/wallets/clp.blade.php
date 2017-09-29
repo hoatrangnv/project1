@@ -74,6 +74,12 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
+                    <div class="col-xs-2 no-padding">
+                        {{ Form::select('wallet_type', array_merge(['0' => 'Choose a type'], $wallet_type), ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
+                    </div>
+                    <div class="col-xs-1">
+                        {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
+                    </div>
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <table class="table table-bordered table-hover table-striped dataTable">
@@ -90,7 +96,7 @@
                             <tr>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $wallet->created_at }}</td>
-                                <td>{{ $wallet->type }}</td>
+                                <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
                                 <td>
                                     @if($wallet->inOut=='in')
                                         <span class="glyphicon glyphicon-log-in text-primary"></span>
@@ -270,6 +276,17 @@
           <!-- /.modal-dialog -->
         </div>
     <script>
+        $(document).ready(function(){
+            $('#btn_filter').on('click', function () {
+                var wallet_type = parseInt($('#wallet_type option:selected').val());
+                if(wallet_type > 0){
+                    location.href = '{{ url()->current() }}?type='+wallet_type;
+                }else{
+                    alert('Please choose a type!');
+                    return false;
+                }
+            })
+        });
         var packageId = {{ Auth::user()->userData->packageId }};
         var packageIdPick = packageId;
         $(document).ready(function () {
