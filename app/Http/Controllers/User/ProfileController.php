@@ -15,6 +15,7 @@ use App\User;
 use Auth;
 use Session;
 use Hash;
+use Google2FA;
 use App\Http\Controllers\Controller;
 
 /**
@@ -44,7 +45,12 @@ class ProfileController extends Controller
         $lstCountry = config('cryptolanding.lstCountry');
         $lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
         $sponsor = UserData::where('refererId', Auth::user()->id)->first();
-        return view('adminlte::profile.index', compact('lstCountry', 'sponsor'));
+        $google2faUrl = Google2FA::getQRCodeGoogleUrl(
+            Auth::user()->name,
+            Auth::user()->email,
+            Auth::user()->google2fa_secret
+        );
+        return view('adminlte::profile.index', compact('lstCountry', 'sponsor', 'google2faUrl'));
     }
     public function update(Request $request, $id)
     {
@@ -93,20 +99,49 @@ class ProfileController extends Controller
      */
     public function switchTwoFactorAuthen(Request $request){
         try {
-            $data = User::where('id',Auth::user()->id)
-                        ->pluck('is2fa');
-            ($data[0] == 1) ? $tmp = 0 : $tmp = 1; 
-            $result = User::where('id',Auth::user()->id)
-                    ->update( [ 'is2fa' => $tmp ] );
-            if($result == 1){
-                return Response::json([
-                    "success" => true,
-                    "result"  => null
-                ]);
-            }else{
-                return Response::json([
-                    "success" => false
-                ]);   
+            $is2fa = Auth::user()->is2fa;
+            if($request->status == 1){//off 2fa
+                if($request->codeOtp != ''){
+                    $key = Auth::user()->google2fa_secret;
+                    $valid = Google2FA::verifyKey($key, $request->codeOtp);
+                    if($valid){
+                        if($is2fa == 0){
+                            return Response::json([
+                                "success" => false,
+                                "msg"  => "2Fa is off"
+                            ]);
+                        }else{
+                            User::where('id',Auth::user()->id) ->update( [ 'is2fa' => 0 ] );
+                            return Response::json([
+                                "success" => true,
+                                "msg"  => null
+                            ]);
+                        }
+                    }else{
+                        return Response::json([
+                            "success" => false,
+                            "msg"  => "code OTP no  match"
+                        ]);
+                    }
+                }else{
+                    return Response::json([
+                        "success" => false,
+                        "msg"  => "Error codeOtp inv"
+                    ]);
+                }
+            }else{//on 2fa
+                if($is2fa == 1){
+                    return Response::json([
+                        "success" => false,
+                        "msg"  => "2Fa is on"
+                    ]);
+                }else{
+                    User::where('id',Auth::user()->id) ->update( [ 'is2fa' => 1 ] );
+                    return Response::json([
+                        "success" => true,
+                        "msg"  => null
+                    ]);
+                }
             }
         } catch (Exception $e) {
             throw $e->gettraceasstring();
@@ -128,5 +163,12 @@ class ProfileController extends Controller
     */
     private function tichLuy($value=''){
 
+    }
+    private function getGoogleUrl($key){
+        return Google2FA::getQRCodeGoogleUrl(
+            $this->name,
+            $this->email,
+            $key
+        );
     }
 }
