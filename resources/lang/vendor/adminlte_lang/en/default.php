@@ -9,6 +9,7 @@ return [
     'btn_update'                  => 'Update',
     'btn_edit'                  => 'Edit',
     'btn_delete'                  => 'Delete',
+    'btn_view'                  => 'View',
     'btn_sign_in'                  => 'Sign in',
     'remember_me'                  => 'Remember me',
 	'create_at'                 => 'Date Create',
@@ -35,4 +36,5 @@ return [
     'add'						=> 'Add',
 	'welcome' 					=> 'Welcome',
 	'loyalty'					=> 'Loyalty',
+    
 ];

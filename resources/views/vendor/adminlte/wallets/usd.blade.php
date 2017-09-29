@@ -119,7 +119,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</h4>
+                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<span class="max" data-type="usdwallet">1000<span></h4>
                     </div>
                     <div class="modal-body">
                         <div class="box-body">

@@ -42,4 +42,6 @@ return [
     'buy_date'                  => "Buy date",
     'release_date'              => "Release date",
     'package_history'           => "Package History",
+    'package_withdrawn' => 'Package Withdrawn',
+    'not_enought_time'=> 'Not enough time',
 ];

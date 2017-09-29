@@ -13,7 +13,7 @@ use Auth;
 use Session;
 use App\Authorizable;
 use Validator;
-
+use DateTime;
 class PackageController extends Controller
 {
     use Authorizable;
@@ -187,5 +187,50 @@ class PackageController extends Controller
                     'Package not delete!');
         }
 
+    }
+    
+    /**
+     * @author Huy NQ
+     * @param Request $request
+     * @return type
+     */
+    public function withDraw(Request $request) {
+        if($request->ajax()){
+            $tempHistoryPackage = UserPackage::where("userId",Auth::user()->id)
+                    ->orderBy('id', 'DESC')->first();
+            
+            //check userID and check withdraw
+            if( $tempHistoryPackage->withdraw == 1 ){
+                $message = trans("adminlte_lang::home.package_withdrawn");
+                return $this->responseError($errorCode = true,$message);
+            }
+           
+            $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+            //get release date của package cuối cùng <-> max id
+            $datetime2 = new DateTime($tempHistoryPackage->release_date);
+            $interval = $datetime1->diff($datetime2);
+            //compare
+            if( $interval->format('%R%a') > 0 ){
+                $message = trans("adminlte_lang::home.not_enought_time");
+                return $this->responseError($errorCode = true,$message);
+            }else{
+                $listHistoryPackage = UserPackage::where("id","<=",$tempHistoryPackage->id)
+                        ->where("userId",Auth::user()->id)
+                        ->where("withdraw",0)
+                        ->get();
+                $sum = 0;
+                foreach ($listHistoryPackage as $key => $value) {
+                    $sum +=$value->amount_increase;
+                    UserPackage::where("id",$value->id)
+                        ->update(["withdraw"=> 1 ]);
+                }
+                $money = Auth()->user()->userCoin->usdAmount + $sum;
+                $update = UserCoin::where("userId",Auth::user()->id)
+                        ->update(["usdAmount" => $money]);
+                if($update){
+                    return $this->responseSuccess( $data = $money );
+                }
+            }
+        }
     }
 }
