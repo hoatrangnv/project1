@@ -73,6 +73,40 @@ CREATE TABLE `notification` (
 
 
 -- ----------------------------
+-- Table structure for user_tree_permissions
+-- ----------------------------
+DROP TABLE IF EXISTS `user_tree_permissions`;
+CREATE TABLE `user_tree_permissions` (
+  `userId` int(10) unsigned NOT NULL,
+  `binary` text COLLATE utf8mb4_unicode_ci,
+  `genealogy` text COLLATE utf8mb4_unicode_ci,
+  `binary_total` int(11) DEFAULT '0',
+  `genealogy_total` int(11) DEFAULT '0',
+  UNIQUE KEY `userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Table structure for withdraw_confirm
+-- ----------------------------
+DROP TABLE IF EXISTS `withdraw_confirm`;
+CREATE TABLE `withdraw_confirm` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `walletAddress` varchar(34) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `withdrawAmount` double DEFAULT NULL,
+  `userId` int(10) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `type` enum('clp','btc') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`,`walletAddress`,`userId`),
+  KEY `type` (`type`),
+  KEY `userId` (`userId`),
+  KEY `updated_at` (`updated_at`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ----------------------------
 -- Table structure for migrations
 -- ----------------------------
 DROP TABLE IF EXISTS `migrations`;
@@ -338,7 +372,7 @@ CREATE TABLE `users_loyalty` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_coins
+-- Table structure for `user_coins`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_coins`;
 CREATE TABLE `user_coins` (
@@ -350,8 +384,13 @@ CREATE TABLE `user_coins` (
   `usdAmount` double unsigned DEFAULT '0',
   `reinvestAmount` double unsigned DEFAULT '0',
   `backupKey` text COLLATE utf8mb4_unicode_ci,
+  `availableAmount` double DEFAULT NULL,
   UNIQUE KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+
 
 -- ----------------------------
 -- Records of user_coins
@@ -366,7 +405,7 @@ CREATE TABLE `user_datas` (
   `userId` int(10) unsigned NOT NULL,
   `refererId` int(10) DEFAULT '0',
   `packageId` smallint(6) DEFAULT '0',
-  `packageDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `packageDate` timestamp NULL DEFAULT NULL,
   `walletAddress` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `accountCoinBase` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `totalBonus` double DEFAULT '0',
@@ -399,11 +438,11 @@ DROP TABLE IF EXISTS `user_packages`;
 CREATE TABLE `user_packages` (
   `userId` int(10) unsigned NOT NULL,
   `packageId` int(10) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `amount_increase` int(10) NOT NULL,
-  `buy_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `release_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `buy_date` timestamp NULL DEFAULT NULL,
+  `release_date` timestamp NULL DEFAULT NULL,
   `withdraw` tinyint(1) DEFAULT '0',
   `weekYear` int(10) NOT NULL,
   KEY `userId` (`userId`) USING BTREE,
