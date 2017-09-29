@@ -143,7 +143,7 @@
                 increaseArea: '20%'
             });
             var mytimer;
-            $('#refererId').keyup(function(){
+            $('#refererId').on('blur onmouseout', function () {
                 clearTimeout(mytimer);
                 var search = $(this).val();
                 if(search.length >= 1){
@@ -168,7 +168,7 @@
                     }, 1000);
                 }
             });
-            $('#referrerName').keyup(function(){
+            $('#referrerName').on('blur onmouseout', function () {
                 clearTimeout(mytimer);
                 var search = $(this).val();
                 if(search.length >= 3){

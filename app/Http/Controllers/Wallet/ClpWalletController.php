@@ -35,11 +35,13 @@ class ClpWalletController extends Controller {
      * @author Huynq
      * @return type
      */
-    public function clpWallet() {
+    public function clpWallet(Request $request) {
         $currentuserid = Auth::user()->id;
-        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType',3)
-       ->paginate();
-        
+        $query = Wallet::where('userId', '=',$currentuserid);
+        if(isset($request->type) && $request->type > 0){
+            $query->where('type', $request->type);
+        }
+        $wallets = $query->where('walletType', Wallet::CLP_WALLET)->paginate();
         //get Packgage
         $currentuserid = Auth::user()->id;
         $user = Auth::user();
@@ -48,11 +50,16 @@ class ClpWalletController extends Controller {
         foreach ($packages as $package){
             $lstPackSelect[$package->id] = $package->name;
         }
-        
+        $requestQuery = $request->query();
+        $wallet_type = config('cryptolanding.wallet_type');
+        foreach ($wallet_type as $key => $val)
+            $wallet_type[$key] = trans($val);
         return view('adminlte::wallets.clp', ['packages' => $packages, 
             'user' => $user, 
             'lstPackSelect' => $lstPackSelect, 
-            'wallets'=> $wallets
+            'wallets'=> $wallets,
+            'wallet_type'=> $wallet_type,
+            'requestQuery'=> $requestQuery,
         ]);
         
     }
