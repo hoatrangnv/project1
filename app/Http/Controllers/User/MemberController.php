@@ -335,13 +335,10 @@ class MemberController extends Controller
         $request->session()->flash('error', 'Push into tree error');
         return redirect('members/binary');
     }
-	public function show($id)
-    {
-		echo $id;
-        //return redirect('members/genealogy');
-    }
     
     public function refferalsDetail($id){
-        return view('adminlte::profile.subprofile', compact('id'));
+        $user = User::where('uid', $id)->get()->first();
+
+        return view('adminlte::profile.subprofile', compact('user'));
     }
 }
