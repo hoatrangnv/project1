@@ -189,24 +189,24 @@ class PackageController extends Controller
 
     }
     
+    /**
+     * @author Huy NQ
+     * @param Request $request
+     * @return type
+     */
     public function withDraw(Request $request) {
         if($request->ajax()){
-          
-            $id = $request->value;
-            
-            $tempHistoryPackage = UserPackage::where("id",$id)
-                    ->max('release_date');
-                   
+            $lastIdUserPackage = UserPackage::where("userId",Auth::user()->id)
+                    ->max('id');
+            $tempHistoryPackage = UserPackage::find($lastIdUserPackage);
             //check userID and check withdraw
-            dd($tempHistoryPackage);
-            if($tempHistoryPackage->userId != Auth::user()->id
-                    || $tempHistoryPackage->withdraw == 1){
+            if( $tempHistoryPackage->withdraw == 1 ){
                 $message = trans("adminlte_lang::home.package_withdrawn");
                 return $this->responseError($errorCode = true,$message);
             }
            
             $datetime1 = new DateTime(date("Y-m-d H:i:s"));
-            //get release date của package cuối cùng
+            //get release date của package cuối cùng <-> max id
             $datetime2 = new DateTime($tempHistoryPackage->release_date);
             $interval = $datetime1->diff($datetime2);
             //compare
@@ -214,13 +214,13 @@ class PackageController extends Controller
                 $message = trans("adminlte_lang::home.not_enought_time");
                 return $this->responseError($errorCode = true,$message);
             }else{
-                $listHistoryPackage = UserPackage::where("id","<=",$id)
+                $listHistoryPackage = UserPackage::where("id","<=",$lastIdUserPackage)
                         ->where("userId",Auth::user()->id)
                         ->where("withdraw",0)
                         ->get();
                 $sum = 0;
                 foreach ($listHistoryPackage as $key => $value) {
-                    $sum = $sum + $value->amount_increase;
+                    $sum +=$value->amount_increase;
                     UserPackage::where("id",$value->id)
                         ->update(["withdraw"=> 1 ]);
                 }
@@ -228,7 +228,7 @@ class PackageController extends Controller
                 $update = UserCoin::where("userId",Auth::user()->id)
                         ->update(["usdAmount" => $money]);
                 if($update){
-                    return $this->responseSuccess( $data = null );
+                    return $this->responseSuccess( $data = $money );
                 }
             }
         }
