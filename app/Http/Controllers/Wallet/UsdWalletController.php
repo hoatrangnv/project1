@@ -87,6 +87,7 @@ class UsdWalletController extends Controller
 
     /** 
      * @author GiangDT
+     * @edit Huynq
      * @param Request $request
      * @return type
      */
@@ -97,8 +98,9 @@ class UsdWalletController extends Controller
                 'usd'=>'required|numeric',
                 'clp'=>'required|numeric'
             ]);
+            $clp = $request->usd / User::getCLPUSDRate();
             //Tranfer
-            $this->tranferUSDCLP($request->usd, $request->clp, $request);
+            $this->tranferReinvestUSDCLP($request->usd, $clp, $request);
         }
         
         //get tỷ giá usd btc
@@ -121,6 +123,70 @@ class UsdWalletController extends Controller
         // $wallets->rateClpUsd = User::getCLPUSDRate();
         
         return view('adminlte::wallets.reinvest')->with('wallets', $wallets);
+    }
+    
+    /**
+     * @author Huy NQ
+     * @param type $usd
+     * @param type $clp
+     * @param type $request
+     */
+    public function tranferReinvestUSDCLP($usd, $clp, $request){
+        //Kq sau khi tính 
+        $valueAfterTranfer = [];
+        $user = Auth::user()->userCoin;
+
+        try {
+            //action trừ tiền USD và Cộng CLP của user Trong bảng UserCoin
+            $valueAfterTranfer['reinvest_amount']   = $user->reinvestAmount - (double)$usd;
+            $valueAfterTranfer['available_amount']  = $user->availableAmount - (double)$usd;
+            $valueAfterTranfer['clp_amount']        =  $user->clpCoinAmount +  (double)$clp;
+            //Hạn mức tối thiêu khi chuyển USD
+            if( $usd > Auth()->user()->userCoin->availableAmount || $usd > Auth()->user()->userCoin->reinvestAmount ){
+                $request->session()->flash( 'errorMessage', trans("adminlte_lang::wallet.error_reinvest_to_clp_over"));
+            } else {
+                $user->reinvestAmount   = $valueAfterTranfer['reinvest_amount'];
+                $user->availableAmount  = $valueAfterTranfer['available_amount'];
+                $user->clpCoinAmount    = $valueAfterTranfer['clp_amount'];
+                
+                $result = $user->save();
+
+                if($result) {
+
+                    $dataInsert = [];
+                    //Lưu LOG 2 report ... 1 : OUT USD và 2 : IN CLP vao bang Wallet
+                    $dataInsert["reinvest_to_clp"] = [
+                        "walletType" => Wallet::REINVEST_WALLET,
+                        "type"       => Wallet::REINVEST_CLP_TYPE,
+                        "inOut"      => Wallet::OUT,
+                        "userId"     => Auth::user()->id,
+                        "amount"     => $usd,
+                        "note"       => "Tranfert from Reinvest wallet to CLP wallet",
+                        "updated_at" => date("Y-m-d H:i:s"),
+                        "created_at" => date("Y-m-d H:i:s")
+                    ];
+
+                    $dataInsert["clp_from_reinvest"] = [
+                        "walletType" => Wallet::CLP_WALLET,
+                        "type"       => Wallet::REINVEST_CLP_TYPE,
+                        "inOut"      => Wallet::IN,
+                        "userId"     => Auth::user()->id,
+                        "amount"     => $clp,
+                        "note"       => "Tranfert from Clp wallet to USD wallet",
+                        "updated_at" => date("Y-m-d H:i:s"),
+                        "created_at" => date("Y-m-d H:i:s"),
+                    ];
+                    // Bulk insert
+                    $result = Wallet::insert($dataInsert);
+
+                    $request->session()->flash( 'successMessage', trans("adminlte_lang::wallet.success") );
+                } else {
+                    $request->session()->flash( 'errorMessage', trans("adminlte_lang::wallet.fail") );
+                }
+            }
+        } catch (\Exception $ex) {
+            Log::error( $ex->getTraceAsString() );
+        }
     }
     
     /**
@@ -161,16 +227,20 @@ class UsdWalletController extends Controller
                         "inOut"      => Wallet::OUT,
                         "userId"     => Auth::user()->id,
                         "amount"     => $request->usd,
-                        "note"       => "Tranfert to CLP wallet"
+                        "note"       => "Tranfert from USD wallet to CLP wallet",
+                        "updated_at" => date("Y-m-d H:i:s"),
+                        "created_at" => date("Y-m-d H:i:s")
                     ];
 
                     $dataInsert["clp_from_usd"] = [
-                        "walletType" => Wallet::USD_WALLET,
+                        "walletType" => Wallet::CLP_WALLET,
                         "type"       => Wallet::USD_CLP_TYPE,
                         "inOut"      => Wallet::IN,
                         "userId"     => Auth::user()->id,
                         "amount"     => $request->clp,
-                        "note"       => "Tranfert from USD wallet"
+                        "note"       => "Tranfert to CLP wallet from USD wallet ",
+                        "updated_at" => date("Y-m-d H:i:s"),
+                        "created_at" => date("Y-m-d H:i:s")
                     ];
                     // Bulk insert
                     $result = Wallet::insert($dataInsert);

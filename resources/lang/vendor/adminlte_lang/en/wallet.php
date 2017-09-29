@@ -49,4 +49,7 @@ return [
     'reinvest_clp_type' => 'Tranfer Reinvest to CLP',
     'btc_clp_type' => 'Tranfer BTC to CLP',
     'clp_btc_type' => 'Tranfer CLP to BTC',
+    'error_reinvest_to_clp_over' => 'Số tiền chuyển lớn hơn số tiền tối đa có thể chuyển',
+    'success' => 'Success',
+    'fail' => 'Fail',
 ];

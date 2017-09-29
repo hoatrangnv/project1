@@ -120,7 +120,7 @@
 		</div>
 	</div>
  <!--fORM submit-->
-    <form class="form-horizontal" _lpchecked="1" method="post" action="">
+    <form class="form-horizontal" _lpchecked="1" method="post" action="reinvest">
         <div class="modal fade" id="modal-default">
             <div class="modal-dialog">
                 <div class="modal-content">
