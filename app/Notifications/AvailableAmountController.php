@@ -9,7 +9,7 @@
 namespace App\Notifications;
 use App\UserCoin;
 use DB;
-
+use App\Wallet;
 /**
  * Description of AvailableAmountController
  *
@@ -22,6 +22,7 @@ class AvailableAmountController {
 
         $dataRelaseTimeToday = DB::table('wallets')
                 ->select('userId','inOut',DB::raw('SUM(amount) as sumamount'))
+                ->where('walletType',Wallet::REINVEST_WALLET)
                 ->whereDate('created_at', $passDate)
                 ->groupBy('userId','inOut')
                 ->get();
@@ -29,7 +30,7 @@ class AvailableAmountController {
         //get all userId from all record from $dataRelaseTimeYesterday
         $availableUser = array();
         foreach ($dataRelaseTimeToday as $value) {
-            if($value->inOut == 'in') 
+            if($value->inOut == Wallet::IN) 
                     $availableUser[$value->userId]  = $value->sumamount;
         }
         //update available amount

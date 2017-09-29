@@ -95,7 +95,7 @@ Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoAct
 
 Route::get('test-binary', 'TestController@testBinary');
 Route::get('test-interest',"TestController@testInterest");
-Route::get('test',"TestController@getAvailableAmount");
+
 
 
 /***------- END TEST -------***/

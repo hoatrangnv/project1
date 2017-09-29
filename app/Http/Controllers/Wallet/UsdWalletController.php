@@ -142,7 +142,7 @@ class UsdWalletController extends Controller
             $valueAfterTranfer['available_amount']  = $user->availableAmount - (double)$usd;
             $valueAfterTranfer['clp_amount']        =  $user->clpCoinAmount +  (double)$clp;
             //Hạn mức tối thiêu khi chuyển USD
-            if( $usd > Auth()->user()->userCoin->availableAmount || $usd > Auth()->user()->userCoin->reinvestAmount ){
+            if( $usd > Auth()->user()->userCoin->availableAmount ){
                 $request->session()->flash( 'errorMessage', trans("adminlte_lang::wallet.error_reinvest_to_clp_over"));
             } else {
                 $user->reinvestAmount   = $valueAfterTranfer['reinvest_amount'];
@@ -161,7 +161,7 @@ class UsdWalletController extends Controller
                         "inOut"      => Wallet::OUT,
                         "userId"     => Auth::user()->id,
                         "amount"     => $usd,
-                        "note"       => "Tranfert from Reinvest wallet to CLP wallet",
+                        "note"       => trans("adminlte_lang::wallet.tranfer_from_reinves_wallet_to_clp_wallet"),
                         "updated_at" => date("Y-m-d H:i:s"),
                         "created_at" => date("Y-m-d H:i:s")
                     ];
@@ -172,7 +172,7 @@ class UsdWalletController extends Controller
                         "inOut"      => Wallet::IN,
                         "userId"     => Auth::user()->id,
                         "amount"     => $clp,
-                        "note"       => "Tranfert from Clp wallet to USD wallet",
+                        "note"       => trans("adminlte_lang::wallet.tranfer_from_reinves_wallet_to_clp_wallet"),
                         "updated_at" => date("Y-m-d H:i:s"),
                         "created_at" => date("Y-m-d H:i:s"),
                     ];
@@ -186,6 +186,7 @@ class UsdWalletController extends Controller
             }
         } catch (\Exception $ex) {
             Log::error( $ex->getTraceAsString() );
+            throw $ex;
         }
     }
     
@@ -227,7 +228,7 @@ class UsdWalletController extends Controller
                         "inOut"      => Wallet::OUT,
                         "userId"     => Auth::user()->id,
                         "amount"     => $request->usd,
-                        "note"       => "Tranfert from USD wallet to CLP wallet",
+                        "note"       => trans("adminlte_lang::wallet.tranfer_from_usd_wallet_to_clp_wallet"),
                         "updated_at" => date("Y-m-d H:i:s"),
                         "created_at" => date("Y-m-d H:i:s")
                     ];
@@ -238,7 +239,7 @@ class UsdWalletController extends Controller
                         "inOut"      => Wallet::IN,
                         "userId"     => Auth::user()->id,
                         "amount"     => $request->clp,
-                        "note"       => "Tranfert to CLP wallet from USD wallet ",
+                        "note"       => trans("adminlte_lang::wallet.tranfer_from_usd_wallet_to_clp_wallet"),
                         "updated_at" => date("Y-m-d H:i:s"),
                         "created_at" => date("Y-m-d H:i:s")
                     ];

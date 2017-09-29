@@ -52,4 +52,6 @@ return [
     'error_reinvest_to_clp_over' => 'Số tiền chuyển lớn hơn số tiền tối đa có thể chuyển',
     'success' => 'Success',
     'fail' => 'Fail',
+    'tranfer_from_reinves_wallet_to_clp_wallet'=>"Tranfer from Reinvest wallet to CLP wallet",
+    'tranfer_from_usd_wallet_to_clp_wallet'=>"Tranfert from Usd wallet to Reinvest wallet"
 ];

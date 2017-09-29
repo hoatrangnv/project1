@@ -196,9 +196,9 @@ class PackageController extends Controller
      */
     public function withDraw(Request $request) {
         if($request->ajax()){
-            $lastIdUserPackage = UserPackage::where("userId",Auth::user()->id)
-                    ->max('id');
-            $tempHistoryPackage = UserPackage::find($lastIdUserPackage);
+            $tempHistoryPackage = UserPackage::where("userId",Auth::user()->id)
+                    ->orderBy('id', 'DESC')->first();
+            
             //check userID and check withdraw
             if( $tempHistoryPackage->withdraw == 1 ){
                 $message = trans("adminlte_lang::home.package_withdrawn");
@@ -214,7 +214,7 @@ class PackageController extends Controller
                 $message = trans("adminlte_lang::home.not_enought_time");
                 return $this->responseError($errorCode = true,$message);
             }else{
-                $listHistoryPackage = UserPackage::where("id","<=",$lastIdUserPackage)
+                $listHistoryPackage = UserPackage::where("id","<=",$tempHistoryPackage->id)
                         ->where("userId",Auth::user()->id)
                         ->where("withdraw",0)
                         ->get();
