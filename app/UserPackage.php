@@ -7,10 +7,15 @@ use Auth;
 use DB;
 class UserPackage extends Model
 {
-    protected $primaryKey = null;
-    public $incrementing = false;
+    protected $primaryKey = "id";
+    public $incrementing = true;
     protected $fillable = [
-		'userId', 'packageId', 'amount_increase', 'buy_date', 'release_date', 'weekYear'
+        'userId', 
+        'packageId', 
+        'amount_increase', 
+        'buy_date', 
+        'release_date', 
+        'weekYear',
 	];
     
     public function __construct(array $attributes = []) {
@@ -21,7 +26,7 @@ class UserPackage extends Model
     public static function getHistoryPackage(){
         $package = new UserPackage;
         $tableName = $package->getTable();
-        $data = $package->select("packages.name","buy_date","release_date")
+        $data = $package->select("$tableName.id","$tableName.buy_date","$tableName.release_date","packages.name")
                 ->where("userId",Auth::user()->id)
                 ->join("packages","packages.id","=","$tableName.packageId")
                 ->get();

@@ -339,4 +339,8 @@ class MemberController extends Controller
 		echo $id;
         //return redirect('members/genealogy');
     }
+    
+    public function refferalsDetail($id){
+        return view('adminlte::profile.subprofile', compact('id'));
+    }
 }

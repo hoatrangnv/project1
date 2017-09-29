@@ -6,6 +6,7 @@
 
 @section('custome_css')
 <link rel="stylesheet" type="text/css" href="css/home.css">
+<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/css/bootstrap-notify.css">-->
 @endsection
 
 @section('main-content')
@@ -46,7 +47,7 @@
                             <!-- small box -->
                             <div class="small-box bg-yellow">
                                 <div class="inner">
-                                    <h3>{{ number_format(Auth::user()->userCoin->usdAmount, 2) }}</h3>
+                                    <h3 class="usd-amount">{{ number_format(Auth::user()->userCoin->usdAmount, 2) }}</h3>
                                     <p>{{ trans('adminlte_lang::home.usd_wallet') }}</p>
                                 </div>
                                 <div class="icon"><i class="fa fa-usd"></i></div>
@@ -335,6 +336,16 @@
                                         <b>{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate ."+ 180 days")) : '' }}</b>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                       {{ trans('adminlte_lang::wallet.withdraw') }}
+                                    </td>
+                                    <td  class="right">
+                                        <button class="btn btn-default bg-olive withdraw-package" 
+                                                        data-id=""
+                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::wallet.withdraw') }}</button>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -379,8 +390,56 @@
                 </div>
                 <!-- /.col (right) -->
             </div>
+            
 
             <!-- end body -->
         </div>
     </div>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="errorwithdraw">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+    </div>
+    <script>
+        var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+      });
+        $('[data-toggle=confirmation]').confirmation({
+            rootSelector: '[data-toggle=confirmation]',
+            onConfirm: function() {
+                $.ajax({
+                    beforeSend: function(){
+                      // Handle the beforeSend event
+                    },
+                    url:"packages/withdraw",
+                    type:"post",
+                    data : {
+                        type: "withdraw",
+                        _token:  $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success : function(result){
+                        if(result.success){
+                            $(".usd-amount").html(formatter.format(result.result).replace("$",""));
+                            alert("{{ trans('adminlte_lang::wallet.success')}}");
+                        }else{
+                            alert(result.message);
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("some error");
+                    },
+                    complete: function(){
+
+                    }
+                    // ......
+                });
+            },
+            onCancel: function() {
+               
+            }
+          });
+    </script>
 @endsection

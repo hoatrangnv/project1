@@ -71,26 +71,6 @@ class WalletController extends Controller
     
     /**
      * 
-     * @return type
-     */
-    public function reinvest(){
-        if($request->isMethod('post')) {
-            $this->validate($request, [
-                'usd'=>'required|numeric',
-                'clp'=>'required|numeric'
-            ]);
-            //Tranfer
-            $tranfer = new USDWallet();
-            $tranfer->tranferUSDCLP($usd, $clp, $request);
-        }
-        $currentuserid = Auth::user()->id;
-        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::CLP_WALLET)
-        ->paginate();
-        return view('adminlte::wallets.reinvest')->with('wallets', $wallets);
-    }
-    
-    /**
-     * 
      * @param Request $request
      * @return type
      */
@@ -248,4 +228,10 @@ class WalletController extends Controller
         return view('adminlte::wallets.buysellclp')->with(compact('user', 'tygia'));
     }
     
+    /**
+     * 
+     */
+    public function getMaxTypeWallet(Request $request){
+        
+    }
 }
