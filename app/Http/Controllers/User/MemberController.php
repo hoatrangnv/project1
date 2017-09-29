@@ -341,8 +341,6 @@ class MemberController extends Controller
     }
     
     public function refferalsDetail($id){
-        $lstCountry = config('cryptolanding.lstCountry');
-        $lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
-        return view('adminlte::profile.subprofile', compact('lstCountry', 'id'));
+        return view('adminlte::profile.subprofile', compact('id'));
     }
 }
