@@ -433,8 +433,8 @@
         </div>
     </div>
     <!-- js -->
-    <link href="https://unpkg.com/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
-    <script src="https://unpkg.com/bootstrap-switch@3.3.4/dist/js/bootstrap-switch.js"></script>
+    <link href="/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
+    <script src="/bootstrap-switch/bootstrap-switch.js"></script>
     <script type="text/javascript">
         $(function() {
             //action Save Pass
