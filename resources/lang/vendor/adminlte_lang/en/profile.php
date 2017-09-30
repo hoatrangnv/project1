@@ -18,5 +18,5 @@ return [
     'sponsor' => 'Sponsor',
     'security_settings'=> 'Security Settings',
     'marketing'=>'Marketing',
-    'profile_refferals'=>'Profile Refferals',
+    'profile_refferals'=>'Profile Referal',
 ];
