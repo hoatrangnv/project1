@@ -111,7 +111,7 @@ class ProfileController extends Controller
                                 "msg"  => "2Fa is off"
                             ]);
                         }else{
-                            User::where('id',Auth::user()->id) ->update( [ 'is2fa' => 0 ] );
+                            User::where('id',Auth::user()->id) ->update( [ 'is2fa' => 0, 'google2fa_secret' => Google2FA::generateSecretKey(16) ] );
                             return Response::json([
                                 "success" => true,
                                 "msg"  => null
@@ -130,16 +130,32 @@ class ProfileController extends Controller
                     ]);
                 }
             }else{//on 2fa
-                if($is2fa == 1){
+                if($request->codeOtp != '') {
+                    $key = Auth::user()->google2fa_secret;
+                    $valid = Google2FA::verifyKey($key, $request->codeOtp);
+                    if($valid){
+                        if ($is2fa == 1) {
+                            return Response::json([
+                                "success" => false,
+                                "msg" => "2Fa is on"
+                            ]);
+                        } else {
+                            User::where('id', Auth::user()->id)->update(['is2fa' => 1]);
+                            return Response::json([
+                                "success" => true,
+                                "msg" => null
+                            ]);
+                        }
+                    }else{
+                        return Response::json([
+                            "success" => false,
+                            "msg"  => "code OTP no  match"
+                        ]);
+                    }
+                }else{
                     return Response::json([
                         "success" => false,
-                        "msg"  => "2Fa is on"
-                    ]);
-                }else{
-                    User::where('id',Auth::user()->id) ->update( [ 'is2fa' => 1 ] );
-                    return Response::json([
-                        "success" => true,
-                        "msg"  => null
+                        "msg"  => "Error codeOtp inv"
                     ]);
                 }
             }
