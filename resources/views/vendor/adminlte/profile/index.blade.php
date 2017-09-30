@@ -480,10 +480,10 @@
             $('#switchAuthen').bootstrapSwitch({
                 size: 'mini',
                 onSwitchChange: function (event, state) {
+                    var modal = $('#myModalOff2FA');
+                    modal.modal({backdrop: 'static'})
+                    modal.modal('show');
                     if(!$("#switchAuthen").is(':checked')){//if on -> off
-                        var modal = $('#myModalOff2FA');
-                        modal.modal({backdrop: 'static'})
-                        modal.modal('show');
                         $('#myModalOff2FA_check').click(function () {
                             var codeOtp = $.trim($('#codeOtp').val());
                             if( codeOtp !=''){
@@ -499,8 +499,8 @@
                                             location.href = '{{ url()->current() }}';
                                         }else{
                                             modal.find('.confirmError').text(result.msg);
-                                            $('#switchAuthen').bootstrapSwitch('state', true, true);
-                                            $("#switchAuthen").attr('checked', true);
+                                            //$('#switchAuthen').bootstrapSwitch('state', true, true);
+                                            //$("#switchAuthen").attr('checked', true);
                                         }
                                     }
                                 });
@@ -509,13 +509,43 @@
                             }
                         });
                         $('#myModalOff2FA_close').click(function () {
-                            modal.modal('hide');
-                            $('#switchAuthen').bootstrapSwitch('state', true, true);
+                            location.href = '{{ url()->current() }}';
+                            /*$('#switchAuthen').bootstrapSwitch('state', true, true);
                             $("#switchAuthen").attr('checked', true);
+                            modal.modal('hide');*/
                         });
-
                     }else{//if off -> on
-                        $.ajax({
+                        $('#myModalOff2FA_check').click(function () {
+                            var codeOtp = $.trim($('#codeOtp').val());
+                            if( codeOtp !=''){
+                                $.ajax({
+                                    url : "profile/switchauthen",
+                                    data: {codeOtp: codeOtp, status:0},
+                                    type : "get",
+                                    success : function (result){
+                                        if(result.success){
+                                            modal.modal('hide');
+                                            $('#switchAuthen').bootstrapSwitch('state', true, true);
+                                            $("#switchAuthen").attr('checked', true);
+                                            location.href = '{{ url()->current() }}';
+                                        }else{
+                                            modal.find('.confirmError').text(result.msg);
+                                            //$('#switchAuthen').bootstrapSwitch('state', false, false);
+                                            //$("#switchAuthen").attr('checked', false);
+                                        }
+                                    }
+                                });
+                            }else{
+                                alert('Please input Opt.');
+                            }
+                        });
+                        $('#myModalOff2FA_close').click(function () {
+                            location.href = '{{ url()->current() }}';
+                            /*$('#switchAuthen').bootstrapSwitch('state', false, false);
+                            $("#switchAuthen").attr('checked', false);
+                            modal.modal('hide');*/
+                        });
+                        /*$.ajax({
                             url : "profile/switchauthen",
                             data: {status:0},
                             type : "get",
@@ -529,7 +559,7 @@
                                     $("#switchAuthen").attr('checked', false);
                                 }
                             }
-                        });
+                        });*/
                     }
                 }
             })
