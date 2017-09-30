@@ -19,7 +19,7 @@ return [
 	'side_wallet_usd'                 => 'USD Wallet',
 	'side_wallet_btc'                 => 'BTC Wallet',
 	'side_wallet_clp'                 => 'CLP Wallet',
-	'side_wallet_reinvest'                 => 'Re invest Wallet',
+	'side_wallet_reinvest'                 => 'Holding Wallet',
 	'side_mybonus'                 => 'My Bonus',
 	'side_mybonust_fast'                 => 'Fast Start Bonus',
 	'side_mybonus_binary'                 => 'Binary Bonus',

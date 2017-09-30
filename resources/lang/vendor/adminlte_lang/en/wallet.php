@@ -5,7 +5,7 @@ return [
     'usd'                       => 'USD Wallet',
     'btc'                       => 'BTC Wallet',
     'clp'                       => 'CLP Wallet',
-    'reinvest'           	=> 'Re Invest Wallet',
+    'reinvest'           	=> 'Holding Wallet',
 	
     'buy_package'           	=> 'Buy Package',
     'buy_clp'           	=> 'Buy CLPCoin',

@@ -17,7 +17,7 @@ return [
     'btc_wallet'                => 'BTC Wallet',
     'clp_wallet'                => 'CLP Wallet',
     'usd_wallet'                => 'USD Wallet',
-    're_invest_wallet'          => 'Re-Invest Wallet',
+    're_invest_wallet'          => 'Holding Wallet',
     'statistical_bussiness'     => 'Business Statistics',
     'sale_f1'                   => 'New F1 Sale',
     'total_sale_f1'             => 'Total F1 Sale',
