@@ -166,7 +166,7 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <!--withdrawa modal-->
+    <!--Withdraw modal-->
     {{ Form::open(array('url' => 'wallets/btcwithdraw'))}}
     <div class="modal fade" id="withdraw" style="display: none;">
         <div class="modal-dialog">
@@ -174,14 +174,14 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">WithRaw</h4>
+                    <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtcwithdraw" data-type="btcwithdraw">1000</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm btcwithdraw', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
@@ -215,7 +215,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}</h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbuyclp" data-type="btctranfer">1000</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -256,19 +256,19 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}</h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtctranfer" data-type="btctranfer">1000</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                                {{ Form::number('username', '', array('class' => 'form-control input-sm', 'step' => '0.0001','placeholder' => "Username")) }}
+                                {{ Form::number('username', '', array('class' => 'form-control input-sm switch-CLP-to-BTC-tranfer', 'step' => '0.0001','placeholder' => "Username")) }}
                             </div>
                             <br>
                             <div class="input-group">
@@ -379,5 +379,88 @@
                 // ......
             });
         }
+        //Switch Btc and Clp
+
+        $(".switch-BTC-to-CLP-tranfer").on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var type = "BtcToClp";
+            //send
+            var result = switchChange(value, type);
+        });
+
+        $(".switch-CLP-to-BTC-tranfer").on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var type = "ClpToBtc";
+            //send
+            var result = switchChange(value, type);
+        });
+
+
+        function switchChangeTranfer(value, type) {
+            $.ajax({
+                beforeSend: function () {
+                    // Handle the beforeSend event
+                },
+                url: "switchbtcclp",
+                type: "get",
+                data: {
+                    type: type,
+                    value: value
+                },
+                success: function (result) {
+                    if (type == "BtcToClp") {
+                        if (result.success) {
+                            $(".switch-CLP-to-BTC-tranfer").val(result.result);
+                        }
+                    } else {
+                        if (result.success) {
+                            $(".switch-BTC-to-CLP-tranfer").val(result.result);
+                        }
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                },
+                complete: function () {
+
+                }
+                // ......
+            });
+        }
+        
+        //get total value;
+        $.get("totalvalue",
+        {
+            type:$(".maxbtcwithdraw").attr("data-type")
+        },function(data, status){
+            $(".maxbtcwithdraw").html(data);
+            $( ".maxbtcwithdraw" ).click(function() {
+                $(".btcwithdraw").val(data)
+            });
+        });
+        
+        $.get("totalvalue",
+        {
+            type:$(".maxbuyclp").attr("data-type")
+        },function(data, status){
+            $(".maxbuyclp").html(data);
+            $( ".maxbuyclp" ).click(function() {
+                $(".switch-BTC-to-CLP").val(data)
+                var type = "BtcToClp";
+                var result = switchChange(data,type);
+            });
+        });
+        
+        $.get("totalvalue",
+        {
+            type:$(".maxbtctranfer").attr("data-type")
+        },function(data, status){
+            $(".maxbtctranfer").html(data);
+            $( ".maxbtctranfer" ).click(function() {
+                $(".switch-BTC-to-CLP-tranfer").val(data)
+                var type = "BtcToClp";
+                var result = switchChangeTranfer(data,type);
+            });
+        });
     </script>
 @endsection

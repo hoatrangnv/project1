@@ -119,7 +119,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<span class="max" data-type="usdwallet">1000<span></h4>
+                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max" data-type="usdwallet">1000</a></h4>
                     </div>
                     <div class="modal-body">
                         <div class="box-body">
@@ -205,8 +205,8 @@
                     }
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    alert("some error");
-                 },
+                    console.log("some error");
+                },
                 complete: function(){
                   
                  }
@@ -215,34 +215,19 @@
             
           
         }
+       
+        //get total value;
+        $.get("totalvalue",
+        {
+            type:$(".max").attr("data-type")
+        },function(data, status){
+            $(".max").html(data);
+            $( ".max" ).click(function() {
+                $(".switch-USD-to-CLP").val(data)
+                var type = "UsdToClp";
+                var result = switchChange(data,type);
+            });
+        });
         
-        // function updateRateBtcUsd(){
-        //     $.ajax({
-        //         beforeSend: function(){
-        //           // Handle the beforeSend event
-        //         },
-        //         url:"getrateusdbtc",
-        //         type:"get",
-        //         data : {
-                    
-        //         },
-        //         success : function(result){
-        //             console.log(result);
-        //             //update
-        //             $(".rate-usd-btc").html(result.result.usd + " $");
-        //             $(".btc").html( result.result.btc + " BTC");
-        //             $(".clp").html(result.result.clp + " CLP");
-        //             $(".clpusd").html(result.result.clpusd + " $");
-        //             $(".clpbtc").html(result.result.clpbtc + " BTC");
-        //         },
-        //         error: function(XMLHttpRequest, textStatus, errorThrown) {
-        //             //alert("some error");
-        //         },
-        //         complete: function(){
-                  
-        //         }
-        //         // ......
-        //     });
-        // }
     </script>
 @endsection
