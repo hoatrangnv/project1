@@ -130,7 +130,8 @@ class PackageController extends Controller
                                 $userData->packageId, 
                                 $userData->binaryUserId, 
                                 $leftRight,
-                                true
+                                true,
+								false
                             );
             }
 
