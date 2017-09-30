@@ -6,66 +6,6 @@
 
 @section('contentheader_description')
     {{ trans('adminlte_lang::profile.my_profile') }}
-    <style type="text/css">
-        /*.label-td{
-            color: #333;
-            font-weight: 700;
-        }
-        .two-authen .switch {
-          position: relative;
-          display: inline-block;
-          width: 60px;
-          height: 34px;
-        }
-
-        .two-authen .switch input {display:none;}
-
-        .two-authen .slider {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #ccc;
-          -webkit-transition: .4s;
-          transition: .4s;
-        }
-
-        .two-authen .slider:before {
-          position: absolute;
-          content: "";
-          height: 26px;
-          width: 26px;
-          left: 4px;
-          bottom: 4px;
-          background-color: white;
-          -webkit-transition: .4s;
-          transition: .4s;
-        }
-
-        .two-authen input:checked + .slider {
-          background-color: #2196F3;
-        }
-
-        .two-authen input:focus + .slider {
-          box-shadow: 0 0 1px #2196F3;
-        }
-
-        .two-authen input:checked + .slider:before {
-          -webkit-transform: translateX(26px);
-          -ms-transform: translateX(26px);
-          transform: translateX(26px);
-        }
-
-        .two-authen .slider.round {
-          border-radius: 34px;
-        }
-
-        .two-authen .slider.round:before {
-          border-radius: 50%;
-        }*/
-    </style>
 @endsection
 
 @section('main-content')
@@ -84,63 +24,63 @@
                         <table class="table no-margin">
                             <tbody>
                                 <tr>
-                                    <td class="label-td">My id</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.my_id') }}</td>
                                     <td>{{ Auth::user()->uid }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Username</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.username') }}</td>
                                     <td>{{ Auth::user()->name }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Fisrt name</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.first_name') }}</td>
                                     <td>{{ Auth::user()->firstname }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Last name</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.last_name') }}</td>
                                     <td>{{ Auth::user()->lastname }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">My email</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.my_email') }}</td>
                                     <td>{{ Auth::user()->email }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Stress Address</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.street_address_1') }}</td>
                                     <td>{{ Auth::user()->address }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Stress Address 2</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.street_address_2') }}</td>
                                     <td>{{ Auth::user()->address2 }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">City</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.city') }}</td>
                                     <td>{{ Auth::user()->city }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">State</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.state') }}</td>
                                     <td>{{ Auth::user()->state }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Postal Code</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.postal_code') }}</td>
                                     <td>{{ Auth::user()->postal_code }}</td>
                                 </tr> 
                                 <tr>
-                                    <td class="label-td">Country</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
                                     <td>{{ isset($lstCountry[Auth::user()->country]) ? $lstCountry[Auth::user()->country] : '' }}</td>
                                 </tr> 
                                 <tr>
-                                    <td class="label-td">Phone Number</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
                                     <td>{{ Auth::user()->phone }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Date of Birth</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.birthday') }}</td>
                                     <td>{{ Auth::user()->birthday }}</td>
                                 </tr> 
                                 <tr>
-                                    <td class="label-td">Passport/id card</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.passport') }}</td>
                                     <td>{{ Auth::user()->passport }}</td>
                                 </tr> 
                                 <tr>
-                                    <td class="label-td">Registration Date</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.created_at') }}</td>
                                     <td>{{ Auth::user()->created_at }}</td>
                                 </tr>
                             </tbody>
@@ -151,47 +91,47 @@
                         <table class="table no-margin">
                             <tbody>
                             <tr>
-                                <td class="label-td">My id</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.my_id') }}</td>
                                 <td>{{ Auth::user()->uid }}</td>
                             </tr>
                             <tr>
-                                <td class="label-td">Username</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.username') }}</td>
                                 <td>{{ Auth::user()->name }}</td>
                             </tr>
                             <tr>
-                                <td class="label-td">My email</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.my_email') }}</td>
                                 <td>{{ Auth::user()->email }}</td>
                             </tr>
                             <tr>
-                                <td class="label-td">Fisrt name</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.first_name') }}</td>
                                 <td><input type="text" name="firstname" value="{{ Auth::user()->firstname }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">Last name</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.last_name') }}</td>
                                 <td><input type="text" name="lastname" value="{{ Auth::user()->lastname }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">Stress Address</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.street_address_1') }}</td>
                                 <td><input type="text" name="address" value="{{ Auth::user()->address }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">Stress Address 2</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.street_address_2') }}</td>
                                 <td><input type="text" name="address2" value="{{ Auth::user()->address2 }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">City</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.city') }}</td>
                                 <td><input type="text" name="city" value="{{ Auth::user()->city }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">State</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.state') }}</td>
                                 <td><input type="text" name="state" value="{{ Auth::user()->state }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">Postal Code</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.postal_code') }}</td>
                                 <td><input type="text" name="postal_code" value="{{ Auth::user()->postal_code }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">Country</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
                                 <td>
                                     <div class="form-group input-group-sm has-feedback{{ $errors->has('country') ? ' has-error' : '' }}">
                                         {{ Form::select('country', $lstCountry, Auth::user()->country, ['class' => 'form-control input-sm'], ['placeholder' => 'Choose a country']) }}
@@ -204,20 +144,20 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="label-td">Phone Number</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
                                 <td><input type="text" name="phone" value="{{ Auth::user()->phone }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">Date of Birth</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.birthday') }}</td>
                                 <td><input type="text" name="birthday" value="{{ Auth::user()->birthday }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
-                                <td class="label-td">Passport/id card</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.passport') }}</td>
                                 <td><input type="text" name="passport" value="{{ Auth::user()->passport }}" class="form-control input-sm"></td>
                             </tr>
                             <tr>
                                 <td class="label-td"></td>
-                                <td><button type="submit" class="btn btn-info">Save</button></td>
+                                <td><button type="submit" class="btn btn-info">{{ trans('adminlte_lang::profile.btn_save') }}</button></td>
                             </tr>
                             </tbody>
                         </table>
@@ -236,11 +176,11 @@
                     <div class="table-responsive">
                         <table class="table no-margin">
                             <tr>
-                                <td class="label-td">Scan of photo id</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.scan_photo') }}</td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td class="label-td">Picture of yourself holding photoid</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.holding_photo') }}</td>
                                 <td></td>
                             </tr>
                         </table>
@@ -256,23 +196,23 @@
                          <table class="table no-margin">
                             <tbody>
                                 <tr>
-                                    <td class="label-td">Sponsor id</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.sponsor_id') }}</td>
                                     <td>{{ $sponsor->uid }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Sponsor username</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.sponsor_username') }}</td>
                                     <td>{{ $sponsor->name }}</td>
                                 </tr> 
                                 <tr>
-                                    <td class="label-td">Email</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.my_email') }}</td>
                                     <td>{{ $sponsor->email }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Phone Number</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
                                     <td>{{ $sponsor->phone }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Country</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
                                     <td>{{ isset($lstCountry[$sponsor->country]) ? $lstCountry[$sponsor->country] : '' }}</td>
                                 </tr>
                             </tbody>
@@ -290,7 +230,7 @@
                    <div class="table-responsive">
                        <table class="table no-margin">
                             <tr>
-                                <td class="label-td">My Refenal link</td>
+                                <td class="label-td">{{ trans('adminlte_lang::profile.my_referal_link') }}</td>
                                 <td><input type="text" name="postal_code" value="{{ url('register') }}?referrer={{ Auth::user()->uid }}" class="form-control input-sm" disabled></td>
                             </tr> 
                        </table>
@@ -312,26 +252,29 @@
                         <table class="table no-margin">
                             <tbody>
                                 <tr>
-                                    <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalChangePassword">Change Password</button></td>
+                                    <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalChangePassword">{{ trans('adminlte_lang::profile.change_password') }}</button></td>
                                     <td></td>
                                 </tr>
                                 <tr >
-                                    <td class="label-td">Two - Factor Authentication</td>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.two_factor_authen') }}</td>
                                     <td class="two-authen"> 
                                         <label class="switch">
                                             <input type="checkbox" id="switchAuthen" {{ Auth::user()->is2fa ? 'checked' : '' }}>
                                         </label>
                                     </td>
                                 </tr>
-                                @if(!Auth::user()->is2fa)
-                                <tr>
+                                <tr id="2fa-google-barcode">
                                     <td colspan="2">
                                         <div class="qrcode">
-                                            <img src="{{ $google2faUrl }}">
+                                            @if(!Auth::user()->is2fa)
+                                                <img src="{{ $google2faUrl }}">
+                                            @else
+                                                <img src="">
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
-                                @endif
+                                
                             </tbody>
                         </table>
                     </div>
@@ -348,7 +291,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Change Password</h4>
+                    <h4 class="modal-title">{{ trans('adminlte_lang::profile.change_password') }}</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" _lpchecked="1">
@@ -384,8 +327,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="savePassword"><i class="fa fa-save"></i> Save</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="savePassword"><i class="fa fa-save"></i> {{ trans('adminlte_lang::profile.btn_save') }}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('adminlte_lang::profile.btn_close') }}</button>
                 </div>
             </div>
         </div>
@@ -396,7 +339,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">OTP</h4>
+                    <h4 class="modal-title">2FA</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
@@ -408,7 +351,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputPasswordNew" class="col-sm-4 control-label label-td">OTP</label>
+                                <label for="inputPasswordNew" class="col-sm-4 control-label label-td">2FA Code</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="codeOtp" placeholder="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" >
                                 </div>
@@ -417,8 +360,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="myModalOff2FA_check"><i class="fa fa-save"></i> Check</button>
-                    <button type="button" class="btn btn-default" id="myModalOff2FA_close">Close</button>
+                    <button type="button" class="btn btn-primary" id="myModalOff2FA_check"><i class="fa fa-save"></i> {{ trans('adminlte_lang::profile.btn_save') }}</button>
+                    <button type="button" class="btn btn-default" id="myModalOff2FA_close">{{ trans('adminlte_lang::profile.btn_close') }}</button>
                 </div>
             </div>
         </div>
@@ -432,9 +375,9 @@
             $( "#savePassword" ).click(function() {
                 //compare password and password confirm
                 if( $( '#inputPasswordNew' ).val() != $( '#inputPasswordConfirm' ).val() ){
-                    $( '#errorPasswordConfirm' ).html("Pasword confirm không giống password mới");
+                    $( '#errorPasswordConfirm' ).html("{{ trans('adminlte_lang::profile.password_not_match') }}");
                 } else if ( $( '#inputPasswordNew' ).val().trim().length < 6 ) {
-                    $( '#errorNewPassword' ).html("Password không được ít hơn 6 ký tự");
+                    $( '#errorNewPassword' ).html("{{ trans('adminlte_lang::profile.minimum_password') }}");
                 } else {
                     //send password 
                     $.ajax({
@@ -451,9 +394,9 @@
                         },
                         success : function (result){
                             if(result.success){
-                                $(".confirmSuccess").html("Thay đổi thành công")
+                                $(".confirmSuccess").html("{{ trans('adminlte_lang::profile.success') }}")
                             }else{
-                                $(".confirmError").html("Có lỗi trong quá trình thay đổi")
+                                $(".confirmError").html("{{ trans('adminlte_lang::profile.fail') }}")
                             } 
                         }
                     })
@@ -463,18 +406,21 @@
                         $( "#savePassword" ).removeClass("disabled");
                     })
                     .fail(function(xhr, status, error){
-                        console.log("Co loi xay ra khi gui send data");
+                        console.log("{{ trans('adminlte_lang::profile.error') }}");
                     });  
                 }
             });
 
             $('#switchAuthen').bootstrapSwitch({
                 size: 'mini',
-                onSwitchChange: function (event, state) {
+                onSwitchChange: function (event, state) 
+                {
+
                     var modal = $('#myModalOff2FA');
                     modal.modal({backdrop: 'static'})
                     modal.modal('show');
-                    if(!$("#switchAuthen").is(':checked')){//if on -> off
+                    if( !$("#switchAuthen").is(':checked') )
+                    {//if on -> off
                         $('#myModalOff2FA_check').click(function () {
                             var codeOtp = $.trim($('#codeOtp').val());
                             if( codeOtp !=''){
@@ -484,28 +430,30 @@
                                     type : "get",
                                     success : function (result){
                                         if(result.success){
+                                            //$('#switchAuthen').bootstrapSwitch('state', !state, true);
                                             modal.modal('hide');
                                             $('#switchAuthen').bootstrapSwitch('state', false, false);
                                             $("#switchAuthen").attr('checked', false);
                                             location.href = '{{ url()->current() }}';
                                         }else{
                                             modal.find('.confirmError').text(result.msg);
-                                            //$('#switchAuthen').bootstrapSwitch('state', true, true);
-                                            //$("#switchAuthen").attr('checked', true);
                                         }
                                     }
                                 });
                             }else{
-                                alert('Please input Opt.');
+                                alert('Please input 2FA code.');
                             }
                         });
+
                         $('#myModalOff2FA_close').click(function () {
-                            location.href = '{{ url()->current() }}';
-                            /*$('#switchAuthen').bootstrapSwitch('state', true, true);
-                            $("#switchAuthen").attr('checked', true);
-                            modal.modal('hide');*/
+                            $('#switchAuthen').bootstrapSwitch('state', !state, true);
+                            $('#codeOtp').val('');
+                            modal.find('.confirmError').text('');
+                            modal.modal('hide');
                         });
-                    }else{//if off -> on
+                    }
+                    else
+                    {//if off -> on
                         $('#myModalOff2FA_check').click(function () {
                             var codeOtp = $.trim($('#codeOtp').val());
                             if( codeOtp !=''){
@@ -521,44 +469,28 @@
                                             location.href = '{{ url()->current() }}';
                                         }else{
                                             modal.find('.confirmError').text(result.msg);
-                                            //$('#switchAuthen').bootstrapSwitch('state', false, false);
-                                            //$("#switchAuthen").attr('checked', false);
                                         }
                                     }
                                 });
                             }else{
-                                alert('Please input Opt.');
+                                alert('Please input 2FA Code.');
                             }
                         });
+
                         $('#myModalOff2FA_close').click(function () {
-                            location.href = '{{ url()->current() }}';
-                            /*$('#switchAuthen').bootstrapSwitch('state', false, false);
-                            $("#switchAuthen").attr('checked', false);
-                            modal.modal('hide');*/
+                            $('#switchAuthen').bootstrapSwitch('state', !state, true);
+                            $('#codeOtp').val('');
+                            modal.find('.confirmError').text('');
+                            modal.modal('hide');
                         });
-                        /*$.ajax({
-                            url : "profile/switchauthen",
-                            data: {status:0},
-                            type : "get",
-                            success : function (result){
-                                if(result.success){
-                                    $('#switchAuthen').bootstrapSwitch('state', true, true);
-                                    $("#switchAuthen").attr('checked', true);
-                                    location.href = '{{ url()->current() }}';
-                                }else{
-                                    $('#switchAuthen').bootstrapSwitch('state', false, false);
-                                    $("#switchAuthen").attr('checked', false);
-                                }
-                            }
-                        });*/
                     }
                 }
-            })
+            });
 
             $('#personal_data_btn').click(function () {
                 $('#personal_data').hide();
                 $('#personal_data_input').removeClass('hide');
-            })
+            });
         });
     </script>
 @endsection
