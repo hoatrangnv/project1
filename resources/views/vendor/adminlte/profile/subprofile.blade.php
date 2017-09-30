@@ -1,7 +1,3 @@
-<?php 
-use App\User;
-$user = User::find($id);
-?>
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
@@ -23,8 +19,8 @@ $user = User::find($id);
                         <table class="table no-margin">
                             <tbody>
                                 <tr>
-                                    <td class="label-td">id</td>
-                                    <td>{{ $user->id }}</td>
+                                    <td class="label-td">Id</td>
+                                    <td>{{ $user->uid }}</td>
                                 </tr>
                                 <tr>
                                     <td class="label-td">Username</td>

@@ -436,6 +436,7 @@ INSERT INTO `user_datas` VALUES ('1', '0', '0', NULL, NULL, NULL, '0', '0', null
 -- ----------------------------
 DROP TABLE IF EXISTS `user_packages`;
 CREATE TABLE `user_packages` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `userId` int(10) unsigned NOT NULL,
   `packageId` int(10) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -445,6 +446,7 @@ CREATE TABLE `user_packages` (
   `release_date` timestamp NULL DEFAULT NULL,
   `withdraw` tinyint(1) DEFAULT '0',
   `weekYear` int(10) NOT NULL,
+  PRIMARY KEY (`id`)
   KEY `userId` (`userId`) USING BTREE,
   KEY `packageId` (`packageId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

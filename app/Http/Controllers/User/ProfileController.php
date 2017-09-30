@@ -46,7 +46,7 @@ class ProfileController extends Controller
         $lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
         $sponsor = UserData::where('refererId', Auth::user()->id)->first();
         $google2faUrl = Google2FA::getQRCodeGoogleUrl(
-            Auth::user()->name,
+            config('app.name'),
             Auth::user()->email,
             Auth::user()->google2fa_secret
         );
