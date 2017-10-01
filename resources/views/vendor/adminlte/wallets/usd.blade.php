@@ -88,12 +88,12 @@
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='in')
-                                        {{ $wallet->amount }}
+                                        +{{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='out')
-                                        {{ $wallet->amount }}
+                                        -{{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>

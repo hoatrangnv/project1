@@ -13,7 +13,7 @@ return [
     'withdraw'           	=> 'Withdraw',
     'transfer'           	=> 'Transfer',
     'buy_clp'           	=> 'Buy CLP Coin',
-    'sell_clp'           	=> 'Sell CLP Coin',
+    'sell_clp'           	=> 'Sell CLP',
     'btctransfer'           	=> 'Btc Coin Transfer',
     'clptransfer'           	=> 'CLP Coin Transfer',
     'create_bitcoin'           	=> 'Create Bitcoin address',
