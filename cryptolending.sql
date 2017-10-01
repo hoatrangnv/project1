@@ -406,8 +406,6 @@ CREATE TABLE `user_datas` (
   `refererId` int(10) DEFAULT '0',
   `packageId` smallint(6) DEFAULT '0',
   `packageDate` timestamp NULL DEFAULT NULL,
-  `walletAddress` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `accountCoinBase` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `totalBonus` double DEFAULT '0',
   `isBinary` tinyint(1) DEFAULT '0',
   `leftRight` enum('right','left') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -451,9 +449,19 @@ CREATE TABLE `user_packages` (
   KEY `packageId` (`packageId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
 -- ----------------------------
--- Records of user_packages
+-- Table structure for clp_wallets
 -- ----------------------------
+DROP TABLE IF EXISTS `clp_wallets`;
+CREATE TABLE `clp_wallets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(10) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for wallets

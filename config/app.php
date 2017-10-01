@@ -123,8 +123,9 @@ return [
     'log' => env('APP_LOG', 'single'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
-    'coinbase_key' => env('COINBASE_KEY'),
-    'coinbase_secret' => env('COINBASE_SECRET'),
+    'coinbase_key' => env('COINBASE_KEY','8aNbvDlYDlVGvr2o'),
+    'coinbase_account' => env('COINBASE_ACCOUNT', 'b08141b5-1d40-50e9-9af7-ea8f152d331a'),
+    'coinbase_secret' => env('COINBASE_SECRET', 'JpLGCFU5OapYUYN3EEy1UxpG75NfrKEq'),
     'bitgo_token' => env('BITGO_TOKEN'),
     'bitgo_password' => env('BITGO_PASSWORD'),
     'bitgo_hook' => env('BITGO_HOOK'),
@@ -202,6 +203,7 @@ return [
 		Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
+        //Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -254,7 +256,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 		'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
         'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
-
+        //'Debugbar' => Barryvdh\Debugbar\Facade::class,
         ],
 
 ];
