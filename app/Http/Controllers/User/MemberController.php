@@ -49,9 +49,9 @@ class MemberController extends Controller
                                 'totalMembers' => $user->userTreePermission ? $user->userTreePermission->genealogy_total : 0,
                                 'packageId'     => $user->userData->packageId,
                                 'loyaltyId'     => $this->getLoyalty($user->id),
-                                'leg'     => $user->userData->leftRight == 'left' ? 1 : ($user->userData->leftRight == 'right' ? 2 : 0),
+                                'leg'     => $user->userData->leftRight == 'left' ? 'L' : ($user->userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $user->userTreePermission && $user->userTreePermission->genealogy_total ? 1 : 0,
-                                'generation'     => $user->fastStart ? $user->fastStart->max('generation') : 0,
+                                'generation'     => $user->fastStart ? 'F' . $user->fastStart->max('generation') : 0,
                             ];
                         } else {
                             return response()->json(['err'=>1]);
@@ -65,9 +65,9 @@ class MemberController extends Controller
                             'totalMembers' => $user->userTreePermission ? $user->userTreePermission->genealogy_total : 0,
                             'packageId'     => $user->userData->packageId,
                             'loyaltyId'     => $this->getLoyalty($user->id),
-                            'leg'     => $user->userData->leftRight == 'left' ? 1 : ($user->userData->leftRight == 'right' ? 2 : 0),
+                            'leg'     => $user->userData->leftRight == 'left' ? 'L' : ($user->userData->leftRight == 'right' ? 'R' : '-'),
                             'dmc' => 3,
-                            'generation'     => $user->fastStart ? $user->fastStart->max('generation') : 0,
+                            'generation'     => $user->fastStart ? 'F' . $user->fastStart->max('generation') : 0,
                         ];
 					}
                     return response()->json($fields);
@@ -89,9 +89,9 @@ class MemberController extends Controller
                                 'totalMembers' => $userData->userTreePermission ? $userData->userTreePermission->genealogy_total : 0,
                                 'packageId' => $userData->packageId,
                                 'loyaltyId' => $userData->loyaltyId,
-                                'leg' => $userData->leftRight == 'left' ? 1 : ($userData->leftRight == 'right' ? 2 : 0),
+                                'leg' => $userData->leftRight == 'left' ? 'L' : ($userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $userData->userTreePermission && $userData->userTreePermission->genealogy_total ? 1 : 0,
-                                'generation'     => $userData->fastStart ? $userData->fastStart->max('generation') : 0,
+                                'generation'     => $userData->fastStart ? 'F' . $userData->fastStart->max('generation') : 0,
                             ];
                         }
                     }
@@ -169,6 +169,7 @@ class MemberController extends Controller
 			}
         }
         $lstUsers = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->where('isBinary', '!=', 1)->get();
+
         $lstUserSelect = array('0'=> 'Choose a user');
         if(Auth::user()->userData->binaryUserId > 0){
             foreach ($lstUsers as $userData){
@@ -245,7 +246,7 @@ class MemberController extends Controller
                     $childRight = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->user->id);
                     $field = [
-                        'pos' => $user->leftRight == 'left' ? 1 : 2,
+                        'position' => ($user->leftRight == 'left') ? 'right' : 'left',
                         'lvl' => $level,
                         'id' => $user->user->id,
                         'name' => $user->user->name,
