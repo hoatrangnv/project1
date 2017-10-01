@@ -56,6 +56,7 @@ class UsdWalletController extends Controller
             ]);
             //Tranfer
             $this->tranferUSDCLP($request->usd, $request->clp, $request);
+            return redirect()->route("wallet.usd");
         }
         //get tỷ giá usd btc
         $dataCurrencyPair = $this->getRateUSDBTC();
