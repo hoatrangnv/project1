@@ -167,15 +167,6 @@ class RegisterController extends Controller
     }
     
     /**
-     * Send mail active NewAccount
-     * @param  array  $data
-     * @return User
-     *
-    */
-    private function sendMailActive($data){
-        
-    }
-    /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
@@ -231,7 +222,6 @@ class RegisterController extends Controller
         } catch (Exception $e) {
             Session()->flash('error', 'Register Account not successfully!');
             \Log::error('Running RegisterController has error: ' . date('Y-m-d') .$e->getMessage());
-            //var_dump($e->getmessage());
         }
     }
 

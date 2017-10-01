@@ -101,3 +101,14 @@
     }
 
     .clp-home h3 { font-size: 30px; }
+
+/* Error page */
+    .error-page > .error-content {
+        margin-left: 112px;
+    }
+
+    .error-page > h2.headline  {
+        font-size: 82px;
+        margin-top: 0px;
+        margin-right: 5px;
+    }
