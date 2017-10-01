@@ -2596,6 +2596,7 @@
 						this.trigger('before_open', { "node" : obj });
 						d
 							.children(".jstree-children").css("display","none").end()
+							.children(".jstree-icon").removeClass("fa fa-plus-square-o").addClass("fa fa-plus-square-o").end()
 							.removeClass("jstree-closed").addClass("jstree-open").attr("aria-expanded", true)
 							.children(".jstree-children").stop(true, true)
 								.slideDown(animation, function () {
@@ -2710,6 +2711,7 @@
 				else {
 					d
 						.children(".jstree-children").attr("style","display:block !important").end()
+						.children(".jstree-icon").removeClass("fa fa-plus-square-o").addClass("fa fa-minus-square-o").end()
 						.removeClass("jstree-open").addClass("jstree-closed").attr("aria-expanded", false)
 						.children(".jstree-children").stop(true, true).slideUp(animation, function () {
 							this.style.display = "";
