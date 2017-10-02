@@ -127,7 +127,7 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Sell CLP&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxsellclp" data-type="maxsellclp">1000</a></h4>
+                <h4 class="modal-title">Sell CLP&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxsellclp" data-type="maxsellclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a></h4>
               </div>
               <div class="modal-body">
                     <div class="box no-border">
@@ -208,7 +208,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span></button>
-            <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp" data-type="withdrawclp">1000</a></h4>
+            <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp" data-type="withdrawclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a></h4>
           </div>
           <div class="modal-body">
                 <div class="box no-border">
@@ -431,28 +431,18 @@
             }
             
              //get total value;
-        $.get("totalvalue",
-        {
-            type:$(".maxsellclp").attr("data-type")
-        },function(data, status){
-            $(".maxsellclp").html(data);
+            var data = {{ Auth()->user()->userCoin->clpCoinAmount }};
+            
             $( ".maxsellclp" ).click(function() {
                 $(".switch-CLP-to-BTC-sellclp").val(data)
                 var type = "UsdToClp";
                 var result = switchChangeSellClp(data,type);
             });
-        });
-        
-        $.get("totalvalue",
-        {
-            type:$(".withdrawclp").attr("data-type")
-        },function(data, status){
-            $(".withdrawclp").html(data);
+   
             $( ".withdrawclp" ).click(function() {
                 $(".withdrawclpinput").val(data)
-                
             });
-        });
+     
         
         
         

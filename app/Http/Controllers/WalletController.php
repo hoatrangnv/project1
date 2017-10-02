@@ -228,31 +228,4 @@ class WalletController extends Controller
         return view('adminlte::wallets.buysellclp')->with(compact('user', 'tygia'));
     }
     
-    /**
-     * get total value
-     */
-    public function getMaxTypeWallet(Request $request){
-        $user = Auth::user()->userCoin;
-        
-        switch ($request->type) {
-            case "usdwallet":
-                return $user->usdAmount;
-                break;
-            case "btcwithdraw":
-                return $user->btcCoinAmount - config('app.fee_withRaw_BTC');
-                break;
-            case "btctranfer":
-                return $user->btcCoinAmount;
-                break;
-            case "maxsellclp":
-                return $user->clpCoinAmount;
-                break;
-            case "withdrawclp";
-                return $user->clpCoinAmount;
-                break;
-            case "maxusdbuyclp":
-                return $user->availableAmount;
-                break;
-        }
-    }
 }

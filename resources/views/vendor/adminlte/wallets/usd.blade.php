@@ -119,7 +119,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max" data-type="usdwallet">1000</a></h4>
+                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max" data-type="usdwallet">{{ $wallets->currencyPair }}</a></h4>
                     </div>
                     <div class="modal-body">
                         <div class="box-body">
@@ -215,18 +215,12 @@
             
           
         }
-       
+        var data = {{ $wallets->currencyPair }};
         //get total value;
-        $.get("totalvalue",
-        {
-            type:$(".max").attr("data-type")
-        },function(data, status){
-            $(".max").html(data);
-            $( ".max" ).click(function() {
-                $(".switch-USD-to-CLP").val(data)
-                var type = "UsdToClp";
-                var result = switchChange(data,type);
-            });
+        $( ".max" ).click(function() {
+            $(".switch-USD-to-CLP").val(data)
+            var type = "UsdToClp";
+            var result = switchChange(data,type);
         });
         
     </script>

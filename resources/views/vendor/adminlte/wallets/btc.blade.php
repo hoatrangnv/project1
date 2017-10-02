@@ -174,7 +174,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtcwithdraw" data-type="btcwithdraw">1000</a></h4>
+                    <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtcwithdraw" data-type="btcwithdraw">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -215,7 +215,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbuyclp" data-type="btctranfer">1000</a></h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbuyclp" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -256,7 +256,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtctranfer" data-type="btctranfer">1000</a></h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtctranfer" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -379,7 +379,7 @@
                 // ......
             });
         }
-        //Switch Btc and Clp
+        //Switch Btc and Clp tranfer
 
         $(".switch-BTC-to-CLP-tranfer").on('keyup change mousewheel', function () {
             var value = $(this).val();
@@ -427,40 +427,23 @@
                 // ......
             });
         }
-        
-        //get total value;
-        $.get("totalvalue",
-        {
-            type:$(".maxbtcwithdraw").attr("data-type")
-        },function(data, status){
-            $(".maxbtcwithdraw").html(data);
-            $( ".maxbtcwithdraw" ).click(function() {
-                $(".btcwithdraw").val(data)
-            });
+        var data = {{ Auth()->user()->userCoin->btcCoinAmount }};
+         //get total value;
+        $( ".maxbtcwithdraw" ).click(function() {
+            $(".btcwithdraw").val(data)
         });
         
-        $.get("totalvalue",
-        {
-            type:$(".maxbuyclp").attr("data-type")
-        },function(data, status){
-            $(".maxbuyclp").html(data);
-            $( ".maxbuyclp" ).click(function() {
-                $(".switch-BTC-to-CLP").val(data)
-                var type = "BtcToClp";
-                var result = switchChange(data,type);
-            });
+         //get total value;
+        $( ".maxbuyclp" ).click(function() {
+            $(".switch-BTC-to-CLP").val(data);
+            switchChange(data,"BtcToClp");
         });
         
-        $.get("totalvalue",
-        {
-            type:$(".maxbtctranfer").attr("data-type")
-        },function(data, status){
-            $(".maxbtctranfer").html(data);
-            $( ".maxbtctranfer" ).click(function() {
-                $(".switch-BTC-to-CLP-tranfer").val(data)
-                var type = "BtcToClp";
-                var result = switchChangeTranfer(data,type);
-            });
+         //get total value;
+        $( ".maxbtctranfer" ).click(function() {
+            $(".switch-BTC-to-CLP-tranfer").val(data);
+            switchChangeTranfer(data,"BtcToClp");
         });
+        
     </script>
 @endsection
