@@ -33,4 +33,8 @@ class UserPackage extends Model
                 
         return $data;
     }
+    
+    public function package(){
+        return $this->hasOne(Package::class, 'id', 'packageId');
+    }
 }
