@@ -152,6 +152,7 @@ class User extends Authenticatable
                 'userId'     => $userId,
                 'partnerId'     => $partnerId,
                 'generation'     => $level,
+                'packageId'     => $packageId,
                 'amount'     => $amount,
             ];
 

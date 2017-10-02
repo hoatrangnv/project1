@@ -83,7 +83,7 @@ class UsdWalletController extends Controller
             $wallet_type[$key] = trans($val);
         return view('adminlte::wallets.usd', compact('wallets','wallet_type', 'requestQuery'));
     }
-
+    
     /** 
      * @author GiangDT
      * @edit Huynq
