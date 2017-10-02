@@ -77,8 +77,9 @@
                     <div class="col-xs-2 no-padding">
                         {{ Form::select('wallet_type', array_merge(['0' => 'Choose a type'], $wallet_type), ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
                     </div>
-                    <div class="col-xs-1">
+                    <div class="col-xs-2">
                         {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
+                        {!! Form::button('Clear', ['class' => 'btn btn-sm bg-olive', 'id' => 'btn_filter_clear']) !!}
                     </div>
                 </div>
                 <div class="box-body" style="padding-top:0;">
@@ -285,7 +286,10 @@
                     alert('Please choose a type!');
                     return false;
                 }
-            })
+            });
+            $('#btn_filter_clear').on('click', function () {
+                location.href = '{{ url()->current() }}';
+            });
         });
         var packageId = {{ Auth::user()->userData->packageId }};
         var packageIdPick = packageId;
