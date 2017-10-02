@@ -18,7 +18,4 @@ class BonusFastStart extends Model
         return $this->hasOne(User::class, 'id', 'partnerId');
     }
     
-    public function user_package(){
-        return $this->hasMany(UserPackage::class, 'userId', 'partnerId');
-    }
 }
