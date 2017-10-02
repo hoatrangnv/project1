@@ -105,12 +105,12 @@
                                 <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
                                 <td>
                                     @if($wallet->inOut=='in')
-                                        <span class="glyphicon glyphicon-log-in text-primary"></span>
+                                        +{{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='out')
-                                        <span class="glyphicon glyphicon-log-out text-danger"></span>
+                                        -{{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>{{ $wallet->note }}</td>

@@ -12,7 +12,7 @@ return [
     'token'                  	=> 'Token',
     'replication'                 => 'Replication times',
     'action'                 	=> 'Action',
-    'clp_coin'                 	=> 'CLP Coin',
+    'clp_coin'                 	=> 'CLP',
     'buypackage' => [
         'downgrade' => 'You can not downgrade your package',
         'upgrade_success' => 'You have upgraded successfully',

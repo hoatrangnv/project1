@@ -5,7 +5,7 @@ return [
     'usd'                       => 'USD Wallet',
     'btc'                       => 'BTC Wallet',
     'clp'                       => 'CLP Wallet',
-    'reinvest'           	=> 'Re Invest Wallet',
+    'reinvest'           	=> 'Holding Wallet',
 	
     'buy_package'           	=> 'Buy Package',
     'buy_clp'           	=> 'Buy CLPCoin',
@@ -13,7 +13,7 @@ return [
     'withdraw'           	=> 'Withdraw',
     'transfer'           	=> 'Transfer',
     'buy_clp'           	=> 'Buy CLP Coin',
-    'sell_clp'           	=> 'Sell CLP Coin',
+    'sell_clp'           	=> 'Sell CLP',
     'btctransfer'           	=> 'Btc Coin Transfer',
     'clptransfer'           	=> 'CLP Coin Transfer',
     'create_bitcoin'           	=> 'Create Bitcoin address',

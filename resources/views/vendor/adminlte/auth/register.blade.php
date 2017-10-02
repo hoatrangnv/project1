@@ -88,13 +88,22 @@
                             </span>
                         @endif
                     </div>
-                    <div class="form-group input-group-sm has-feedback">
+                    <div class="form-group input-group-sm has-feedback{{ $errors->has('referrerId') ? ' has-error' : '' }}">
                         <input type="text" value="{{ $referrerId }}" name="refererId" id="refererId" class="form-control" placeholder="Id Sponsor">
-                        <span class="help-block" id="refererIdError"></span>
+                        @if ($errors->has('refererId'))
+                            <span class="help-block">
+                                {{ $errors->first('refererId') }}
+                             </span>
+                        @endif
                     </div>
-                    <div class="form-group input-group-sm has-feedback">
+                    <div class="form-group input-group-sm has-feedback{{ $errors->has('referrerName') ? ' has-error' : '' }}">
                         <input type="text" value="{{ $referrerName }}" name="referrerName" id="referrerName" class="form-control" placeholder="Username Sponsor">
-                        <span class="help-block" id="refererNameError"></span>
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                        @if ($errors->has('referrerName'))
+                            <span class="help-block">
+                                {{ $errors->first('referrerName') }}
+                             </span>
+                        @endif
                     </div>
                     @if (Config::get('app.enable_captcha'))
                     <div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">

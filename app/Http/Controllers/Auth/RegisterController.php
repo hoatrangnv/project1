@@ -101,6 +101,7 @@ class RegisterController extends Controller
             //'password' => 'required|min:8|confirmed|regex:/^.*(?=.{3,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%@]).*$/',
             'phone'    => 'required',
             'terms'    => 'required',
+            'refererId'    => 'required',
             'country'    => 'required|not_in:0',
             'g-recaptcha-response'=> config('app.enable_captcha') ? 'required|captcha' : '',
         ]);
@@ -112,7 +113,6 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-//        $this->guard()->login($user);
 
         return $this->registered($request, $user)
                         ?: redirect($this->redirectPath());
@@ -167,15 +167,6 @@ class RegisterController extends Controller
     }
     
     /**
-     * Send mail active NewAccount
-     * @param  array  $data
-     * @return User
-     *
-    */
-    private function sendMailActive($data){
-        
-    }
-    /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
@@ -185,15 +176,6 @@ class RegisterController extends Controller
     {
         //Tao acc vi
         try {
-            //Tạo tk 
-            /*if($data['name']) {
-                $accountWallet = $this->GenerateWallet(self::COINBASE,$data['name']);
-            }
-
-            if(!$accountWallet){
-                return false;
-            }*/
-            //}
             //get userid from uid
             $userReferer = User::where('uid', $data['refererId'])->get()->first();
 
@@ -240,7 +222,6 @@ class RegisterController extends Controller
         } catch (Exception $e) {
             Session()->flash('error', 'Register Account not successfully!');
             \Log::error('Running RegisterController has error: ' . date('Y-m-d') .$e->getMessage());
-            //var_dump($e->getmessage());
         }
     }
 
