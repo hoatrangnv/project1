@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.auth')
 
 @section('htmlheader_title')
-    Register
+    Authentication
 @endsection
 
 @section('content')
@@ -15,15 +15,20 @@
 
             <div class="register-box-body">
                 <form action="/authenticator" method="post">
-                {{ trans("adminlte_lang::home.type_your_code")}}
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="text" name="code">
-                @if ($valid)
-                        <div style="color: green; font-weight: 800;margin-left: 110px;">{{ trans("adminlte_lang::home.valid") }}</div>
-                @else
-                        <div style="color: red; font-weight: 800;margin-left: 110px;">{{ trans("adminlte_lang::home.in_valid") }}</div>
-                @endif
-                <input type="submit" class="btn btn-default" value="CHECK">
+                <div class="form-group input-group-sm has-feedback{{ $valid ? '' : ' has-error' }}">
+                    <input type="text" value="" name="code" id="code" class="form-control" placeholder="{{ trans("adminlte_lang::home.type_your_code")}}">
+                    @if (!$valid)
+                        <span class="help-block">
+                            {{ trans("adminlte_lang::home.in_valid") }}
+                        </span>
+                    @endif
+                </div>
+                <div class="row">
+                        <div class="col-xs-4">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('adminlte_lang::default.submit') }}</button>
+                        </div>
+                    </div>
                 </form>
             </div><!-- /.form-box -->
         </div><!-- /.register-box -->

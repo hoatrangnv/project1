@@ -32,15 +32,11 @@ class UpdateBtcCoin {
                     $temp = json_decode($value->data);
                     if(isset($temp->data->address)){
                         //công vào tk cho user
-                        if(isset(UserCoin::where('walletAddress', $temp->data->address)
-                                ->first()->btcCoinAmount)){
-                            $amountAddress = UserCoin::where('walletAddress', $temp->data->address)
-                                ->first()->btcCoinAmount + $temp->additional_data->amount->amount;
-                            $result = UserCoin::where('walletAddress', $temp->data->address)
-                                   ->update([
-                                       'btcCoinAmount' => 
-                                        $amountAddress
-                                           ]);
+                        $userCoin = UserCoin::where('walletAddress', $temp->data->address)->first();
+                        if(isset($userCoin->btcCoinAmount)){
+                            $amountAddress = $userCoin->btcCoinAmount + $temp->additional_data->amount->amount;
+                            $userCoin->btcCoinAmount = $amountAddress;
+                            $result = $userCoin->save();
 
                             if($result == 1) {
                                 Notification::where("id",$value->id)

@@ -44,7 +44,7 @@ return [
     'package_history'           => "Package History",
     'package_withdrawn' => 'Package Withdrawn',
     'not_enought_time'=> 'Not enough time',
-    'type_your_code' => 'Type your code',
+    'type_your_code' => 'Enter your 2FA code',
     'valid' => 'VALID',
-    'in_valid' => 'INVALID',
+    'in_valid' => 'Invalid',
 ];
