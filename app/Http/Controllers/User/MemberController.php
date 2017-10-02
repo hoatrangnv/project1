@@ -232,7 +232,7 @@ class MemberController extends Controller
                     $childRight = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->user->id);
                     $field = [
-                        'pos' => $user->leftRight == 'left' ? 1 : 2,
+                        'position' => ($user->leftRight == 'left') ? 'right' : 'left',
                         'lvl' => $level,
                         'id' => $user->user->id,
                         'name' => $user->user->name,
