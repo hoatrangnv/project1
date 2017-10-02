@@ -18,6 +18,7 @@
 							<th>{{ trans('adminlte_lang::mybonus.date_time') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.generation') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.partner') }}</th>
+                                                        <th>Package</th>
 							<th>{{ trans('adminlte_lang::mybonus.amount') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.reinvest') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.transfer_withdraw') }}</th>
@@ -29,6 +30,11 @@
 								<td>{{ $fastStart->created_at }}</td>
 								<td>{{ $fastStart->generation }}</td>
 								<td>{{ $fastStart->users->name }}</td>
+                                                                <td>
+                                                                    @if(count($fastStart->user_package) > 0 )
+                                                                        {{ $fastStart->user_package[count($fastStart->user_package)-1]->package->name}}
+                                                                    @endif
+                                                                </td>
 								<td>{{ $fastStart->amount }}</td>
 								<td>{{ round($fastStart->amount*40/100) }}</td>
 								<td>{{ round($fastStart->amount*60/100) }}</td>
