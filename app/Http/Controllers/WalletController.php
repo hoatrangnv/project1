@@ -228,10 +228,4 @@ class WalletController extends Controller
         return view('adminlte::wallets.buysellclp')->with(compact('user', 'tygia'));
     }
     
-    /**
-     * 
-     */
-    public function getMaxTypeWallet(Request $request){
-        
-    }
 }

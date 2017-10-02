@@ -17,4 +17,5 @@ class BonusFastStart extends Model
     public function users() {
         return $this->hasOne(User::class, 'id', 'partnerId');
     }
+    
 }

@@ -53,6 +53,7 @@ CREATE TABLE `bonus_faststart` (
   `userId` int(10) NOT NULL,
   `generation` smallint(6) NOT NULL,
   `partnerId` int(10) NOT NULL,
+  `packageId` int(10) NOT NULL,
   `amount` double DEFAULT NULL,
   PRIMARY KEY (`id`,`partnerId`,`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -205,7 +206,6 @@ CREATE TABLE `password_resets` (
 -- ----------------------------
 -- Records of password_resets
 -- ----------------------------
-INSERT INTO `password_resets` VALUES ('namhong1983@gmail.com', '$2y$10$p538WLBeIDAUbyJkAeRoI.nZIDzD/NUjVecyVU23sUcg0dZBJbdRG', '2017-09-06 08:25:49');
 
 -- ----------------------------
 -- Table structure for permissions

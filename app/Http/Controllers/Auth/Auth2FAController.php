@@ -28,27 +28,33 @@ class Auth2FAController extends Controller
     }
 
 
-    public function index(Request $request){
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
-        $this->keyPrefix = Auth::user()->id;
-        //echo $key = $this->getSecretKey();
-        $key = Auth::user()->google2fa_secret;
-        echo $code = $request->get('code');
-        if (!$code){
-            $valid = false;
-            Session::put('google2fa', false);
-        }else{
-            $valid = Google2FA::verifyKey($key, $code);
-            if($valid){
-                Session::put('google2fa', true);
-                return redirect('/home');
+    public function index(Request $request)
+    {
+        if(Session::get('google2fa')) return redirect('/home');
+
+        $valid = true;
+        if ( $request->isMethod('post') ) {
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $this->keyPrefix = Auth::user()->id;
+            $key = Auth::user()->google2fa_secret;
+            $code = $request->get('code');
+            if (!$code){
+                $valid = false;
+                Session::put('google2fa', false);
+            }else{
+                $valid = Google2FA::verifyKey($key, $code);
+                if($valid){
+                    Session::put('google2fa', true);
+                    return redirect('/home');
+                }
             }
         }
-        $googleUrl = $this->getGoogleUrl($key);
-        $inlineUrl = $this->getInlineUrl($key);
+        
+        //$googleUrl = $this->getGoogleUrl($key);
+        //$inlineUrl = $this->getInlineUrl($key);
         //return view('adminlte::auth.google2fa')->with(compact('key', 'googleUrl', 'inlineUrl', 'valid'));
-        return view('adminlte::auth.authenticator')->with(compact('key', 'googleUrl', 'inlineUrl', 'valid'));
+        return view('adminlte::auth.authenticator')->with(compact('valid'));
     }
     public function check2fa(){
         $this->name = Auth::user()->name;
