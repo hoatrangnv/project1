@@ -19,6 +19,9 @@ use Auth;
 use Symfony\Component\HttpFoundation\Session\Session; 
 use Validator;
 use Log;
+use App\CLPWalletAPI;
+use App\CLPWallet;
+
 /**
  * Description of ClpWalletController
  *
@@ -62,6 +65,21 @@ class ClpWalletController extends Controller {
             'requestQuery'=> $requestQuery,
         ]);
         
+    }
+
+    public static function generateCLPWallet() {
+        $client = new CLPWalletAPI();
+
+        $result = $client->generateWallet();
+        if($result['success'] == 1) {
+            $fields = [
+                'address'     => $result['address'],
+                'transaction'     => $result['tx'],
+            ];
+            
+            CLPWallet::create();
+        }
+
     }
     
 }
