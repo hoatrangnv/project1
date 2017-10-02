@@ -25,7 +25,7 @@
 						</tr>
 						<tbody>
 							@foreach ($fastStarts as $key => $fastStart)
-								@if(isset($fastStart->user_package->package->name)
+								@if(isset($fastStart->user_package->package->name))
 								<tr>
 									<td>{{ $fastStart->created_at }}</td>
 									<td>{{ $fastStart->generation }}</td>
