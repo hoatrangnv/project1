@@ -18,7 +18,7 @@
 							<th>{{ trans('adminlte_lang::mybonus.date_time') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.generation') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.partner') }}</th>
-                                                        <th>Package</th>
+                                                        <th>{{ trans('adminlte_lang::mybonus.package') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.amount') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.reinvest') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.transfer_withdraw') }}</th>
