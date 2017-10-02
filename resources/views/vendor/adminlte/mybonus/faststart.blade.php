@@ -14,7 +14,7 @@
 				<div class="box-body" style="padding-top:0;">
 					<table class="table table-bordered table-hover table-striped dataTable">
 						<tr>
-							<th>{{ trans('adminlte_lang::mybonus.no') }}</th>
+							
 							<th>{{ trans('adminlte_lang::mybonus.date_time') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.generation') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.partner') }}</th>
@@ -25,20 +25,31 @@
 						</tr>
 						<tbody>
 							@foreach ($fastStarts as $key => $fastStart)
-							<tr>
-								<td>{{ $key+1 }}</td>
-								<td>{{ $fastStart->created_at }}</td>
-								<td>{{ $fastStart->generation }}</td>
-								<td>{{ $fastStart->users->name }}</td>
-                                                                <td>
-                                                                    @if(count($fastStart->user_package) > 0 )
-                                                                        {{ $fastStart->user_package[count($fastStart->user_package)-1]->package->name}}
-                                                                    @endif
-                                                                </td>
-								<td>{{ $fastStart->amount }}</td>
-								<td>{{ round($fastStart->amount*40/100) }}</td>
-								<td>{{ round($fastStart->amount*60/100) }}</td>
-							</tr>
+								@if(count($fastStart->user_package) > 0 )
+									@foreach ($fastStart->user_package as $package)
+									<tr>
+										<td>{{ $fastStart->created_at }}</td>
+										<td>{{ $fastStart->generation }}</td>
+										<td>{{ $fastStart->users->name }}</td>
+										<td>
+										    {{ $package->package->name}}
+										</td>
+										<td>{{ $fastStart->amount }}</td>
+										<td>{{ round($fastStart->amount*40/100) }}</td>
+										<td>{{ round($fastStart->amount*60/100) }}</td>
+									</tr>
+									@endforeach
+								@else
+								<tr>
+									<td>{{ $fastStart->created_at }}</td>
+									<td>{{ $fastStart->generation }}</td>
+									<td>{{ $fastStart->users->name }}</td>
+									<td></td>
+									<td>{{ $fastStart->amount }}</td>
+									<td>{{ round($fastStart->amount*40/100) }}</td>
+									<td>{{ round($fastStart->amount*60/100) }}</td>
+								</tr>
+								@endif
 							@endforeach
 						</tbody>
 					</table>
