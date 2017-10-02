@@ -25,29 +25,31 @@
 						</tr>
 						<tbody>
 							@foreach ($fastStarts as $key => $fastStart)
-							@if(count($fastStart->user_package) > 0 )
-							<tr>
-								<td>{{ $fastStart->created_at }}</td>
-								<td>{{ $fastStart->generation }}</td>
-								<td>{{ $fastStart->users->name }}</td>
-                                                                <td>
-                                                                    {{ $fastStart->user_package[count($fastStart->user_package)-1]->package->name}}
-                                                                </td>
-								<td>{{ $fastStart->amount }}</td>
-								<td>{{ round($fastStart->amount*40/100) }}</td>
-								<td>{{ round($fastStart->amount*60/100) }}</td>
-							</tr>
-							@else
-							<tr>
-								<td>{{ $fastStart->created_at }}</td>
-								<td>{{ $fastStart->generation }}</td>
-								<td>{{ $fastStart->users->name }}</td>
-                                                                <td></td>
-								<td>{{ $fastStart->amount }}</td>
-								<td>{{ round($fastStart->amount*40/100) }}</td>
-								<td>{{ round($fastStart->amount*60/100) }}</td>
-							</tr>
-							@endif
+								@if(count($fastStart->user_package) > 0 )
+									@foreach ($fastStart->user_package as $package)
+									<tr>
+										<td>{{ $fastStart->created_at }}</td>
+										<td>{{ $fastStart->generation }}</td>
+										<td>{{ $fastStart->users->name }}</td>
+										<td>
+										    {{ $package->package->name}}
+										</td>
+										<td>{{ $fastStart->amount }}</td>
+										<td>{{ round($fastStart->amount*40/100) }}</td>
+										<td>{{ round($fastStart->amount*60/100) }}</td>
+									</tr>
+									@endforeach
+								@else
+								<tr>
+									<td>{{ $fastStart->created_at }}</td>
+									<td>{{ $fastStart->generation }}</td>
+									<td>{{ $fastStart->users->name }}</td>
+									<td></td>
+									<td>{{ $fastStart->amount }}</td>
+									<td>{{ round($fastStart->amount*40/100) }}</td>
+									<td>{{ round($fastStart->amount*60/100) }}</td>
+								</tr>
+								@endif
 							@endforeach
 						</tbody>
 					</table>
