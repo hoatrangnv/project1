@@ -9,9 +9,13 @@ Auth::routes();
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('users/root', 'User\UserController@root')->name('users.root');
     Route::resource('users', 'User\UserController');
     Route::resource('roles', 'User\RoleController');
     Route::resource('posts', 'User\PostController');
+
+
+
     Route::get('members/genealogy', 'User\MemberController@genealogy');
     Route::get('members/binary', 'User\MemberController@binary');
     Route::get('members/refferals', 'User\MemberController@refferals');
