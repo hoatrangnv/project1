@@ -128,6 +128,27 @@ class BtcWalletController extends Controller
                 if($userRiCoin){
                     $userRiCoin->btcCoinAmount = $userRiCoin->btcCoinAmount + $request->btcAmount;
                     $userRiCoin->save();
+
+                    $field = [
+                        'walletType' => Wallet::BTC_WALLET,//btc
+                        'type' =>  Wallet::TRANSFER_BTC_TYPE,//transfer BTC
+                        'inOut' => Wallet::OUT,
+                        'userId' => $userCoin->userId,
+                        'amount' => $request->btcAmount,
+                    ];
+
+                    Wallet::create($field);
+
+                    $field = [
+                        'walletType' => Wallet::BTC_WALLET,//btc
+                        'type' => Wallet::TRANSFER_BTC_TYPE,//transfer BTC
+                        'inOut' => Wallet::IN,
+                        'userId' => $userRiCoin->userId,
+                        'amount' => $request->btcAmount,
+                    ];
+
+                    Wallet::create($field);
+
                     $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_tranfer_btc') );
                     return response()->json(array('err' => false));
                 }else{
