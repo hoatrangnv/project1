@@ -31,7 +31,7 @@
 									<td>{{ $fastStart->generation }}</td>
 									<td>{{ $fastStart->users->name }}</td>
 									<td>
-									    {{ $fastStart->user_package->package->name}}
+									    {{ $fastStart->user_package->package->name }}
 									</td>
 									<td>{{ $fastStart->amount }}</td>
 									<td>{{ round($fastStart->amount*40/100) }}</td>
