@@ -11,7 +11,7 @@
 
 @section('main-content')
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12 clp-home">
             <div class="box">
                 <div class="box-header clp-dashboard">
                     <div class="row">
@@ -31,7 +31,7 @@
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                        <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 4) }}</h3>
+                                        <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 2) }}</h3>
                                         <p>{{ trans('adminlte_lang::home.clp_wallet') }}</p>
                                 </div>
                                 <div class="icon icon-clp">C</div>
@@ -180,18 +180,18 @@
                                     </table>
                                     <table class="table table-bordered table-hover table-striped award-table">
                                         <tr>
-                                            <td>
+                                            <td class="sale-left">
                                                 {{ trans('adminlte_lang::home.f1_left_new') }}
                                             </td>
-                                            <td class="sale-right">
+                                            <td >
                                                 <b>{{$data['leftNew']}}</b>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>
+                                            <td class="sale-left">
                                                {{ trans('adminlte_lang::home.f1_left_tichluy') }}
                                             </td>
-                                            <td class="sale-right">
+                                            <td>
                                                 <b>{{$data['leftOpen']}}</b>
                                             </td>
                                         </tr>
@@ -271,18 +271,18 @@
                                     </table>
                                     <table class="table table-bordered table-hover table-striped award-table">
                                         <tr>
-                                            <td>
+                                            <td class="sale-left">
                                                 {{ trans('adminlte_lang::home.f1_right_new') }}
                                             </td>
-                                            <td class="sale-right">
+                                            <td>
                                                 <b>{{$data['rightNew']}}</b>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>
+                                            <td class="sale-left">
                                                {{ trans('adminlte_lang::home.f1_right_tichluy') }}
                                             </td>
-                                            <td  class="sale-right">
+                                            <td>
                                                 <b>{{$data['rightOpen']}}</b>
                                             </td>
                                         </tr>
@@ -337,7 +337,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td style="vertical-align: middle;">
                                        {{ trans('adminlte_lang::wallet.withdraw') }}
                                     </td>
                                     <td  class="right">

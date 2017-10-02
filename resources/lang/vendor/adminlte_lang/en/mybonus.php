@@ -13,7 +13,7 @@ return [
     'partner'           	=> 'Partner',
     'amount'           	=> 'Amount',
 
-    'reinvest'           	=> 'Re-invest(40%)',
+    'reinvest'           	=> 'Holding(40%)',
     'transfer_withdraw'           	=> 'Transfer/withdraw(60%)',
 
     'week'           	=> 'Week',

@@ -42,38 +42,33 @@ class HomeController extends Controller
      */
     public function index()
     {
-        try {
-            $data = [];
-            //Tong doanh so and ben trai and ben phai
-            $data['newF1InWeek']      = $this->getF1CurrentWeek();
-            $data['totalF1Sale']   = $this->getF1TotalSale();
-            
-            //Goi Packgade id
-            $data['package'] = UserData::findOrFail(Auth::user()->id)->packageId;
+        $data = [];
+        //Tong doanh so and ben trai and ben phai
+        $data['newF1InWeek']      = $this->getF1CurrentWeek();
+        $data['totalF1Sale']   = $this->getF1TotalSale();
+        
+        //Goi Packgade id
+        $data['package'] = UserData::findOrFail(Auth::user()->id)->packageId;
 
-            if( count( Package::where('id',$data['package'])->get() ) == 0 ){
-                $data['value'] = 0;
-            }else{
-                $data['value'] = Package::where('id',$data['package'])->get()[0]->price;
-            }
-
-            //Doanh so F1 moi
-            $newF1InWeek = $this->newF1InWeek();
-            //$data['newF1InWeek'] = $newF1InWeek['total'];
-            $data['leftNew']     = $newF1InWeek['leftNew'];
-            $data['rightNew']    = $newF1InWeek['rightNew'];
-            $data['leftOpen']    = $newF1InWeek['leftOpen'];
-            $data['rightOpen']   = $newF1InWeek['rightOpen'];
-            //Get số lương coin trong tài khoản
-            $data['coin'] = $this->getInfoCoin();
-            //Get lịch sử package
-            $data['history_package'] = UserPackage::getHistoryPackage();
-            
-            return view('adminlte::home.index')->with('data', $data);
-        } catch (Exception $e) {
-            //Debug
-            Log:: $e->gettraceasstring();
+        if( count( Package::where('id',$data['package'])->get() ) == 0 ){
+            $data['value'] = 0;
+        }else{
+            $data['value'] = Package::where('id',$data['package'])->get()[0]->price;
         }
+
+        //Doanh so F1 moi
+        $newF1InWeek = $this->newF1InWeek();
+        //$data['newF1InWeek'] = $newF1InWeek['total'];
+        $data['leftNew']     = $newF1InWeek['leftNew'];
+        $data['rightNew']    = $newF1InWeek['rightNew'];
+        $data['leftOpen']    = $newF1InWeek['leftOpen'];
+        $data['rightOpen']   = $newF1InWeek['rightOpen'];
+        //Get số lương coin trong tài khoản
+        $data['coin'] = $this->getInfoCoin();
+        //Get lịch sử package
+        $data['history_package'] = UserPackage::getHistoryPackage();
+        
+        return view('adminlte::home.index')->with('data', $data);
     }
 
     /*

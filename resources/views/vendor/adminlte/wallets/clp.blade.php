@@ -99,12 +99,12 @@
                                 <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
                                 <td>
                                     @if($wallet->inOut=='in')
-                                        <span class="glyphicon glyphicon-log-in text-primary"></span>
+                                        +{{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='out')
-                                        <span class="glyphicon glyphicon-log-out text-danger"></span>
+                                        -{{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>{{ $wallet->note }}</td>
@@ -127,7 +127,7 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}</h4>
+                <h4 class="modal-title">{{ trans("adminlte_lang::wallet.sell_clp")}}</h4>
               </div>
               <div class="modal-body">
                     <div class="box no-border">
@@ -182,8 +182,8 @@
                         @foreach ($packages as $package)
                             <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
                                 <td>{{ $package->name }}</td>
-                                <td>${{ $package->price }}</td>
-                                <td style="text-align: right;">{{ number_format($package->price / Auth::user()->getCLPUSDRate(), 2, '.', ',') }}</td>
+                                <td>${{ number_format($package->price) }}</td>
+                                <td>{{ number_format($package->price / Auth::user()->getCLPUSDRate(), 2, '.', ',') }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -208,7 +208,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span></button>
-            <h4 class="modal-title">WithRaw</h4>
+            <h4 class="modal-title">Withdraw</h4>
           </div>
           <div class="modal-body">
                 <div class="box no-border">
@@ -257,10 +257,10 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group" style="text-align: center">
-                                    <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your BTC Wallet address</h5>
+                                    <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your CLP Wallet address</h5>
                                     <h6 class="wallet-address"></h6>
-                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">BTC Wallet link</h5>
-                                    <a class="link-blockchain" href="" target="_blank">blockchain</a>, <a class="link-blockexplorer" href="" target="_blank">blockexplorer</a>
+                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">CLP Wallet link</h5>
+                                    <a class="link-blockchain" href="" target="_blank">etherscan</a>
                                     <center><div id="qrcode" style="padding-bottom: 10px;"></div></center>
                                 </div>
                             </div>

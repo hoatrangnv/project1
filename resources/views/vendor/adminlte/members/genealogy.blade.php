@@ -57,10 +57,10 @@
 											text: user.uid +' '+ user.u,
 											data: {
 												username: user.id +' '+ user.u,
-                                                packageId: user.packageId,
+                                                packageId: buildPackHtml(user.packageId),
                                                 totalMembers: user.totalMembers,
                                                 leg: user.leg,
-                                                loyaltyId: user.loyaltyId,
+                                                loyaltyId: buildLoyaltyHtml(user.loyaltyId),
 												level: user.l,
                                                 generation: user.generation,
 											},
@@ -77,10 +77,10 @@
 										text: user.uid +' '+ user.u,
 										data: {
 											username: user.id +' '+ user.u,
-                                            packageId: user.packageId,
+                                            packageId: buildPackHtml(user.packageId),
                                             totalMembers: user.totalMembers,
                                             leg: user.leg,
-                                            loyaltyId: user.loyaltyId,
+                                            loyaltyId: buildLoyaltyHtml(user.loyaltyId),
 											level: user.l,
                                             generation: user.generation,
 										},
@@ -110,6 +110,67 @@
 					resizable: true,
 				}
 			});
+
+			function buildPackHtml(packageId) {
+
+				var innerHtml = '';
+				var finalHtml = ''
+				if(packageId == 0) {
+					innerHtml = '<b class="psi" title="Tiny">T</b><b class="psi" title="Small">S</b><b class="psi" title="Medium">M</b><b class="psi" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+				}
+				else if(packageId == 1) {
+					innerHtml = '<b class="psi psi1" title="Tiny">T</b><b class="psi" title="Small">S</b><b class="psi" title="Medium">M</b><b class="psi" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+				}
+				else if(packageId == 2) {
+					innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi" title="Medium">M</b><b class="psi" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+				}
+				else if(packageId == 3) {
+					innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi psi3" title="Medium">M</b><b class="psi" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+				}
+				else if(packageId == 4) {
+					innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi psi3" title="Medium">M</b><b class="psi psi4" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+				}
+				else if(packageId == 5) {
+					innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi psi3" title="Medium">M</b><b class="psi psi4" title="Large">L</b><b class="psi psi5" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+				}
+				else {
+					innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi psi3" title="Medium">M</b><b class="psi psi4" title="Large">L</b><b class="psi psi5" title="Huge">H</b><b class="psi psi6" title="Angel">A</b>';
+				}
+
+				finalHtml = '<div class="psg">' + innerHtml + '</div>';
+
+				return finalHtml;
+			}
+
+			function buildLoyaltyHtml(loyaltyId) {
+
+				var innerHtml = '';
+				var finalHtml = ''
+				if(loyaltyId == 0) {
+					innerHtml = '<b class="psi" title="Broker">B</b><b class="psi" title="Supervisor">S</b><b class="psi" title="Manager">M</b><b class="psi" title="Executive">E</b><b class="psi" title="President">P</b>';
+				}
+				else if(loyaltyId == 1) {
+					innerHtml = '<b class="psi psr" title="Broker">B</b><b class="psi" title="Supervisor">S</b><b class="psi" title="Manager">M</b><b class="psi" title="Executive">E</b><b class="psi" title="President">P</b>';
+				}
+				else if(loyaltyId == 2) {
+					innerHtml = '<b class="psi psr" title="Broker">B</b><b class="psi psr" title="Supervisor">S</b><b class="psi" title="Manager">M</b><b class="psi" title="Executive">E</b><b class="psi" title="President">P</b>';
+				}
+				else if(loyaltyId == 3) {
+					innerHtml = '<b class="psi psr" title="Broker">B</b><b class="psi psr" title="Supervisor">S</b><b class="psi psr" title="Manager">M</b><b class="psi" title="Executive">E</b><b class="psi" title="President">P</b>';
+				}
+				else if(loyaltyId == 4) {
+					innerHtml = '<b class="psi psr" title="Broker">B</b><b class="psi psr" title="Supervisor">S</b><b class="psi psr" title="Manager">M</b><b class="psi psr" title="Executive">E</b><b class="psi" title="President">P</b>';
+				}
+				else {
+					innerHtml = '<b class="psi psr" title="Broker">B</b><b class="psi psr" title="Supervisor">S</b><b class="psi psr" title="Manager">M</b><b class="psi psr" title="Executive">E</b><b class="psi psr" title="President">P</b>';
+				}
+				
+
+				finalHtml = '<div class="psg">' + innerHtml + '</div>';
+
+				return finalHtml;
+			}
+
 			var to = false;
 			$('#search-button').on('click', function (e) {
 				$.ajax({

@@ -4,7 +4,7 @@ return [
     'header_title'           	=> 'Member',
     'genealogy'           	=> 'Genealogy Tree',
     'binary'           	=> 'Binary Tree',
-    'refferals'           	=> 'Refferals',
+    'refferals'           	=> 'Referals',
     'btn_search'           	=> 'Search',
     'search_title'           	=> 'Search Downline User',
 	
