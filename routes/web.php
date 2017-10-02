@@ -2,6 +2,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/term-condition.html', function () {
+    return view('term');
+});
 Auth::routes();
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
@@ -12,6 +15,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('members/genealogy', 'User\MemberController@genealogy');
     Route::get('members/binary', 'User\MemberController@binary');
     Route::get('members/refferals', 'User\MemberController@refferals');
+    Route::get('members/refferals/{id}/detail', 'User\MemberController@refferalsDetail');
     Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
     Route::resource('members', 'User\MemberController');
     Route::get('authenticator', 'Auth\Auth2FAController@index');
@@ -62,6 +66,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('packages/invest', 'PackageController@invest');
     Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
+    Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'PackageController@withDraw']);
     Route::resource('packages', 'PackageController');
 
     //Profile router
@@ -90,6 +95,7 @@ Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoAct
 
 Route::get('test-binary', 'TestController@testBinary');
 Route::get('test-interest',"TestController@testInterest");
+
 
 
 /***------- END TEST -------***/

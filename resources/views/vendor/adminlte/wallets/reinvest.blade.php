@@ -44,7 +44,7 @@
                                     <th class="icon-wallet">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
                                     </th>
-                                    <th class="wallet-amount"><i class="fa fa-usd" aria-hidden="true"></i>@isset($wallets->currencyPair){{ $wallets->currencyPair }}@endisset  </th>
+                                    <th class="wallet-amount"><i class="fa fa-usd" aria-hidden="true"></i>@isset($wallets->currencyPair){{ $wallets->currencyPair }} / {{ Auth()->user()->userCoin->availableAmount }}@endisset  </th>
                                     <th><button class="btn bg-olive" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button></th>
                                 </tr>
                             </tbody>
@@ -59,6 +59,14 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box">
+                <div class="box-header">
+                    <div class="col-xs-2 no-padding">
+                        {{ Form::select('wallet_type', array_merge(['0' => 'Choose a type'], $wallet_type), ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
+                    </div>
+                    <div class="col-xs-1">
+                        {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
+                    </div>
+                </div>
                 <div class="box-body" style="padding-top:0;">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover table-striped dataTable">
@@ -76,32 +84,16 @@
                                         <td>{{ $key+1 }}</td>
                                         <td>{{ $wallet->created_at }}</td> 
                                         <td>
-                                            @if($wallet->type == App\Wallet::FAST_START_TYPE)
-                                                {{ trans('adminlte_lang::wallet.fast_start_type') }}
-                                            @elseif($wallet->type == App\Wallet::INTEREST_TYPE )
-                                                {{ trans('adminlte_lang::wallet.interest') }}
-                                            @elseif($wallet->type == App\Wallet::BINARY_TYPE)
-                                                {{ trans('adminlte_lang::wallet.binary') }}
-                                            @elseif($wallet->type == App\Wallet::LTOYALTY_TYPE)
-                                                {{ trans('adminlte_lang::wallet.loyalty') }}
-                                            @elseif($wallet->type == App\Wallet::USD_CLP_TYPE)
-                                                {{ trans('adminlte_lang::wallet.usd_clp_type') }}
-                                            @elseif($wallet->type == App\Wallet::REINVEST_CLP_TYPE)
-                                                {{ trans('adminlte_lang::wallet.reinvest_clp_type') }}
-                                            @elseif($wallet->type == App\Wallet::BTC_CLP_TYPE)
-                                                {{ trans('adminlte_lang::wallet.btc_clp_type') }}
-                                            @elseif($wallet->type == App\Wallet::CLP_BTC_TYPE)
-                                                {{ trans('adminlte_lang::wallet.clp_btc_type') }}
-                                            @endif
+                                            {{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}
                                         </td>
                                         <td>
                                             @if($wallet->inOut=='in')
-                                                {{ $wallet->amount }}
+                                                +{{ $wallet->amount }}
                                             @endif
                                         </td>
                                         <td>
                                             @if($wallet->inOut=='out')
-                                                {{ $wallet->amount }}
+                                                -{{ $wallet->amount }}
                                             @endif
                                         </td>
                                         <td>
@@ -120,7 +112,7 @@
 		</div>
 	</div>
  <!--fORM submit-->
-    <form class="form-horizontal" _lpchecked="1" method="post" action="">
+    <form class="form-horizontal" _lpchecked="1" method="post" action="reinvest">
         <div class="modal fade" id="modal-default">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -160,6 +152,17 @@
     </form>
     <!-- /.modal -->
     <script>
+        $(document).ready(function(){
+            $('#btn_filter').on('click', function () {
+                var wallet_type = parseInt($('#wallet_type option:selected').val());
+                if(wallet_type > 0){
+                    location.href = '{{ url()->current() }}?type='+wallet_type;
+                }else{
+                    alert('Please choose a type!');
+                    return false;
+                }
+            })
+        });
         $( ".switch-USD-to-CLP" ).keyup(function() {
              var value = $(this).val();
              var type = "UsdToClp";

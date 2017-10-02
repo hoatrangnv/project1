@@ -49,3 +49,66 @@
             padding: 15px 0px 15px 15px;
         }
     }
+
+    .psi {
+        width: 15px;
+        margin: 0 1px 0 0;
+        border: 1px solid gray;
+        display: inline-block;
+        cursor: default;
+        font-weight: 100;
+        text-align: center;
+        line-height: 7px;
+        padding: 2px 2px;
+        color: white;
+        background-color: lightgray;
+        border: 1px solid lightgray;
+        font-weight: bold;
+        font-size: 10px;
+        font-family: Verdana, Arial, Helvetica, sans-serif
+    }
+
+    .psi1 {
+        background-color: green;
+    }
+
+    .psi2 {
+        background-color: blue;
+    }
+
+    .psi3 {
+        background-color: orange;
+    }
+
+    .psi4 {
+        background-color: magenta;
+    }
+
+    .psi5 {
+        background-color: cyan;
+    }
+
+    .psi6 {
+        background-color: red;
+    }
+
+    .psr {
+        background-color: green;
+    }
+
+    .clp-home .table-bordered > thead > tr > th,.clp-home .table-bordered > tbody > tr > th,.clp-home .table-bordered > tfoot > tr > th,.clp-home .table-bordered > thead > tr > td, .clp-home .table-bordered > tbody > tr > td, .clp-home .table-bordered > tfoot > tr > td {
+        border: 1px solid #22221F;
+    }
+
+    .clp-home h3 { font-size: 30px; }
+
+/* Error page */
+    .error-page > .error-content {
+        margin-left: 112px;
+    }
+
+    .error-page > h2.headline  {
+        font-size: 82px;
+        margin-top: 0px;
+        margin-right: 5px;
+    }

@@ -50,7 +50,16 @@ class BtcWalletController extends Controller
         $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::BTC_WALLET)
                             //->take(10)
             ->paginate();
-        return view('adminlte::wallets.btc')->with('wallets', $wallets);
+        $query = Wallet::where('userId', '=',$currentuserid);
+        if(isset($request->type) && $request->type > 0){
+            $query->where('type', $request->type);
+        }
+        $wallets = $query->where('walletType', Wallet::BTC_WALLET)->paginate();
+        $requestQuery = $request->query();
+        $wallet_type = config('cryptolanding.wallet_type');
+        foreach ($wallet_type as $key => $val)
+            $wallet_type[$key] = trans($val);
+        return view('adminlte::wallets.btc',compact('wallets','wallet_type', 'requestQuery'));
     }
     
     /** 

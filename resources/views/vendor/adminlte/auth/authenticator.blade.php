@@ -16,8 +16,6 @@
             <div class="register-box-body">
                 <p class="login-box-msg">{{ trans('adminlte_lang::message.registermember') }}</p>
 
-				<div class="key">{{ $key }}</div>
-
 				<div class="qrcode">
 					Google QRCode
 					<img src="{{ $googleUrl }}" alt="">

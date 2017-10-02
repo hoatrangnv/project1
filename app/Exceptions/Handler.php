@@ -45,32 +45,37 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-//        if ($exception instanceof AuthorizationException) {
-//            return $this->unauthorized($request, $exception);
-//        }
-//if($this->isHttpException($e))
-//        {
-//            switch ($e->getStatusCode()) 
-//                {
-//                // not found
-//                case 404:
-//                return redirect()->guest('home');
-//                break;
-//
-//                // internal error
-//                case '500':
-//                return redirect()->guest('home');
-//                break;
-//
-//                default:
-//                    return $this->renderHttpException($e);
-//                break;
-//            }
-//        }
-//        else
-//        {
-//                return parent::render($request, $e);
-//        }
+        if(config('app.debug')=== false) {
+
+            if ($exception instanceof AuthorizationException) {
+                return $this->unauthorized($request, $exception);
+            }
+
+            if ($this->isHttpException($exception)) {
+                switch ($exception->getStatusCode()) {
+                    // not authorized
+                    case '403':
+                        return \Response::view('adminlte::errors.403', array(), 403);
+                        break;
+                    // not found    
+                    case '404':
+                        return \Response::view('adminlte::errors.404', array(), 404);
+                        break;
+                    case '401':
+                        return \Response::view('adminlte::errors.401', array(), 404);    
+                    // internal error
+                    case '500':
+                        return \Response::view('adminlte::errors.500', array(), 500);
+                        break;
+                    default:
+                        return \Response::view('adminlte::errors.default');
+                        break;
+                }
+            } else {
+                return \Response::view('adminlte::errors.default');
+            }
+        }
+        
         return parent::render($request, $exception);
     }
 

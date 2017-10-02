@@ -6,6 +6,9 @@
 
 @section('main-content')
     <style>
+        #myTable tbody tr:hover {
+            background-color: #f5f5f5!important;
+        }
         tr.selected {
             background-color: #5bc0de!important;
         }
@@ -71,6 +74,12 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
+                    <div class="col-xs-2 no-padding">
+                        {{ Form::select('wallet_type', array_merge(['0' => 'Choose a type'], $wallet_type), ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
+                    </div>
+                    <div class="col-xs-1">
+                        {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
+                    </div>
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <table class="table table-bordered table-hover table-striped dataTable">
@@ -87,15 +96,15 @@
                             <tr>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $wallet->created_at }}</td>
-                                <td>{{ $wallet->type }}</td>
+                                <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
                                 <td>
                                     @if($wallet->inOut=='in')
-                                        <span class="glyphicon glyphicon-log-in text-primary"></span>
+                                        +{{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='out')
-                                        <span class="glyphicon glyphicon-log-out text-danger"></span>
+                                        -{{ $wallet->amount }}
                                     @endif
                                 </td>
                                 <td>{{ $wallet->note }}</td>
@@ -118,7 +127,7 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}</h4>
+                <h4 class="modal-title">{{ trans("adminlte_lang::wallet.sell_clp")}}</h4>
               </div>
               <div class="modal-body">
                     <div class="box no-border">
@@ -162,19 +171,24 @@
                 <div class="modal-body">
                     <div id="msg_package"></div>
                     <table class="table" id="myTable">
-                        <tr>
+                        <thead>
+                        <tr id="table_th">
                             <th>{{ trans('adminlte_lang::package.name') }}</th>
                             <th>{{ trans('adminlte_lang::package.price') }}</th>
+                            <th>{{ trans('adminlte_lang::package.clp_coin') }}</th>
                         </tr>
+                        </thead>
                         <tbody>
                         @foreach ($packages as $package)
                             <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
                                 <td>{{ $package->name }}</td>
-                                <td>${{ $package->price }}</td>
+                                <td>${{ number_format($package->price) }}</td>
+                                <td>{{ number_format($package->price / Auth::user()->getCLPUSDRate(), 2, '.', ',') }}</td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                    <a href="/term-condition.html" target="_blank">Term and condition</a>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="packageId" id="packageId" value="{{ Auth::user()->userData->packageId }}">
@@ -194,7 +208,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span></button>
-            <h4 class="modal-title">WithRaw</h4>
+            <h4 class="modal-title">Withdraw</h4>
           </div>
           <div class="modal-body">
                 <div class="box no-border">
@@ -243,10 +257,10 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group" style="text-align: center">
-                                    <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your BTC Wallet address</h5>
+                                    <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your CLP Wallet address</h5>
                                     <h6 class="wallet-address"></h6>
-                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">BTC Wallet link</h5>
-                                    <a class="link-blockchain" href="" target="_blank">blockchain</a>, <a class="link-blockexplorer" href="" target="_blank">blockexplorer</a>
+                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">CLP Wallet link</h5>
+                                    <a class="link-blockchain" href="" target="_blank">etherscan</a>
                                     <center><div id="qrcode" style="padding-bottom: 10px;"></div></center>
                                 </div>
                             </div>
@@ -262,20 +276,35 @@
           <!-- /.modal-dialog -->
         </div>
     <script>
+        $(document).ready(function(){
+            $('#btn_filter').on('click', function () {
+                var wallet_type = parseInt($('#wallet_type option:selected').val());
+                if(wallet_type > 0){
+                    location.href = '{{ url()->current() }}?type='+wallet_type;
+                }else{
+                    alert('Please choose a type!');
+                    return false;
+                }
+            })
+        });
         var packageId = {{ Auth::user()->userData->packageId }};
         var packageIdPick = packageId;
         $(document).ready(function () {
             $('#myTable tbody').on( 'click', 'tr', function () {
                 var _packageId = parseInt($(this).data('id'));
-                if(_packageId < packageId) {
-                    $('#msg_package').html("<div class='alert alert-danger'>You cant not downgrate package.</div>");
-                }else if(_packageId == packageId){
-                    $('#msg_package').html("<div class='alert alert-danger'>You purchased this package.</div>");
-                }else{
-                    $('#myTable tbody tr').removeClass('selected');
-                    $(this).addClass('selected');
-                    $("#packageId").val(_packageId);
-                    packageIdPick = _packageId;
+                if(_packageId >0) {
+                    if (_packageId < packageId) {
+                        $('#msg_package').html("<div class='alert alert-danger'>You cant not downgrate package.</div>");
+                    } else if (_packageId == packageId) {
+                        $('#msg_package').html("<div class='alert alert-danger'>You purchased this package.</div>");
+                    } else {
+                        $('#msg_package').html("");
+                        $('#myTable tbody tr').removeClass('selected');
+                        $('#table_th').removeClass('selected');
+                        $(this).addClass('selected');
+                        $("#packageId").val(_packageId);
+                        packageIdPick = _packageId;
+                    }
                 }
             });
             $('#btn_submit').on('click', function () {
