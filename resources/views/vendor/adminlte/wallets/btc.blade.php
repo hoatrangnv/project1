@@ -209,7 +209,7 @@
 
     <!--Buy CLP modal-->
     <div class="modal fade" id="buy" style="display: none;">
-        {{ Form::open(array('url' => 'wallets/btctranfer')) }}
+        {{ Form::open(array('url' => 'wallets/btcbuyclp')) }}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -250,7 +250,6 @@
 
     <!--Tranfer modal-->
     <div class="modal fade" id="tranfer" style="display: none;">
-        {{ Form::open(array('url' => 'wallets/btctranfer')) }}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -259,34 +258,36 @@
                     <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="box no-border">
-                        <div class="box-body" style="padding-top:0;">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                                {{ Form::number('username', '', array('class' => 'form-control input-sm', 'step' => '0.0001','placeholder' => "Username")) }}
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
-                            </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                            {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm', 'id' => 'btcAmount', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
                         </div>
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                            {{ Form::text('username', '', array('class' => 'form-control input-sm', 'id' => 'btcUsername', 'placeholder' => "Username")) }}
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                            {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'id' => 'btcOTP', 'placeholder' => "2FA Code E.g. 123456")) }}
+                        </div>
+                        <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary')) }}
+                    {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary', 'id' => 'btctranfer')) }}
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
-        {{ Form::close() }}
     </div>
 
     <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
@@ -301,7 +302,70 @@
                     alert('Please choose a type!');
                     return false;
                 }
-            })
+            });
+            $('#btctranfer').on('click', function () {
+                var btcAmount = $('#btcAmount').val();
+                var btcUsername = $('#btcUsername').val();
+                var btcOTP = $('#btcOTP').val();
+                if($.trim(btcAmount) == ''){
+                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                    $("#btcAmount").parents("div.form-group").find('.help-block').text('The Amount field is required');
+                }else{
+                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
+                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(btcUsername) == ''){
+                    $("#btcUsername").parents("div.form-group").addClass('has-error');
+                    $("#btcUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
+                }else{
+                    $("#btcUsername").parents("div.form-group").removeClass('has-error');
+                    $("#btcUsername").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(btcOTP) == ''){
+                    $("#btcOTP").parents("div.form-group").addClass('has-error');
+                    $("#btcOTP").parents("div.form-group").find('.help-block').text('The OTP field is required');
+                }else{
+                    $("#btcOTP").parents("div.form-group").removeClass('has-error');
+                    $("#btcOTP").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(btcAmount) != '' && $.trim(btcUsername) != '' && $.trim(btcOTP) != ''){
+                    $.ajax({
+                        url: "{{ url('wallets/btctranfer') }}",
+                        data: {btcAmount: btcAmount, btcUsername: btcUsername, btcOTP: btcOTP}
+                    }).done(function (data) {
+                        if (data.err) {
+                            if(typeof data.msg !== undefined){
+                                if(typeof data.msg.btcAmountErr !== undefined) {
+                                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.btcAmountErr);
+                                }else {
+                                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+                                if(typeof data.msg.btcUsernameErr !== undefined) {
+                                    $("#btcUsername").parents("div.form-group").addClass('has-error');
+                                    $("#btcUsername").parents("div.form-group").find('.help-block').text(data.msg.btcUsernameErr);
+                                }else if(typeof data.msg.user !== undefined) {
+                                        $("#btcUsername").parents("div.form-group").addClass('has-error');
+                                        $("#btcUsername").parents("div.form-group").find('.help-block').text(data.msg.btcUsernameErr);
+                                }else {
+                                    $("#btcUsername").parents("div.form-group").removeClass('has-error');
+                                    $("#btcUsername").parents("div.form-group").find('.help-block').text('');
+                                }
+                                if(typeof data.msg.btcOTPErr !== undefined) {
+                                    $("#btcOTP").parents("div.form-group").addClass('has-error');
+                                    $("#btcOTP").parents("div.form-group").find('.help-block').text(data.msg.btcOTPErr);
+                                }else {
+                                    $("#btcOTP").parents("div.form-group").removeClass('has-error');
+                                    $("#btcOTP").parents("div.form-group").find('.help-block').text('');
+                                }
+                            }
+                        } else {
+                            location.href = '{{ url()->current() }}';
+                        }
+                    });
+                }
+            });
         });
         var getBtcCoin = setInterval(function () {
             getBtccoin();

@@ -35,7 +35,10 @@ Route::group( ['middleware' => ['auth']], function() {
     //BTC WALLET
     Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet')->name('wallet.btc');
     Route::get('wallets/getbtccoin',"Wallet\BtcWalletController@getBtcCoin");
-    Route::post('wallets/btctranfer',"Wallet\BtcWalletController@tranferBtcClp");
+    Route::post('wallets/btcbuyclp',"Wallet\BtcWalletController@tranferBtcClp");
+
+    Route::get('wallets/btctranfer',"Wallet\BtcWalletController@btctranfer");
+
     Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
     Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
     

@@ -93,6 +93,64 @@ class BtcWalletController extends Controller
      * @param Request $request
      * @return type
      */
+    public function btctranfer(Request $request){
+        if($request->ajax()){
+            $userCoin = Auth::user()->userCoin;
+            $btcAmountErr = $btcUsernameErr = $btcOTPErr = '';
+            if($request->btcAmount == ''){
+                $btcAmountErr = 'The Amount field is required';
+            }elseif (is_numeric($request->btcAmount)){
+                $btcAmountErr = 'The Amount must be a number';
+            }elseif ($userCoin->btcCoinAmount < $request->btcAmount){
+                $btcAmountErr = trans('adminlte_lang::wallet.error_not_enough');
+            }
+            if($request->btcUsername == ''){
+                $btcUsernameErr = 'The Username field is required';
+            }elseif (!preg_match('/^\S*$/u', $request->btcUsername)){
+                $btcUsernameErr = 'The Username not required';
+            }elseif (!User::where('name', $request->btcUsername)->where('active', 1)->count()){
+                $btcUsernameErr = 'The Username is not invalid';
+            }
+            if($request->btcOTP == ''){
+                $btcOTPErr = 'The OTP field is required';
+            }else{
+                $key = Auth::user()->google2fa_secret;
+                $valid = Google2FA::verifyKey($key, $request->btcOTP);
+                if(!$valid){
+                    $btcOTPErr = 'The OTP not match';
+                }
+            }
+            if($btcAmountErr !='' && $btcUsernameErr != '' && $btcOTPErr != ''){
+                $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
+                $userCoin->save();
+                $userRi = User::where('name', $request->btcUsername)->where('active', 1)->first();
+                $userRiCoin = $userRi->userCoin;
+                if($userRiCoin){
+                    $userRiCoin->btcCoinAmount = $userRiCoin->btcCoinAmount + $request->btcAmount;
+                    $userRiCoin->save();
+                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_tranfer_btc') );
+                    return response()->json(array('err' => false));
+                }else{
+                    $result = [
+                        'err' => true,
+                        'msg' => ['btcUsernameErr'=>'User not required']
+                    ];
+                    return response()->json($result);
+                }
+            }else{
+                $result = [
+                    'err' => true,
+                    'msg' =>[
+                        'btcAmountErr' => $btcAmountErr,
+                        'btcUsernameErr' => $btcUsernameErr,
+                        'btcOTPErr' => $btcOTPErr,
+                    ]
+                ];
+                return response()->json($result);
+            }
+        }
+        return response()->json(array('err' => true, 'msg' => null));
+    }
     public function tranferBtcClp(Request $request){
         $currentuserid = Auth::user()->id;
         $userCoin = Auth::user()->userCoin;
