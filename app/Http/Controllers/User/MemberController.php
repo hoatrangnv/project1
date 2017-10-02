@@ -41,7 +41,7 @@ class MemberController extends Controller
                             $user = User::where('name', '=', $request['username'])->first();
                         }
 
-                        if($user && $lstGenealogyUser && (in_array($user->id, $lstGenealogyUser) || $user->id == Auth::user()->id)) {
+                        if(true || $user && $lstGenealogyUser && (in_array($user->id, $lstGenealogyUser) || $user->id == Auth::user()->id)) {
                             $fields = [
                                 'id'     => $user->id,
                                 'uid'     => $user->uid,
@@ -78,7 +78,7 @@ class MemberController extends Controller
                     if($userTreePermission = $user->userTreePermission)
                         $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
                     $fields = array();
-                    if(isset($request['id']) && $request['id'] > 0 && (($lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)) || $currentuserid == $request['id']) ){
+                    if(true || isset($request['id']) && $request['id'] > 0 && (($lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)) || $currentuserid == $request['id']) ){
                         $userDatas = UserData::where('refererId', $request['id'])->get();
                         $fields = array();
                         foreach ($userDatas as $userData) {
@@ -283,7 +283,8 @@ class MemberController extends Controller
 	public function pushIntoTree(Request $request){
         //if($request->ajax()){
         if($request->isMethod('post') && Auth::user()->userData->isBinary > 0){
-            if(isset($request->userid) && $request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
+            if($request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
+
                 //Get user that is added to tree
                 $userData = UserData::find($request->userSelect);
                 if($userData && $userData->refererId == Auth::user()->id && $userData->isBinary !== 1) {

@@ -152,7 +152,7 @@ class TestRegisterController extends Controller
                 'country'    => '704',
                 'refererId'    => isset($userReferer->id) ? $userReferer->id : null,
                 'password' => bcrypt('1'),
-                'accountCoinBase' => 'test',
+                //'accountCoinBase' => 'test',
                 'active' => 1,
                 'activeCode' => 'test',
                 'uid' => User::getUid(),
@@ -165,7 +165,7 @@ class TestRegisterController extends Controller
 
             //SAVE to User_datas
             $fields['userId'] = $user->id;
-            $fields['walletAddress'] = 'test';
+            
             $fields['clpCoinAmount'] = '20000';
             if($userReferer->name == config('app.root_name')) {
                 $fields['isBinary'] = 1;
@@ -174,6 +174,8 @@ class TestRegisterController extends Controller
 
             //Luu thong tin ca nhan vao bang user_coin
             //$fields['backupKey'] = $backupKey;
+             $fields['accountCoinBase'] = 'test';
+             $fields['walletAddress'] = 'test';
             $userCoin = UserCoin::create($fields);
 
             //gui mail

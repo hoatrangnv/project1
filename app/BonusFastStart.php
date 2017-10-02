@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BonusFastStart extends Model
 {
     protected $fillable = [
-		'userId', 'generation', 'partnerId', 'amount'
+		'userId', 'generation', 'partnerId', 'packageId', 'amount'
 	];
 	public function __construct(array $attributes = [])
     {
