@@ -113,7 +113,8 @@ class TestRegisterController extends Controller
 
         event(new Registered($user = $this->createNoActive($request->all())));
 
-        flash()->success('User has been created.');
+        if($user == false) flash()->success('Dont have sponsor id.');
+        else flash()->success('User has been created.');
 
         return redirect()->route('test.showRegister');
     }
@@ -139,6 +140,8 @@ class TestRegisterController extends Controller
             //get userid from uid
             $userReferer = User::where('uid', $data['refererId'])->get()->first();
 
+            if(!isset($userReferer->id)) return false;
+
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['name'],
@@ -148,7 +151,7 @@ class TestRegisterController extends Controller
                 'phone'    => '0978788999',
                 'country'    => '704',
                 'refererId'    => isset($userReferer->id) ? $userReferer->id : null,
-                'password' => bcrypt('12345678'),
+                'password' => bcrypt('1'),
                 'accountCoinBase' => 'test',
                 'active' => 1,
                 'activeCode' => 'test',
