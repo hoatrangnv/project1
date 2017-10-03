@@ -86,7 +86,7 @@ class User extends Authenticatable
         if($refererId > 0){
             $packageBonus = 0;
             $userData = UserData::find($refererId);
-            if($userData && $level <= 3){
+            if($userData && $level <= 3 && $userData->packageId > 0){
                 if($level == 1){//F1
                     $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f1_pay');
                     $userData->totalBonus = $userData->totalBonus + $packageBonus;
