@@ -54,4 +54,5 @@ return [
     'new_password' => 'New Password',
     'confirm_password' => 'Confirm Password',
     'wrong_password'=> 'Wrong Password',
+    'recovery_code'=> "Recovery Code"
 ];
