@@ -291,16 +291,6 @@
                                         </div>
                                     </td>
                                 </tr>
-                                @if(!Auth::user()->is2fa)
-                                <tr id="2fa-google-secretcode">
-                                    <td class="label-td">
-                                        {{ trans('adminlte_lang::profile.recovery_code') }}
-                                    </td>
-                                    <td>
-                                        {{ substr(Auth::user()->google2fa_secret, 0,12) }}
-                                    </td>
-                                </tr>
-                                @endif
                             </tbody>
                         </table>
                     </div>
