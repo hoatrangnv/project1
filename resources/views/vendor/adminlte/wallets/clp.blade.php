@@ -1,3 +1,6 @@
+<?php
+use App\Http\Controllers\Wallet\Views\WalletViewController;
+?>
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
@@ -42,6 +45,7 @@
             </ul>
         </div>
     @endif
+    <?php  echo WalletViewController::viewAllWallet(); ?>
     <div class="row">
         <div class="col-md-12">
             <!-- Widget: user widget style 1 -->
@@ -141,16 +145,22 @@
                     <h4 class="modal-title">{{ trans("adminlte_lang::wallet.sell_clp")}}</h4>
                 </div>
                 <div class="modal-body">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Sell CLP&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxsellclp" data-type="maxsellclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a></h4>
+              </div>
+              <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC', 'step' => '0.0001','placeholder' => "CLP Amount")) }}
+                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC-sellclp', 'step' => '0.0001','placeholder' => "CLP Amount")) }}
                             </div>
                             <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-sellclp', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
@@ -228,12 +238,28 @@
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp" data-type="withdrawclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a></h4>
+          </div>
+          <div class="modal-body">
+                <div class="box no-border">
+                    <div class="box-body" style="padding-top:0;">
+                        <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
                                 {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
+                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm withdrawclpinput', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
                                 {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm', 'placeholder' => "Ethereum address E.g. 0xbHB5XMLmzFVj8ALj6mfBsbifRoD4miY36v")) }}
                             </div>
                             <br>
@@ -508,5 +534,73 @@
                 // ......
             });
         }
+                    }
+                    // ......
+                });
+            }
+
+
+            $(".switch-BTC-to-CLP-sellclp").on('keyup change mousewheel', function (){
+                var value = $(this).val();
+                var type = "BtcToClp";
+                //send
+                var result = switchChange(value,type);
+            });
+
+            $( ".switch-CLP-to-BTC-sellclp" ).on('keyup change mousewheel', function() {
+                var value = $(this).val();
+                var type = "ClpToBtc";
+                //send
+                var result = switchChange(value,type);
+            });
+
+            function switchChangeSellClp(value,type){
+                $.ajax({
+                    beforeSend: function(){
+                      // Handle the beforeSend event
+                    },
+                    url:"switchbtcclp",
+                    type:"get",
+                    data : {
+                        type: type,
+                        value: value
+                    },
+                    success : function(result){
+                        if( type == "BtcToClp" ){
+                            if(result.success) {
+                                $(".switch-CLP-to-BTC-sellclp").val(result.result);
+                            }
+                        } else {
+                            if(result.success) {
+                                $(".switch-BTC-to-CLP-sellclp").val(result.result);
+                            }
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("some error");
+                    },
+                    complete: function(){
+
+                    }
+                    // ......
+                });
+            }
+
+             //get total value;
+            var data = {{ Auth()->user()->userCoin->clpCoinAmount }};
+
+            $( ".maxsellclp" ).click(function() {
+                $(".switch-CLP-to-BTC-sellclp").val(data)
+                var type = "UsdToClp";
+                var result = switchChangeSellClp(data,type);
+            });
+
+            $( ".withdrawclp" ).click(function() {
+                $(".withdrawclpinput").val(data)
+            });
+
+
+
+
     </script>
 @endsection

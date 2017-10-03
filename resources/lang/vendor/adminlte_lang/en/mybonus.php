@@ -37,6 +37,7 @@ return [
     'pear'           	=> 'Manager',
     'emerald'           	=> 'Executive',
     'diamond'           	=> 'President',
+    'package' => 'Package',
 
 
 ];

@@ -53,6 +53,7 @@ CREATE TABLE `bonus_faststart` (
   `userId` int(10) NOT NULL,
   `generation` smallint(6) NOT NULL,
   `partnerId` int(10) NOT NULL,
+  `packageId` int(10) NOT NULL,
   `amount` double DEFAULT NULL,
   PRIMARY KEY (`id`,`partnerId`,`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -205,7 +206,6 @@ CREATE TABLE `password_resets` (
 -- ----------------------------
 -- Records of password_resets
 -- ----------------------------
-INSERT INTO `password_resets` VALUES ('namhong1983@gmail.com', '$2y$10$p538WLBeIDAUbyJkAeRoI.nZIDzD/NUjVecyVU23sUcg0dZBJbdRG', '2017-09-06 08:25:49');
 
 -- ----------------------------
 -- Table structure for permissions
@@ -395,7 +395,7 @@ CREATE TABLE `user_coins` (
 -- ----------------------------
 -- Records of user_coins
 -- ----------------------------
-INSERT INTO `user_coins` VALUES ('1', 'admin', 'admin', '0', '0', '0', '0', null);
+INSERT INTO `user_coins` VALUES ('1', 'admin', 'admin', '0', '0', '0', '0', null, '0');
 
 -- ----------------------------
 -- Table structure for user_datas
@@ -427,7 +427,7 @@ CREATE TABLE `user_datas` (
 -- ----------------------------
 -- Records of user_datas
 -- ----------------------------
-INSERT INTO `user_datas` VALUES ('1', '0', '0', NULL, NULL, NULL, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
+INSERT INTO `user_datas` VALUES ('1', '0', '0', NULL, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
 
 -- ----------------------------
 -- Table structure for user_packages
@@ -445,8 +445,6 @@ CREATE TABLE `user_packages` (
   `withdraw` tinyint(1) DEFAULT '0',
   `weekYear` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-  KEY `userId` (`userId`) USING BTREE,
-  KEY `packageId` (`packageId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 

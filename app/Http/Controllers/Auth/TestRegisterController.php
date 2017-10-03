@@ -113,7 +113,8 @@ class TestRegisterController extends Controller
 
         event(new Registered($user = $this->createNoActive($request->all())));
 
-        flash()->success('User has been created.');
+        if($user == false) flash()->success('Dont have sponsor id.');
+        else flash()->success('User has been created.');
 
         return redirect()->route('test.showRegister');
     }
@@ -139,6 +140,8 @@ class TestRegisterController extends Controller
             //get userid from uid
             $userReferer = User::where('uid', $data['refererId'])->get()->first();
 
+            if(!isset($userReferer->id)) return false;
+
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['name'],
@@ -148,8 +151,8 @@ class TestRegisterController extends Controller
                 'phone'    => '0978788999',
                 'country'    => '704',
                 'refererId'    => isset($userReferer->id) ? $userReferer->id : null,
-                'password' => bcrypt('12345678'),
-                'accountCoinBase' => 'test',
+                'password' => bcrypt('1'),
+                //'accountCoinBase' => 'test',
                 'active' => 1,
                 'activeCode' => 'test',
                 'uid' => User::getUid(),
@@ -162,12 +165,17 @@ class TestRegisterController extends Controller
 
             //SAVE to User_datas
             $fields['userId'] = $user->id;
-            $fields['walletAddress'] = 'test';
+            
             $fields['clpCoinAmount'] = '20000';
+            if($userReferer->name == config('app.root_name')) {
+                $fields['isBinary'] = 1;
+            }
             $userData = UserData::create($fields);
 
             //Luu thong tin ca nhan vao bang user_coin
             //$fields['backupKey'] = $backupKey;
+             $fields['accountCoinBase'] = 'test';
+             $fields['walletAddress'] = 'test';
             $userCoin = UserCoin::create($fields);
 
             //gui mail

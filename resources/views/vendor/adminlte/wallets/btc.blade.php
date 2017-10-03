@@ -38,6 +38,7 @@
             </ul>
         </div>
     @endif
+    <?php echo WalletViewController::viewAllWallet();?>
     <div class="row">
         <div class="col-md-12">
             <!-- Widget: user widget style 1 -->
@@ -167,7 +168,7 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <!--withdrawa modal-->
+    <!--Withdraw modal-->
     {{ Form::open(array('url' => 'wallets/btcwithdraw'))}}
     <div class="modal fade" id="withdraw" style="display: none;">
         <div class="modal-dialog">
@@ -175,14 +176,14 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Withdraw</h4>
+                    <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtcwithdraw" data-type="btcwithdraw">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm btcwithdraw', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
@@ -216,7 +217,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}</h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbuyclp" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -256,9 +257,25 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}</h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtctranfer" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
+                    <div class="box no-border">
+                        <div class="box-body" style="padding-top:0;">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                                {{ Form::number('username', '', array('class' => 'form-control input-sm switch-CLP-to-BTC-tranfer', 'step' => '0.0001','placeholder' => "Username")) }}
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
+                            </div>
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-btc"></i></span>
@@ -447,5 +464,71 @@
                 // ......
             });
         }
+        //Switch Btc and Clp tranfer
+
+        $(".switch-BTC-to-CLP-tranfer").on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var type = "BtcToClp";
+            //send
+            var result = switchChange(value, type);
+        });
+
+        $(".switch-CLP-to-BTC-tranfer").on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var type = "ClpToBtc";
+            //send
+            var result = switchChange(value, type);
+        });
+
+
+        function switchChangeTranfer(value, type) {
+            $.ajax({
+                beforeSend: function () {
+                    // Handle the beforeSend event
+                },
+                url: "switchbtcclp",
+                type: "get",
+                data: {
+                    type: type,
+                    value: value
+                },
+                success: function (result) {
+                    if (type == "BtcToClp") {
+                        if (result.success) {
+                            $(".switch-CLP-to-BTC-tranfer").val(result.result);
+                        }
+                    } else {
+                        if (result.success) {
+                            $(".switch-BTC-to-CLP-tranfer").val(result.result);
+                        }
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                },
+                complete: function () {
+
+                }
+                // ......
+            });
+        }
+        var data = {{ Auth()->user()->userCoin->btcCoinAmount }};
+         //get total value;
+        $( ".maxbtcwithdraw" ).click(function() {
+            $(".btcwithdraw").val(data)
+        });
+
+         //get total value;
+        $( ".maxbuyclp" ).click(function() {
+            $(".switch-BTC-to-CLP").val(data);
+            switchChange(data,"BtcToClp");
+        });
+
+         //get total value;
+        $( ".maxbtctranfer" ).click(function() {
+            $(".switch-BTC-to-CLP-tranfer").val(data);
+            switchChangeTranfer(data,"BtcToClp");
+        });
+
     </script>
 @endsection

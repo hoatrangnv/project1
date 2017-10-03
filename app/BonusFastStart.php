@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BonusFastStart extends Model
 {
     protected $fillable = [
-		'userId', 'generation', 'partnerId', 'amount'
+		'userId', 'generation', 'partnerId', 'packageId', 'amount'
 	];
 	public function __construct(array $attributes = [])
     {
@@ -17,4 +17,5 @@ class BonusFastStart extends Model
     public function users() {
         return $this->hasOne(User::class, 'id', 'partnerId');
     }
+    
 }

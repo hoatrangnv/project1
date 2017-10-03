@@ -52,7 +52,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
-
+    
+    //Get total value
+    Route::get('wallets/totalvalue','WalletController@getMaxTypeWallet');
     
 
     Route::get('wallets/buyclp', 'WalletController@buyclp');
@@ -95,6 +97,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::put('news/edit/{id}','News\NewsController@newEdit');
     Route::get('news/delete/{id}','News\NewsController@newDelete');
     Route::get('news/detail/{id}','News\DisplayNewsController@displayDetailNews');
+    
+    
 
 });
 Route::get('getnotification','GetNotificationController@getNotification');

@@ -45,7 +45,7 @@ class ProfileController extends Controller
     {
         $lstCountry = config('cryptolanding.lstCountry');
         $lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
-        $sponsor = UserData::where('refererId', Auth::user()->id)->first();
+        $sponsor = User::where('id', Auth::user()->refererId)->first();
         $google2faUrl = Google2FA::getQRCodeGoogleUrl(
             config('app.name'),
             Auth::user()->email,

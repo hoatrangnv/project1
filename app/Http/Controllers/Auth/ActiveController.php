@@ -14,6 +14,7 @@ use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Account;
 use Coinbase\Wallet\Resource\Address;
+use App\CLPWallet;
 
 /**
  * Class RegisterController
@@ -76,6 +77,9 @@ class ActiveController extends Controller
                             $userCoin->accountCoinBase = $accountWallet['accountId'];
                             $userCoin->walletAddress = $accountWallet['walletAddress'];
                             $userCoin->save();
+
+                            //Assign CLP Wallet Address
+                            $this->assignCLPAddress($user->id);
 
                             User::updateUserGenealogy($user->id);
                             return redirect("notification/useractive");
@@ -197,6 +201,27 @@ class ActiveController extends Controller
             default:
                 throw new \Exception("Not select type of api yet");
                 
+        }
+    }
+
+    /*
+    * @author GiangDT
+    * 
+    * Generate new address
+    *
+    */
+    private function assignCLPAddress( $userId ) 
+    {
+        $clpAddress = CLPWallet::whereNull('userId')
+                            ->orderby('id', 'asc')
+                            ->get()
+                            ->first();
+
+        if(isset($clpAddress->address)) {
+            $clpAddress->userId = $userId;
+            $clpAddress->save();
+        } else {
+            CLPWallet::create(['userId' => $userId]);
         }
     }
 
