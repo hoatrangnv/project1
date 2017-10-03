@@ -72,11 +72,12 @@ class ProfileController extends Controller
      * @return Response
      */
     public function changePassword(Request $request){
+        
         $a = $this->validate($request, [
             'new_password'=>'required|min:6'
         ]);
-        //no error
-        if($a == null){
+
+        if ( Hash::check($request->old_password, Auth::user()->password ) ) {
             try {
                 User::where('id',Auth::user()->id)
                     ->update( [ 'password' => bcrypt( $request->new_password ) ] );
@@ -89,7 +90,12 @@ class ProfileController extends Controller
                     "success" => false
                 ]);
             }
+        }else{
+            return Response::json([
+                "errorcode" => 1
+            ]);
         }
+
     }
 
     /**
