@@ -17,6 +17,7 @@ use Session;
 use Hash;
 use Google2FA;
 use App\Http\Controllers\Controller;
+use Validator;
 
 /**
  * Class ProfileController
@@ -186,5 +187,29 @@ class ProfileController extends Controller
             $this->email,
             $key
         );
+    }
+    public function upload(Request $request){
+        $validator = Validator::make($request->all(),
+            [
+                'file' => 'image',
+            ],
+            [
+                'file.image' => 'The file must be an image (jpeg, png, bmp, gif, or svg)'
+            ]);
+        if ($validator->fails())
+            return array(
+                'err' => true,
+                'msg' => $validator->getMessageBag()->toArray()['file'][0]
+            );
+        $extension = $request->file('file')->getClientOriginalExtension(); // getting image extension
+        $folder ='/uploads/images/';
+        $dir = public_path($folder);
+        $filename = uniqid() . '_' . time() . '.' . $extension;
+        $request->file('file')->move($dir, $filename);
+        return array(
+            'err' => false,
+            'image' => $folder.$filename
+        );
+        return $folder.$filename;
     }
 }

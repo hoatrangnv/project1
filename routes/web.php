@@ -43,6 +43,8 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('wallets/btctranfer',"Wallet\BtcWalletController@btctranfer");
 
+    Route::get('wallets/clptranfer',"Wallet\ClpWalletController@clptranfer");
+
     Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
     Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
     
@@ -77,10 +79,13 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('packages', 'PackageController');
 
     //Profile router
+    Route::any('profile/upload','User\ProfileController@upload');
     Route::get('profile','User\ProfileController@index');
     Route::post('profile/changepassword','User\ProfileController@changePassword');
     Route::get('profile/switchauthen','User\ProfileController@switchTwoFactorAuthen');
+
     Route::resource('profile', 'User\ProfileController');
+
     
     //News
     Route::get('news/manage','News\NewsController@newManagent')->name('news.manage');
