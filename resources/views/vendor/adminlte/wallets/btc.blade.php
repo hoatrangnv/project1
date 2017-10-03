@@ -292,6 +292,13 @@
                     </div>
                     <div class="form-group">
                         <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-clp"></i></span>
+                            {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid')) }}
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-key"></i></span>
                             {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'id' => 'btcOTP', 'placeholder' => "2FA Code E.g. 123456")) }}
                         </div>
@@ -324,10 +331,62 @@
             $('#btn_filter_clear').on('click', function () {
                 location.href = '{{ url()->current() }}';
             });
+            var mytimer;
+            $('#clpUid').on('blur onmouseout keyup', function () {
+                clearTimeout(mytimer);
+                var search = $(this).val();
+                if(search.length >= 1){
+                    mytimer = setTimeout(function(){
+                        $.ajax({
+                            type: "GET",
+                            url: "/users/search",
+                            data: {id : search}
+                        }).done(function(data){
+                            if(data.err) {
+                                $("#clpUid").parents("div.form-group").addClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+                                $('#clpUsername').val('');
+                            }else{
+                                $('#clpUid').parent().removeClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                                $('#clpUsername').parent().removeClass('has-error');
+                                $('#clpUsername').parent().find('.help-block').text('');
+                                $('#clpUsername').val(data.username);
+                            }
+                        });
+                    }, 1000);
+                }
+            });
+            $('#clpUsername').on('blur onmouseout keyup', function () {
+                clearTimeout(mytimer);
+                var search = $(this).val();
+                if(search.length >= 3){
+                    mytimer = setTimeout(function(){
+                        $.ajax({
+                            type: "GET",
+                            url: "/users/search",
+                            data: {username : search}
+                        }).done(function(data){
+                            if(data.err) {
+                                $("#clpUsername").parents("div.form-group").addClass('has-error');
+                                $("#clpUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
+                                $('#clpUid').val('');
+                            }else{
+                                $('#clpUid').parent().removeClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                                $('#clpUsername').parent().removeClass('has-error');
+                                $('#clpUsername').parent().find('.help-block').text('');
+                                $('#clpUsername').val(data.id);
+                            }
+                        });
+                    }, 1000);
+                }
+            });
             $('#btctranfer').on('click', function () {
                 var btcAmount = $('#btcAmount').val();
                 var btcUsername = $('#btcUsername').val();
                 var btcOTP = $('#btcOTP').val();
+                var clpUid = $('#clpUid').val();
                 if($.trim(btcAmount) == ''){
                     $("#btcAmount").parents("div.form-group").addClass('has-error');
                     $("#btcAmount").parents("div.form-group").find('.help-block').text('The Amount field is required');
@@ -342,6 +401,13 @@
                     $("#btcUsername").parents("div.form-group").removeClass('has-error');
                     $("#btcUsername").parents("div.form-group").find('.help-block').text('');
                 }
+                if($.trim(clpUid) == ''){
+                    $("#clpUid").parents("div.form-group").addClass('has-error');
+                    $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+                }else{
+                    $("#clpUid").parents("div.form-group").removeClass('has-error');
+                    $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                }
                 if($.trim(btcOTP) == ''){
                     $("#btcOTP").parents("div.form-group").addClass('has-error');
                     $("#btcOTP").parents("div.form-group").find('.help-block').text('The OTP field is required');
@@ -352,7 +418,7 @@
                 if($.trim(btcAmount) != '' && $.trim(btcUsername) != '' && $.trim(btcOTP) != ''){
                     $.ajax({
                         url: "{{ url('wallets/btctranfer') }}",
-                        data: {btcAmount: btcAmount, btcUsername: btcUsername, btcOTP: btcOTP}
+                        data: {btcAmount: btcAmount, btcUsername: btcUsername, btcOTP: btcOTP, clpUid: clpUid}
                     }).done(function (data) {
                         if (data.err) {
                             if(typeof data.msg !== undefined){
@@ -372,6 +438,16 @@
                                 }else {
                                     $("#btcUsername").parents("div.form-group").removeClass('has-error');
                                     $("#btcUsername").parents("div.form-group").find('.help-block').text('');
+                                }
+                                if(typeof data.msg.clpUidErr !== undefined) {
+                                    $("#clpUid").parents("div.form-group").addClass('has-error');
+                                    $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
+                                }else if(typeof data.msg.user !== undefined) {
+                                    $("#clpUid").parents("div.form-group").addClass('has-error');
+                                    $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
+                                }else {
+                                    $("#clpUid").parents("div.form-group").removeClass('has-error');
+                                    $("#clpUid").parents("div.form-group").find('.help-block').text('');
                                 }
                                 if(typeof data.msg.btcOTPErr !== undefined) {
                                     $("#btcOTP").parents("div.form-group").addClass('has-error');

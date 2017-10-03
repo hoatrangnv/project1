@@ -85,7 +85,7 @@ class ClpWalletController extends Controller {
     public function clptranfer(Request $request){
         if($request->ajax()){
             $userCoin = Auth::user()->userCoin;
-            $clpAmountErr = $clpUsernameErr = $btcOTPErr = '';
+            $clpAmountErr = $clpUsernameErr = $clpUidErr = $clpOTPErr = '';
             if($request->clpAmount == ''){
                 $clpAmountErr = 'The Amount field is required';
             }elseif (is_numeric($request->clpAmount)){
@@ -100,16 +100,23 @@ class ClpWalletController extends Controller {
             }elseif (!User::where('name', $request->clpUsername)->where('active', 1)->count()){
                 $clpUsernameErr = 'The Username is not invalid';
             }
+            if($request->clpUid == ''){
+                $clpUidErr = 'The Uid field is required';
+            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
+                $clpUidErr = 'The Uid not required';
+            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
+                $clpUidErr = 'The Uid is not invalid';
+            }
             if($request->clpOTP == ''){
-                $btcOTPErr = 'The OTP field is required';
+                $clpOTPErr = 'The OTP field is required';
             }else{
                 $key = Auth::user()->google2fa_secret;
                 $valid = Google2FA::verifyKey($key, $request->clpOTP);
                 if(!$valid){
-                    $btcOTPErr = 'The OTP not match';
+                    $clpOTPErr = 'The OTP not match';
                 }
             }
-            if($clpAmountErr !='' && $clpUsernameErr != '' && $btcOTPErr != ''){
+            if($clpAmountErr !='' && $clpUsernameErr != '' && $clpOTPErr != '' && $clpUidErr != ''){
                 $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $request->clpAmount;
                 $userCoin->save();
                 $userRi = User::where('name', $request->clpUsername)->where('active', 1)->first();
@@ -153,7 +160,8 @@ class ClpWalletController extends Controller {
                     'msg' =>[
                         'clpAmountErr' => $clpAmountErr,
                         'clpUsernameErr' => $clpUsernameErr,
-                        'clpOTPErr' => $btcOTPErr,
+                        'clpOTPErr' => $clpOTPErr,
+                        'clpUidErr' => $clpUidErr,
                     ]
                 ];
                 return response()->json($result);

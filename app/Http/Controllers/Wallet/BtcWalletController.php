@@ -96,7 +96,7 @@ class BtcWalletController extends Controller
     public function btctranfer(Request $request){
         if($request->ajax()){
             $userCoin = Auth::user()->userCoin;
-            $btcAmountErr = $btcUsernameErr = $btcOTPErr = '';
+            $btcAmountErr = $btcUsernameErr = $clpUidErr = $btcOTPErr = '';
             if($request->btcAmount == ''){
                 $btcAmountErr = 'The Amount field is required';
             }elseif (is_numeric($request->btcAmount)){
@@ -111,6 +111,13 @@ class BtcWalletController extends Controller
             }elseif (!User::where('name', $request->btcUsername)->where('active', 1)->count()){
                 $btcUsernameErr = 'The Username is not invalid';
             }
+            if($request->clpUid == ''){
+                $clpUidErr = 'The Uid field is required';
+            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
+                $clpUidErr = 'The Uid not required';
+            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
+                $clpUidErr = 'The Uid is not invalid';
+            }
             if($request->btcOTP == ''){
                 $btcOTPErr = 'The OTP field is required';
             }else{
@@ -120,7 +127,7 @@ class BtcWalletController extends Controller
                     $btcOTPErr = 'The OTP not match';
                 }
             }
-            if($btcAmountErr !='' && $btcUsernameErr != '' && $btcOTPErr != ''){
+            if($btcAmountErr !='' && $btcUsernameErr != '' && $btcOTPErr != '' && $clpUidErr != ''){
                 $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
                 $userCoin->save();
                 $userRi = User::where('name', $request->btcUsername)->where('active', 1)->first();
@@ -165,6 +172,7 @@ class BtcWalletController extends Controller
                         'btcAmountErr' => $btcAmountErr,
                         'btcUsernameErr' => $btcUsernameErr,
                         'btcOTPErr' => $btcOTPErr,
+                        'clpUidErr' => $clpUidErr,
                     ]
                 ];
                 return response()->json($result);

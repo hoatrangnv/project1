@@ -206,10 +206,27 @@ class ProfileController extends Controller
         $dir = public_path($folder);
         $filename = uniqid() . '_' . time() . '.' . $extension;
         $request->file('file')->move($dir, $filename);
+        $user = Auth::user();
+        $user->approve = 0;
+        $photo_verification = json_decode($user->photo_verification);
+        if($photo_verification){
+            if($request->type == 'scan_photo'){
+                $photo_verification['scan_photo'] = $folder.$filename;
+            }elseif($request->type == 'holding_photo'){
+                $photo_verification['holding_photo'] = $folder.$filename;
+            }
+        }else{
+            if($request->type == 'scan_photo'){
+                $photo_verification['scan_photo'] = $folder.$filename;
+            }elseif($request->type == 'holding_photo'){
+                $photo_verification['holding_photo'] = $folder.$filename;
+            }
+        }
+        $user->photo_verification = json_encode($photo_verification);
+        $user->save();
         return array(
             'err' => false,
             'image' => $folder.$filename
         );
-        return $folder.$filename;
     }
 }

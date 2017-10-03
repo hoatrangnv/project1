@@ -338,6 +338,13 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     </div>
                     <div class="form-group">
                         <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-clp"></i></span>
+                            {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid')) }}
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-usd"></i></span>
                             {{ Form::text('username', '', array('class' => 'form-control input-sm', 'id' => 'clpUsername', 'placeholder' => "Username")) }}
                         </div>
@@ -375,9 +382,61 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 location.href = '{{ url()->current() }}';
             });
         });
+        var mytimer;
+        $('#clpUid').on('blur onmouseout keyup', function () {
+            clearTimeout(mytimer);
+            var search = $(this).val();
+            if(search.length >= 1){
+                mytimer = setTimeout(function(){
+                    $.ajax({
+                        type: "GET",
+                        url: "/users/search",
+                        data: {id : search}
+                    }).done(function(data){
+                        if(data.err) {
+                            $("#clpUid").parents("div.form-group").addClass('has-error');
+                            $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+                            $('#clpUsername').val('');
+                        }else{
+                            $('#clpUid').parent().removeClass('has-error');
+                            $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                            $('#clpUsername').parent().removeClass('has-error');
+                            $('#clpUsername').parent().find('.help-block').text('');
+                            $('#clpUsername').val(data.username);
+                        }
+                    });
+                }, 1000);
+            }
+        });
+        $('#clpUsername').on('blur onmouseout keyup', function () {
+            clearTimeout(mytimer);
+            var search = $(this).val();
+            if(search.length >= 3){
+                mytimer = setTimeout(function(){
+                    $.ajax({
+                        type: "GET",
+                        url: "/users/search",
+                        data: {username : search}
+                    }).done(function(data){
+                        if(data.err) {
+                            $("#clpUsername").parents("div.form-group").addClass('has-error');
+                            $("#clpUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
+                            $('#clpUid').val('');
+                        }else{
+                            $('#clpUid').parent().removeClass('has-error');
+                            $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                            $('#clpUsername').parent().removeClass('has-error');
+                            $('#clpUsername').parent().find('.help-block').text('');
+                            $('#clpUsername').val(data.id);
+                        }
+                    });
+                }, 1000);
+            }
+        });
         $('#clptranfer').on('click', function () {
             var clpAmount = $('#clpAmount').val();
             var clpUsername = $('#clpUsername').val();
+            var clpUid = $('#clpUid').val();
             var clpOTP = $('#clpOTP').val();
             if($.trim(clpAmount) == ''){
                 $("#clpAmount").parents("div.form-group").addClass('has-error');
@@ -393,6 +452,13 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 $("#clpUsername").parents("div.form-group").removeClass('has-error');
                 $("#clpUsername").parents("div.form-group").find('.help-block').text('');
             }
+            if($.trim(clpUid) == ''){
+                $("#clpUid").parents("div.form-group").addClass('has-error');
+                $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+            }else{
+                $("#clpUid").parents("div.form-group").removeClass('has-error');
+                $("#clpUid").parents("div.form-group").find('.help-block').text('');
+            }
             if($.trim(clpOTP) == ''){
                 $("#clpOTP").parents("div.form-group").addClass('has-error');
                 $("#clpOTP").parents("div.form-group").find('.help-block').text('The OTP field is required');
@@ -403,7 +469,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             if($.trim(clpAmount) != '' && $.trim(clpUsername) != '' && $.trim(clpOTP) != ''){
                 $.ajax({
                     url: "{{ url('wallets/clptranfer') }}",
-                    data: {clpAmount: clpAmount, clpUsername: clpUsername, clpOTP: clpOTP}
+                    data: {clpAmount: clpAmount, clpUsername: clpUsername, clpOTP: clpOTP, clpUid: clpUid}
                 }).done(function (data) {
                     if (data.err) {
                         if(typeof data.msg !== undefined){
@@ -423,6 +489,16 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             }else {
                                 $("#clpUsername").parents("div.form-group").removeClass('has-error');
                                 $("#clpUsername").parents("div.form-group").find('.help-block').text('');
+                            }
+                            if(typeof data.msg.clpUidErr !== undefined) {
+                                $("#clpUid").parents("div.form-group").addClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
+                            }else if(typeof data.msg.user !== undefined) {
+                                $("#clpUid").parents("div.form-group").addClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
+                            }else {
+                                $("#clpUid").parents("div.form-group").removeClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text('');
                             }
                             if(typeof data.msg.clpOTPErr !== undefined) {
                                 $("#clpOTP").parents("div.form-group").addClass('has-error');
