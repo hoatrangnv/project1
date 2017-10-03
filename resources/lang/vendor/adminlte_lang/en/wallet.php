@@ -53,5 +53,6 @@ return [
     'success' => 'Success',
     'fail' => 'Fail',
     'tranfer_from_reinves_wallet_to_clp_wallet'=>"Tranfer from Reinvest wallet to CLP wallet",
-    'tranfer_from_usd_wallet_to_clp_wallet'=>"Tranfert from Usd wallet to Reinvest wallet"
+    'tranfer_from_usd_wallet_to_clp_wallet'=>"Tranfert from Usd wallet to Reinvest wallet",
+    'btn_copy' => "copy"
 ];

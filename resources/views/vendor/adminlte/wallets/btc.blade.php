@@ -131,24 +131,31 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
     </div>
     <!--Deposit modal-->
     <div class="modal fade" id="deposit" style="display: none;">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-sm" style="">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Deposit</h4>
+                    <h4 class="modal-title">Deposit to your wallet</h4>
                 </div>
                 <div class="modal-body">
                     <div class="col-lg-12">
-                        <div class="card box">
-                            <div class="card-heading  b-b b-light" style="text-align: center">
-                                <h2>Deposit to your wallet</h2>
-                            </div>
+                        <div class="card box" style="border-top:none;">
                             <div class="card-body">
                                 <div class="form-group" style="text-align: center">
                                     <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your BTC Wallet
                                         address</h5>
-                                    <h6 class="wallet-address"></h6>
+                                    <div class="form-group">
+                                        <input type="text" value="" class="wallet-address" id="wallet-address">
+                                        <span>
+                                            <button class="btnwallet-address" data-clipboard-target="#wallet-address" title="copy">
+                                                <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                   
+                                    <!-- Trigger -->
+                                    
                                     <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">BTC
                                         Wallet link</h5>
                                     <a class="link-blockchain" href="" target="_blank">blockchain</a>, <a
@@ -294,9 +301,33 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
     </div>
 
     <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
     <script>
         $(document).ready(function(){
+            $('.btnwallet-address').tooltip({
+                trigger: 'click',
+                placement: 'bottom'
+            });
+            
+            function setTooltip(message) {
+                $('.btnwallet-address')
+                  .attr('data-original-title', message)
+                  .tooltip('show');
+            }
+            
+            function hideTooltip() {
+                setTimeout(function() {
+                  $('button').tooltip('hide');
+                }, 1000);
+              }
+            
+            var clipboard = new Clipboard('.btnwallet-address');
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+                setTooltip('Copied!');
+                hideTooltip();
+            });
+            
             $('#btn_filter').on('click', function () {
                 var wallet_type = parseInt($('#wallet_type option:selected').val());
                 if(wallet_type > 0){
@@ -315,10 +346,12 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             url: "{{ url('wallets/deposit') }}?action=btc",
         }).done(function (data) {
             if (!data.err) {
-                $(".wallet-address").html(data.walletAddress);
+                $(".wallet-address").val(data.walletAddress);
                 $(".link-blockchain").attr("href", "https://blockchain.info/address/" + data.walletAddress);
                 $(".link-blockexplorer").attr("href", "https://blockexplorer.com/address/" + data.walletAddress);
                 var qrcode = new QRCode(document.getElementById("qrcode"), {
+                    width: 128,
+                    height: 128,
                     text: data.walletAddress,
                     colorDark: "#000000",
                     colorLight: "#ffffff",
