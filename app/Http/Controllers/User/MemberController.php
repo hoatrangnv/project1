@@ -36,7 +36,6 @@ class MemberController extends Controller
 
 					    if(is_numeric($request['username'])){
                             $user = User::where('uid', '=', $request['username'])->first();
-                            //dd($user);
                         }else{
                             $user = User::where('name', '=', $request['username'])->first();
                         }
@@ -51,7 +50,7 @@ class MemberController extends Controller
                                 'loyaltyId'     => $this->getLoyalty($user->id),
                                 'leg'     => $user->userData->leftRight == 'left' ? 'L' : ($user->userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $user->userTreePermission && $user->userTreePermission->genealogy_total ? 1 : 0,
-                                'generation'     => $user->fastStart ? 'F' . $user->fastStart->max('generation') : 0,
+                                'generation'     => $this->getQualify($user->userData->packageId),
                             ];
                         } else {
                             return response()->json(['err'=>1]);
@@ -67,7 +66,7 @@ class MemberController extends Controller
                             'loyaltyId'     => $this->getLoyalty($user->id),
                             'leg'     => $user->userData->leftRight == 'left' ? 'L' : ($user->userData->leftRight == 'right' ? 'R' : '-'),
                             'dmc' => 3,
-                            'generation'     => $user->fastStart ? 'F' . $user->fastStart->max('generation') : 0,
+                            'generation'     => $this->getQualify($user->userData->packageId),
                         ];
 					}
                     return response()->json($fields);
@@ -91,7 +90,7 @@ class MemberController extends Controller
                                 'loyaltyId' => $userData->loyaltyId,
                                 'leg' => $userData->leftRight == 'left' ? 'L' : ($userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $userData->userTreePermission && $userData->userTreePermission->genealogy_total ? 1 : 0,
-                                'generation'     => $userData->fastStart ? 'F' . $userData->fastStart->max('generation') : 0,
+                                'generation'     => $this->getQualify($userData->packageId),
                             ];
                         }
                     }
@@ -104,6 +103,15 @@ class MemberController extends Controller
             }
 		}
         return view('adminlte::members.genealogy');
+    }
+
+    public function getQualify($packageId) {
+        $result = '0';
+        if($packageId > 0) $result = 'F1';
+        if($packageId > 2) $result = 'F2';
+        if($packageId > 4) $result = 'F3';
+
+        return $result;
     }
 	
 	public function binary(Request $request){
