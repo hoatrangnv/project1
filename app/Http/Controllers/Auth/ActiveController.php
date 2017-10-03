@@ -217,7 +217,7 @@ class ActiveController extends Controller
                             ->get()
                             ->first();
 
-        if($clpAddress->address) {
+        if(isset($clpAddress->address)) {
             $clpAddress->userId = $userId
             $clpAddress->save();
         } else {
