@@ -338,12 +338,12 @@
                                 </tr>
                                 <tr>
                                     <td style="vertical-align: middle;">
-                                       {{ trans('adminlte_lang::wallet.withdraw') }}
+                                       {{ trans('adminlte_lang::home.withdraw_to_usd') }}
                                     </td>
                                     <td  class="right">
                                         <button class="btn btn-default bg-olive withdraw-package" 
                                                         data-id=""
-                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::wallet.withdraw') }}</button>
+                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::home.withdraw_to_usd') }}</button>
                                     </td>
                                 </tr>
                             </table>
