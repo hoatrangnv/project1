@@ -744,7 +744,7 @@ class User extends Authenticatable
             $user->genealogy_total = $user->genealogy_total + 1;
             $user->save();
         }else{
-            UserTreePermission::create(['userId'=>$refererId, 'genealogy' => $userId, 'genealogy_total' => 1]);
+            UserTreePermission::create(['userId'=>$refererId, 'genealogy' => $userId, 'genealogy_total' => 0]);
             $user = UserTreePermission::find($userId);
         }
         if($user->userData->refererId > 0)
