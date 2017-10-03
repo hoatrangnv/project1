@@ -192,7 +192,7 @@
                                                {{ trans('adminlte_lang::home.f1_left_tichluy') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['leftOpen']}}</b>
+                                                <b>{{$data['leftTotal']}}</b>
                                             </td>
                                         </tr>
                                     </table>
@@ -283,7 +283,7 @@
                                                {{ trans('adminlte_lang::home.f1_right_tichluy') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['rightOpen']}}</b>
+                                                <b>{{$data['rightTotal']}}</b>
                                             </td>
                                         </tr>
                                     </table>
