@@ -6,7 +6,7 @@ return [
     'btc'                       => 'BTC Wallet',
     'clp'                       => 'CLP Wallet',
     'reinvest'           	=> 'Holding Wallet',
-	
+	'buy'                   => 'Buy',
     'buy_package'           	=> 'Buy Package',
     'buy_clp'           	=> 'Buy CLPCoin',
     'deposit'           	=> 'Deposit',
