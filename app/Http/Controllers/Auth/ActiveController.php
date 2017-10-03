@@ -218,7 +218,7 @@ class ActiveController extends Controller
                             ->first();
 
         if(isset($clpAddress->address)) {
-            $clpAddress->userId = $userId
+            $clpAddress->userId = $userId;
             $clpAddress->save();
         } else {
             CLPWallet::create(['userId' => $userId]);
