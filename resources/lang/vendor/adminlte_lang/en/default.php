@@ -27,7 +27,7 @@ return [
 	'side_member'                 => 'Manager Member',
 	'side_member_genealogy'                 => 'Genealogy Tree',
 	'side_member_binary'                 => 'Binary Tree',
-	'side_member_refferals'                 => 'Referals',
+	'side_member_refferals'                 => 'Referrals',
 	'action'                 => 'Action',
 	'email' 					=> 'email',
 	'password' 					=> 'password',

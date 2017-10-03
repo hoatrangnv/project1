@@ -78,9 +78,14 @@ class UsdWalletController extends Controller
             Log::info("Cannot get rate");
         }
         $requestQuery = $request->query();
-        $wallet_type = config('cryptolanding.wallet_type');
-        foreach ($wallet_type as $key => $val)
+        $all_wallet_type = config('cryptolanding.wallet_type');
+        $wallet_type = [];
+        foreach ($all_wallet_type as $key => $val) {
+            if($key == 6) break;
             $wallet_type[$key] = trans($val);
+
+        }
+
         return view('adminlte::wallets.usd', compact('wallets','wallet_type', 'requestQuery'));
     }
     
