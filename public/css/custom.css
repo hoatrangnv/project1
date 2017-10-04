@@ -164,4 +164,12 @@
     }
 
     .box-body .input-group .input-group-addon{min-width: 40px;}
-    
+
+    .binary-search #search-input {}
+    .binary-search #search-button {min-width: 106px; }
+
+    .binary-search .col-lg-6{ padding-right: 0px; padding-left: 0px; }
+
+     @media (max-width: 767px) {
+        .binary-search #search-input {max-width: 106px; margin-bottom: 10px;}
+    }
