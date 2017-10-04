@@ -127,19 +127,14 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     <div class="modal-body">
                         <div class="box-body">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">USD</label>
-
-                                <div class="col-sm-10">
-                                  <input type="number" step="0.01" class="form-control switch-USD-to-CLP" id="inputEmail3" name="usd" placeholder="USD" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
-                                </div>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                                {{ Form::number('usd', '', array('class' => 'form-control input-sm switch-USD-to-CLP', 'step' => '0.01', 'placeholder' => "USD Amount")) }}
                             </div>
-                            <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">CLP</label>
-
-                                <div class="col-sm-10">
-                                  <input type="number" step="0.000000001" class="form-control switch-CLP-to-USD" id="inputPassword3" name="clp" placeholder="CLP" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
-                                </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
+                                {{ Form::number('clp', '', array('class' => 'form-control input-sm switch-CLP-to-USD', 'step' => '0.000000001','placeholder' => "CLP Amount")) }}
                             </div>
                         </div>
                     </div>

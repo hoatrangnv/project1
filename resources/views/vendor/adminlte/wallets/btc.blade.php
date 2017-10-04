@@ -202,7 +202,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::wallet.btn_withdraw'), array('class' => 'btn btn-primary')) }}
+                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -230,20 +230,15 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             </div>
                             <br>
                             <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                                <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
                                 {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC', 'step' => '0.0001','placeholder' => "CLP Amount")) }}
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::wallet.buy'), array('class' => 'btn btn-primary')) }}
+                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -271,7 +266,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             </div>
                             <br>
                             <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                 {{ Form::number('username', '', array('class' => 'form-control input-sm switch-CLP-to-BTC-tranfer', 'step' => '0.0001','placeholder' => "Username")) }}
                             </div>
                             <br>
@@ -284,7 +279,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary')) }}
+                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -382,6 +377,28 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 }
                 // ......
             });
+
+            $.ajax({
+                url: 'switchbtcclp',
+                type: 'GET',
+                // headers: {
+                //     'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                // },
+                data: {
+                    type: type,
+                    value: value
+                }
+            }).done(function (result) {
+                if (type == "BtcToClp") {
+                        if (result.value) {
+                            $(".switch-CLP-to-BTC").val(result.value);
+                        }
+                    } else {
+                        if (result.value) {
+                            $(".switch-BTC-to-CLP").val(result.value);
+                        }
+                    }
+            });
         }
         //Switch Btc and Clp tranfer
 
@@ -401,34 +418,48 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
 
 
         function switchChangeTranfer(value, type) {
+            // $.ajax({
+            //     beforeSend: function () {
+            //         // Handle the beforeSend event
+            //     },
+            //     url: "switchbtcclp",
+            //     type: "get",
+            //     data: {
+            //         type: type,
+            //         value: value
+            //     },
+            //     success: function (result) {
+            //         if (type == "BtcToClp") {
+            //             if (result.success) {
+            //                 $(".switch-CLP-to-BTC-tranfer").val(result.value);
+            //             }
+            //         } else {
+            //             if (result.success) {
+            //                 $(".switch-BTC-to-CLP-tranfer").val(result.result);
+            //             }
+            //         }
+            //     },
+            //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+            //         alert(errorThrown);
+            //         alert("some error");
+            //     },
+            //     complete: function () {
+
+            //     }
+            //     // ......
+            // });
             $.ajax({
-                beforeSend: function () {
-                    // Handle the beforeSend event
-                },
-                url: "switchbtcclp",
-                type: "get",
+                url: 'switchbtcclp',
+                type: 'GET',
+                // headers: {
+                //     'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                // },
                 data: {
                     type: type,
                     value: value
-                },
-                success: function (result) {
-                    if (type == "BtcToClp") {
-                        if (result.success) {
-                            $(".switch-CLP-to-BTC-tranfer").val(result.result);
-                        }
-                    } else {
-                        if (result.success) {
-                            $(".switch-BTC-to-CLP-tranfer").val(result.result);
-                        }
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("some error");
-                },
-                complete: function () {
-
                 }
-                // ......
+            }).done(function (data) {
+                alert(data);
             });
         }
         var data = {{ Auth()->user()->userCoin->btcCoinAmount }};

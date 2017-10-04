@@ -1,5 +1,6 @@
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url('/favicon.ico') }}" />
     <title> CryptoLending - @yield('htmlheader_title', 'Your title here') </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- CSRF Token -->
