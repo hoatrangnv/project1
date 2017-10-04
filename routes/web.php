@@ -85,7 +85,10 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::put('news/edit/{id}','News\NewsController@newEdit');
     Route::get('news/delete/{id}','News\NewsController@newDelete');
     Route::get('news/detail/{id}','News\DisplayNewsController@displayDetailNews');
-    
+    //get ty gia
+    Route::get('exchange',function(App\ExchangeRate $rate){
+        return $rate->getExchRate();
+    });
     
 
 });
@@ -111,3 +114,5 @@ Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
 Route::any('confirmWithdraw',"Wallet\WithDrawController@confirmWithdraw");
+
+Route::get('test',"TestController@test");
