@@ -14,7 +14,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="/AdminLTE/bower_components/bootstrap/dist/js/bootstrap-confirmation.min.js"></script>
 <script src="/AdminLTE/bower_components/fastclick/lib/fastclick.js"></script>
 <script src="/AdminLTE/dist/js/app.js"></script>
-<body class="skin-blue sidebar-mini">
+<body class="skin-purple sidebar-mini">
 <div>
     <div class="wrapper">
 
