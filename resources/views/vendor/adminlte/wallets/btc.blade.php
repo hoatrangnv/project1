@@ -271,23 +271,14 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             </div>
                             <br>
                             <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-id-card-o"></i></span>
+                                {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid', 'placeholder' => "Id")) }}
+                            </div>
+                            <br>
+                            <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-key"></i></span>
                                 {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
                             </div>
-                        </div>
-                        <span class="help-block"></span>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-clp"></i></span>
-                            {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid', 'placeholder' => "Uid")) }}
-                        </div>
-                        <span class="help-block"></span>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                            {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'id' => 'btcOTP', 'placeholder' => "2FA Code E.g. 123456")) }}
                         </div>
                         <span class="help-block"></span>
                     </div>
