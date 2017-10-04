@@ -86,7 +86,7 @@ class User extends Authenticatable
         if($refererId > 0){
             $packageBonus = 0;
             $userData = UserData::find($refererId);
-            if($userData && $level <= 3){
+            if($userData && $level <= 3 && $userData->packageId > 0){
                 if($level == 1){//F1
                     $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f1_pay');
                     $userData->totalBonus = $userData->totalBonus + $packageBonus;
@@ -744,7 +744,7 @@ class User extends Authenticatable
             $user->genealogy_total = $user->genealogy_total + 1;
             $user->save();
         }else{
-            UserTreePermission::create(['userId'=>$refererId, 'genealogy' => $userId, 'genealogy_total' => 1]);
+            UserTreePermission::create(['userId'=>$refererId, 'genealogy' => $userId, 'genealogy_total' => 0]);
             $user = UserTreePermission::find($userId);
         }
         if($user->userData->refererId > 0)

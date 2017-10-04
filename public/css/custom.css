@@ -97,7 +97,7 @@
     }
 
     .clp-home .table-bordered > thead > tr > th,.clp-home .table-bordered > tbody > tr > th,.clp-home .table-bordered > tfoot > tr > th,.clp-home .table-bordered > thead > tr > td, .clp-home .table-bordered > tbody > tr > td, .clp-home .table-bordered > tfoot > tr > td {
-        border: 1px solid #22221F;
+        border: 1px solid #eeeeee;
     }
 
     .clp-home h3 { font-size: 30px; }

@@ -27,7 +27,7 @@ class CLPWalletAPI
     public function generateWallet() 
     {
         $path = $this->apiUrl . '/generate-wallet';
-        $result = $client->request('GET', $path);
+        $result = $this->client->request('GET', $path);
 
         $result = json_decode($result);
         

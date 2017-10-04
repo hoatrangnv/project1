@@ -192,7 +192,7 @@
                                                {{ trans('adminlte_lang::home.f1_left_tichluy') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['leftOpen']}}</b>
+                                                <b>{{$data['leftTotal']}}</b>
                                             </td>
                                         </tr>
                                     </table>
@@ -283,7 +283,7 @@
                                                {{ trans('adminlte_lang::home.f1_right_tichluy') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['rightOpen']}}</b>
+                                                <b>{{$data['rightTotal']}}</b>
                                             </td>
                                         </tr>
                                     </table>
@@ -338,12 +338,12 @@
                                 </tr>
                                 <tr>
                                     <td style="vertical-align: middle;">
-                                       {{ trans('adminlte_lang::wallet.withdraw') }}
+                                       {{ trans('adminlte_lang::home.withdraw_to_usd') }}
                                     </td>
                                     <td  class="right">
                                         <button class="btn btn-default bg-olive withdraw-package" 
                                                         data-id=""
-                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::wallet.withdraw') }}</button>
+                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::home.withdraw_to_usd') }}</button>
                                     </td>
                                 </tr>
                             </table>

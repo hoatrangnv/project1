@@ -4,9 +4,9 @@
     <!-- Logo -->
     <a href="{{ url('/home') }}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>C</b>PL</span>
+        <span class="logo-mini"><img src="{{ url('/') }}/img/logo_3d.png" width="30px" /></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>CRYPTOLENDING</b> </span>
+        <span class="logo-lg"><b><img src="{{ url('/') }}/img/logo.png" width="40px" />CRYPTOLENDING</b> </span>
     </a>
 
     <!-- Header Navbar -->
@@ -156,7 +156,7 @@
 
                 <!-- Control Sidebar Toggle Button -->
                 <li>
-                    <a href="#" data-toggle="control-sidebar" class="clp-news"><i class="fa fa-newspaper-o"></i></a>
+                    <a href="#" data-toggle="control-sidebar" class="clp-news"><i class="fa fa-newspaper-o"></i>&nbsp{{ trans('adminlte_lang::news.title_news') }}</a>
                 </li>
             </ul>
         </div>
