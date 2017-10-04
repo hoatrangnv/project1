@@ -76,10 +76,99 @@ class ClpWalletController extends Controller {
                 'address'     => $result['address'],
                 'transaction'     => $result['tx'],
             ];
-            
+
             CLPWallet::create();
         }
 
     }
-    
+
+    public function clptranfer(Request $request){
+        if($request->ajax()){
+            $userCoin = Auth::user()->userCoin;
+            $clpAmountErr = $clpUsernameErr = $clpUidErr = $clpOTPErr = '';
+            if($request->clpAmount == ''){
+                $clpAmountErr = trans('adminlte_lang::wallet.amount_required');
+            }elseif (is_numeric($request->clpAmount)){
+                $clpAmountErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif ($userCoin->clpCoinAmount < $request->clpAmount){
+                $clpAmountErr = trans('adminlte_lang::wallet.error_not_enough');
+            }
+            if($request->clpUsername == ''){
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_required');
+            }elseif (!preg_match('/^\S*$/u', $request->clpUsername)){
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_notspace');
+            }elseif (!User::where('name', $request->clpUsername)->where('active', 1)->count()){
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
+            }
+            if($request->clpUid == ''){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_required');
+            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
+            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
+            }
+            if($request->clpOTP == ''){
+                $clpOTPErr = trans('adminlte_lang::wallet.otp_required');
+            }else{
+                $key = Auth::user()->google2fa_secret;
+                $valid = Google2FA::verifyKey($key, $request->clpOTP);
+                if(!$valid){
+                    $clpOTPErr = trans('adminlte_lang::wallet.otp_not_match');
+                }
+            }
+            if($clpAmountErr !='' && $clpUsernameErr != '' && $clpOTPErr != '' && $clpUidErr != ''){
+                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $request->clpAmount;
+                $userCoin->save();
+                $userRi = User::where('name', $request->clpUsername)->where('active', 1)->first();
+                $userRiCoin = $userRi->userCoin;
+                if($userRiCoin){
+                    $userRiCoin->clpCoinAmount = $userRiCoin->clpCoinAmount + $request->clpAmount;
+                    $userRiCoin->save();
+
+                    $field = [
+                        'walletType' => Wallet::CLP_WALLET,//btc
+                        'type' =>  Wallet::TRANSFER_CLP_TYPE,//transfer BTC
+                        'inOut' => Wallet::OUT,
+                        'userId' => $userCoin->userId,
+                        'amount' => $request->clpAmount,
+                        'note' => 'Transfer from ' . $request->clpUsername
+                    ];
+
+                    Wallet::create($field);
+
+                    $field = [
+                        'walletType' => Wallet::CLP_WALLET,//btc
+                        'type' => Wallet::TRANSFER_CLP_TYPE,//transfer BTC
+                        'inOut' => Wallet::IN,
+                        'userId' => $userRiCoin->userId,
+                        'amount' => $request->clpAmount,
+                        'note' => 'Transfer from ' . $request->clpUsername
+                    ];
+
+                    Wallet::create($field);
+
+                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_tranfer_clp') );
+                    return response()->json(array('err' => false));
+                }else{
+                    $result = [
+                        'err' => true,
+                        'msg' => ['clpUsernameErr'=>trans('adminlte_lang::wallet.user_required')]
+                    ];
+                    return response()->json($result);
+                }
+            }else{
+                $result = [
+                    'err' => true,
+                    'msg' =>[
+                        'clpAmountErr' => $clpAmountErr,
+                        'clpUsernameErr' => $clpUsernameErr,
+                        'clpOTPErr' => $clpOTPErr,
+                        'clpUidErr' => $clpUidErr,
+                    ]
+                ];
+                return response()->json($result);
+            }
+        }
+        return response()->json(array('err' => true, 'msg' => null));
+    }
 }

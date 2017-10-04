@@ -74,6 +74,7 @@ class PackageController extends Controller
 
             $this->validate($request, [
                 'packageId' => 'required|not_in:0|packageCheck',
+                'terms'    => 'required',
             ],['packageId.package_check' => 'CLP Coin not money buy package']);
 
             $amount_increase = $packageOldId = 0;

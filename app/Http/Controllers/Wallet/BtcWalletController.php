@@ -93,6 +93,95 @@ class BtcWalletController extends Controller
      * @param Request $request
      * @return type
      */
+    public function btctranfer(Request $request){
+        if($request->ajax()){
+            $userCoin = Auth::user()->userCoin;
+            $btcAmountErr = $btcUsernameErr = $clpUidErr = $btcOTPErr = '';
+            if($request->btcAmount == ''){
+                $btcAmountErr = trans('adminlte_lang::wallet.amount_required');
+            }elseif (is_numeric($request->btcAmount)){
+                $btcAmountErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif ($userCoin->btcCoinAmount < $request->btcAmount){
+                $btcAmountErr = trans('adminlte_lang::wallet.error_not_enough');
+            }
+            if($request->btcUsername == ''){
+                $btcUsernameErr = trans('adminlte_lang::wallet.username_required');
+            }elseif (!preg_match('/^\S*$/u', $request->btcUsername)){
+                $btcUsernameErr = trans('adminlte_lang::wallet.username_notspace');
+            }elseif (!User::where('name', $request->btcUsername)->where('active', 1)->count()){
+                $btcUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
+            }
+            if($request->clpUid == ''){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_required');
+            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
+            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
+            }
+            if($request->btcOTP == ''){
+                $btcOTPErr = trans('adminlte_lang::wallet.otp_required');
+            }else{
+                $key = Auth::user()->google2fa_secret;
+                $valid = Google2FA::verifyKey($key, $request->btcOTP);
+                if(!$valid){
+                    $btcOTPErr = trans('adminlte_lang::wallet.otp_not_match');
+                }
+            }
+            if($btcAmountErr !='' && $btcUsernameErr != '' && $btcOTPErr != '' && $clpUidErr != ''){
+                $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
+                $userCoin->save();
+                $userRi = User::where('name', $request->btcUsername)->where('active', 1)->first();
+                $userRiCoin = $userRi->userCoin;
+                if($userRiCoin){
+                    $userRiCoin->btcCoinAmount = $userRiCoin->btcCoinAmount + $request->btcAmount;
+                    $userRiCoin->save();
+
+                    $field = [
+                        'walletType' => Wallet::BTC_WALLET,//btc
+                        'type' =>  Wallet::TRANSFER_BTC_TYPE,//transfer BTC
+                        'inOut' => Wallet::OUT,
+                        'userId' => $userCoin->userId,
+                        'amount' => $request->btcAmount,
+                        'note' => 'Transfer from ' . $request->btcUsername
+                    ];
+
+                    Wallet::create($field);
+
+                    $field = [
+                        'walletType' => Wallet::BTC_WALLET,//btc
+                        'type' => Wallet::TRANSFER_BTC_TYPE,//transfer BTC
+                        'inOut' => Wallet::IN,
+                        'userId' => $userRiCoin->userId,
+                        'amount' => $request->btcAmount,
+                        'note' => 'Transfer from ' . $request->btcUsername
+                    ];
+
+                    Wallet::create($field);
+
+                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_tranfer_btc') );
+                    return response()->json(array('err' => false));
+                }else{
+                    $result = [
+                        'err' => true,
+                        'msg' => ['btcUsernameErr'=>trans('adminlte_lang::wallet.user_required')]
+                    ];
+                    return response()->json($result);
+                }
+            }else{
+                $result = [
+                    'err' => true,
+                    'msg' =>[
+                        'btcAmountErr' => $btcAmountErr,
+                        'btcUsernameErr' => $btcUsernameErr,
+                        'btcOTPErr' => $btcOTPErr,
+                        'clpUidErr' => $clpUidErr,
+                    ]
+                ];
+                return response()->json($result);
+            }
+        }
+        return response()->json(array('err' => true, 'msg' => null));
+    }
     public function tranferBtcClp(Request $request){
         $currentuserid = Auth::user()->id;
         $userCoin = Auth::user()->userCoin;
