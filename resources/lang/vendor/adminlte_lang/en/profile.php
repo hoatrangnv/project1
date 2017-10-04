@@ -50,4 +50,9 @@ return [
     'error' 					=> 		'Connection error',
     'holding_photo' 			=> 				'Picture of yourself holding photo id',
     'holding_photo' 			=> 				'Picture of yourself holding photo id',
+    'old_password' => 'Old Password',
+    'new_password' => 'New Password',
+    'confirm_password' => 'Confirm Password',
+    'wrong_password'=> 'Wrong Password',
+    'recovery_code'=> "Recovery Code"
 ];

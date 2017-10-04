@@ -48,7 +48,8 @@ class HomeController extends Controller
         $data['totalF1Sale']   = $this->getF1TotalSale();
         
         //Goi Packgade id
-        $data['package'] = UserData::findOrFail(Auth::user()->id)->packageId;
+        $userData = UserData::where('userId', Auth::user()->id)->get()->first();
+        $data['package'] = isset($userData->packageId) ? $userData->packageId : 0;
 
         if( count( Package::where('id',$data['package'])->get() ) == 0 ){
             $data['value'] = 0;
@@ -61,8 +62,8 @@ class HomeController extends Controller
         //$data['newF1InWeek'] = $newF1InWeek['total'];
         $data['leftNew']     = $newF1InWeek['leftNew'];
         $data['rightNew']    = $newF1InWeek['rightNew'];
-        $data['leftOpen']    = $newF1InWeek['leftOpen'];
-        $data['rightOpen']   = $newF1InWeek['rightOpen'];
+        $data['leftTotal']    = isset($userData->totalBonusLeft) ? $userData->totalBonusLeft : 0;
+        $data['rightTotal']   = isset($userData->totalBonusRight) ? $userData->totalBonusRight : 0;
         //Get số lương coin trong tài khoản
         $data['coin'] = $this->getInfoCoin();
         //Get lịch sử package

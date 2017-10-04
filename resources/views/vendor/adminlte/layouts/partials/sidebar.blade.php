@@ -33,7 +33,7 @@
                 <ul class="treeview-menu">
                     <li class="{{ Request::segment(2) === 'genealogy' ? 'active' : null }}"><a href="{{ url('members/genealogy') }}">{{ trans('adminlte_lang::default.side_member_genealogy') }}</a></li>
                     <li class="{{ Request::segment(2) === 'binary' ? 'active' : null }}"><a href="{{ url('members/binary') }}">{{ trans('adminlte_lang::default.side_member_binary') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'refferals' ? 'active' : null }}"><a href="{{ url('members/refferals') }}">{{ trans('adminlte_lang::default.side_member_refferals') }}</a></li>
+                    <li class="{{ Request::segment(2) === 'refferals' ? 'active' : null }}"><a href="{{ url('members/referrals') }}">{{ trans('adminlte_lang::default.side_member_refferals') }}</a></li>
                 </ul>
             </li>
             @can('view_users')

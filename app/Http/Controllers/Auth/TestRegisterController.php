@@ -178,6 +178,9 @@ class TestRegisterController extends Controller
              $fields['walletAddress'] = 'test';
             $userCoin = UserCoin::create($fields);
 
+            //Update calculate total member
+            User::updateUserGenealogy($user->id);
+
             //gui mail
             //ma hoa send link active qua mail
             // if($user) {

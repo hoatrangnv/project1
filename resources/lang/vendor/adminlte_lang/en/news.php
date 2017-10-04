@@ -20,5 +20,6 @@ return  [
     'crypto_news' => 'Crypto News',
     'blockchain_news'=> 'Blockchain News',
     'clp_news'=> 'CLP News',
-    'p2p_news'=> 'P2P News'
+    'p2p_news'=> 'P2P News',
+    'title_news'=> 'News',
 ];

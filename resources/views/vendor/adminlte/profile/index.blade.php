@@ -9,6 +9,21 @@
 @endsection
 
 @section('main-content')
+    @if ( session()->has("errorMessage") )
+        <div class="callout callout-danger">
+            <h4>Warning!</h4>
+            <p>{!! session("errorMessage") !!}</p>
+        </div>
+        {{ session()->forget('errorMessage') }}
+    @elseif ( session()->has("successMessage") )
+        <div class="callout callout-success">
+            <h4>Success</h4>
+            <p>{!! session("successMessage") !!}</p>
+        </div>
+        {{ session()->forget('successMessage') }}
+    @else
+        <div></div>
+    @endif
     <div class="row">
         <div class="col-md-4">
             <!-- Horizontal Form -->
@@ -195,6 +210,7 @@
                     </div>
                 </div>
             </div>
+            @if(isset($sponsor))
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ trans('adminlte_lang::profile.sponsor') }}</h3>
@@ -228,6 +244,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <div class="box box-danger">
                 <div class="box-header with-border">
                   <h3 class="box-title">{{ trans('adminlte_lang::profile.marketing') }}</h3>
@@ -282,7 +299,6 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
                             </tbody>
                         </table>
                     </div>
@@ -293,7 +309,7 @@
     </div>
 
     <!-- Modal -->
-    <div id="myModalChangePassword" class="modal fade" role="dialog">
+    <div id="myModalChangePassword" class="modal fade" role="dialog" >
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
@@ -302,7 +318,7 @@
                     <h4 class="modal-title">{{ trans('adminlte_lang::profile.change_password') }}</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" _lpchecked="1">
+                    <form class="form-horizontal" id="formchangpassword" _lpchecked="1">
                         <div class="box-body">
                             <div class="form-group">
                                 <div class="col-sm-8">
@@ -315,7 +331,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                              <label for="inputPasswordNew" class="col-sm-4 control-label label-td">New Password</label>
+                                <label for="inputPasswordOld" class="col-sm-4 control-label label-td">{{ trans("adminlte_lang::profile.old_password") }}</label>
+
+                                <div class="col-sm-8">
+                                  <input type="password" class="form-control" id="inputPasswordOld" placeholder="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" >
+                                  <span style="color: red" id="errorOldPassword"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputPasswordNew" class="col-sm-4 control-label label-td">{{ trans("adminlte_lang::profile.new_password") }}</label>
 
                               <div class="col-sm-8">
                                 <input type="password" class="form-control" id="inputPasswordNew" placeholder="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" >
@@ -323,7 +347,7 @@
                               </div>
                             </div>
                             <div class="form-group">
-                              <label for="inputPasswordConfirm" class="col-sm-4 control-label label-td">Confirm Password</label>
+                              <label for="inputPasswordConfirm" class="col-sm-4 control-label label-td">{{ trans("adminlte_lang::profile.confirm_password") }}</label>
 
                               <div class="col-sm-8">
                                 <input type="password" class="form-control" id="inputPasswordConfirm" placeholder="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" >
@@ -374,25 +398,20 @@
             </div>
         </div>
     </div>
-    <div id="myModalPreview" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <div class="modal-body">
-                    <img class="modal-content" id="img01">
-                </div>
-            </div>
-        </div>
-    </div>
-    <style>
-        #myModalPreview img {max-width: 100%;}
-    </style>
     <!-- js -->
     <link href="/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
     <script src="/bootstrap-switch/bootstrap-switch.js"></script>
     <script type="text/javascript">
         $(function() {
+            $( '#inputPasswordNew' ).focus(function(){
+                $( '#errorNewPassword' ).hide();
+            });
+            $( '#inputPasswordConfirm' ).focus(function(){
+                $( '#errorPasswordConfirm' ).hide();
+            });
+            $( '#inputPasswordOld' ).focus(function(){
+                $( '#errorOldPassword' ).hide();
+            });
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -466,10 +485,12 @@
             //action Save Pass
             $( "#savePassword" ).click(function() {
                 //compare password and password confirm
-                if( $( '#inputPasswordNew' ).val() != $( '#inputPasswordConfirm' ).val() ){
-                    $( '#errorPasswordConfirm' ).html("{{ trans('adminlte_lang::profile.password_not_match') }}");
-                } else if ( $( '#inputPasswordNew' ).val().trim().length < 6 ) {
+                if ( $( '#inputPasswordNew' ).val().trim().length < 6 ) {
+                    $( '#errorNewPassword' ).show();
                     $( '#errorNewPassword' ).html("{{ trans('adminlte_lang::profile.minimum_password') }}");
+                } else if( $( '#inputPasswordNew' ).val() != $( '#inputPasswordConfirm' ).val() ){
+                    $( '#errorPasswordConfirm' ).show();
+                    $( '#errorPasswordConfirm' ).html("{{ trans('adminlte_lang::profile.password_not_match') }}");
                 } else {
                     //send password 
                     $.ajax({
@@ -482,20 +503,31 @@
                         type : "post",
                         data : {
                             _token:  $("meta[name='csrf-token']").attr("content"), 
-                            new_password : $( '#inputPasswordNew' ).val()
+                            new_password : $( '#inputPasswordNew' ).val(),
+                            old_password : $( '#inputPasswordOld ').val(),
+                            confirm_password: $( '#inputPasswordConfirm ').val()
                         },
                         success : function (result){
-                            if(result.success){
-                                $(".confirmSuccess").html("{{ trans('adminlte_lang::profile.success') }}")
-                            }else{
-                                $(".confirmError").html("{{ trans('adminlte_lang::profile.fail') }}")
+                            console.log(result.errorcode);
+                            if(result.errorcode == 1){
+                                $( '#errorOldPassword' ).show();
+                                $( '#errorOldPassword' ).html("{{ trans('adminlte_lang::profile.wrong_password') }}");
+                            } else if (result.success){
+                                $('#myModalChangePassword').modal('hide');
+                                alert("{{ trans('adminlte_lang::profile.success') }}");
+                            } else {
+                                $('#myModalChangePassword').modal('hide');
+                                alert("{{ trans('adminlte_lang::profile.fail') }}");
                             } 
+
+
                         }
                     })
                     .done(function(){
                         $( "#savePassword i" ).removeClass("fa fa-refresh fa-spin");
                         $( "#savePassword i" ).addClass("fa fa-save");
                         $( "#savePassword" ).removeClass("disabled");
+                        $("#formchangpassword")[0].reset();
                     })
                     .fail(function(xhr, status, error){
                         console.log("{{ trans('adminlte_lang::profile.error') }}");

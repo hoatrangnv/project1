@@ -18,8 +18,8 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('members/genealogy', 'User\MemberController@genealogy');
     Route::get('members/binary', 'User\MemberController@binary');
-    Route::get('members/refferals', 'User\MemberController@refferals');
-    Route::get('members/refferals/{id}/detail', 'User\MemberController@refferalsDetail');
+    Route::get('members/referrals', 'User\MemberController@refferals');
+    Route::get('members/referrals/{id}/detail', 'User\MemberController@refferalsDetail');
     Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
     Route::resource('members', 'User\MemberController');
     Route::get('authenticator', 'Auth\Auth2FAController@index');
