@@ -25,11 +25,11 @@ use Validator;
  */
 class ProfileController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+    const PHOTO_APPROVE_NONE = 0;
+    const PHOTO_APPROVE_PENDING = 1;
+    const PHOTO_APPROVE_OK = 2;
+    const PHOTO_APPROVE_CANCEL = 3;
+
     public function __construct()
     {
         $this->middleware(['auth']);
@@ -213,8 +213,8 @@ class ProfileController extends Controller
         $filename = uniqid() . '_' . time() . '.' . $extension;
         $request->file('file')->move($dir, $filename);
         $user = Auth::user();
-        $user->approve = 0;
-        $photo_verification = json_decode($user->photo_verification);
+        $user->approve = self::PHOTO_APPROVE_PENDING;
+        $photo_verification = $user->photo_verification ? json_decode($user->photo_verification, true) : [];
         if($photo_verification){
             if($request->type == 'scan_photo'){
                 $photo_verification['scan_photo'] = $folder.$filename;

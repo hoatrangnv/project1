@@ -131,6 +131,7 @@ class ClpWalletController extends Controller {
                         'inOut' => Wallet::OUT,
                         'userId' => $userCoin->userId,
                         'amount' => $request->clpAmount,
+                        'note' => 'Transfer from ' . $request->clpUsername
                     ];
 
                     Wallet::create($field);
@@ -141,6 +142,7 @@ class ClpWalletController extends Controller {
                         'inOut' => Wallet::IN,
                         'userId' => $userRiCoin->userId,
                         'amount' => $request->clpAmount,
+                        'note' => 'Transfer from ' . $request->clpUsername
                     ];
 
                     Wallet::create($field);

@@ -1,3 +1,6 @@
+<?php
+use App\Http\Controllers\Wallet\Views\WalletViewController;
+?>
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
@@ -260,22 +263,6 @@
                     <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtctranfer" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="box no-border">
-                        <div class="box-body" style="padding-top:0;">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                                {{ Form::number('username', '', array('class' => 'form-control input-sm switch-CLP-to-BTC-tranfer', 'step' => '0.0001','placeholder' => "Username")) }}
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
-                            </div>
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-btc"></i></span>
@@ -293,7 +280,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-clp"></i></span>
-                            {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid')) }}
+                            {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid', 'placeholder' => "Uid")) }}
                         </div>
                         <span class="help-block"></span>
                     </div>

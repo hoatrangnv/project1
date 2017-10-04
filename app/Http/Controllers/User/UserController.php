@@ -29,6 +29,31 @@ class UserController extends Controller
         return view('adminlte::user.root', compact('result'));
     }
 
+    public function photo_approve()
+    {
+        $result = User::where('approve', 1)->paginate();
+        return view('adminlte::user.approve', compact('result'));
+    }
+    public function approve_ok($id)
+    {
+        if( User::find($id)->update(['approve'=> 2]) ) {
+            flash()->success('User has been approve ok');
+        } else {
+            flash()->success('User not approve ok');
+        }
+
+        return redirect()->back();
+    }
+    public function approve_cancel($id)
+    {
+        if( User::find($id)->update(['approve'=> 3]) ) {
+            flash()->success('User has been approve cancel');
+        } else {
+            flash()->success('User not approve cancel');
+        }
+
+        return redirect()->back();
+    }
     /**
      * Show the form for creating a new resource.
      *

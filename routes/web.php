@@ -10,6 +10,9 @@ Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('users/root', 'User\UserController@root')->name('users.root');
+    Route::get('users/photo_approve', 'User\UserController@photo_approve')->name('users.photo_approve');
+    Route::post('users/approve_ok/{id}', 'User\UserController@approve_ok')->name('approve.ok');
+    Route::post('users/approve_cancel/{id}', 'User\UserController@approve_cancel')->name('approve.cancel');
     Route::resource('users', 'User\UserController');
     Route::resource('roles', 'User\RoleController');
     Route::resource('posts', 'User\PostController');

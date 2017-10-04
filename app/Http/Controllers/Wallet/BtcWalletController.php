@@ -142,6 +142,7 @@ class BtcWalletController extends Controller
                         'inOut' => Wallet::OUT,
                         'userId' => $userCoin->userId,
                         'amount' => $request->btcAmount,
+                        'note' => 'Transfer from ' . $request->btcUsername
                     ];
 
                     Wallet::create($field);
@@ -152,6 +153,7 @@ class BtcWalletController extends Controller
                         'inOut' => Wallet::IN,
                         'userId' => $userRiCoin->userId,
                         'amount' => $request->btcAmount,
+                        'note' => 'Transfer from ' . $request->btcUsername
                     ];
 
                     Wallet::create($field);

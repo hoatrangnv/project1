@@ -1,4 +1,4 @@
-<?php 
+<?php
 use App\Http\Controllers\Wallet\Views\WalletViewController;
 ?>
 @extends('adminlte::layouts.member')
@@ -10,13 +10,15 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
 @section('main-content')
     <style>
         #myTable tbody tr:hover {
-            background-color: #f5f5f5!important;
+            background-color: #f5f5f5 !important;
         }
+
         tr.selected {
-            background-color: #5bc0de!important;
+            background-color: #5bc0de !important;
         }
+
         tr.checked {
-            background-color: #d9edf7!important;
+            background-color: #d9edf7 !important;
         }
     </style>
     @if ( session()->has("errorMessage") )
@@ -46,32 +48,40 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
     <?php  echo WalletViewController::viewAllWallet(); ?>
     <div class="row">
         <div class="col-md-12">
-          <!-- Widget: user widget style 1 -->
+            <!-- Widget: user widget style 1 -->
             <div class="box">
                 <!-- Add the bg color to the header using any of the bg-* classes -->
                 <div class="box-body">
                     <div class="table-responsive">
                         <table class="table table-hover table-striped wallet-table">
                             <tbody>
-                                <tr>
-                                    <th class="icon-wallet">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
-                                    </th>
-                                    <th class="wallet-amount">{{ Auth()->user()->userCoin->clpCoinAmount }}  </th>
-                                    <th>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#sell">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#buy-package">{{ trans("adminlte_lang::wallet.buy_package") }}</a>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th class="icon-wallet">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path>
+                                    </svg>
+                                </th>
+                                <th class="wallet-amount">{{ Auth()->user()->userCoin->clpCoinAmount }}  </th>
+                                <th>
+                                    <a href="#" class="btn bg-olive" data-toggle="modal"
+                                       data-target="#sell">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
+                                    <a href="#" class="btn bg-olive" data-toggle="modal"
+                                       data-target="#buy-package">{{ trans("adminlte_lang::wallet.buy_package") }}</a>
+                                    <a href="#" class="btn bg-olive" data-toggle="modal"
+                                       data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
+                                    <a href="#" class="btn bg-olive" data-toggle="modal"
+                                       data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
+                                    <button class="btn bg-olive" data-toggle="modal"
+                                            data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>
+                                </th>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <!-- /.widget-user -->
             </div>
-        <!-- /.col -->
+            <!-- /.col -->
         </div>
     </div>
     <div class="row">
@@ -124,16 +134,18 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
         </div>
     </div>
     <!--Sell CLP modal-->
-        <div class="modal fade" id="sell" style="display: none;">
+    <div class="modal fade" id="sell" style="display: none;">
         {{ Form::open(array('url' => 'wallets/btctranfer')) }}
-          <div class="modal-dialog">
+        <div class="modal-dialog">
             <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Sell CLP&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxsellclp" data-type="maxsellclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a></h4>
-              </div>
-              <div class="modal-body">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Sell CLP&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxsellclp"
+                                                                               data-type="maxsellclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a>
+                    </h4>
+                </div>
+                <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
@@ -152,17 +164,17 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             </div>
                         </div>
                     </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary')) }}
-              </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary')) }}
+                </div>
             </div>
             <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-dialog -->
         {{ Form::close() }}
-        </div> 
+    </div>
     <div class="modal fade" id="buy-package" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -184,10 +196,11 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                         </thead>
                         <tbody>
                         @foreach ($packages as $package)
-                            <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
-                                <td>{{ $package->name }}</td>
-                                <td>${{ number_format($package->price) }}</td>
-                                <td>{{ number_format($package->price / Auth::user()->getCLPUSDRate(), 2, '.', ',') }}</td>
+                            <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id
+                            ="{{ $package->pack_id }}">
+                            <td>{{ $package->name }}</td>
+                            <td>${{ number_format($package->price) }}</td>
+                            <td>{{ number_format($package->price / Auth::user()->getCLPUSDRate(), 2, '.', ',') }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -195,8 +208,10 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     <a href="/term-condition.html" target="_blank">Term and condition</a>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" name="packageId" id="packageId" value="{{ Auth::user()->userData->packageId }}">
-                    <button class="btn btn-success btn-block" id="btn_submit">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
+                    <input type="hidden" name="packageId" id="packageId"
+                           value="{{ Auth::user()->userData->packageId }}">
+                    <button class="btn btn-success btn-block"
+                            id="btn_submit">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
                 </div>
                 {{ Form::close() }}
             </div>
@@ -207,53 +222,55 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
     <!--withdrawa modal-->
     {{ Form::open(array('url' => 'wallets/clpwithdraw'))}}
     <div class="modal fade" id="withdraw" style="display: none;">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span></button>
-            <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp" data-type="withdrawclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a></h4>
-          </div>
-          <div class="modal-body">
-                <div class="box no-border">
-                    <div class="box-body" style="padding-top:0;">
-                        <div class="input-group">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">WithRaw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp"
+                                                                              data-type="withdrawclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box no-border">
+                        <div class="box-body" style="padding-top:0;">
+                            <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
                                 {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm withdrawclpinput', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
-                        </div>
-                        <br>
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
                                 {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm', 'placeholder' => "Ethereum address E.g. 0xbHB5XMLmzFVj8ALj6mfBsbifRoD4miY36v")) }}
-                        </div>
-                        <br>
-                        <div class="input-group">
+                            </div>
+                            <br>
+                            <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-key"></i></span>
                                 {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA code E.g. 123456")) }}
+                            </div>
                         </div>
                     </div>
                 </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-            {{ Form::submit(trans('adminlte_lang::wallet.btn_withdraw'), array('class' => 'btn btn-primary')) }}
-          </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    {{ Form::submit(trans('adminlte_lang::wallet.btn_withdraw'), array('class' => 'btn btn-primary')) }}
+                </div>
+            </div>
+            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>  
+        <!-- /.modal-dialog -->
+    </div>
     {{ Form::close() }}
     <!--Deposit modal-->
-        <div class="modal fade" id="deposit" style="display: none;">
-          <div class="modal-dialog">
+    <div class="modal fade" id="deposit" style="display: none;">
+        <div class="modal-dialog">
             <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Deposit</h4>
-              </div>
-              <div class="modal-body">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Deposit</h4>
+                </div>
+                <div class="modal-body">
                     <div class="col-lg-12">
                         <div class="card box">
                             <div class="card-heading  b-b b-light" style="text-align: center">
@@ -261,42 +278,227 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             </div>
                             <div class="card-body">
                                 <div class="form-group" style="text-align: center">
-                                    <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your CLP Wallet address</h5>
+                                    <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your CLP Wallet
+                                        address</h5>
                                     <h6 class="wallet-address"></h6>
-                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">CLP Wallet link</h5>
+                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">CLP
+                                        Wallet link</h5>
                                     <a class="link-blockchain" href="" target="_blank">etherscan</a>
-                                    <center><div id="qrcode" style="padding-bottom: 10px;"></div></center>
+                                    <center>
+                                        <div id="qrcode" style="padding-bottom: 10px;"></div>
+                                    </center>
                                 </div>
                             </div>
                         </div>
                     </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
-              </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+                </div>
             </div>
             <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
         </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal fade" id="tranfer" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-clp"></i></span>
+                            {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm', 'id' => 'clpAmount', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                            {{ Form::text('username', '', array('class' => 'form-control input-sm', 'id' => 'clpUsername', 'placeholder' => "Username")) }}
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-clp"></i></span>
+                            {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid', 'placeholder' => "Uid")) }}
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                            {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'id' => 'clpOTP', 'placeholder' => "2FA Code E.g. 123456")) }}
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary', 'id' => 'clptranfer')) }}
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('#btn_filter').on('click', function () {
                 var wallet_type = parseInt($('#wallet_type option:selected').val());
-                if(wallet_type > 0){
-                    location.href = '{{ url()->current() }}?type='+wallet_type;
-                }else{
+                if (wallet_type > 0) {
+                    location.href = '{{ url()->current() }}?type=' + wallet_type;
+                } else {
                     alert('Please choose a type!');
                     return false;
                 }
             })
         });
+        var mytimer;
+        $('#clpUid').on('blur onmouseout keyup', function () {
+            clearTimeout(mytimer);
+            var search = $(this).val();
+            if(search.length >= 1){
+                mytimer = setTimeout(function(){
+                    $.ajax({
+                        type: "GET",
+                        url: "/users/search",
+                        data: {id : search}
+                    }).done(function(data){
+                        if(data.err) {
+                            $("#clpUid").parents("div.form-group").addClass('has-error');
+                            $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+                            $('#clpUsername').val('');
+                        }else{
+                            $('#clpUid').parent().removeClass('has-error');
+                            $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                            $('#clpUsername').parent().removeClass('has-error');
+                            $('#clpUsername').parent().find('.help-block').text('');
+                            $('#clpUsername').val(data.username);
+                        }
+                    });
+                }, 1000);
+            }
+        });
+        $('#clpUsername').on('blur onmouseout keyup', function () {
+            clearTimeout(mytimer);
+            var search = $(this).val();
+            if(search.length >= 3){
+                mytimer = setTimeout(function(){
+                    $.ajax({
+                        type: "GET",
+                        url: "/users/search",
+                        data: {username : search}
+                    }).done(function(data){
+                        if(data.err) {
+                            $("#clpUsername").parents("div.form-group").addClass('has-error');
+                            $("#clpUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
+                            $('#clpUid').val('');
+                        }else{
+                            $('#clpUid').parent().removeClass('has-error');
+                            $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                            $('#clpUsername').parent().removeClass('has-error');
+                            $('#clpUsername').parent().find('.help-block').text('');
+                            $('#clpUsername').val(data.id);
+                        }
+                    });
+                }, 1000);
+            }
+        });
+        $('#clptranfer').on('click', function () {
+            var clpAmount = $('#clpAmount').val();
+            var clpUsername = $('#clpUsername').val();
+            var clpUid = $('#clpUid').val();
+            var clpOTP = $('#clpOTP').val();
+            if($.trim(clpAmount) == ''){
+                $("#clpAmount").parents("div.form-group").addClass('has-error');
+                $("#clpAmount").parents("div.form-group").find('.help-block').text('The Amount field is required');
+            }else{
+                $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+            }
+            if($.trim(clpUsername) == ''){
+                $("#clpUsername").parents("div.form-group").addClass('has-error');
+                $("#clpUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
+            }else{
+                $("#clpUsername").parents("div.form-group").removeClass('has-error');
+                $("#clpUsername").parents("div.form-group").find('.help-block').text('');
+            }
+            if($.trim(clpUid) == ''){
+                $("#clpUid").parents("div.form-group").addClass('has-error');
+                $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+            }else{
+                $("#clpUid").parents("div.form-group").removeClass('has-error');
+                $("#clpUid").parents("div.form-group").find('.help-block').text('');
+            }
+            if($.trim(clpOTP) == ''){
+                $("#clpOTP").parents("div.form-group").addClass('has-error');
+                $("#clpOTP").parents("div.form-group").find('.help-block').text('The OTP field is required');
+            }else{
+                $("#clpOTP").parents("div.form-group").removeClass('has-error');
+                $("#clpOTP").parents("div.form-group").find('.help-block').text('');
+            }
+            if($.trim(clpAmount) != '' && $.trim(clpUsername) != '' && $.trim(clpOTP) != ''){
+                $.ajax({
+                    url: "{{ url('wallets/clptranfer') }}",
+                    data: {clpAmount: clpAmount, clpUsername: clpUsername, clpOTP: clpOTP, clpUid: clpUid}
+                }).done(function (data) {
+                    if (data.err) {
+                        if(typeof data.msg !== undefined){
+                            if(typeof data.msg.clpAmountErr !== undefined) {
+                                $("#clpAmount").parents("div.form-group").addClass('has-error');
+                                $("#clpAmount").parents("div.form-group").find('.help-block').text(data.msg.clpAmountErr);
+                            }else {
+                                $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                                $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                            }
+                            if(typeof data.msg.clpUsernameErr !== undefined) {
+                                $("#clpUsername").parents("div.form-group").addClass('has-error');
+                                $("#clpUsername").parents("div.form-group").find('.help-block').text(data.msg.clpUsernameErr);
+                            }else if(typeof data.msg.user !== undefined) {
+                                $("#clpUsername").parents("div.form-group").addClass('has-error');
+                                $("#clpUsername").parents("div.form-group").find('.help-block').text(data.msg.clpUsernameErr);
+                            }else {
+                                $("#clpUsername").parents("div.form-group").removeClass('has-error');
+                                $("#clpUsername").parents("div.form-group").find('.help-block').text('');
+                            }
+                            if(typeof data.msg.clpUidErr !== undefined) {
+                                $("#clpUid").parents("div.form-group").addClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
+                            }else if(typeof data.msg.user !== undefined) {
+                                $("#clpUid").parents("div.form-group").addClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
+                            }else {
+                                $("#clpUid").parents("div.form-group").removeClass('has-error');
+                                $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                            }
+                            if(typeof data.msg.clpOTPErr !== undefined) {
+                                $("#clpOTP").parents("div.form-group").addClass('has-error');
+                                $("#clpOTP").parents("div.form-group").find('.help-block').text(data.msg.clpOTPErr);
+                            }else {
+                                $("#clpOTP").parents("div.form-group").removeClass('has-error');
+                                $("#clpOTP").parents("div.form-group").find('.help-block').text('');
+                            }
+                        }
+                    } else {
+                        location.href = '{{ url()->current() }}';
+                    }
+                });
+            }
+        });
+        });
         var packageId = {{ Auth::user()->userData->packageId }};
         var packageIdPick = packageId;
         $(document).ready(function () {
-            $('#myTable tbody').on( 'click', 'tr', function () {
+            $('#myTable tbody').on('click', 'tr', function () {
                 var _packageId = parseInt($(this).data('id'));
-                if(_packageId >0) {
+                if (_packageId > 0) {
                     if (_packageId < packageId) {
                         $('#msg_package').html("<div class='alert alert-danger'>You cant not downgrate package.</div>");
                     } else if (_packageId == packageId) {
@@ -312,26 +514,26 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 }
             });
             $('#btn_submit').on('click', function () {
-                if(packageIdPick > packageId) {
+                if (packageIdPick > packageId) {
                     $('#formPackage').submit();
-                }else{
+                } else {
                     alert('You cant not this package');
                 }
             });
         });
-        
+
         $.ajax({
             url: "{{ url('wallets/deposit') }}?action=clp",
-        }).done(function(data) {
+        }).done(function (data) {
             if (!data.err) {
                 $(".wallet-address").html(data.walletAddress);
-                $(".link-blockchain").attr("href","https://blockchain.info/address/"+data.walletAddress);
-                $(".link-blockexplorer").attr("href","https://blockexplorer.com/address/"+data.walletAddress);
+                $(".link-blockchain").attr("href", "https://blockchain.info/address/" + data.walletAddress);
+                $(".link-blockexplorer").attr("href", "https://blockexplorer.com/address/" + data.walletAddress);
                 var qrcode = new QRCode(document.getElementById("qrcode"), {
                     text: data.walletAddress,
-                    colorDark : "#000000",
-                    colorLight : "#ffffff",
-                    correctLevel : QRCode.CorrectLevel.H
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
                 });
             } else {
                 $(".wallet-address").html(data.err);
@@ -339,116 +541,114 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
         });
 
         //Switch Btc and Clp
-            
-            $(".switch-BTC-to-CLP").on('keyup change mousewheel', function (){
-                var value = $(this).val();
-                var type = "BtcToClp";
-                //send
-                var result = switchChange(value,type);
-            });
 
-            $( ".switch-CLP-to-BTC" ).on('keyup change mousewheel', function() {
-                var value = $(this).val();
-                var type = "ClpToBtc";
-                //send
-                var result = switchChange(value,type);
-            });
+        $(".switch-BTC-to-CLP").on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var type = "BtcToClp";
+            //send
+            var result = switchChange(value, type);
+        });
+
+        $(".switch-CLP-to-BTC").on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var type = "ClpToBtc";
+            //send
+            var result = switchChange(value, type);
+        });
 
 
-            function switchChange(value,type){
-                $.ajax({
-                    beforeSend: function(){
-                      // Handle the beforeSend event
-                    },
-                    url:"switchbtcclp",
-                    type:"get",
-                    data : {
-                        type: type,
-                        value: value
-                    },
-                    success : function(result){
-                        if( type == "BtcToClp" ){
-                            if(result.success) {
-                                $(".switch-CLP-to-BTC").val(result.result);
-                            }
-                        } else {
-                            if(result.success) {
-                                $(".switch-BTC-to-CLP").val(result.result); 
-                            }
+        function switchChange(value, type) {
+            $.ajax({
+                beforeSend: function () {
+                    // Handle the beforeSend event
+                },
+                url: "switchbtcclp",
+                type: "get",
+                data: {
+                    type: type,
+                    value: value
+                },
+                success: function (result) {
+                    if (type == "BtcToClp") {
+                        if (result.success) {
+                            $(".switch-CLP-to-BTC").val(result.result);
                         }
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        alert("some error");
-                    },
-                    complete: function(){
-
-                    }
-                    // ......
-                });
-            }
-            
-              
-            $(".switch-BTC-to-CLP-sellclp").on('keyup change mousewheel', function (){
-                var value = $(this).val();
-                var type = "BtcToClp";
-                //send
-                var result = switchChange(value,type);
-            });
-
-            $( ".switch-CLP-to-BTC-sellclp" ).on('keyup change mousewheel', function() {
-                var value = $(this).val();
-                var type = "ClpToBtc";
-                //send
-                var result = switchChange(value,type);
-            });
-
-            function switchChangeSellClp(value,type){
-                $.ajax({
-                    beforeSend: function(){
-                      // Handle the beforeSend event
-                    },
-                    url:"switchbtcclp",
-                    type:"get",
-                    data : {
-                        type: type,
-                        value: value
-                    },
-                    success : function(result){
-                        if( type == "BtcToClp" ){
-                            if(result.success) {
-                                $(".switch-CLP-to-BTC-sellclp").val(result.result);
-                            }
-                        } else {
-                            if(result.success) {
-                                $(".switch-BTC-to-CLP-sellclp").val(result.result); 
-                            }
+                    } else {
+                        if (result.success) {
+                            $(".switch-BTC-to-CLP").val(result.result);
                         }
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        alert("some error");
-                    },
-                    complete: function(){
-
                     }
-                    // ......
-                });
-            }
-            
-             //get total value;
-            var data = {{ Auth()->user()->userCoin->clpCoinAmount }};
-            
-            $( ".maxsellclp" ).click(function() {
-                $(".switch-CLP-to-BTC-sellclp").val(data)
-                var type = "UsdToClp";
-                var result = switchChangeSellClp(data,type);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                },
+                complete: function () {
+
+                }
+                // ......
             });
-   
-            $( ".withdrawclp" ).click(function() {
-                $(".withdrawclpinput").val(data)
+        }
+
+
+        $(".switch-BTC-to-CLP-sellclp").on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var type = "BtcToClp";
+            //send
+            var result = switchChange(value, type);
+        });
+
+        $(".switch-CLP-to-BTC-sellclp").on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var type = "ClpToBtc";
+            //send
+            var result = switchChange(value, type);
+        });
+
+        function switchChangeSellClp(value, type) {
+            $.ajax({
+                beforeSend: function () {
+                    // Handle the beforeSend event
+                },
+                url: "switchbtcclp",
+                type: "get",
+                data: {
+                    type: type,
+                    value: value
+                },
+                success: function (result) {
+                    if (type == "BtcToClp") {
+                        if (result.success) {
+                            $(".switch-CLP-to-BTC-sellclp").val(result.result);
+                        }
+                    } else {
+                        if (result.success) {
+                            $(".switch-BTC-to-CLP-sellclp").val(result.result);
+                        }
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                },
+                complete: function () {
+
+                }
+                // ......
             });
-     
-        
-        
-        
+        }
+
+        //get total value;
+        var data = {{ Auth()->user()->userCoin->clpCoinAmount }};
+
+        $(".maxsellclp").click(function () {
+            $(".switch-CLP-to-BTC-sellclp").val(data)
+            var type = "UsdToClp";
+            var result = switchChangeSellClp(data, type);
+        });
+
+        $(".withdrawclp").click(function () {
+            $(".withdrawclpinput").val(data)
+        });
+
+
     </script>
 @endsection
