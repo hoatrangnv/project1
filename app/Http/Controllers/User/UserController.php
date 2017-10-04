@@ -3,29 +3,57 @@
 namespace App\Http\Controllers\User;
 
 use App\User;
+use App\UserData;
+use App\UserCoin;
 use App\Role;
 use App\Permission;
 use App\Authorizable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Google2FA;
 
 class UserController extends Controller
 {
     use Authorizable;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $result = User::latest()->paginate();
 
         return view('adminlte::user.index', compact('result'));
     }
+    public function root()
+    {
+        $result = User::where('refererId', 0)->paginate();
+        return view('adminlte::user.root', compact('result'));
+    }
 
+    public function photo_approve()
+    {
+        $result = User::where('approve', 1)->paginate();
+        return view('adminlte::user.approve', compact('result'));
+    }
+    public function approve_ok($id)
+    {
+        if( User::find($id)->update(['approve'=> 2]) ) {
+            flash()->success('User has been approve ok');
+        } else {
+            flash()->success('User not approve ok');
+        }
+
+        return redirect()->back();
+    }
+    public function approve_cancel($id)
+    {
+        if( User::find($id)->update(['approve'=> 3]) ) {
+            flash()->success('User has been approve cancel');
+        } else {
+            flash()->success('User not approve cancel');
+        }
+
+        return redirect()->back();
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -50,17 +78,24 @@ class UserController extends Controller
             'name' => 'bail|required|min:2',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'roles' => 'required|min:1'
+            //'roles' => 'required|min:1'
         ]);
 
         // hash password
-        $request->merge(['password' => bcrypt($request->get('password'))]);
-
+        $request->merge(
+            [
+                'password' => bcrypt($request->get('password')),
+                'refererId' => 0,
+                'active' => 1,
+                'uid' => User::getUid(),
+                'google2fa_secret' => Google2FA::generateSecretKey(16)
+            ]);
         // Create the user
         if ( $user = User::create($request->except('roles', 'permissions')) ) {
 
             $this->syncPermissions($request, $user);
-
+            UserData::create($request->except('roles', 'permissions'));
+            UserCoin::create($request->except('roles', 'permissions'));
             flash('User has been created.');
 
         } else {

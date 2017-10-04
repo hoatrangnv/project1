@@ -9,9 +9,16 @@ Auth::routes();
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('users/root', 'User\UserController@root')->name('users.root');
+    Route::get('users/photo_approve', 'User\UserController@photo_approve')->name('users.photo_approve');
+    Route::post('users/approve_ok/{id}', 'User\UserController@approve_ok')->name('approve.ok');
+    Route::post('users/approve_cancel/{id}', 'User\UserController@approve_cancel')->name('approve.cancel');
     Route::resource('users', 'User\UserController');
     Route::resource('roles', 'User\RoleController');
     Route::resource('posts', 'User\PostController');
+
+
+
     Route::get('members/genealogy', 'User\MemberController@genealogy');
     Route::get('members/binary', 'User\MemberController@binary');
     Route::get('members/referrals', 'User\MemberController@refferals');
@@ -35,7 +42,12 @@ Route::group( ['middleware' => ['auth']], function() {
     //BTC WALLET
     Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet')->name('wallet.btc');
     Route::get('wallets/getbtccoin',"Wallet\BtcWalletController@getBtcCoin");
-    Route::post('wallets/btctranfer',"Wallet\BtcWalletController@tranferBtcClp");
+    Route::post('wallets/btcbuyclp',"Wallet\BtcWalletController@tranferBtcClp");
+
+    Route::get('wallets/btctranfer',"Wallet\BtcWalletController@btctranfer");
+
+    Route::get('wallets/clptranfer',"Wallet\ClpWalletController@clptranfer");
+
     Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
     Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
     
@@ -72,10 +84,13 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('packages', 'PackageController');
 
     //Profile router
+    Route::any('profile/upload','User\ProfileController@upload');
     Route::get('profile','User\ProfileController@index');
     Route::post('profile/changepassword','User\ProfileController@changePassword');
     Route::get('profile/switchauthen','User\ProfileController@switchTwoFactorAuthen');
+
     Route::resource('profile', 'User\ProfileController');
+
     
     //News
     Route::get('news/manage','News\NewsController@newManagent')->name('news.manage');

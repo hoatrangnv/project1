@@ -54,5 +54,17 @@ return [
     'fail' => 'Fail',
     'tranfer_from_reinves_wallet_to_clp_wallet'=>"Tranfer from Reinvest wallet to CLP wallet",
     'tranfer_from_usd_wallet_to_clp_wallet'=>"Tranfert from Usd wallet to Reinvest wallet",
-    'btn_copy' => "copy"
+    'btn_copy' => "copy",
+    'amount_number'=>'The Amount must be a number',
+    'amount_required'=>'The Amount field is required',
+    'username_required'=>'The Username field is required',
+    'username_notspace'=>'The Username field is not space',
+    'username_not_invalid'=>'The Username is not invalid',
+    'uid_required'=>'The Uid field is required',
+    'uid_notspace'=>'The Uid field is not space',
+    'ui_not_invalid'=>'The Uid is not invalid',
+    'otp_required'=>'The OTP field is required',
+    'otp_not_match'=>'The OTP not match',
+    'user_required'=>'User is required',
+
 ];

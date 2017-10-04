@@ -42,6 +42,16 @@
                         <i class="glyphicon glyphicon-user"></i> Users
                     </a>
                 </li>
+                <li class="{{ Request::is('users/root') ? 'active' : '' }}">
+                    <a href="{{ route('users.root') }}">
+                        <i class="glyphicon glyphicon-user"></i> List Root
+                    </a>
+                </li>
+                <li class="{{ Request::is('users/photo_approve') ? 'active' : '' }}">
+                    <a href="{{ route('users.photo_approve') }}">
+                        <i class="glyphicon glyphicon-user"></i> List Approve
+                    </a>
+                </li>
             @endcan
             @can('view_roles')
                 <li class="{{ Request::is('roles*') ? 'active' : '' }}">

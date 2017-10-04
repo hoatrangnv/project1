@@ -189,14 +189,24 @@
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
+                        <p class="" id="photo_msg"></p>
+                        <?php $photo_verification = Auth::user()->photo_verification ? json_decode(Auth::user()->photo_verification, true) : [];?>
                         <table class="table no-margin">
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.scan_photo') }}</td>
-                                <td></td>
+                                <td>
+                                    <button id="scan_photo_view" class="btn btn-xs btn-info">Preview</button>
+                                    <input type="file" name="scan_photo" id="scan_photo" accept="image/*" />
+                                    <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['scan_photo']) ? $photo_verification['scan_photo'] : '') }}" id="scan_photo_thumb"/>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.holding_photo') }}</td>
-                                <td></td>
+                                <td>
+                                    <button id="holding_photo_view" class="btn btn-xs btn-info">Preview</button>
+                                    <input type="file" name="holding_photo" id="holding_photo" accept="image/*" />
+                                    <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['holding_photo']) ? $photo_verification['holding_photo'] : '') }}" id="holding_photo_thumb"/>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -315,7 +325,7 @@
                             <div class="form-group">
                                 <div class="col-sm-8">
                                     <div class="confirmSuccess" style="color:green">
-                                        
+
                                     </div>
                                     <div class="confirmError" style="color:red">
 
@@ -390,7 +400,22 @@
             </div>
         </div>
     </div>
+    <div id="myModalPreview" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="modal-body">
+                    <img class="modal-content" id="img01">
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        #myModalPreview img {max-width: 100%;}
+    </style>
     <!-- js -->
+
     <link href="/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
     <script src="/bootstrap-switch/bootstrap-switch.js"></script>
     <script type="text/javascript">
@@ -404,6 +429,78 @@
             $( '#inputPasswordOld' ).focus(function(){
                 $( '#errorOldPassword' ).hide();
             });
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('#scan_photo_view').on('click', function () {
+                var modal = $('#myModalPreview');
+                $("#img01").attr('src',$('#scan_photo_thumb').val());
+                modal.modal('show');
+            });
+            $('#scan_photo').on('change', function () {
+                //$(this).val("");
+                if ($(this).val() != '') {
+                    var file_data = $('#scan_photo').prop('files')[0];
+                    var form_data = new FormData();
+                    form_data.append('file', file_data);
+                    form_data.append('type', 'scan_photo');
+                    $.ajax({
+                        url: '/profile/upload',
+                        data: form_data,
+                        dataType: 'json',
+                        async: false,
+                        type: 'post',
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if(!response.err){
+                                $('#scan_photo_thumb').val(response.image);
+                                $('#photo_msg').text('Upload successful.');
+                            }else{
+                                alert(response.msg);
+                            }
+                        },
+                    });
+                }
+                $(this).val("");
+            });
+            $('#holding_photo_view').on('click', function () {
+                var modal = $('#myModalPreview');
+                $("#img01").attr('src',$('#holding_photo_thumb').val());
+                modal.modal('show');
+            });
+            $('#holding_photo').on('change', function () {
+                //$(this).val("");
+                if ($(this).val() != '') {
+                    var file_data = $('#holding_photo').prop('files')[0];
+                    var form_data = new FormData();
+                    form_data.append('file', file_data);
+                    form_data.append('type', 'holding_photo');
+                    $.ajax({
+                        url: '/profile/upload',
+                        data: form_data,
+                        dataType: 'json',
+                        async: false,
+                        type: 'post',
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if(!response.err){
+                                $('#holding_photo_thumb').val(response.image);
+                                $('#photo_msg').text('Upload successful.');
+                            }else{
+                                alert(response.msg);
+                            }
+                        },
+                    });
+                }
+                $(this).val("");
+            });
+
+
             //action Save Pass
             $( "#savePassword" ).click(function() {
                 //compare password and password confirm
@@ -441,8 +538,8 @@
                                 $('#myModalChangePassword').modal('hide');
                                 alert("{{ trans('adminlte_lang::profile.fail') }}");
                             } 
-                            
-                            
+
+
                         }
                     })
                     .done(function(){

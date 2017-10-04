@@ -117,12 +117,12 @@ class MemberController extends Controller
 	public function binary(Request $request){
         $currentuserid = Auth::user()->id;
 		if($request->ajax()){
-			if(isset($request['id']) && $request['id'] > 0){
+			if(isset($request['id']) && $request['id'] > 0) {
                 $user = User::find($request['id']);
                 $lstBinaryUser = [];
-                if($userTreePermission = Auth::user()->userTreePermission)
+                if ($userTreePermission = Auth::user()->userTreePermission)
                     $lstBinaryUser = explode(',', $userTreePermission->binary);
-                if($user && (($lstBinaryUser && in_array($request['id'], $lstBinaryUser)) || Auth::user()->id == $request['id'])) {
+                if ($user && (($lstBinaryUser && in_array($request['id'], $lstBinaryUser)) || Auth::user()->id == $request['id'])) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);
@@ -134,9 +134,9 @@ class MemberController extends Controller
                         'childLeftId' => $childLeft ? $childLeft->userId : 0,
                         'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
-                        'weeklySale'     => self::getBV($user->id),
-                        'left'     => $weeklySale['left'],
-                        'right'     => $weeklySale['right'],
+                        'weeklySale' => self::getBV($user->id),
+                        'left' => $weeklySale['left'],
+                        'right' => $weeklySale['right'],
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
                         'rMembers' => $user->userData->rightMembers,
@@ -146,8 +146,45 @@ class MemberController extends Controller
                         $fields['children'] = $children;
                     }
                     return response()->json($fields);
+                } else {
+                    return response()->json(['err' => 1]);
+                }
+            }elseif (isset($request['action']) && $request['action'] == 'getUser'){
+                if(is_numeric($request['username'])){
+                    $user = User::where('uid', '=', $request['username'])->first();
                 }else{
-                    return response()->json(['err'=>1]);
+                    $user = User::where('name', '=', $request['username'])->first();
+                }
+                $lstBinaryUser = [];
+                if ($userTreePermission = Auth::user()->userTreePermission)
+                    $lstBinaryUser = explode(',', $userTreePermission->binary);
+
+                if ($user && (($lstBinaryUser && in_array($user->id, $lstBinaryUser)) || Auth::user()->id == $user->id)) {
+                    $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
+                    $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
+                    $weeklySale = self::getWeeklySale($user->id);
+                    $fields = [
+                        'lvl' => 0,
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'parentID' => $user->userData->binaryUserId,
+                        'childLeftId' => $childLeft ? $childLeft->userId : 0,
+                        'childRightId' => $childRight ? $childRight->userId : 0,
+                        'level' => 0,
+                        'weeklySale' => self::getBV($user->id),
+                        'left' => $weeklySale['left'],
+                        'right' => $weeklySale['right'],
+                        'pkg' => 2000,
+                        'lMembers' => $user->userData->leftMembers,
+                        'rMembers' => $user->userData->rightMembers,
+                    ];
+                    $children = self::getBinaryChildren($user->id);
+                    if ($children) {
+                        $fields['children'] = $children;
+                    }
+                    return response()->json($fields);
+                } else {
+                    return response()->json(['err' => 1]);
                 }
 			}else{
                 $user = Auth::user();

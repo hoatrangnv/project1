@@ -17,6 +17,7 @@ use Session;
 use Hash;
 use Google2FA;
 use App\Http\Controllers\Controller;
+use Validator;
 
 /**
  * Class ProfileController
@@ -24,11 +25,11 @@ use App\Http\Controllers\Controller;
  */
 class ProfileController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+    const PHOTO_APPROVE_NONE = 0;
+    const PHOTO_APPROVE_PENDING = 1;
+    const PHOTO_APPROVE_OK = 2;
+    const PHOTO_APPROVE_CANCEL = 3;
+
     public function __construct()
     {
         $this->middleware(['auth']);
@@ -191,6 +192,47 @@ class ProfileController extends Controller
             $this->name,
             $this->email,
             $key
+        );
+    }
+    public function upload(Request $request){
+        $validator = Validator::make($request->all(),
+            [
+                'file' => 'image',
+            ],
+            [
+                'file.image' => 'The file must be an image (jpeg, png, bmp, gif, or svg)'
+            ]);
+        if ($validator->fails())
+            return array(
+                'err' => true,
+                'msg' => $validator->getMessageBag()->toArray()['file'][0]
+            );
+        $extension = $request->file('file')->getClientOriginalExtension(); // getting image extension
+        $folder ='/uploads/images/';
+        $dir = public_path($folder);
+        $filename = uniqid() . '_' . time() . '.' . $extension;
+        $request->file('file')->move($dir, $filename);
+        $user = Auth::user();
+        $user->approve = self::PHOTO_APPROVE_PENDING;
+        $photo_verification = $user->photo_verification ? json_decode($user->photo_verification, true) : [];
+        if($photo_verification){
+            if($request->type == 'scan_photo'){
+                $photo_verification['scan_photo'] = $folder.$filename;
+            }elseif($request->type == 'holding_photo'){
+                $photo_verification['holding_photo'] = $folder.$filename;
+            }
+        }else{
+            if($request->type == 'scan_photo'){
+                $photo_verification['scan_photo'] = $folder.$filename;
+            }elseif($request->type == 'holding_photo'){
+                $photo_verification['holding_photo'] = $folder.$filename;
+            }
+        }
+        $user->photo_verification = json_encode($photo_verification);
+        $user->save();
+        return array(
+            'err' => false,
+            'image' => $folder.$filename
         );
     }
 }

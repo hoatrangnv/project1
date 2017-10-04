@@ -34,7 +34,7 @@
                                         <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 2) }}</h3>
                                         <p>{{ trans('adminlte_lang::home.clp_wallet') }}</p>
                                 </div>
-                                <div class="icon icon-clp">C</div>
+                                <div class="icon"><span class="icon-clp-icon"></span></div>
                                 <a href="{{ route('wallet.clp') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                                     <h3>{{ number_format(Auth::user()->userCoin->reinvestAmount, 2) }}</h3>
                                     <p>{{ trans('adminlte_lang::home.re_invest_wallet') }}</p>
                                 </div>
-                                <div class="icon"><i class="fa fa-usd"></i></div>
+                                <div class="icon"><span class="icon-clp-icon"></span></div>
                                 <a href="{{ route('wallet.reinvest') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>

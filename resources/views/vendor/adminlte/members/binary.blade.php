@@ -39,6 +39,14 @@
                         </div>
                         {!! Form::close() !!}
                     </div>
+                    <div class="col-xs-2" style="padding-top: 15px;position: absolute;right:0;">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
+                            <span class="input-group-btn">
+								<button type="button" id="search-button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
+							</span>
+                        </div>
+                    </div>
                     <div style="margin-top: 15px;text-align:center;">
                         <center>
                             <button class="btn btn-app btn-xs binary-control" type="button" id="refresh-tree"
@@ -49,6 +57,7 @@
                                         class="fa fa-play rotate120 "></i></button></center>
                     </div>
                     <div class="chart" id="tree-container"></div>
+
                     <div class="pull-left">
                         <button class="btn btn-app btn-xs binary-control" type="button" id="go-endleft"><i
                                     class="fa fa-fast-forward rotate90"></i></button>
@@ -237,6 +246,35 @@
                     getTree(endRight, function (err) {
                         if (err) console.log(err);
                     })
+                }
+            });
+            $('#search-button').on('click', function (e) {
+                $.ajax({
+                    url: "?action=getUser",
+                    data: {
+                        username: $('#search-input').val(),
+                    },
+                    timeout : 15000
+                }).done(function(data) {
+                    if (!data.err) {
+                        selectedNodeID = data.id;
+                        getTree(selectedNodeID, function (err) {
+                            if (err) console.log(err);
+                        })
+                    } else {
+                        swal({
+                            title: "There's something wrong",
+                            text: ErrorCodes[data.err],
+                            type: "error"
+                        });
+                    }
+                });
+            });
+            $('#search-input').keypress(function (e) {
+                var key = e.which;
+                if(key == 13) {
+                    $('#search-button').click();
+                    return false;
                 }
             });
         });
