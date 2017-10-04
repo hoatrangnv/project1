@@ -49,7 +49,7 @@
                 </li>
                 <li class="{{ Request::is('users/photo_approve') ? 'active' : '' }}">
                     <a href="{{ route('users.photo_approve') }}">
-                        <i class="glyphicon glyphicon-user"></i> List Root
+                        <i class="glyphicon glyphicon-user"></i> List Approve
                     </a>
                 </li>
             @endcan

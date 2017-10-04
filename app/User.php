@@ -110,7 +110,7 @@ class User extends Authenticatable
                     $user = Auth::user();
 
                     $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
-                    $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay'));
+                    $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay')/self::getCLPUSDRate());
                     $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
                     $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
                     $userCoin->save();
@@ -442,7 +442,7 @@ class User extends Authenticatable
                     'type' => Wallet::BINARY_TYPE,//bonus week
                     'inOut' => Wallet::IN,
                     'userId' => $binary->userId,
-                    'amount' => ($bonus * config('cryptolanding.reinvest_bonus_pay')),
+                    'amount' => ($bonus * config('cryptolanding.reinvest_bonus_pay')/self::getCLPUSDRate()),
                 ];
 
                 Wallet::create($fieldInvest);
@@ -543,40 +543,45 @@ class User extends Authenticatable
 
         if(LoyaltyUser::where('userId', '=', $userId)->count())
         {
+
             $loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
+            $userData = $loyaltyUser->user->userData;
             $loyaltyUser->f1Left = $totalf1Left;
             $loyaltyUser->f1Right = $totalf1Right;
-
-            if($loyaltyUser->isSilver==0) {
-                $loyaltyUser->isSilver = $isSilver;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['silver']) && $loyaltyUser->isSilver == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['silver'], 'silver');
+            if($userData && $userData->package && $userData->package->price  && $userData->package->price>=1000){
+                if($loyaltyUser->isSilver==0) {
+                    $loyaltyUser->isSilver = $isSilver;
+                    if(isset($loyaltyBonus) && isset($loyaltyBonus['silver']) && $loyaltyUser->isSilver == 1)
+                        self::bonusLoyaltyCal($userId, $loyaltyBonus['silver'], 'silver');
+                }
             }
 
-            if($loyaltyUser->isGold==0) {
-                $loyaltyUser->isGold = $isGold;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['gold']) && $loyaltyUser->isGold == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['gold'], 'gold');
+            if($userData && $userData->package && $userData->package->price  && $userData->package->price>=5000){
+                if($loyaltyUser->isGold == 0){
+                    $loyaltyUser->isGold = $isGold;
+                    if(isset($loyaltyBonus) && isset($loyaltyBonus['gold']) && $loyaltyUser->isGold == 1)
+                        self::bonusLoyaltyCal($userId, $loyaltyBonus['gold'], 'gold');
+                }
             }
+            if($userData && $userData->package && $userData->package->price  && $userData->package->price>=10000){
+                if($loyaltyUser->isPear == 0){
+                    $loyaltyUser->isPear = $isPear;
+                    if(isset($loyaltyBonus) && isset($loyaltyBonus['pear']) && $loyaltyUser->isPear == 1)
+                        self::bonusLoyaltyCal($userId, $loyaltyBonus['pear'], 'pear');
+                }
 
-            if($loyaltyUser->isPear==0) {
-                $loyaltyUser->isPear = $isPear;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['pear']) && $loyaltyUser->isPear == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['pear'], 'pear');
+                if($loyaltyUser->isEmerald == 0){
+                    $loyaltyUser->isEmerald = $isEmerald;
+                    if(isset($loyaltyBonus) && isset($loyaltyBonus['emerald']) && $loyaltyUser->isEmerald == 1)
+                        self::bonusLoyaltyCal($userId, $loyaltyBonus['emerald'], 'emerald');
+                }
+
+                if($loyaltyUser->isDiamond == 0){
+                    $loyaltyUser->isDiamond = $isDiamond;
+                    if(isset($loyaltyBonus) && isset($loyaltyBonus['diamond']) && $loyaltyUser->isEmerald == 1)
+                        self::bonusLoyaltyCal($userId, $loyaltyBonus['diamond'], 'diamond');
+                }
             }
-
-            if($loyaltyUser->isEmerald==0) {
-                $loyaltyUser->isEmerald = $isEmerald;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['emerald']) && $loyaltyUser->isEmerald == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['emerald'], 'emerald');
-            }
-
-            if($loyaltyUser->isDiamond==0) {
-                $loyaltyUser->isDiamond = $isDiamond;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['diamond'])  && $loyaltyUser->isEmerald == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['diamond'], 'diamond');
-            }
-
             $loyaltyUser->save();
         }
         else
@@ -608,7 +613,7 @@ class User extends Authenticatable
             'type' => Wallet::LTOYALTY_TYPE,//bonus f1
             'inOut' => Wallet::IN,
             'userId' => $userId,
-            'amount' => $amount * config("cryptolanding.reinvest_bonus_pay"),
+            'amount' => $amount * config("cryptolanding.reinvest_bonus_pay")/self::getCLPUSDRate(),
             'note' => $type,
         ];
         

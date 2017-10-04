@@ -205,7 +205,18 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                         @endforeach
                         </tbody>
                     </table>
-                    <a href="/term-condition.html" target="_blank">Term and condition</a>
+                    <div class="form-group">
+                        <label>
+                            <div class="checkbox_register icheck">
+                                <label data-toggle="modal" data-target="#termsModal" class="" style="position: relative;">
+                                    <input type="checkbox" name="terms" id="termsPackage">
+                                    <a href="/term-condition.html" target="_blank">Term and condition</a>
+                                </label>
+                            </div>
+                        </label>
+                        <span class="help-block"></span>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="packageId" id="packageId"
@@ -492,7 +503,6 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 });
             }
         });
-        });
         var packageId = {{ Auth::user()->userData->packageId }};
         var packageIdPick = packageId;
         $(document).ready(function () {
@@ -514,11 +524,21 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 }
             });
             $('#btn_submit').on('click', function () {
-                if (packageIdPick > packageId) {
-                    $('#formPackage').submit();
-                } else {
-                    alert('You cant not this package');
+                if(!$('#termsPackage').is(':checked')){
+                    $("#termsPackage").parents("div.form-group").addClass('has-error');
+                    $("#termsPackage").parents("div.form-group").find('.help-block').text('Please checked term');
+                    return false;
+                }else{
+                    $("#termsPackage").parents("div.form-group").removeClass('has-error');
+                    $("#termsPackage").parents("div.form-group").find('.help-block').text('');
+                    if (packageIdPick > packageId) {
+                        $('#formPackage').submit();
+                    } else {
+                        alert('You cant not this package');
+                        return false;
+                    }
                 }
+
             });
         });
 

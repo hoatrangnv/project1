@@ -87,33 +87,33 @@ class ClpWalletController extends Controller {
             $userCoin = Auth::user()->userCoin;
             $clpAmountErr = $clpUsernameErr = $clpUidErr = $clpOTPErr = '';
             if($request->clpAmount == ''){
-                $clpAmountErr = 'The Amount field is required';
+                $clpAmountErr = trans('adminlte_lang::wallet.amount_required');
             }elseif (is_numeric($request->clpAmount)){
-                $clpAmountErr = 'The Amount must be a number';
+                $clpAmountErr = trans('adminlte_lang::wallet.amount_number');
             }elseif ($userCoin->clpCoinAmount < $request->clpAmount){
                 $clpAmountErr = trans('adminlte_lang::wallet.error_not_enough');
             }
             if($request->clpUsername == ''){
-                $clpUsernameErr = 'The Username field is required';
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_required');
             }elseif (!preg_match('/^\S*$/u', $request->clpUsername)){
-                $clpUsernameErr = 'The Username not required';
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_notspace');
             }elseif (!User::where('name', $request->clpUsername)->where('active', 1)->count()){
-                $clpUsernameErr = 'The Username is not invalid';
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
             }
             if($request->clpUid == ''){
-                $clpUidErr = 'The Uid field is required';
+                $clpUidErr = trans('adminlte_lang::wallet.uid_required');
             }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
-                $clpUidErr = 'The Uid not required';
+                $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
             }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
-                $clpUidErr = 'The Uid is not invalid';
+                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
             }
             if($request->clpOTP == ''){
-                $clpOTPErr = 'The OTP field is required';
+                $clpOTPErr = trans('adminlte_lang::wallet.otp_required');
             }else{
                 $key = Auth::user()->google2fa_secret;
                 $valid = Google2FA::verifyKey($key, $request->clpOTP);
                 if(!$valid){
-                    $clpOTPErr = 'The OTP not match';
+                    $clpOTPErr = trans('adminlte_lang::wallet.otp_not_match');
                 }
             }
             if($clpAmountErr !='' && $clpUsernameErr != '' && $clpOTPErr != '' && $clpUidErr != ''){
@@ -152,7 +152,7 @@ class ClpWalletController extends Controller {
                 }else{
                     $result = [
                         'err' => true,
-                        'msg' => ['clpUsernameErr'=>'User not required']
+                        'msg' => ['clpUsernameErr'=>trans('adminlte_lang::wallet.user_required')]
                     ];
                     return response()->json($result);
                 }

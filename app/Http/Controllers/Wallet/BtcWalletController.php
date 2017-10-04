@@ -98,33 +98,33 @@ class BtcWalletController extends Controller
             $userCoin = Auth::user()->userCoin;
             $btcAmountErr = $btcUsernameErr = $clpUidErr = $btcOTPErr = '';
             if($request->btcAmount == ''){
-                $btcAmountErr = 'The Amount field is required';
+                $btcAmountErr = trans('adminlte_lang::wallet.amount_required');
             }elseif (is_numeric($request->btcAmount)){
-                $btcAmountErr = 'The Amount must be a number';
+                $btcAmountErr = trans('adminlte_lang::wallet.amount_number');
             }elseif ($userCoin->btcCoinAmount < $request->btcAmount){
                 $btcAmountErr = trans('adminlte_lang::wallet.error_not_enough');
             }
             if($request->btcUsername == ''){
-                $btcUsernameErr = 'The Username field is required';
+                $btcUsernameErr = trans('adminlte_lang::wallet.username_required');
             }elseif (!preg_match('/^\S*$/u', $request->btcUsername)){
-                $btcUsernameErr = 'The Username not required';
+                $btcUsernameErr = trans('adminlte_lang::wallet.username_notspace');
             }elseif (!User::where('name', $request->btcUsername)->where('active', 1)->count()){
-                $btcUsernameErr = 'The Username is not invalid';
+                $btcUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
             }
             if($request->clpUid == ''){
-                $clpUidErr = 'The Uid field is required';
+                $clpUidErr = trans('adminlte_lang::wallet.uid_required');
             }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
-                $clpUidErr = 'The Uid not required';
+                $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
             }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
-                $clpUidErr = 'The Uid is not invalid';
+                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
             }
             if($request->btcOTP == ''){
-                $btcOTPErr = 'The OTP field is required';
+                $btcOTPErr = trans('adminlte_lang::wallet.otp_required');
             }else{
                 $key = Auth::user()->google2fa_secret;
                 $valid = Google2FA::verifyKey($key, $request->btcOTP);
                 if(!$valid){
-                    $btcOTPErr = 'The OTP not match';
+                    $btcOTPErr = trans('adminlte_lang::wallet.otp_not_match');
                 }
             }
             if($btcAmountErr !='' && $btcUsernameErr != '' && $btcOTPErr != '' && $clpUidErr != ''){
@@ -163,7 +163,7 @@ class BtcWalletController extends Controller
                 }else{
                     $result = [
                         'err' => true,
-                        'msg' => ['btcUsernameErr'=>'User not required']
+                        'msg' => ['btcUsernameErr'=>trans('adminlte_lang::wallet.user_required')]
                     ];
                     return response()->json($result);
                 }
