@@ -68,7 +68,7 @@ return [
     'fail' => 'Fail',
     'tranfer_from_reinves_wallet_to_clp_wallet'=>"Tranfer from Reinvest wallet to CLP wallet",
     'tranfer_from_usd_wallet_to_clp_wallet'=>"Tranfert from Usd wallet to Reinvest wallet",
-
+    'btn_copy' => "copy",
     'amount_number'=>'The Amount must be a number',
     'amount_required'=>'The Amount field is required',
     'username_required'=>'The Username field is required',
@@ -80,4 +80,5 @@ return [
     'otp_required'=>'The OTP field is required',
     'otp_not_match'=>'The OTP not match',
     'user_required'=>'User is required',
+
 ];

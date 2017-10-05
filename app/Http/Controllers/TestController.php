@@ -14,6 +14,8 @@ use App\User;
 use App\Wallet;
 use DB;
 use Log;
+use App\ExchangeRate;
+use App\ExchangeRateAPI;
 
 /**
  * Description of TestController
@@ -69,4 +71,40 @@ class TestController {
         }
        
     }
+    
+    function test(){
+        $exchrate =  new ExchangeRateAPI();
+        
+        $exchrateClpUsd = $exchrate->getCLPUSDRate();
+        $exchrateBtcUsd = $exchrate->getBTCUSDRate();
+        $exchrateClpBtc = $exchrate->getCLPBTCRate();
+        /* make array insert db*/
+        $dataArrayExrate = [
+            [
+                'from_currency' => ExchangeRate::CLP,
+                'exchrate'      => $exchrateClpUsd,
+                'to_currency'   => ExchangeRate::USD,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ],
+            [
+                'from_currency' => ExchangeRate::BTC,
+                'exchrate'      => $exchrateBtcUsd,
+                'to_currency'   => ExchangeRate::USD,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ],
+            [
+                'from_currency' => ExchangeRate::CLP,
+                'exchrate'      => $exchrateClpBtc,
+                'to_currency'   => ExchangeRate::BTC,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ]
+        ];
+        
+        ExchangeRate::insert($dataArrayExrate);
+        
+    }
+    
 }
