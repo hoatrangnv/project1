@@ -200,7 +200,10 @@ class PackageController extends Controller
         if($request->ajax()){
             $tempHistoryPackage = UserPackage::where("userId",Auth::user()->id)
                     ->orderBy('id', 'DESC')->first();
-            
+            if(!isset($tempHistoryPackage)){
+                $message = trans("adminlte_lang::home.not_buy_package");
+                return $this->responseError($errorCode = true,$message);
+            }
             //check userID and check withdraw
             if( $tempHistoryPackage->withdraw == 1 ){
                 $message = trans("adminlte_lang::home.package_withdrawn");
