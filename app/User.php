@@ -548,7 +548,7 @@ class User extends Authenticatable
             $userData = $loyaltyUser->user->userData;
             $loyaltyUser->f1Left = $totalf1Left;
             $loyaltyUser->f1Right = $totalf1Right;
-            if($userData && $userData->package && $userData->package->price  && $userData->package->price>=1000){
+            if($userData && $userData->packageId && $userData->packageId >=3){
                 if($loyaltyUser->isSilver==0) {
                     $loyaltyUser->isSilver = $isSilver;
                     if(isset($loyaltyBonus) && isset($loyaltyBonus['silver']) && $loyaltyUser->isSilver == 1)
@@ -556,14 +556,14 @@ class User extends Authenticatable
                 }
             }
 
-            if($userData && $userData->package && $userData->package->price  && $userData->package->price>=5000){
+            if($userData && $userData->packageId && $userData->packageId >=5){
                 if($loyaltyUser->isGold == 0){
                     $loyaltyUser->isGold = $isGold;
                     if(isset($loyaltyBonus) && isset($loyaltyBonus['gold']) && $loyaltyUser->isGold == 1)
                         self::bonusLoyaltyCal($userId, $loyaltyBonus['gold'], 'gold');
                 }
             }
-            if($userData && $userData->package && $userData->package->price  && $userData->package->price>=10000){
+            if($userData && $userData->packageId && $userData->packageId >=6){
                 if($loyaltyUser->isPear == 0){
                     $loyaltyUser->isPear = $isPear;
                     if(isset($loyaltyBonus) && isset($loyaltyBonus['pear']) && $loyaltyUser->isPear == 1)

@@ -39,12 +39,14 @@
                         </div>
                         {!! Form::close() !!}
                     </div>
-                    <div class="col-xs-2" style="padding-top: 15px;position: absolute;right:0;">
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
-                            <span class="input-group-btn">
-								<button type="button" id="search-button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
-							</span>
+                    <div class="col-xs-5 col-lg-6" style="padding-top: 15px;position: absolute;right:0;">
+                        <div class="col-xs-12 col-lg-6" style="position: absolute;right:0;">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
+                                <span class="input-group-btn">
+                                    <button type="button" id="search-button" class="btn btn-primary btn-flat" >{{ trans('adminlte_lang::member.btn_search') }}</button>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div style="margin-top: 15px;text-align:center;">
@@ -99,7 +101,7 @@
             -moz-border-radius: 10px;
             border-radius: 10px;
             background-color: #ffffff;
-            border: 1px solid #222d32;
+            border: 0px solid #222d32;
             width: 12%;
             font-size: 10px;
             text-align: center;
@@ -337,6 +339,7 @@
                                     children: [],
                                     pos: 1,
                                     level: 0,
+                                    loyaltyId: 0,
                                     lMembers: 0,
                                     rMembers: 0
                                 });
@@ -349,6 +352,7 @@
                                     children: [],
                                     pos: 2,
                                     level: 0,
+                                    loyaltyId: 0,
                                     lMembers: 0,
                                     rMembers: 0
                                 });
@@ -363,6 +367,7 @@
                                         children: [],
                                         pos: 1,
                                         level: 0,
+                                        loyaltyId: 0,
                                         lMembers: 0,
                                         rMembers: 0
                                     });
@@ -376,6 +381,7 @@
                                         children: [],
                                         pos: 2,
                                         level: 0,
+                                        loyaltyId: 0,
                                         lMembers: 0,
                                         rMembers: 0
                                     });
@@ -397,6 +403,7 @@
                             pkg: node.weeklySale < 0 ? '' : 'BV:' + node.weeklySale,
                             leginfo: node.weeklySale < 0 ? '' : 'L:' + node.left + ' R:' + node.right,
                             level: node.level,
+                            loyaltyId: node.loyaltyId,
                             lMembers: node.lMembers,
                             rMembers: node.rMembers
                         };

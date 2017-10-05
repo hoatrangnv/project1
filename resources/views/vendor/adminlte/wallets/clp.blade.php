@@ -55,7 +55,6 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     <div class="table-responsive">
                         <table class="table table-hover table-striped wallet-table">
                             <tbody>
-<<<<<<< HEAD
                             <tr>
                                 <th class="icon-wallet">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -76,20 +75,6 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                             data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>
                                 </th>
                             </tr>
-=======
-                                <tr>
-                                    <th class="icon-wallet">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
-                                    </th>
-                                    <th class="wallet-amount"><span class="icon-clp-icon" style="font-size: 16px;"></span>{{ Auth()->user()->userCoin->clpCoinAmount }}  </th>
-                                    <th>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#sell">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#buy-package">{{ trans("adminlte_lang::wallet.buy_package") }}</a>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
-                                    </th>
-                                </tr>
->>>>>>> b68b76b4c84e8b5d86a4023f52313ae493ce9e21
                             </tbody>
                         </table>
                     </div>
@@ -440,10 +425,10 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
                             $('#clpUsername').val('');
                         }else{
-                            $('#clpUid').parent().removeClass('has-error');
+                            $('#clpUid').parents("div.form-group").removeClass('has-error');
                             $("#clpUid").parents("div.form-group").find('.help-block').text('');
-                            $('#clpUsername').parent().removeClass('has-error');
-                            $('#clpUsername').parent().find('.help-block').text('');
+                            $('#clpUsername').parents("div.form-group").removeClass('has-error');
+                            $('#clpUsername').parents("div.form-group").find('.help-block').text('');
                             $('#clpUsername').val(data.username);
                         }
                     });
@@ -465,11 +450,11 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             $("#clpUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
                             $('#clpUid').val('');
                         }else{
-                            $('#clpUid').parent().removeClass('has-error');
+                            $('#clpUid').parents("div.form-group").removeClass('has-error');
                             $("#clpUid").parents("div.form-group").find('.help-block').text('');
-                            $('#clpUsername').parent().removeClass('has-error');
-                            $('#clpUsername').parent().find('.help-block').text('');
-                            $('#clpUsername').val(data.id);
+                            $('#clpUsername').parents("div.form-group").removeClass('has-error');
+                            $('#clpUsername').parents("div.form-group").find('.help-block').text('');
+                            $('#clpUid').val(data.id);
                         }
                     });
                 }, 1000);

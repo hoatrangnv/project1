@@ -258,7 +258,6 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtctranfer" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
-<<<<<<< HEAD
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-btc"></i></span>
@@ -270,24 +269,6 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-usd"></i></span>
                             {{ Form::text('username', '', array('class' => 'form-control input-sm', 'id' => 'btcUsername', 'placeholder' => "Username")) }}
-=======
-                    <div class="box no-border">
-                        <div class="box-body" style="padding-top:0;">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                {{ Form::number('username', '', array('class' => 'form-control input-sm switch-CLP-to-BTC-tranfer', 'step' => '0.0001','placeholder' => "Username")) }}
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
-                            </div>
->>>>>>> b68b76b4c84e8b5d86a4023f52313ae493ce9e21
                         </div>
                         <span class="help-block"></span>
                     </div>
@@ -308,11 +289,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-<<<<<<< HEAD
                     {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary', 'id' => 'btctranfer')) }}
-=======
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
->>>>>>> b68b76b4c84e8b5d86a4023f52313ae493ce9e21
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -350,19 +327,19 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             if(data.err) {
                                 $("#clpUid").parents("div.form-group").addClass('has-error');
                                 $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
-                                $('#clpUsername').val('');
+                                $('#btcUsername').val('');
                             }else{
-                                $('#clpUid').parent().removeClass('has-error');
+                                $('#clpUid').parents("div.form-group").removeClass('has-error');
                                 $("#clpUid").parents("div.form-group").find('.help-block').text('');
-                                $('#clpUsername').parent().removeClass('has-error');
-                                $('#clpUsername').parent().find('.help-block').text('');
-                                $('#clpUsername').val(data.username);
+                                $('#btcUsername').parents("div.form-group").removeClass('has-error');
+                                $('#btcUsername').parents("div.form-group").find('.help-block').text('');
+                                $('#btcUsername').val(data.username);
                             }
                         });
                     }, 1000);
                 }
             });
-            $('#clpUsername').on('blur onmouseout keyup', function () {
+            $('#btcUsername').on('blur onmouseout keyup', function () {
                 clearTimeout(mytimer);
                 var search = $(this).val();
                 if(search.length >= 3){
@@ -373,15 +350,15 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             data: {username : search}
                         }).done(function(data){
                             if(data.err) {
-                                $("#clpUsername").parents("div.form-group").addClass('has-error');
-                                $("#clpUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
+                                $("#btcUsername").parents("div.form-group").addClass('has-error');
+                                $("#btcUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
                                 $('#clpUid').val('');
                             }else{
-                                $('#clpUid').parent().removeClass('has-error');
+                                $('#clpUid').parents("div.form-group").removeClass('has-error');
                                 $("#clpUid").parents("div.form-group").find('.help-block').text('');
-                                $('#clpUsername').parent().removeClass('has-error');
-                                $('#clpUsername').parent().find('.help-block').text('');
-                                $('#clpUsername').val(data.id);
+                                $('#btcUsername').parents("div.form-group").removeClass('has-error');
+                                $('#btcUsername').parents("div.form-group").find('.help-block').text('');
+                                $('#clpUid').val(data.id);
                             }
                         });
                     }, 1000);
