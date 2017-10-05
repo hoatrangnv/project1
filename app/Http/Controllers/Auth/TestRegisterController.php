@@ -156,7 +156,7 @@ class TestRegisterController extends Controller
                 'active' => 1,
                 'activeCode' => 'test',
                 'uid' => User::getUid(),
-                'google2fa_secret' => 'test'
+                'google2fa_secret' => Google2FA::generateSecretKey(16)
             ];
             if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {
                 $fields['username'] = $data['username'];

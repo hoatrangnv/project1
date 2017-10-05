@@ -265,61 +265,34 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtctranfer" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
-<<<<<<< HEAD
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                            {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm', 'id' => 'btcAmount', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
-                        </div>
-                        <span class="help-block"></span>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                            {{ Form::text('username', '', array('class' => 'form-control input-sm', 'id' => 'btcUsername', 'placeholder' => "Username")) }}
-=======
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                {{ Form::number('username', '', array('class' => 'form-control input-sm switch-CLP-to-BTC-tranfer', 'step' => '0.0001','placeholder' => "Username")) }}
+                                {{ Form::number('username', '', array('class' => 'form-control input-sm', 'step' => '0.0001','placeholder' => "Username")) }}
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-id-card-o"></i></span>
+                                {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid', 'placeholder' => "Id")) }}
                             </div>
                             <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-key"></i></span>
                                 {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
                             </div>
->>>>>>> b68b76b4c84e8b5d86a4023f52313ae493ce9e21
-                        </div>
-                        <span class="help-block"></span>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-clp"></i></span>
-                            {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid', 'placeholder' => "Uid")) }}
-                        </div>
-                        <span class="help-block"></span>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                            {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'id' => 'btcOTP', 'placeholder' => "2FA Code E.g. 123456")) }}
                         </div>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-<<<<<<< HEAD
-                    {{ Form::submit(trans('adminlte_lang::wallet.transfer'), array('class' => 'btn btn-primary', 'id' => 'btctranfer')) }}
-=======
                     {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
->>>>>>> b68b76b4c84e8b5d86a4023f52313ae493ce9e21
                 </div>
             </div>
             <!-- /.modal-content -->
