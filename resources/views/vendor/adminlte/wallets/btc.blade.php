@@ -232,12 +232,12 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP', 'step' => '0.00001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC', 'step' => '0.0001','placeholder' => "CLP Amount")) }}
+                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC', 'step' => '0.00001','placeholder' => "CLP Amount")) }}
                             </div>
                         </div>
                     </div>
@@ -268,7 +268,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.0001', 'placeholder' => "Min 0.0001", 'id' => 'btcAmount' )) }}
+                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.00001', 'placeholder' => "Min 0.0001", 'id' => 'btcAmount' )) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>

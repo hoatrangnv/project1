@@ -15,6 +15,7 @@ use App\Authorizable;
 use Validator;
 use DateTime;
 use App\ExchangeRate;
+use App\Wallet;
 
 class PackageController extends Controller
 {
@@ -113,9 +114,20 @@ class PackageController extends Controller
                 'weekYear' => $weekYear,
             ]);
 
+            $amountCLPDecrease = $amount_increase / ExchangeRate::getCLPUSDRate();
             $userCoin = $userData->userCoin;
-            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - ($amount_increase / ExchangeRate::getCLPUSDRate());
+            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
             $userCoin->save();
+
+            $fieldUsd = [
+                'walletType' => Wallet::CLP_WALLET,//usd
+                'type' => Wallet::BUY_PACK_TYPE,//bonus f1
+                'inOut' => Wallet::OUT,
+                'userId' => Auth::user()->id,
+                'amount' => $amountCLPDecrease,
+                'note'   => 'Buy Package ' . $userData->package->name
+            ];
+            Wallet::create($fieldUsd);
 
             // Calculate fast start bonus
             User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);

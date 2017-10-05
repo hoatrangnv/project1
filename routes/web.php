@@ -55,6 +55,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
+    Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
     
     //Get total value
     Route::get('wallets/totalvalue','WalletController@getMaxTypeWallet');

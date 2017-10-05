@@ -193,7 +193,6 @@ class BtcWalletController extends Controller
     public function buyCLP(Request $request){
         $currentuserid = Auth::user()->id;
         $userCoin = Auth::user()->userCoin;
-        $walletAdmin = config("app.btc_wallet_admin");
         if ( $request->isMethod('post') ) {
             //validate
             $this->validate($request, [
@@ -207,6 +206,7 @@ class BtcWalletController extends Controller
                 $amountCLP = ($request->btcAmount / ExchangeRate::getCLPBTCRate()) + $userCoin->clpCoinAmount;
                 $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
                 $userCoin->clpCoinAmount = $amountCLP;
+                $userCoin->save();
 
                 $fieldBTC = [
                     'walletType' => Wallet::BTC_WALLET,//usd
@@ -228,6 +228,8 @@ class BtcWalletController extends Controller
                 ];
                 Wallet::create($fieldCLP);
 
+                $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_buy_clp_success') );
+                return redirect()->route('wallet.btc');
             } else {
                 //Not enough money
                 $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );

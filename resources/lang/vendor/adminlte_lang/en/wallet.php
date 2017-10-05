@@ -63,6 +63,11 @@ return [
     'transfer_clp_type'         => 'Tranfer CLP',
     'deposit_btc_type'          => 'Deposit BTC',
     'deposit_clp_type'          => 'Deposit CLP',
+    'buy_pack'                  => 'Buy Package',
+
+    //Message
+     'msg_sell_clp_success'     => 'Sell CLP successfully!',
+     'msg_buy_clp_success'     => 'Buy CLP successfully!',
 
     'error_reinvest_to_clp_over' => 'Số tiền chuyển lớn hơn số tiền tối đa có thể chuyển',
     'success' => 'Success',

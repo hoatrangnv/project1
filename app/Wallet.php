@@ -52,6 +52,8 @@ class Wallet extends Model
     const DEPOSIT_BTC_TYPE = 13;
     // deposit CLP
     const DEPOSIT_CLP_TYPE = 14;
+    // buy Package
+    const BUY_PACK_TYPE = 15;
     //inOut 
     const IN = "in" ;
     
