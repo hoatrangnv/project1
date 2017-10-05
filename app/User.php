@@ -54,23 +54,7 @@ class User extends Authenticatable
     public function userLoyatys() {
         return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
     }
-    /**
-     * update: giangdt 21/09
-     *
-     * Return rate CLP by USD ( 1 CLP = ? USD)
-     */
-    public static function getCLPUSDRate(){
-        return 1.12;
-    }
 
-    /**
-     * update: giangdt 21/09
-     *
-     * Return rate CLP by BTC ( 1 CLP = ? BTC)
-     */
-    public static function getCLPBTCRate(){
-        return 0.00025;
-    }
     public static function getUid(){
         $uid = mt_rand(1001, 999999);
         if(User::where('uid', $uid)->count()){
