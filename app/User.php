@@ -110,7 +110,7 @@ class User extends Authenticatable
                     $user = Auth::user();
 
                     $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
-                    $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay')/self::getCLPUSDRate());
+                    $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRateAPI::getCLPUSDRate());
                     $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
                     $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
                     $userCoin->save();
@@ -442,7 +442,7 @@ class User extends Authenticatable
                     'type' => Wallet::BINARY_TYPE,//bonus week
                     'inOut' => Wallet::IN,
                     'userId' => $binary->userId,
-                    'amount' => ($bonus * config('cryptolanding.reinvest_bonus_pay')/self::getCLPUSDRate()),
+                    'amount' => ($bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRateAPI::getCLPUSDRate()),
                 ];
 
                 Wallet::create($fieldInvest);
@@ -583,7 +583,7 @@ class User extends Authenticatable
                 if(isset($loyaltyBonus) && isset($loyaltyBonus['diamond']) && $loyaltyUser->isEmerald == 1)
                     self::bonusLoyaltyCal($userId, $loyaltyBonus['diamond'], 'diamond');
             }
-            
+
             $loyaltyUser->save();
         }
         else
@@ -615,7 +615,7 @@ class User extends Authenticatable
             'type' => Wallet::LTOYALTY_TYPE,//bonus f1
             'inOut' => Wallet::IN,
             'userId' => $userId,
-            'amount' => $amount * config("cryptolanding.reinvest_bonus_pay")/self::getCLPUSDRate(),
+            'amount' => $amount * config("cryptolanding.reinvest_bonus_pay") / ExchangeRateAPI::getCLPUSDRate(),
             'note' => $type,
         ];
         
