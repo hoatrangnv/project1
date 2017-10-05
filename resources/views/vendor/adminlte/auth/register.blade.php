@@ -54,6 +54,8 @@
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('phone') ? ' has-error' : '' }}">
                         <input type="text" id="phone" name="phone" class="form-control" hidden="">
+                        <input type="text" id="country" name="country" class="form-control" style="display: none">
+                        <input type="text" id="name_country" name="name_country" class="form-control" style="display: none">
                         <span class="glyphicon glyphicon-phone form-control-feedback"></span>
                         @if ($errors->has('country'))
                             <span class="help-block">
@@ -162,6 +164,8 @@
             
             $('form').submit(function(){
                 $("#phone").val($("#phone").intlTelInput("getNumber"));
+                $("#country").val($("#phone").intlTelInput("getSelectedCountryData").dialCode);
+                $("#name_country").val($("#phone").intlTelInput("getSelectedCountryData").name);
             });
             
             $('input').iCheck({
