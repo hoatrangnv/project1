@@ -46,7 +46,7 @@
                         @endif
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('country') ? ' has-error' : '' }}">
-                        {{ Form::select('country', $lstCountry, null, ['class' => 'form-control input-sm'], ['placeholder' => 'Choose a country']) }}
+                        {{ Form::select('country', $lstCountry, null, ['class' => 'form-control input-sm'], ['placeholder' => 'Select a country']) }}
                         @if ($errors->has('country'))
                             <span class="help-block">
 									{{ $errors->first('country') }}
@@ -81,7 +81,7 @@
                         @endif
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                        <input type="password" placeholder="Retype password" name="password_confirmation" class="form-control">
+                        <input type="password" placeholder="Retype Password" name="password_confirmation" class="form-control">
                         @if ($errors->has('password_confirmation'))
                             <span class="help-block">
                                 {{ $errors->first('password_confirmation') }}
@@ -89,7 +89,7 @@
                         @endif
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('referrerId') ? ' has-error' : '' }}">
-                        <input type="text" value="{{ $referrerId }}" name="refererId" id="refererId" class="form-control" placeholder="Id Sponsor">
+                        <input type="text" value="{{ $referrerId }}" name="refererId" id="refererId" class="form-control" placeholder="Referral Id">
                         @if ($errors->has('refererId'))
                             <span class="help-block">
                                 {{ $errors->first('refererId') }}
@@ -97,7 +97,7 @@
                         @endif
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('referrerName') ? ' has-error' : '' }}">
-                        <input type="text" value="{{ $referrerName }}" name="referrerName" id="referrerName" class="form-control" placeholder="Username Sponsor">
+                        <input type="text" value="{{ $referrerName }}" name="referrerName" id="referrerName" class="form-control" placeholder="Referral User">
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                         @if ($errors->has('referrerName'))
                             <span class="help-block">
