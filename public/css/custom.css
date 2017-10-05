@@ -183,6 +183,15 @@
         padding-left: 10px;
     }
 
+    .fwbCLP {
+        min-width: 355px;
+        border: 1px solid #DAE1E9;
+        background: #F9FBFC;
+        height: 40px;
+        border-right: none;
+        padding-left: 10px;
+    }
+
     .cp-btc {
         height: 40px;
         width: 40px;

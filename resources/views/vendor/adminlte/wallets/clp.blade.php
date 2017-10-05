@@ -269,17 +269,19 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 <div class="modal-body">
                     <div class="col-lg-12">
                         <div class="card box">
-                            <div class="card-heading  b-b b-light" style="text-align: center">
-                                <h2>Deposit to your wallet</h2>
-                            </div>
                             <div class="card-body">
                                 <div class="form-group" style="text-align: center">
                                     <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your CLP Wallet
                                         address</h5>
-                                    <h6 class="wallet-address"></h6>
+                                        <div class="form-group">
+                                        <input type="text" value="{{ $walletAddress }}" class="wallet-address fwbCLP" id="wallet-address" readonly="true">
+                                         <button class="btnwallet-address cp-btc" data-clipboard-target="#wallet-address" title="copy">
+                                                    <i class="fa fa-clone"></i>
+                                                </button>
+                                        </div>
                                     <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">CLP
                                         Wallet link</h5>
-                                    <a class="link-blockchain" href="" target="_blank">etherscan</a>
+                                    <a class="link-blockchain" href="https://etherscan.io/address/{{ $walletAddress }}" target="_blank">etherscan</a>
                                     <center>
                                         <div id="qrcode" style="padding-bottom: 10px;"></div>
                                     </center>
@@ -309,6 +311,30 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     return false;
                 }
             })
+
+            $('.btnwallet-address').tooltip({
+                trigger: 'click',
+                placement: 'bottom'
+            });
+            
+            function setTooltip(message) {
+                $('.btnwallet-address')
+                  .attr('data-original-title', message)
+                  .tooltip('show');
+            }
+            
+            function hideTooltip() {
+                setTimeout(function() {
+                  $('button').tooltip('hide');
+                }, 1000);
+              }
+            
+            var clipboard = new Clipboard('.btnwallet-address');
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+                setTooltip('Copied!');
+                hideTooltip();
+            });
         });
         var mytimer;
         
