@@ -79,6 +79,8 @@ class UsdWalletController extends Controller
         }
         $requestQuery = $request->query();
         $all_wallet_type = config('cryptolanding.wallet_type');
+
+        //USD Wallet has 5 type: Profit day, farst start, binary, loyalty, buy CLP
         $wallet_type = [];
         foreach ($all_wallet_type as $key => $val) {
             if($key == 6) break;
@@ -128,9 +130,17 @@ class UsdWalletController extends Controller
         // $wallets->rateClpBtc = User::getCLPBTCRate();
         // $wallets->rateClpUsd = User::getCLPUSDRate();
         $requestQuery = $request->query();
-        $wallet_type = config('cryptolanding.wallet_type');
-        foreach ($wallet_type as $key => $val)
-            $wallet_type[$key] = trans($val);
+
+        //Holding Wallet has 4 types: Farst start, binary, loyalty, Transfer to CLP Wallet
+        $all_wallet_type = config('cryptolanding.wallet_type');
+
+        $wallet_type = [];
+        foreach ($all_wallet_type as $key => $val) {
+            if($key == 1) $wallet_type[$key] = trans($val);
+            if($key == 3) $wallet_type[$key] = trans($val);
+            if($key == 4) $wallet_type[$key] = trans($val);
+            if($key == 6) $wallet_type[$key] = trans('adminlte_lang::wallet.holding_clp_type');
+        }
         return view('adminlte::wallets.reinvest', compact('wallets','wallet_type', 'requestQuery'));
     }
     
