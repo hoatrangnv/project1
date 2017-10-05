@@ -131,7 +131,7 @@ return [
     'bitgo_hook' => env('BITGO_HOOK'),
     'fee_withRaw_BTC' => 0.0005,
     'fee_withRaw_CLP' => 2,
-    'enable_captcha' => false,
+    'enable_captcha' => true,
     'f1_bonus' => 0.1,
     'f2_bonus' => 0.02,
     'f3_bonus' => 0.01,
