@@ -1,6 +1,7 @@
 <?php
 
 return [
+    //Title
     'header_title'           	=> 'USD Wallet',
     'usd'                       => 'USD Wallet',
     'btc'                       => 'BTC Wallet',
@@ -20,6 +21,9 @@ return [
     'create_clpcoin'           	=> 'Create CLPcoin address',
     'tranfer_to_clp'            => 'Buy CLP',
     'register_package'            => 'Register Package',
+
+    //Button
+    'btn_transfer_holding_to_clp'            => 'Transfer To CLP Wallet',
 	
 	'amount'                => 'Amount',
     'wallet_no'           	=> 'No',
@@ -41,6 +45,8 @@ return [
     'error_not_enough'          => 'Not enough Money!',
     'success_withdraw'          => 'Update transition success!',
     'error_db'                  => 'Error conection DATABASE',
+
+    //Wallet type
     'fast_start_type'           => 'Fast start bonus',
     'interest'                  => 'Profit',
     'binary'                    => 'Binary bonus',
