@@ -32,6 +32,7 @@ return [
     'wallet_in'           	=> 'In',
     'wallet_out'           	=> 'Out',
     'wallet_info'           	=> 'Info',
+    'title_selection_filter'               => 'Select type',
     
     'btn_withdraw'           	=> 'Withdraw',
     'bnt_otp'           	=> 'Request OTP',

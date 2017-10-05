@@ -14,6 +14,8 @@ use Session;
 use App\Authorizable;
 use Validator;
 use DateTime;
+use App\ExchangeRate;
+
 class PackageController extends Controller
 {
     use Authorizable;
@@ -63,7 +65,7 @@ class PackageController extends Controller
                         if($packageOldId > 0){
                             $usdCoinAmount = $usdCoinAmount - $user->userData->package->price;
                         }
-                        $clpCoinAmount = $usdCoinAmount / User::getCLPUSDRate();
+                        $clpCoinAmount = $usdCoinAmount / ExchangeRate::getCLPUSDRate();
                         if($user->userCoin->clpCoinAmount >= $clpCoinAmount){
                             return true;
                         }
@@ -107,12 +109,12 @@ class PackageController extends Controller
                 'packageId' => $userData->packageId,
                 'amount_increase' => $amount_increase,
                 'buy_date' => date('Y-m-d H:i:s'),
-                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 180 days")),
+                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 6 months")),
                 'weekYear' => $weekYear,
             ]);
 
             $userCoin = $userData->userCoin;
-            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - ($amount_increase / User::getCLPUSDRate());
+            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - ($amount_increase / ExchangeRate::getCLPUSDRate());
             $userCoin->save();
 
             // Calculate fast start bonus

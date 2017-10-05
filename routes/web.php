@@ -31,7 +31,7 @@ Route::group( ['middleware' => ['auth']], function() {
     //USD WALLET
     Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet')->name('wallet.usd');
     Route::post('wallets/usd', 'Wallet\UsdWalletController@usdWallet');
-    Route::get('wallets/switchusdclp', 'Wallet\UsdWalletController@switchUSDCLP');
+    //Route::get('wallets/switchusdclp', 'Wallet\UsdWalletController@switchUSDCLP');
     Route::get('wallets/getrateusdbtc', 'Wallet\UsdWalletController@getDataWallet');
     Route::post('wallets/btcwithdraw', 'Wallet\WithDrawController@btcWithDraw');
 
@@ -40,16 +40,16 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('wallets/reinvest', 'Wallet\UsdWalletController@reinvestWallet');
 
     //BTC WALLET
-    Route::get('wallets/btc', 'Wallet\BtcWalletController@btcWallet')->name('wallet.btc');
+    Route::get('wallets/btc', 'Wallet\BtcWalletController@showBTCWallet')->name('wallet.btc');
     Route::get('wallets/getbtccoin',"Wallet\BtcWalletController@getBtcCoin");
-    Route::post('wallets/btcbuyclp',"Wallet\BtcWalletController@tranferBtcClp");
+    Route::post('wallets/btcbuyclp',"Wallet\BtcWalletController@buyCLP");
 
     Route::get('wallets/btctranfer',"Wallet\BtcWalletController@btctranfer");
 
     Route::get('wallets/clptranfer',"Wallet\ClpWalletController@clptranfer");
 
-    Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
-    Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
+    //Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
+    //Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
     
     //CLP WALLET
     Route::get('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');

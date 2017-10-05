@@ -145,8 +145,10 @@ class WithDrawController extends Controller
         }else{
             $request->session()->flash('error', 'Something wrongs. We cannot Confirm Withdraw!');
         }
+
         return view('adminlte::wallets.confirmWithdraw', compact('isConfirm', 'withdrawConfirm'));
     }
+    
     function sendCoinBTC(Request $request, $id){
         $isConfirm = false;
         $withdrawConfirm = WithdrawConfirm::where('id', '=', $id)->first();
@@ -169,7 +171,7 @@ class WithDrawController extends Controller
                     'description' => 'Your tranfer bitcoin!'
                 ]);
                 //get object account
-                $account = $client->getAccount($user->accountCoinBase);
+                $account = $client->getAccount(config('app.coinbase_account'));
                 //begin send
                 try {
                     $resultGiven = $client->createAccountTransaction($account, $transaction);
@@ -233,6 +235,7 @@ class WithDrawController extends Controller
                 //return redirect()->route('wallet.btc');
             }
         }
+
         return $isConfirm;
     }
 
@@ -357,7 +360,7 @@ class WithDrawController extends Controller
             ]);
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn
             // số tiền chuyển đi thì thực hiện giao dịch
-            if ( $user->btcCoinAmount - config('app.fee_withRaw_BTC') > $request->withdrawAmount ) {
+            if ( $user->btcCoinAmount - config('app.fee_withRaw_BTC') >= $request->withdrawAmount ) {
                 $user = Auth::user();
                 if($user){
                     $field = [

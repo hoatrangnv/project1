@@ -186,6 +186,9 @@
                $('.btcusd').html(data[1].exchrate);
                $('.clpusd').html(data[2].exchrate);
                $('.clpbtc').html(data[0].exchrate);
+               globalBTCUSD = data[1].exchrate;
+               globalCLPUSD = data[2].exchrate; //clpUSD
+               globalCLPBTC = data[0].exchrate;
             }
         });
     }
