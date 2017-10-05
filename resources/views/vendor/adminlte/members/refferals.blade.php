@@ -35,7 +35,7 @@
 								<td>{{ $userData->user->name }}</td>
 								<td class="text-uppercase">{{ $userData->package->name }}</td>
 								<td>
-									<a href="{{ URL::to('members/refferals/'.$userData->user->uid.'/detail') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_view') }}</a>
+									<a href="{{ URL::to('members/referrals/'.$userData->user->uid.'/detail') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_view') }}</a>
 								</td>
 								<td>
 									{{ $userData->loyaltyId }}
