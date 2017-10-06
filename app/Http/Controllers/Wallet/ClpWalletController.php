@@ -54,9 +54,20 @@ class ClpWalletController extends Controller {
             $lstPackSelect[$package->id] = $package->name;
         }
         $requestQuery = $request->query();
-        $wallet_type = config('cryptolanding.wallet_type');
-        foreach ($wallet_type as $key => $val)
-            $wallet_type[$key] = trans($val);
+
+        $all_wallet_type = config('cryptolanding.wallet_type');
+
+        //CLP Wallet has 6 type: 14-Deposit, 10-Withdraw, 7-Buy CLP by BTC, 8-Sell CLP, 5-Buy CLP by USD, 6-Transfer From Holding Wallet
+        $wallet_type = [];
+        foreach ($all_wallet_type as $key => $val) {
+            if($key == 5) $wallet_type[$key] = trans($val);
+            if($key == 6) $wallet_type[$key] = trans($val);
+            if($key == 7) $wallet_type[$key] = trans($val);
+            if($key == 8) $wallet_type[$key] = trans($val);
+            if($key == 10) $wallet_type[$key] = trans($val);
+            if($key == 14) $wallet_type[$key] = trans($val);
+        }
+
         return view('adminlte::wallets.clp', ['packages' => $packages, 
             'user' => $user, 
             'lstPackSelect' => $lstPackSelect, 

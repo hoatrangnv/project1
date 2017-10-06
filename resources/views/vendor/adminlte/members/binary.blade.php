@@ -39,6 +39,17 @@
                         </div>
                         {!! Form::close() !!}
                     </div>
+                    <div class="col-xs-5 binary-search" style="padding-top: 15px;position: absolute;right:-14px;">
+                        <!-- <div class="input-group input-group-sm"> -->
+                            <div class="col-lg-6">
+                            <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
+                            </div>
+                            <div class="col-lg-6">
+                            <!-- <span class="input-group-btn"> -->
+								<button type="button" id="search-button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
+							<!-- </span> -->
+                            </div>
+                        <!-- </div> -->
                     <div class="col-xs-5 col-lg-6" style="padding-top: 15px;position: absolute;right:0;">
                         <div class="col-xs-12 col-lg-6" style="position: absolute;right:0;">
                             <div class="input-group input-group-sm">

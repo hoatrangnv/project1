@@ -24,6 +24,7 @@ use Coinbase\Wallet\Resource\Transaction;
 use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
+use Google2FA;
 
 use Log;
 
@@ -59,6 +60,19 @@ class BtcWalletController extends Controller
         $wallet_type = config('cryptolanding.wallet_type');
         foreach ($wallet_type as $key => $val)
             $wallet_type[$key] = trans($val);
+
+        $all_wallet_type = config('cryptolanding.wallet_type');
+
+        //BTC Wallet has 5 type: 13-Deposit, 9-Withdraw, 7-Buy CLP, 8-Sell CLP, 11-Transfer BTC
+        $wallet_type = [];
+        foreach ($all_wallet_type as $key => $val) {
+            if($key == 7) $wallet_type[$key] = trans($val);
+            if($key == 8) $wallet_type[$key] = trans($val);
+            if($key == 9) $wallet_type[$key] = trans($val);
+            if($key == 11) $wallet_type[$key] = trans($val);
+            if($key == 13) $wallet_type[$key] = trans($val);
+        }
+        
         return view('adminlte::wallets.btc',compact('wallets','wallet_type', 'requestQuery'));
     }
     
@@ -96,10 +110,10 @@ class BtcWalletController extends Controller
     public function btctranfer(Request $request){
         if($request->ajax()){
             $userCoin = Auth::user()->userCoin;
-            $btcAmountErr = $btcUsernameErr = $clpUidErr = $btcOTPErr = '';
+            $btcAmountErr = $btcUsernameErr = $btcUidErr = $btcOTPErr = '';
             if($request->btcAmount == ''){
                 $btcAmountErr = trans('adminlte_lang::wallet.amount_required');
-            }elseif (is_numeric($request->btcAmount)){
+            }elseif (!is_numeric($request->btcAmount)){
                 $btcAmountErr = trans('adminlte_lang::wallet.amount_number');
             }elseif ($userCoin->btcCoinAmount < $request->btcAmount){
                 $btcAmountErr = trans('adminlte_lang::wallet.error_not_enough');
@@ -111,12 +125,12 @@ class BtcWalletController extends Controller
             }elseif (!User::where('name', $request->btcUsername)->where('active', 1)->count()){
                 $btcUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
             }
-            if($request->clpUid == ''){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_required');
-            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
-            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
+            if($request->btcUid == ''){
+                $btcUidErr = trans('adminlte_lang::wallet.uid_required');
+            }elseif (!preg_match('/^\S*$/u', $request->btcUid)){
+                $btcUidErr = trans('adminlte_lang::wallet.uid_notspace');
+            }elseif (!User::where('uid', $request->btcUid)->where('active', 1)->count()){
+                $btcUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
             }
             if($request->btcOTP == ''){
                 $btcOTPErr = trans('adminlte_lang::wallet.otp_required');
@@ -127,7 +141,7 @@ class BtcWalletController extends Controller
                     $btcOTPErr = trans('adminlte_lang::wallet.otp_not_match');
                 }
             }
-            if($btcAmountErr !='' && $btcUsernameErr != '' && $btcOTPErr != '' && $clpUidErr != ''){
+            if($btcAmountErr =='' && $btcUsernameErr == '' && $btcOTPErr == '' && $btcUidErr == ''){
                 $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
                 $userCoin->save();
                 $userRi = User::where('name', $request->btcUsername)->where('active', 1)->first();
@@ -163,7 +177,12 @@ class BtcWalletController extends Controller
                 }else{
                     $result = [
                         'err' => true,
-                        'msg' => ['btcUsernameErr'=>trans('adminlte_lang::wallet.user_required')]
+                        'msg' =>[
+                                'btcAmountErr' => '',
+                                'btcUsernameErr' => trans('adminlte_lang::wallet.user_required'),
+                                'btcOTPErr' => '',
+                                'btcUidErr' => '',
+                            ]
                     ];
                     return response()->json($result);
                 }
@@ -174,7 +193,7 @@ class BtcWalletController extends Controller
                         'btcAmountErr' => $btcAmountErr,
                         'btcUsernameErr' => $btcUsernameErr,
                         'btcOTPErr' => $btcOTPErr,
-                        'clpUidErr' => $clpUidErr,
+                        'btcUidErr' => $btcUidErr,
                     ]
                 ];
                 return response()->json($result);
