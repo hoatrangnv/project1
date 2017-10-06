@@ -528,7 +528,6 @@ class User extends Authenticatable
         }
 
         $loyaltyBonus = config('cryptolanding.loyalty_bonus');
-         = 
         if( isset($loyaltyUser->isGold) && $loyaltyUser->isGold == 0 ) 
             $isGold = self::getBonusLoyaltyUser($userId, 'gold',$userInfo->packageId);
         if(isset($loyaltyUser->isPear) && $loyaltyUser->isPear == 0 ) 
