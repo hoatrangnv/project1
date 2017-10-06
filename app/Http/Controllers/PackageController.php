@@ -137,8 +137,8 @@ class PackageController extends Controller
 
             // Case: User already in tree and then upgrade package => re-caculate loyalty
             /* REMOVE: because User::bonusBinary below already calculate */
-            // if(in_array($userData->leftRight, ['left', 'right']))
-            //     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
+            if($userData->binaryUserId)
+                User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
 
             // Case: User already in tree and then upgrade package => re-caculate binary bonus
             if($userData->binaryUserId > 0 && in_array($userData->leftRight, ['left', 'right'])) {
