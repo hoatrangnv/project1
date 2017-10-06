@@ -57,8 +57,8 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                         <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path>
                                     </svg>
                                 </th>
-                                <th class="wallet-amount"><i class="fa fa-btc"
-                                                             aria-hidden="true"></i>{{ Auth()->user()->userCoin->btcCoinAmount }}
+                                <th class="wallet-amount">
+                                    <i class="fa fa-btc"></i><span class="btc-amount">{{ Auth()->user()->userCoin->btcCoinAmount }}</span>
                                 </th>
                                 <th>
                                     <button class="btn bg-olive" data-toggle="modal"
@@ -85,7 +85,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             <div class="box">
                 <div class="box-header">
                     <div class="col-xs-2 no-padding">
-                        {{ Form::select('wallet_type', array_merge(['0' => 'Choose a type'], $wallet_type), ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
+                        {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
                     </div>
                     <div class="col-xs-2">
                         {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
@@ -137,30 +137,35 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Deposit</h4>
+                    <h4 class="modal-title">Deposit to your wallet</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="col-lg-12">
-                        <div class="card box">
-                            <div class="card-heading  b-b b-light" style="text-align: center">
-                                <h2>Deposit to your wallet</h2>
-                            </div>
-                            <div class="card-body">
+                    <!-- <div class="col-lg-12"> -->
+                        <div class="box no-border" style="border-top:none;">
+                            <div class="box-body">
                                 <div class="form-group" style="text-align: center">
                                     <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your BTC Wallet
                                         address</h5>
-                                    <h6 class="wallet-address"></h6>
+                                    <div class="form-group">
+                                        <input type="text" value="{{ $walletAddress }}" class="wallet-address fwbBcc" id="wallet-address" readonly="true">
+                                            <button class="btnwallet-address cp-btc" data-clipboard-target="#wallet-address" title="copy">
+                                                <i class="fa fa-clone"></i>
+                                            </button>
+                                    </div>
+                                   
+                                    <!-- Trigger -->
+                                    
                                     <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">BTC
                                         Wallet link</h5>
-                                    <a class="link-blockchain" href="" target="_blank">blockchain</a>, <a
-                                            class="link-blockexplorer" href="" target="_blank">blockexplorer</a>
+                                    <a class="link-blockchain" href="https://blockchain.info/address/{{ $walletAddress }}" target="_blank">blockchain</a>, <a
+                                            class="link-blockexplorer" href="https://blockexplorer.com/address/{{ $walletAddress }}" target="_blank">blockexplorer</a>
                                     <center>
                                         <div id="qrcode" style="padding-bottom: 10px;"></div>
                                     </center>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <!-- </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
@@ -179,14 +184,14 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtcwithdraw" data-type="btcwithdraw">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
+                    <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btc-amount maxbtcwithdraw" data-type="btcwithdraw">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm btcwithdraw', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm btcwithdraw ', 'step' => '0.0001', 'placeholder' => "Min 0.0001", )) }}
                             </div>
                             <br>
                             <div class="input-group">
@@ -220,19 +225,19 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbuyclp" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btc-amount maxbuyclp" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP', 'step' => '0.00001', 'placeholder' => "Min 0.0001")) }}
                             </div>
                             <br>
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC', 'step' => '0.0001','placeholder' => "CLP Amount")) }}
+                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC', 'step' => '0.00001','placeholder' => "CLP Amount")) }}
                             </div>
                         </div>
                     </div>
@@ -255,29 +260,38 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxbtctranfer" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btc-amount maxbtctranfer" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.00001', 'placeholder' => "Min 0.0001", 'id' => 'btcAmount' )) }}
+                                </div>
+                                <span class="help-block"></span>
                             </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                {{ Form::number('username', '', array('class' => 'form-control input-sm', 'step' => '0.0001','placeholder' => "Username")) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    {{ Form::text('btcUsername', '', array('class' => 'form-control input-sm', 'id' => 'btcUsername','placeholder' => "Username")) }}
+                                </div>
+                                <span class="help-block"></span>
                             </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-id-card-o"></i></span>
-                                {{ Form::number('uid', '', array('class' => 'form-control input-sm', 'id' => 'clpUid', 'placeholder' => "Id")) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-id-card-o"></i></span>
+                                    {{ Form::number('btcUid', '', array('class' => 'form-control input-sm', 'id' => 'btcUid', 'placeholder' => "Id")) }}
+                                </div>
+                                <span class="help-block"></span>
                             </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                    {{ Form::number('btcOTP', '', array('class' => 'form-control input-sm', 'id' => 'btcOTP' ,'placeholder' => "2FA Code E.g. 123456")) }}
+                                </div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                         <span class="help-block"></span>
@@ -285,7 +299,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
+                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'btctranfer')) }}
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -294,9 +308,33 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
     </div>
 
     <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
     <script>
         $(document).ready(function(){
+            $('.btnwallet-address').tooltip({
+                trigger: 'click',
+                placement: 'bottom'
+            });
+            
+            function setTooltip(message) {
+                $('.btnwallet-address')
+                  .attr('data-original-title', message)
+                  .tooltip('show');
+            }
+            
+            function hideTooltip() {
+                setTimeout(function() {
+                  $('button').tooltip('hide');
+                }, 1000);
+              }
+            
+            var clipboard = new Clipboard('.btnwallet-address');
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+                setTooltip('Copied!');
+                hideTooltip();
+            });
+            
             $('#btn_filter').on('click', function () {
                 var wallet_type = parseInt($('#wallet_type option:selected').val());
                 if(wallet_type > 0){
@@ -310,7 +348,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 location.href = '{{ url()->current() }}';
             });
             var mytimer;
-            $('#clpUid').on('blur onmouseout keyup', function () {
+            $('#btcUid').on('blur onmouseout keyup', function () {
                 clearTimeout(mytimer);
                 var search = $(this).val();
                 if(search.length >= 1){
@@ -321,21 +359,21 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             data: {id : search}
                         }).done(function(data){
                             if(data.err) {
-                                $("#clpUid").parents("div.form-group").addClass('has-error');
-                                $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
-                                $('#clpUsername').val('');
+                                $("#btcUid").parents("div.form-group").addClass('has-error');
+                                $("#btcUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+                                $('#btcUsername').val('');
                             }else{
-                                $('#clpUid').parent().removeClass('has-error');
-                                $("#clpUid").parents("div.form-group").find('.help-block').text('');
-                                $('#clpUsername').parent().removeClass('has-error');
-                                $('#clpUsername').parent().find('.help-block').text('');
-                                $('#clpUsername').val(data.username);
+                                $('#btcUid').parent().removeClass('has-error');
+                                $("#btcUid").parents("div.form-group").find('.help-block').text('');
+                                $('#btcUsername').parent().removeClass('has-error');
+                                $('#btcUsername').parent().find('.help-block').text('');
+                                $('#btcUsername').val(data.username);
                             }
                         });
                     }, 1000);
                 }
             });
-            $('#clpUsername').on('blur onmouseout keyup', function () {
+            $('#btcUsername').on('blur onmouseout keyup', function () {
                 clearTimeout(mytimer);
                 var search = $(this).val();
                 if(search.length >= 3){
@@ -346,15 +384,15 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             data: {username : search}
                         }).done(function(data){
                             if(data.err) {
-                                $("#clpUsername").parents("div.form-group").addClass('has-error');
-                                $("#clpUsername").parents("div.form-group").find('.help-block').text('The Username field is required');
-                                $('#clpUid').val('');
+                                $("#btcUsername").parents("div.form-group").addClass('has-error');
+                                $("#btcUsername").parents("div.form-group").find('.help-block').text(data.err);
+                                $('#btcUid').val('');
                             }else{
-                                $('#clpUid').parent().removeClass('has-error');
-                                $("#clpUid").parents("div.form-group").find('.help-block').text('');
-                                $('#clpUsername').parent().removeClass('has-error');
-                                $('#clpUsername').parent().find('.help-block').text('');
-                                $('#clpUsername').val(data.id);
+                                $('#btcUsername').parent().removeClass('has-error');
+                                $("#btcUsername").parents("div.form-group").find('.help-block').text('');
+                                $('#btcUid').parent().removeClass('has-error');
+                                $('#btcUid').parent().find('.help-block').text('');
+                                $('#btcUid').val(data.id);
                             }
                         });
                     }, 1000);
@@ -364,7 +402,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 var btcAmount = $('#btcAmount').val();
                 var btcUsername = $('#btcUsername').val();
                 var btcOTP = $('#btcOTP').val();
-                var clpUid = $('#clpUid').val();
+                var btcUid = $('#btcUid').val();
                 if($.trim(btcAmount) == ''){
                     $("#btcAmount").parents("div.form-group").addClass('has-error');
                     $("#btcAmount").parents("div.form-group").find('.help-block').text('The Amount field is required');
@@ -379,12 +417,12 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     $("#btcUsername").parents("div.form-group").removeClass('has-error');
                     $("#btcUsername").parents("div.form-group").find('.help-block').text('');
                 }
-                if($.trim(clpUid) == ''){
-                    $("#clpUid").parents("div.form-group").addClass('has-error');
-                    $("#clpUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+                if($.trim(btcUid) == ''){
+                    $("#btcUid").parents("div.form-group").addClass('has-error');
+                    $("#btcUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
                 }else{
-                    $("#clpUid").parents("div.form-group").removeClass('has-error');
-                    $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                    $("#btcUid").parents("div.form-group").removeClass('has-error');
+                    $("#btcUid").parents("div.form-group").find('.help-block').text('');
                 }
                 if($.trim(btcOTP) == ''){
                     $("#btcOTP").parents("div.form-group").addClass('has-error');
@@ -396,38 +434,35 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 if($.trim(btcAmount) != '' && $.trim(btcUsername) != '' && $.trim(btcOTP) != ''){
                     $.ajax({
                         url: "{{ url('wallets/btctranfer') }}",
-                        data: {btcAmount: btcAmount, btcUsername: btcUsername, btcOTP: btcOTP, clpUid: clpUid}
+                        data: {btcAmount: btcAmount, btcUsername: btcUsername, btcOTP: btcOTP, btcUid: btcUid}
                     }).done(function (data) {
                         if (data.err) {
                             if(typeof data.msg !== undefined){
-                                if(typeof data.msg.btcAmountErr !== undefined) {
+                                if(data.msg.btcAmountErr !== '') {
                                     $("#btcAmount").parents("div.form-group").addClass('has-error');
                                     $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.btcAmountErr);
                                 }else {
                                     $("#btcAmount").parents("div.form-group").removeClass('has-error');
                                     $("#btcAmount").parents("div.form-group").find('.help-block').text('');
                                 }
-                                if(typeof data.msg.btcUsernameErr !== undefined) {
+
+                                if(data.msg.btcUsernameErr !== '') {
                                     $("#btcUsername").parents("div.form-group").addClass('has-error');
                                     $("#btcUsername").parents("div.form-group").find('.help-block').text(data.msg.btcUsernameErr);
-                                }else if(typeof data.msg.user !== undefined) {
-                                        $("#btcUsername").parents("div.form-group").addClass('has-error');
-                                        $("#btcUsername").parents("div.form-group").find('.help-block').text(data.msg.btcUsernameErr);
                                 }else {
                                     $("#btcUsername").parents("div.form-group").removeClass('has-error');
                                     $("#btcUsername").parents("div.form-group").find('.help-block').text('');
                                 }
-                                if(typeof data.msg.clpUidErr !== undefined) {
-                                    $("#clpUid").parents("div.form-group").addClass('has-error');
-                                    $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
-                                }else if(typeof data.msg.user !== undefined) {
-                                    $("#clpUid").parents("div.form-group").addClass('has-error');
-                                    $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
+
+                                if(data.msg.btcUidErr !== '') {
+                                    $("#btcUid").parents("div.form-group").addClass('has-error');
+                                    $("#btcUid").parents("div.form-group").find('.help-block').text(data.msg.btcUidErr);
                                 }else {
-                                    $("#clpUid").parents("div.form-group").removeClass('has-error');
-                                    $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                                    $("#btcUid").parents("div.form-group").removeClass('has-error');
+                                    $("#btcUid").parents("div.form-group").find('.help-block').text('');
                                 }
-                                if(typeof data.msg.btcOTPErr !== undefined) {
+
+                                if(data.msg.btcOTPErr !== '') {
                                     $("#btcOTP").parents("div.form-group").addClass('has-error');
                                     $("#btcOTP").parents("div.form-group").find('.help-block').text(data.msg.btcOTPErr);
                                 }else {
@@ -436,188 +471,55 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                 }
                             }
                         } else {
+                            $('#tranfer').modal('hide');
+                            swal("Transfer successfully!");
                             location.href = '{{ url()->current() }}';
                         }
                     });
                 }
             });
         });
+
         var getBtcCoin = setInterval(function () {
-            getBtccoin();
+            $.get("getbtccoin", function (data) {
+                $(".btc-amount").html(data);
+            });
         },{{ config("app.time_interval")}});
-        //get wallet code and render code to qrcode
-        $.ajax({
-            url: "{{ url('wallets/deposit') }}?action=btc",
-        }).done(function (data) {
-            if (!data.err) {
-                $(".wallet-address").html(data.walletAddress);
-                $(".link-blockchain").attr("href", "https://blockchain.info/address/" + data.walletAddress);
-                $(".link-blockexplorer").attr("href", "https://blockexplorer.com/address/" + data.walletAddress);
-                var qrcode = new QRCode(document.getElementById("qrcode"), {
-                    text: data.walletAddress,
+
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+                    width: 180,
+                    height: 180,
+                    text: '{{ $walletAddress }}',
                     colorDark: "#000000",
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.H
                 });
-            } else {
-                $(".wallet-address").html(data.err);
-            }
-        });
-
-        function getBtccoin() {
-            $.get("getbtccoin", function (data) {
-                $(".btcCoin").html(data);
-            });
-        };
-
-        //Switch Btc and Clp
 
         $(".switch-BTC-to-CLP").on('keyup change mousewheel', function () {
             var value = $(this).val();
-            var type = "BtcToClp";
-            //send
-            var result = switchChange(value, type);
+            var result = value / globalCLPBTC;
+            $(".switch-CLP-to-BTC").val(result.toFixed(5));
         });
 
         $(".switch-CLP-to-BTC").on('keyup change mousewheel', function () {
             var value = $(this).val();
-            var type = "ClpToBtc";
-            //send
-            var result = switchChange(value, type);
+            var result = value * globalCLPBTC;
+            $(".switch-BTC-to-CLP").val(result.toFixed(5));
         });
 
 
-        function switchChange(value, type) {
-            $.ajax({
-                beforeSend: function () {
-                    // Handle the beforeSend event
-                },
-                url: "switchbtcclp",
-                type: "get",
-                data: {
-                    type: type,
-                    value: value
-                },
-                success: function (result) {
-                    if (type == "BtcToClp") {
-                        if (result.success) {
-                            $(".switch-CLP-to-BTC").val(result.result);
-                        }
-                    } else {
-                        if (result.success) {
-                            $(".switch-BTC-to-CLP").val(result.result);
-                        }
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("some error");
-                },
-                complete: function () {
-
-                }
-                // ......
-            });
-
-            $.ajax({
-                url: 'switchbtcclp',
-                type: 'GET',
-                // headers: {
-                //     'X-CSRF-Token': $('meta[name=_token]').attr('content')
-                // },
-                data: {
-                    type: type,
-                    value: value
-                }
-            }).done(function (result) {
-                if (type == "BtcToClp") {
-                        if (result.value) {
-                            $(".switch-CLP-to-BTC").val(result.value);
-                        }
-                    } else {
-                        if (result.value) {
-                            $(".switch-BTC-to-CLP").val(result.value);
-                        }
-                    }
-            });
-        }
-        //Switch Btc and Clp tranfer
-
-        $(".switch-BTC-to-CLP-tranfer").on('keyup change mousewheel', function () {
-            var value = $(this).val();
-            var type = "BtcToClp";
-            //send
-            var result = switchChange(value, type);
-        });
-
-        $(".switch-CLP-to-BTC-tranfer").on('keyup change mousewheel', function () {
-            var value = $(this).val();
-            var type = "ClpToBtc";
-            //send
-            var result = switchChange(value, type);
-        });
-
-
-        function switchChangeTranfer(value, type) {
-            // $.ajax({
-            //     beforeSend: function () {
-            //         // Handle the beforeSend event
-            //     },
-            //     url: "switchbtcclp",
-            //     type: "get",
-            //     data: {
-            //         type: type,
-            //         value: value
-            //     },
-            //     success: function (result) {
-            //         if (type == "BtcToClp") {
-            //             if (result.success) {
-            //                 $(".switch-CLP-to-BTC-tranfer").val(result.value);
-            //             }
-            //         } else {
-            //             if (result.success) {
-            //                 $(".switch-BTC-to-CLP-tranfer").val(result.result);
-            //             }
-            //         }
-            //     },
-            //     error: function (XMLHttpRequest, textStatus, errorThrown) {
-            //         alert(errorThrown);
-            //         alert("some error");
-            //     },
-            //     complete: function () {
-
-            //     }
-            //     // ......
-            // });
-            $.ajax({
-                url: 'switchbtcclp',
-                type: 'GET',
-                // headers: {
-                //     'X-CSRF-Token': $('meta[name=_token]').attr('content')
-                // },
-                data: {
-                    type: type,
-                    value: value
-                }
-            }).done(function (data) {
-                alert(data);
-            });
-        }
-        var data = {{ Auth()->user()->userCoin->btcCoinAmount }};
-         //get total value;
         $( ".maxbtcwithdraw" ).click(function() {
-            $(".btcwithdraw").val(data)
+            $(".btcwithdraw").val($(".btc-amount").html())
         });
 
-         //get total value;
         $( ".maxbuyclp" ).click(function() {
-            $(".switch-BTC-to-CLP").val(data);
-            switchChange(data,"BtcToClp");
+            $(".switch-BTC-to-CLP").val($(".btc-amount").html());
+            var amountCLP = $(".btc-amount").html() / globalCLPBTC;
+            $(".switch-CLP-to-BTC").val(amountCLP.toFixed(5));
         });
 
-         //get total value;
         $( ".maxbtctranfer" ).click(function() {
-            $(".switch-BTC-to-CLP-tranfer").val(data);
-            switchChangeTranfer(data,"BtcToClp");
+            $(".switch-BTC-to-CLP-tranfer").val($(".btc-amount").html());
         });
 
     </script>

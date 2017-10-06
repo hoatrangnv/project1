@@ -23,7 +23,7 @@ class ExchangeRateAPI
 
     public static function getCLPUSDRate()
     {
-        return 1.12;
+        return 1;
     }
 
     public function getBTCUSDRate() 

@@ -31,6 +31,6 @@ class CLPWalletAPI
 
         $result = json_decode($result);
         
-        return $result
+        return $result;
     }
 }

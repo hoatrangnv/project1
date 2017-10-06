@@ -24,6 +24,8 @@ use Coinbase\Wallet\Resource\Transaction;
 use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
+use Google2FA;
+use App\ExchangeRate;
 
 use Log;
 
@@ -45,7 +47,7 @@ class BtcWalletController extends Controller
      * @param Request $request
      * @return type
      */
-    public function btcWallet(Request $request){
+    public function showBTCWallet(Request $request){
         $currentuserid = Auth::user()->id;
         $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::BTC_WALLET)
                             //->take(10)
@@ -54,27 +56,27 @@ class BtcWalletController extends Controller
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
+
+        $walletAddress = Auth::user()->userCoin->walletAddress;
+
         $wallets = $query->where('walletType', Wallet::BTC_WALLET)->paginate();
         $requestQuery = $request->query();
-        $wallet_type = config('cryptolanding.wallet_type');
-        foreach ($wallet_type as $key => $val)
-            $wallet_type[$key] = trans($val);
-        return view('adminlte::wallets.btc',compact('wallets','wallet_type', 'requestQuery'));
-    }
-    
-    /** 
-     * @author Huynq
-     * @param Request $request
-     * @return type
-     */
-    public static function deposit(Request $request){
-        if($request->ajax()) {
-            if(isset($request['action']) && $request['action'] == 'btc') {
-                $user = Auth::user()->userCoin;
-                return response()->json(array('walletAddress' => $user->walletAddress));
-            }
+
+
+        $all_wallet_type = config('cryptolanding.wallet_type');
+
+        //BTC Wallet has 5 type: 13-Deposit, 9-Withdraw, 7-Buy CLP, 8-Sell CLP, 11-Transfer BTC
+        $wallet_type = [];
+        $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
+        foreach ($all_wallet_type as $key => $val) {
+            if($key == 7) $wallet_type[$key] = trans($val);
+            if($key == 8) $wallet_type[$key] = trans($val);
+            if($key == 9) $wallet_type[$key] = trans($val);
+            if($key == 11) $wallet_type[$key] = trans($val);
+            if($key == 13) $wallet_type[$key] = trans($val);
         }
-        die();
+
+        return view('adminlte::wallets.btc',compact('wallets','wallet_type', 'requestQuery', 'walletAddress'));
     }
     
     /**
@@ -96,10 +98,10 @@ class BtcWalletController extends Controller
     public function btctranfer(Request $request){
         if($request->ajax()){
             $userCoin = Auth::user()->userCoin;
-            $btcAmountErr = $btcUsernameErr = $clpUidErr = $btcOTPErr = '';
+            $btcAmountErr = $btcUsernameErr = $btcUidErr = $btcOTPErr = '';
             if($request->btcAmount == ''){
                 $btcAmountErr = trans('adminlte_lang::wallet.amount_required');
-            }elseif (is_numeric($request->btcAmount)){
+            }elseif (!is_numeric($request->btcAmount)){
                 $btcAmountErr = trans('adminlte_lang::wallet.amount_number');
             }elseif ($userCoin->btcCoinAmount < $request->btcAmount){
                 $btcAmountErr = trans('adminlte_lang::wallet.error_not_enough');
@@ -111,12 +113,12 @@ class BtcWalletController extends Controller
             }elseif (!User::where('name', $request->btcUsername)->where('active', 1)->count()){
                 $btcUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
             }
-            if($request->clpUid == ''){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_required');
-            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
-            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
+            if($request->btcUid == ''){
+                $btcUidErr = trans('adminlte_lang::wallet.uid_required');
+            }elseif (!preg_match('/^\S*$/u', $request->btcUid)){
+                $btcUidErr = trans('adminlte_lang::wallet.uid_notspace');
+            }elseif (!User::where('uid', $request->btcUid)->where('active', 1)->count()){
+                $btcUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
             }
             if($request->btcOTP == ''){
                 $btcOTPErr = trans('adminlte_lang::wallet.otp_required');
@@ -127,7 +129,7 @@ class BtcWalletController extends Controller
                     $btcOTPErr = trans('adminlte_lang::wallet.otp_not_match');
                 }
             }
-            if($btcAmountErr !='' && $btcUsernameErr != '' && $btcOTPErr != '' && $clpUidErr != ''){
+            if($btcAmountErr =='' && $btcUsernameErr == '' && $btcOTPErr == '' && $btcUidErr == ''){
                 $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
                 $userCoin->save();
                 $userRi = User::where('name', $request->btcUsername)->where('active', 1)->first();
@@ -142,7 +144,7 @@ class BtcWalletController extends Controller
                         'inOut' => Wallet::OUT,
                         'userId' => $userCoin->userId,
                         'amount' => $request->btcAmount,
-                        'note' => 'Transfer from ' . $request->btcUsername
+                        'note' => 'Transfer to ' . $request->btcUsername
                     ];
 
                     Wallet::create($field);
@@ -163,7 +165,12 @@ class BtcWalletController extends Controller
                 }else{
                     $result = [
                         'err' => true,
-                        'msg' => ['btcUsernameErr'=>trans('adminlte_lang::wallet.user_required')]
+                        'msg' =>[
+                                'btcAmountErr' => '',
+                                'btcUsernameErr' => trans('adminlte_lang::wallet.user_required'),
+                                'btcOTPErr' => '',
+                                'btcUidErr' => '',
+                            ]
                     ];
                     return response()->json($result);
                 }
@@ -174,7 +181,7 @@ class BtcWalletController extends Controller
                         'btcAmountErr' => $btcAmountErr,
                         'btcUsernameErr' => $btcUsernameErr,
                         'btcOTPErr' => $btcOTPErr,
-                        'clpUidErr' => $clpUidErr,
+                        'btcUidErr' => $btcUidErr,
                     ]
                 ];
                 return response()->json($result);
@@ -182,10 +189,10 @@ class BtcWalletController extends Controller
         }
         return response()->json(array('err' => true, 'msg' => null));
     }
-    public function tranferBtcClp(Request $request){
+
+    public function buyCLP(Request $request){
         $currentuserid = Auth::user()->id;
         $userCoin = Auth::user()->userCoin;
-        $walletAdmin = config("app.btc_wallet_admin");
         if ( $request->isMethod('post') ) {
             //validate
             $this->validate($request, [
@@ -194,67 +201,37 @@ class BtcWalletController extends Controller
             ]);
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn 
             // số tiền chuyển đi thì thực hiện giao dịch
-            if ( $userCoin->btcCoinAmount - config('app.fee_withRaw') >
-                    $request->btcAmount ) {
-                //Config API key
-                $configuration = Configuration::apiKey( 
-                        config('app.coinbase_key'), 
-                        config('app.coinbase_secret') );
-            
-                $client = Client::create($configuration);
-                //quy đổi sang clp cho user
-                $newClpUser = $request->btcAmount / User::getCLPBTCRate() + $userCoin->clpCoinAmount;
-                $transaction = Transaction::send([
-                    'toBitcoinAddress' => $walletAdmin,
-                    'amount'           => new Money($request->btcAmount, CurrencyCode::BTC),
-                    'description'      => 'Your tranfer bitcoin!'
-                ]);
-                //get object account
-                $account = $client->getAccount($userCoin->accountCoinBase);
-                //begin send
-                try {
-                    $resultGiven = $client->createAccountTransaction($account, $transaction);
-                    //Action save to DB
-                    if( count(json_encode($resultGiven)) > 0) {
-                        //Lưu log
-                        $dataInsert = [
-                            "walletAddress" => $address,
-                            "userId" => $currentuserid,
-                            "amountBTC" => $request->btcAmount,
-                            "detail" => json_encode($resultGiven)
-                        ];
-                        $dataInsert = Withdraw::create($dataInsert);
-                        if($dataInsert == 1) {
-                            $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_withdraw') );
-                            //update btc amount của user sau khi chuyển
-                            $btc = (double) $account->getBalance()->getAmount();
-                            UserCoin::where('userId', '=',$currentuserid)
-                            ->update([
-                                'btcCoinAmount' => $btc,
-                                'clpCoinAmount' => $newClpUser
-                            ]);
-                            return redirect()->route('wallet.btc');
-                        } else {
-                            //Không kết nối được DB
-                            Log::warning( "Error when insert or update into DB !" );
-                            $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_db') );
-                            return redirect()->route('wallet.btc');
-                        }
-                        
-                    }else{
-                        //lỗi không thực hiện được giao dịch trên coinbase ghi vào LOG
-                        //Log::error( $e->getTraceAsString() );
-                        $request->session()->flash('errorMessage', "Không thực hiện chuyển tiền được trên CoinBase" );
-                        return redirect()->route('wallet.btc');
-                    }
-                } catch (\Exception $e) {
-                    //lỗi không thực hiện được giao dịch trên coinbase ghi vào LOG
-                    Log::error( $e->getTraceAsString() );
-                    $request->session()->flash('errorMessage', "Không thực hiện chuyển tiền được trên CoinBase" );
-                    return redirect()->route('wallet.btc');
-                }   
-            }else {
-                //nếu không đủ tiền thì báo lỗi
+            if ( $userCoin->btcCoinAmount >= $request->btcAmount ) {
+                //Amount CLP
+                $amountCLP = ($request->btcAmount / ExchangeRate::getCLPBTCRate()) + $userCoin->clpCoinAmount;
+                $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
+                $userCoin->clpCoinAmount = $amountCLP;
+                $userCoin->save();
+
+                $fieldBTC = [
+                    'walletType' => Wallet::BTC_WALLET,//usd
+                    'type' => Wallet::BTC_CLP_TYPE,//bonus f1
+                    'inOut' => Wallet::OUT,
+                    'userId' => Auth::user()->id,
+                    'amount' => $request->btcAmount,
+                    'note'   => 'Buy CLP'
+                ];
+                Wallet::create($fieldBTC);
+
+                $fieldCLP = [
+                    'walletType' => Wallet::CLP_WALLET,//reinvest
+                    'type' => Wallet::BTC_CLP_TYPE,//bonus f1
+                    'inOut' => Wallet::IN,
+                    'userId' => Auth::user()->id,
+                    'amount' => $amountCLP,
+                    'note'   => 'Buy CLP by BTC'
+                ];
+                Wallet::create($fieldCLP);
+
+                $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_buy_clp_success') );
+                return redirect()->route('wallet.btc');
+            } else {
+                //Not enough money
                 $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
                 return redirect()->route('wallet.btc');
             }
@@ -262,36 +239,6 @@ class BtcWalletController extends Controller
             return redirect()->route('wallet.btc');
         }
         
-    }
-    
-    /** 
-     * @author Huynq
-     * @param Request $request
-     * @return type
-     */
-    public static function switchBTCCLP(Request $request){
-         //if have get rq
-        if( $request->method( 'get' ) ) {
-            if( is_numeric( $request->value ) ){
-                
-                if($request->value == 0){
-                    $data = 0;
-                    return BtcWalletController::responseSuccess( $data );
-                }
-                
-                if($request->type ===  "ClpToBtc"){
-                    $clpbtc = new BtcWalletController();
-                    
-                    $data = $request->value * ( USER::getCLPBTCRate() );
-                    return $clpbtc->responseSuccess( $data );
-                } else {
-                    $clpbtc = new BtcWalletController();
-                    
-                    $data = $request->value * ( 1/USER::getCLPBTCRate() );
-                    return $clpbtc->responseSuccess( $data );
-                }  
-            }
-        }
     }
     
 }

@@ -34,11 +34,11 @@ class Wallet extends Model
     const LTOYALTY_TYPE = 4;
     // Tranfer Usd to Clp
     const USD_CLP_TYPE = 5;
-    // Tranfer ReInvest to Clp
+    // Tranfer holding to Clp
     const REINVEST_CLP_TYPE = 6;
-    // Tranfer Btc to Clp
+    // Buy CLP by BTC
     const BTC_CLP_TYPE = 7;
-    // Tranfer Clp to Btc
+    // Sell Clp to Btc
     const CLP_BTC_TYPE = 8;
     // WithDraw BTC
     const WITH_DRAW_BTC_TYPE = 9;
@@ -47,7 +47,13 @@ class Wallet extends Model
     // transfer BTC
     const TRANSFER_BTC_TYPE = 11;
     // transfer CLP
-    const TRANSFER_CLP_TYPE = 12;
+    const TRANSFER_CLP_TYPE = 12; //REMOVE
+    // deposit BTC
+    const DEPOSIT_BTC_TYPE = 13;
+    // deposit CLP
+    const DEPOSIT_CLP_TYPE = 14;
+    // buy Package
+    const BUY_PACK_TYPE = 15;
     //inOut 
     const IN = "in" ;
     

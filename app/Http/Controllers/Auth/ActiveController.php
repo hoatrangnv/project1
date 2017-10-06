@@ -82,7 +82,7 @@ class ActiveController extends Controller
                             $this->assignCLPAddress($user->id);
 
                             User::updateUserGenealogy($user->id);
-                            return redirect("notification/useractive");
+                            return redirect("login");
                         }else{
                             $request->session()->flash('error', 'Cannot activate !');
                         }

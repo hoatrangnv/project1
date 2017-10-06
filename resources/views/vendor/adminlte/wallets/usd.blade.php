@@ -48,7 +48,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             <th class="icon-wallet">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
                             </th>
-                            <th class="wallet-amount">@isset($wallets->currencyPair)<i class="fa fa-usd" aria-hidden="true"></i>{{ $wallets->currencyPair }}  @endisset</th>
+                            <th class="wallet-amount">@isset($wallets->currencyPair)<i class="fa fa-usd" aria-hidden="true"></i><span class="usd-amount">{{ $wallets->currencyPair }}</span>  @endisset</th>
                             <th><button class="btn bg-olive" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button></th>
                         </tr>
                     </table>
@@ -123,7 +123,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max" data-type="usdwallet">{{ $wallets->currencyPair }}</a></h4>
+                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max usd-amount" data-type="usdwallet">{{ $wallets->currencyPair }}</a></h4>
                     </div>
                     <div class="modal-body">
                         <div class="box-body">
@@ -165,64 +165,31 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 location.href = '{{ url()->current() }}';
             });
         });
-        // var getRateBtcUsd = setInterval(function(){ 
-        //     updateRateBtcUsd(); 
-        // }, {{ config("app.time_interval")}});
+
+        // var getUSDAmount = setInterval(function () {
+        //     $.get("getusdamount", function (data) {
+        //         $(".usd-amount").html(data);
+        //     });
+        // },{{ config("app.time_interval")}});
         
         $( ".switch-USD-to-CLP" ).keyup(function() {
              var value = $(this).val();
-             var type = "UsdToClp";
-             //send
-             var result = switchChange(value,type);
+             var result = value / globalCLPUSD;
+             $(".switch-CLP-to-USD").val(result);
         });
         
         $( ".switch-CLP-to-USD" ).keyup(function() {
              var value = $(this).val();
-            var type = "ClpToUsd";
-            //send
-           var result = switchChange(value,type);
+            var result = value * globalCLPUSD;
+           $(".switch-USD-to-CLP").val(result);
         });
         
-        
-        function switchChange(value,type){
-            $.ajax({
-                beforeSend: function(){
-                  // Handle the beforeSend event
-                },
-                url:"switchusdclp",
-                type:"get",
-                data : {
-                     type: type,
-                    value: value
-                },
-                success : function(result){
-                     if( type == "UsdToClp" ){
-                         if(result.success) {
-                             $(".switch-CLP-to-USD").val(result.result);
-                        }
-                    } else {
-                        if(result.success) {
-                            $(".switch-USD-to-CLP").val(result.result); 
-                        }
-                    }
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    console.log("some error");
-                },
-                complete: function(){
-                  
-                 }
-                 // ......
-             });
-            
-          
-        }
         var data = {{ $wallets->currencyPair }};
         //get total value;
         $( ".max" ).click(function() {
             $(".switch-USD-to-CLP").val(data)
-            var type = "UsdToClp";
-            var result = switchChange(data,type);
+            var result = data / globalCLPUSD;
+            $(".switch-CLP-to-USD").val(result);
         });
         
     </script>
