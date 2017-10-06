@@ -20,7 +20,7 @@ use App\UserData;
 use App\UserCoin;
 use URL;
 use Session;
-use DB;
+
 /**
  * Class RegisterController
  * @package %%NAMESPACE%%\Http\Controllers\Auth
