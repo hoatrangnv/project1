@@ -48,4 +48,5 @@ return [
     'type_your_code' => 'Enter your 2FA code',
     'valid' => 'VALID',
     'in_valid' => 'Invalid',
+    'not_buy_package'=> 'You have not purchased the package yet !',
 ];

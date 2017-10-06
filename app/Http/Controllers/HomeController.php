@@ -16,6 +16,7 @@ use App\UserPackage;
 use Auth;
 use Log;
 use DB;
+use DateTime;
 
 
 /**
@@ -68,8 +69,28 @@ class HomeController extends Controller
         $data['coin'] = $this->getInfoCoin();
         //Get lịch sử package
         $data['history_package'] = UserPackage::getHistoryPackage();
-        
-        return view('adminlte::home.index')->with('data', $data);
+        // check turn on/off button withdraw
+        $tempHistoryPackage = UserPackage::where("userId",Auth::user()->id)
+                    ->orderBy('id', 'DESC')->first();
+        if(isset($tempHistoryPackage)){
+            //check status withdraw
+            if( $tempHistoryPackage->withdraw == 1 ){
+                $disabled = true;
+            } else {
+                $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+                //get release date của package cuối cùng <-> max id
+                $datetime2 = new DateTime($tempHistoryPackage->release_date);
+                $interval = $datetime1->diff($datetime2);
+                //compare
+                if( $interval->format('%R%a') > 0 ){
+                    $disabled = true;
+                }
+            }
+            
+        }else{
+            $disabled = true;
+        }
+        return view('adminlte::home.index')->with(compact('data','disabled'));
     }
 
     /*

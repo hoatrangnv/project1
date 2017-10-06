@@ -5,7 +5,14 @@
 @endsection
 
 @section('content')
+    <link rel="stylesheet" href="css/intlTelInput.css">
+    <style>
+        .iti-flag {background-image: url("img/flags.png");}
 
+        @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+          .iti-flag {background-image: url("img/flags@2x.png");}
+        }
+    </style>
     <body class="hold-transition register-page">
     <div id="app" v-cloak>
         <div class="register-box">
@@ -23,8 +30,8 @@
                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
                         @if ($errors->has('firstname'))
                             <span class="help-block">
-									{{ $errors->first('firstname') }}
-								</span>
+                                    {{ $errors->first('firstname') }}
+                            </span>
                         @endif
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('lastname') ? ' has-error' : '' }}">
@@ -32,8 +39,8 @@
                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
                         @if ($errors->has('lastname'))
                             <span class="help-block">
-									{{ $errors->first('lastname') }}
-								</span>
+                                    {{ $errors->first('lastname') }}
+                            </span>
                         @endif
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -41,16 +48,22 @@
                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
                         @if ($errors->has('name'))
                             <span class="help-block">
-									{{ $errors->first('name') }}
-								</span>
+                                    {{ $errors->first('name') }}
+                            </span>
                         @endif
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('country') ? ' has-error' : '' }}">
                         {{ Form::select('country', $lstCountry, null, ['class' => 'form-control input-sm'], ['placeholder' => 'Select a country']) }}
+                    </div>
+                    <div class="form-group input-group-sm has-feedback{{ $errors->has('phone') ? ' has-error' : '' }}">
+                        <input type="text" id="phone" name="phone" class="form-control" hidden="">
+                        <input type="text" id="country" name="country" class="form-control" style="display: none">
+                        <input type="text" id="name_country" name="name_country" class="form-control" style="display: none">
+                        <span class="glyphicon glyphicon-phone form-control-feedback"></span>
                         @if ($errors->has('country'))
                             <span class="help-block">
-									{{ $errors->first('country') }}
-								</span>
+                                {{ $errors->first('phone') }}
+                            </span>
                         @endif
                     </div>
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -58,16 +71,7 @@
                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                         @if ($errors->has('email'))
                             <span class="help-block">
-									{{ $errors->first('email') }}
-								</span>
-                        @endif
-                    </div>
-                    <div class="form-group input-group-sm has-feedback{{ $errors->has('phone') ? ' has-error' : '' }}">
-                        <input type="text" placeholder="{{ trans('adminlte_lang::user.phone') }}" name="phone" value="{{ old('phone') }}" class="form-control">
-                        <span class="fa fa-phone form-control-feedback"></span>
-                        @if ($errors->has('phone'))
-                            <span class="help-block">
-                                {{ $errors->first('phone') }}
+                                {{ $errors->first('email') }}
                             </span>
                         @endif
                     </div>
@@ -135,6 +139,8 @@
                             <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('adminlte_lang::user.btn_register') }}</button>
                         </div>
                     </div>
+                    
+                    
                 </form>
 
 
@@ -144,8 +150,27 @@
     </div>
     @include('adminlte::layouts.partials.scripts_auth')
     @include('adminlte::auth.terms')
+    <script src="js/intlTelInput.js"></script>
+    <script src="js/utils.js"></script>
     <script>
         $(document).ready(function(){
+            $("#phone").intlTelInput({
+                initialCountry: "auto",
+                geoIpLookup: function(callback) {
+                    $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+                    var countryCode = (resp && resp.country) ? resp.country : "";
+                    callback(countryCode);
+                  });
+                },
+                preferredCountries:["vn"]
+            });
+            
+            $('form').submit(function(){
+                $("#phone").val($("#phone").intlTelInput("getNumber"));
+                $("#country").val($("#phone").intlTelInput("getSelectedCountryData").dialCode);
+                $("#name_country").val($("#phone").intlTelInput("getSelectedCountryData").name);
+            });
+            
             $('input').iCheck({
                 checkboxClass: 'icheckbox_square-blue',
                 radioClass: 'iradio_square-blue',
