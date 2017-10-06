@@ -335,6 +335,7 @@ class User extends Authenticatable
                 }
             }
 
+            if($bonus > config('cryptolanding.bonus_maxout')) $bonus = config('cryptolanding.bonus_maxout');
             $binary->settled = $settled;
             $binary->bonus_tmp = $bonus;
             $binary->save();
