@@ -498,6 +498,10 @@ class User extends Authenticatable
 
         $totalf1Left = $totalf1Right = 0;
         $isSilver = 0;
+        $isGold = 0;
+        $isPear = 0;
+        $isEmerald = 0;
+        $isDiamond = 0;
 
         foreach ($users as $user) {
             if($user->packageId > 0){
@@ -524,6 +528,7 @@ class User extends Authenticatable
         }
 
         $loyaltyBonus = config('cryptolanding.loyalty_bonus');
+         = 
         if( isset($loyaltyUser->isGold) && $loyaltyUser->isGold == 0 ) 
             $isGold = self::getBonusLoyaltyUser($userId, 'gold',$userInfo->packageId);
         if(isset($loyaltyUser->isPear) && $loyaltyUser->isPear == 0 ) 
@@ -532,7 +537,7 @@ class User extends Authenticatable
             $isEmerald = self::getBonusLoyaltyUser($userId, 'emerald', $userInfo->packageId);
         if(isset($loyaltyUser->isDiamond) && $loyaltyUser->isDiamond == 0 ) 
             $isDiamond = self::getBonusLoyaltyUser($userId, 'diamond', $userInfo->packageId);
-        
+
         $loyaltyId = 0;
         if($isSilver) $loyaltyId = 1;
         if($isGold) $loyaltyId = 2;
