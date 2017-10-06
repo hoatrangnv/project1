@@ -25,6 +25,7 @@ return [
     'f1_left_new'               => 'Current Vol',
     'f1_left_tichluy'           => 'Total Vol',
     'f1_right'                  => 'Right',
+    'f1_vol'                    => 'F1 Volume',
     'f1_right_new'              => 'Current Vol',
     'f1_right_tichluy'          => 'Total Vol',
     'investment_status'         => 'Investment Status',
