@@ -87,7 +87,7 @@ class MemberController extends Controller
                                 'u' => $userData->user->name,
                                 'totalMembers' => $userData->userTreePermission ? $userData->userTreePermission->genealogy_total : 0,
                                 'packageId' => $userData->packageId,
-                                'loyaltyId' => $userData->loyaltyId,
+                                'loyaltyId' => $this->getLoyalty($userData->userId),
                                 'leg' => $userData->leftRight == 'left' ? 'L' : ($userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $userData->userTreePermission && $userData->userTreePermission->genealogy_total ? 1 : 0,
                                 'generation'     => $this->getQualify($userData->packageId),
