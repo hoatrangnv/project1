@@ -514,18 +514,37 @@ class User extends Authenticatable
 
         //Get UserData
         $userInfo = UserData::where('userId', '=', $userId)->get()->first();
+        $loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
 
         if($totalf1Left >= config('cryptolanding.loyalty_upgrate_silver') 
             && $totalf1Right >= config('cryptolanding.loyalty_upgrate_silver')
-            && $userInfo->packageId > 2){
+            && $userInfo->packageId > 2) {
             $isSilver = 1;
+            
         }
 
         $loyaltyBonus = config('cryptolanding.loyalty_bonus');
-        $isGold = self::getBonusLoyaltyUser($userId, 'gold',$userInfo->packageId);
-        $isPear = self::getBonusLoyaltyUser($userId, 'pear', $userInfo->packageId);
-        $isEmerald = self::getBonusLoyaltyUser($userId, 'emerald', $userInfo->packageId);
-        $isDiamond = self::getBonusLoyaltyUser($userId, 'diamond', $userInfo->packageId);
+        if( isset($loyaltyUser->isGold) && $loyaltyUser->isGold == 0 ) 
+            $isGold = self::getBonusLoyaltyUser($userId, 'gold',$userInfo->packageId);
+        if(isset($loyaltyUser->isPear) && $loyaltyUser->isPear == 0 ) 
+            $isPear = self::getBonusLoyaltyUser($userId, 'pear', $userInfo->packageId);
+        if(isset($loyaltyUser->isEmerald) && $loyaltyUser->isEmerald == 0 ) 
+            $isEmerald = self::getBonusLoyaltyUser($userId, 'emerald', $userInfo->packageId);
+        if(isset($loyaltyUser->isDiamond) && $loyaltyUser->isDiamond == 0 ) 
+            $isDiamond = self::getBonusLoyaltyUser($userId, 'diamond', $userInfo->packageId);
+        
+        $loyaltyId = 0;
+        if($isSilver) $loyaltyId = 1;
+        if($isGold) $loyaltyId = 2;
+        if($isPear) $loyaltyId = 3;
+        if($isEmerald) $loyaltyId = 4;
+        if($isDiamond) $loyaltyId = 5;
+
+        if($loyaltyId > 0) {
+            $userInfo->loyaltyId = $loyaltyId;
+            $userInfo->save();
+        }
+        
 
         $fields = [
             'userId'     => $userId,
@@ -538,10 +557,9 @@ class User extends Authenticatable
             'refererId'     => $refererId,
         ];
 
-        if(LoyaltyUser::where('userId', '=', $userId)->count())
+        if($loyaltyUser)
         {
 
-            $loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
             $userData = $loyaltyUser->user->userData;
             $loyaltyUser->f1Left = $totalf1Left;
             $loyaltyUser->f1Right = $totalf1Right;
