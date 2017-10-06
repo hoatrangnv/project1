@@ -21,6 +21,7 @@ use Validator;
 use Log;
 use App\CLPWalletAPI;
 use App\CLPWallet;
+use App\ExchangeRate;
 
 /**
  * Description of ClpWalletController
@@ -54,14 +55,29 @@ class ClpWalletController extends Controller {
             $lstPackSelect[$package->id] = $package->name;
         }
         $requestQuery = $request->query();
-        $wallet_type = config('cryptolanding.wallet_type');
-        foreach ($wallet_type as $key => $val)
-            $wallet_type[$key] = trans($val);
+
+        $all_wallet_type = config('cryptolanding.wallet_type');
+
+        //CLP Wallet has 6 type:15-buy pack, 14-Deposit, 10-Withdraw, 7-Buy CLP by BTC, 8-Sell CLP, 5-Buy CLP by USD, 6-Transfer From Holding Wallet
+        $wallet_type = [];
+        foreach ($all_wallet_type as $key => $val) {
+            if($key == 5) $wallet_type[$key] = trans($val);
+            if($key == 6) $wallet_type[$key] = trans($val);
+            if($key == 7) $wallet_type[$key] = trans($val);
+            if($key == 8) $wallet_type[$key] = trans($val);
+            if($key == 10) $wallet_type[$key] = trans($val);
+            if($key == 14) $wallet_type[$key] = trans($val);
+            if($key == 15) $wallet_type[$key] = trans($val);
+        }
+
+        $walletAddress = '0x4BD156D31187Bf0739e6ABc940b9f21898eC0Db7';
+
         return view('adminlte::wallets.clp', ['packages' => $packages, 
             'user' => $user, 
             'lstPackSelect' => $lstPackSelect, 
             'wallets'=> $wallets,
             'wallet_type'=> $wallet_type,
+            'walletAddress' =>  $walletAddress,
             'requestQuery'=> $requestQuery,
         ]);
         
@@ -82,93 +98,53 @@ class ClpWalletController extends Controller {
 
     }
 
-    public function clptranfer(Request $request){
-        if($request->ajax()){
-            $userCoin = Auth::user()->userCoin;
-            $clpAmountErr = $clpUsernameErr = $clpUidErr = $clpOTPErr = '';
-            if($request->clpAmount == ''){
-                $clpAmountErr = trans('adminlte_lang::wallet.amount_required');
-            }elseif (is_numeric($request->clpAmount)){
-                $clpAmountErr = trans('adminlte_lang::wallet.amount_number');
-            }elseif ($userCoin->clpCoinAmount < $request->clpAmount){
-                $clpAmountErr = trans('adminlte_lang::wallet.error_not_enough');
-            }
-            if($request->clpUsername == ''){
-                $clpUsernameErr = trans('adminlte_lang::wallet.username_required');
-            }elseif (!preg_match('/^\S*$/u', $request->clpUsername)){
-                $clpUsernameErr = trans('adminlte_lang::wallet.username_notspace');
-            }elseif (!User::where('name', $request->clpUsername)->where('active', 1)->count()){
-                $clpUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
-            }
-            if($request->clpUid == ''){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_required');
-            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
-            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
-            }
-            if($request->clpOTP == ''){
-                $clpOTPErr = trans('adminlte_lang::wallet.otp_required');
-            }else{
-                $key = Auth::user()->google2fa_secret;
-                $valid = Google2FA::verifyKey($key, $request->clpOTP);
-                if(!$valid){
-                    $clpOTPErr = trans('adminlte_lang::wallet.otp_not_match');
-                }
-            }
-            if($clpAmountErr !='' && $clpUsernameErr != '' && $clpOTPErr != '' && $clpUidErr != ''){
-                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $request->clpAmount;
+    public function sellCLP(Request $request){
+        $currentuserid = Auth::user()->id;
+        $userCoin = Auth::user()->userCoin;
+        if ( $request->isMethod('post') ) {
+            //validate
+            $this->validate($request, [
+                'btcAmount'=>'required|numeric',
+                'clpAmount'=>'required|numeric'
+            ]);
+
+            if ( $userCoin->clpCoinAmount >= $request->clpAmount ) {
+                //Amount CLP
+                $amountBTC = ($request->clpAmount * ExchangeRate::getCLPBTCRate()) + $userCoin->btcCoinAmount;
+                $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount - $request->clpAmount);
+                $userCoin->btcCoinAmount = $amountBTC;
                 $userCoin->save();
-                $userRi = User::where('name', $request->clpUsername)->where('active', 1)->first();
-                $userRiCoin = $userRi->userCoin;
-                if($userRiCoin){
-                    $userRiCoin->clpCoinAmount = $userRiCoin->clpCoinAmount + $request->clpAmount;
-                    $userRiCoin->save();
 
-                    $field = [
-                        'walletType' => Wallet::CLP_WALLET,//btc
-                        'type' =>  Wallet::TRANSFER_CLP_TYPE,//transfer BTC
-                        'inOut' => Wallet::OUT,
-                        'userId' => $userCoin->userId,
-                        'amount' => $request->clpAmount,
-                        'note' => 'Transfer from ' . $request->clpUsername
-                    ];
-
-                    Wallet::create($field);
-
-                    $field = [
-                        'walletType' => Wallet::CLP_WALLET,//btc
-                        'type' => Wallet::TRANSFER_CLP_TYPE,//transfer BTC
-                        'inOut' => Wallet::IN,
-                        'userId' => $userRiCoin->userId,
-                        'amount' => $request->clpAmount,
-                        'note' => 'Transfer from ' . $request->clpUsername
-                    ];
-
-                    Wallet::create($field);
-
-                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_tranfer_clp') );
-                    return response()->json(array('err' => false));
-                }else{
-                    $result = [
-                        'err' => true,
-                        'msg' => ['clpUsernameErr'=>trans('adminlte_lang::wallet.user_required')]
-                    ];
-                    return response()->json($result);
-                }
-            }else{
-                $result = [
-                    'err' => true,
-                    'msg' =>[
-                        'clpAmountErr' => $clpAmountErr,
-                        'clpUsernameErr' => $clpUsernameErr,
-                        'clpOTPErr' => $clpOTPErr,
-                        'clpUidErr' => $clpUidErr,
-                    ]
+                $fieldCLP = [
+                    'walletType' => Wallet::CLP_WALLET,//usd
+                    'type' => Wallet::CLP_BTC_TYPE,//bonus f1
+                    'inOut' => Wallet::OUT,
+                    'userId' => Auth::user()->id,
+                    'amount' => $request->clpAmount,
+                    'note'   => 'Sell CLP'
                 ];
-                return response()->json($result);
+                Wallet::create($fieldCLP);
+
+                $fieldBTC = [
+                    'walletType' => Wallet::BTC_WALLET,//reinvest
+                    'type' => Wallet::CLP_BTC_TYPE,//bonus f1
+                    'inOut' => Wallet::IN,
+                    'userId' => Auth::user()->id,
+                    'amount' => $amountBTC,
+                    'note'   => 'Sell CLP'
+                ];
+                Wallet::create($fieldBTC);
+                $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_sell_clp_success') );
+                return redirect()->route('wallet.clp');
+            } else {
+                //Not enough money
+                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
+                return redirect()->route('wallet.clp');
             }
+        } else { 
+            return redirect()->route('wallet.clp');
         }
-        return response()->json(array('err' => true, 'msg' => null));
+        
     }
+    
 }

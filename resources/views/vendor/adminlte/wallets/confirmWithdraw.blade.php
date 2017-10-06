@@ -11,7 +11,7 @@
     <div id="app">
         <div class="login-box">
             <div class="login-logo">
-                <a href="{{ url('/home') }}"><b>Admin</b>LTE</a>
+                <a href="#"><b>CLP</b></a>
             </div>
             @if (session('error'))
                 <div class="alert alert-danger">

@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Wallet;
 use App\UserCoin;
+use App\ExchangeRate;
 
 use Auth;
 use function Sodium\compare;
@@ -71,14 +72,16 @@ class UsdWalletController extends Controller
         if(isset($dataCurrencyPair) && count( json_decode($dataCurrencyPair) ) > 0 ) {
             $wallets->currencyPair = Auth()->user()->usercoin->usdAmount ;
             $wallets->currencyBtc = round( $wallets->currencyPair / json_decode($dataCurrencyPair)->last , 4);
-            $wallets->currencyClp = $wallets->currencyPair / User::getCLPUSDRate() ;
-            $wallets->rateClpBtc = User::getCLPBTCRate();
-            $wallets->rateClpUsd = User::getCLPUSDRate();
+            $wallets->currencyClp = $wallets->currencyPair / ExchangeRate::getCLPUSDRate() ;
+            $wallets->rateClpBtc = ExchangeRate::getCLPBTCRate();
+            $wallets->rateClpUsd = ExchangeRate::getCLPUSDRate();
         } else {
             Log::info("Cannot get rate");
         }
         $requestQuery = $request->query();
         $all_wallet_type = config('cryptolanding.wallet_type');
+
+        //USD Wallet has 5 type: Profit day, farst start, binary, loyalty, buy CLP
         $wallet_type = [];
         foreach ($all_wallet_type as $key => $val) {
             if($key == 6) break;
@@ -128,9 +131,17 @@ class UsdWalletController extends Controller
         // $wallets->rateClpBtc = User::getCLPBTCRate();
         // $wallets->rateClpUsd = User::getCLPUSDRate();
         $requestQuery = $request->query();
-        $wallet_type = config('cryptolanding.wallet_type');
-        foreach ($wallet_type as $key => $val)
-            $wallet_type[$key] = trans($val);
+
+        //Holding Wallet has 4 types: Farst start, binary, loyalty, Transfer to CLP Wallet
+        $all_wallet_type = config('cryptolanding.wallet_type');
+
+        $wallet_type = [];
+        foreach ($all_wallet_type as $key => $val) {
+            if($key == 1) $wallet_type[$key] = trans($val);
+            if($key == 3) $wallet_type[$key] = trans($val);
+            if($key == 4) $wallet_type[$key] = trans($val);
+            if($key == 6) $wallet_type[$key] = trans('adminlte_lang::wallet.holding_clp_type');
+        }
         return view('adminlte::wallets.reinvest', compact('wallets','wallet_type', 'requestQuery'));
     }
     
@@ -292,11 +303,11 @@ class UsdWalletController extends Controller
                 json_decode($dataCurrencyPair)->last , 4);
         
         $data["clp"] = $data["usd"] / 
-                User::getCLPUSDRate();
+                ExchangeRate::getCLPUSDRate();
         
-        $data["clpbtc"] = User::getCLPBTCRate();
+        $data["clpbtc"] = ExchangeRate::getCLPBTCRate();
         
-        $data["clpusd"] = User::getCLPUSDRate();
+        $data["clpusd"] = ExchangeRate::getCLPUSDRate();
         
         return $this->responseSuccess($data);
     }
