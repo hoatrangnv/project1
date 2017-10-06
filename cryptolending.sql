@@ -142,7 +142,7 @@ CREATE TABLE `model_has_permissions` (
 -- ----------------------------
 -- Records of model_has_permissions
 -- ----------------------------
-INSERT INTO `model_has_permissions` VALUES ('1', '3', 'App\\User');
+INSERT INTO `model_has_permissions` VALUES ('1', '1', 'App\\User');
 
 -- ----------------------------
 -- Table structure for model_has_roles
@@ -184,12 +184,12 @@ CREATE TABLE `packages` (
 -- ----------------------------
 -- Records of packages
 -- ----------------------------
-INSERT INTO `packages` VALUES ('1', 'tiny', '2017-08-16 07:06:07', '2017-09-18 04:14:44', null, '100', '0.001', '1');
-INSERT INTO `packages` VALUES ('2', 'small', '2017-08-16 07:06:33', '2017-09-18 04:14:48', null, '500', '0.002', '2');
-INSERT INTO `packages` VALUES ('3', 'medium', '2017-08-16 07:58:10', '2017-09-18 04:14:55', null, '1000', '0.003', '3');
-INSERT INTO `packages` VALUES ('4', 'large', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '2000', '0.004', '4');
-INSERT INTO `packages` VALUES ('5', 'huge', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '5000', '0.005', '5');
-INSERT INTO `packages` VALUES ('6', 'angel', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '10000', '0.006', '6');
+INSERT INTO `packages` VALUES ('1', 'TINY', '2017-08-16 07:06:07', '2017-09-18 04:14:44', null, '100', '0.001', '1');
+INSERT INTO `packages` VALUES ('2', 'SMALL', '2017-08-16 07:06:33', '2017-09-18 04:14:48', null, '500', '0.002', '2');
+INSERT INTO `packages` VALUES ('3', 'MEDIUM', '2017-08-16 07:58:10', '2017-09-18 04:14:55', null, '1000', '0.003', '3');
+INSERT INTO `packages` VALUES ('4', 'LARGE', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '2000', '0.004', '4');
+INSERT INTO `packages` VALUES ('5', 'HUGE', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '5000', '0.005', '5');
+INSERT INTO `packages` VALUES ('6', 'ANGEL', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '10000', '0.006', '6');
 
 -- ----------------------------
 -- Table structure for password_resets
