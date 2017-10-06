@@ -16,6 +16,7 @@ use DB;
 use Log;
 use App\ExchangeRate;
 use App\ExchangeRateAPI;
+use App\Cronjob\AutoAddBinary;
 
 /**
  * Description of TestController
@@ -34,6 +35,12 @@ class TestController {
         //Get Notification
         User::bonusBinaryWeekCron();
         echo "Return binary bonus this week for user successfully!";
+    }
+
+    function testAutoAddBinary($param = null) {
+        //Get Notification
+        AutoAddBinary::addBinary();
+        echo "Return auto add binary successfully!";
     }
     
     function getAvailableAmount() {
