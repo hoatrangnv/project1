@@ -16,7 +16,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('users', 'User\UserController');
     Route::resource('roles', 'User\RoleController');
     Route::resource('posts', 'User\PostController');
-
+    
 
 
     Route::get('members/genealogy', 'User\MemberController@genealogy');
@@ -122,7 +122,7 @@ Route::get('test-interest',"TestController@testInterest");
 
 
 /***------- END TEST -------***/
-
+Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef");
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
 Route::get('reactive',"Auth\ActiveController@reactiveAccount");
 Route::post('reactive',"Auth\ActiveController@reactiveAccount");

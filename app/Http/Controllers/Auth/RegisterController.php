@@ -20,7 +20,7 @@ use App\UserData;
 use App\UserCoin;
 use URL;
 use Session;
-
+use DB;
 /**
  * Class RegisterController
  * @package %%NAMESPACE%%\Http\Controllers\Auth
@@ -229,5 +229,23 @@ class RegisterController extends Controller
             \Log::error('Running RegisterController has error: ' . date('Y-m-d') .$e->getMessage());
         }
     }
-
+    /** 
+     * @author huynq
+     * @param type $username
+     * @return type
+     */
+    public function registerWithRef($nameRef){
+        if($nameRef){
+           $data = User::select("uid")->where('name', $nameRef)->first();
+           if ( $data ) {
+               $referrerId = $data->uid;
+               $referrerName = $nameRef;
+               return view('adminlte::auth.register', ['referrerId' =>$referrerId, 'referrerName' => $referrerName]);
+           }else{
+               return redirect("register");
+           }
+        }else{
+            return redirect("register");
+        }
+    }
 }

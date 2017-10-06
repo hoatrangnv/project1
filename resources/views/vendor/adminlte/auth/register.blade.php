@@ -5,12 +5,12 @@
 @endsection
 
 @section('content')
-    <link rel="stylesheet" href="css/intlTelInput.css">
+    <link rel="stylesheet" href="{{ URL::to('css/intlTelInput.css')}}">
     <style>
-        .iti-flag {background-image: url("img/flags.png");}
+        .iti-flag {background-image: url("{{ URL::to('img/flags.png')}}");}
 
         @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-          .iti-flag {background-image: url("img/flags@2x.png");}
+          .iti-flag {background-image: url("{{ URL::to('img/flags@2x.png')}}");}
         }
     </style>
     <body class="hold-transition register-page">
@@ -23,7 +23,7 @@
             <div class="register-box-body">
                 <p class="login-box-msg">{{ trans('adminlte_lang::message.registermember') }}</p>
 
-                <form role="form" method="POST">
+                <form role="form" method="POST" action="{{ URL::to("/register") }}">
                     {!! csrf_field() !!}
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('firstname') ? ' has-error' : '' }}">
                         <input type="text" placeholder="{{ trans('adminlte_lang::user.firstname') }}" name="firstname" value="{{ old('firstname') }}" autofocus="autofocus" class="form-control">
@@ -147,10 +147,17 @@
     </div>
     @include('adminlte::layouts.partials.scripts_auth')
     @include('adminlte::auth.terms')
-    <script src="js/intlTelInput.js"></script>
-    <script src="js/utils.js"></script>
+    <script src="{{ URL::to('js/intlTelInput.js')}}"></script>
+    <script src="{{ URL::to('js/utils.js')}}"></script>
     <script>
+        function changeUrl(){
+            var URL = window.location.href;
+            if (URL.split('/')[3] == 'ref') {
+                window.history.pushState("object or string", "Title", "/register");
+            }
+        }
         $(document).ready(function(){
+            var changurl = changeUrl();
             $("#phone").intlTelInput({
                 initialCountry: "auto",
                 geoIpLookup: function(callback) {
