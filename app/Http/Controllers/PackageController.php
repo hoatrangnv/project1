@@ -119,13 +119,16 @@ class PackageController extends Controller
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
             $userCoin->save();
 
+            //get package name
+            $package = Package::where('pack_id', $userData->packageId)->get()->first();
+
             $fieldUsd = [
                 'walletType' => Wallet::CLP_WALLET,//usd
                 'type' => Wallet::BUY_PACK_TYPE,//bonus f1
                 'inOut' => Wallet::OUT,
                 'userId' => Auth::user()->id,
                 'amount' => $amountCLPDecrease,
-                'note'   => 'Buy Package ' . $userData->package->name
+                'note'   => 'Buy Package ' . $package->name
             ];
             Wallet::create($fieldUsd);
 
