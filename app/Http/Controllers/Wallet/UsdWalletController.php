@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Wallet;
 use App\UserCoin;
+use App\ExchangeRate;
 
 use Auth;
 use function Sodium\compare;
@@ -71,9 +72,9 @@ class UsdWalletController extends Controller
         if(isset($dataCurrencyPair) && count( json_decode($dataCurrencyPair) ) > 0 ) {
             $wallets->currencyPair = Auth()->user()->usercoin->usdAmount ;
             $wallets->currencyBtc = round( $wallets->currencyPair / json_decode($dataCurrencyPair)->last , 4);
-            $wallets->currencyClp = $wallets->currencyPair / User::getCLPUSDRate() ;
-            $wallets->rateClpBtc = User::getCLPBTCRate();
-            $wallets->rateClpUsd = User::getCLPUSDRate();
+            $wallets->currencyClp = $wallets->currencyPair / ExchangeRate::getCLPUSDRate() ;
+            $wallets->rateClpBtc = ExchangeRate::getCLPBTCRate();
+            $wallets->rateClpUsd = ExchangeRate::getCLPUSDRate();
         } else {
             Log::info("Cannot get rate");
         }
@@ -302,11 +303,11 @@ class UsdWalletController extends Controller
                 json_decode($dataCurrencyPair)->last , 4);
         
         $data["clp"] = $data["usd"] / 
-                User::getCLPUSDRate();
+                ExchangeRate::getCLPUSDRate();
         
-        $data["clpbtc"] = User::getCLPBTCRate();
+        $data["clpbtc"] = ExchangeRate::getCLPBTCRate();
         
-        $data["clpusd"] = User::getCLPUSDRate();
+        $data["clpusd"] = ExchangeRate::getCLPUSDRate();
         
         return $this->responseSuccess($data);
     }

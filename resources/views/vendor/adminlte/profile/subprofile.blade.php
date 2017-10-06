@@ -27,15 +27,15 @@
                                     <td>{{ $user->name }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Fisrt name</td>
+                                    <td class="label-td">First Name</td>
                                     <td>{{ $user->firstname }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">Last name</td>
+                                    <td class="label-td">Last Name</td>
                                     <td>{{ $user->lastname }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">My email</td>
+                                    <td class="label-td">Email</td>
                                     <td>{{ $user->email }}</td>
                                 </tr>
                                 <tr>
@@ -71,7 +71,7 @@
                                     <td>{{ $user->birthday }}</td>
                                 </tr> 
                                 <tr>
-                                    <td class="label-td">Passport/id card</td>
+                                    <td class="label-td">Passport/Id Card</td>
                                     <td>{{ $user->passport }}</td>
                                 </tr> 
                                 <tr>

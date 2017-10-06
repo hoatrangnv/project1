@@ -1,6 +1,7 @@
 <?php
 
 return [
+    //Title
     'header_title'           	=> 'USD Wallet',
     'usd'                       => 'USD Wallet',
     'btc'                       => 'BTC Wallet',
@@ -20,6 +21,9 @@ return [
     'create_clpcoin'           	=> 'Create CLPcoin address',
     'tranfer_to_clp'            => 'Buy CLP',
     'register_package'            => 'Register Package',
+
+    //Button
+    'btn_transfer_holding_to_clp'            => 'Transfer To CLP Wallet',
 	
 	'amount'                => 'Amount',
     'wallet_no'           	=> 'No',
@@ -28,6 +32,7 @@ return [
     'wallet_in'           	=> 'In',
     'wallet_out'           	=> 'Out',
     'wallet_info'           	=> 'Info',
+    'title_selection_filter'               => 'Select type',
     
     'btn_withdraw'           	=> 'Withdraw',
     'bnt_otp'           	=> 'Request OTP',
@@ -41,6 +46,8 @@ return [
     'error_not_enough'          => 'Not enough Money!',
     'success_withdraw'          => 'Update transition success!',
     'error_db'                  => 'Error conection DATABASE',
+
+    //Wallet type
     'fast_start_type'           => 'Fast start bonus',
     'interest'                  => 'Profit',
     'binary'                    => 'Binary bonus',
@@ -56,13 +63,18 @@ return [
     'transfer_clp_type'         => 'Tranfer CLP',
     'deposit_btc_type'          => 'Deposit BTC',
     'deposit_clp_type'          => 'Deposit CLP',
+    'buy_pack'                  => 'Buy Package',
+
+    //Message
+     'msg_sell_clp_success'     => 'Sell CLP successfully!',
+     'msg_buy_clp_success'     => 'Buy CLP successfully!',
 
     'error_reinvest_to_clp_over' => 'Số tiền chuyển lớn hơn số tiền tối đa có thể chuyển',
     'success' => 'Success',
     'fail' => 'Fail',
     'tranfer_from_reinves_wallet_to_clp_wallet'=>"Tranfer from Reinvest wallet to CLP wallet",
     'tranfer_from_usd_wallet_to_clp_wallet'=>"Tranfert from Usd wallet to Reinvest wallet",
-
+    'btn_copy' => "copy",
     'amount_number'=>'The Amount must be a number',
     'amount_required'=>'The Amount field is required',
     'username_required'=>'The Username field is required',
@@ -74,4 +86,5 @@ return [
     'otp_required'=>'The OTP field is required',
     'otp_not_match'=>'The OTP not match',
     'user_required'=>'User is required',
+
 ];

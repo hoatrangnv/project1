@@ -7,6 +7,7 @@ use App\Console\Commands\AuthPermissionCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Notifications\UpdateBtcCoin;
 use App\Notifications\AvailableAmountController as AvailableAmount;
+use App\Cronjob\UpdateExchangeRate;
 
 class Kernel extends ConsoleKernel
 {
@@ -41,14 +42,23 @@ class Kernel extends ConsoleKernel
         }
         /** 
          * @author Huynq
+         * run every dây update availAmount table usercoin
          */
         $stringCronTab = "* * * * * *";
         try {
             $schedule->call(function () {
                 AvailableAmount::getAvailableAmount();
             })->daily();
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             Log::info($ex);
+        }
+        
+        try {
+            $schedule->call(function (){
+                UpdateExchangeRate::updateExchangRate();
+            })->everyMinute();
+        } catch (\Exception $ex) {
+            
         }
     }
 

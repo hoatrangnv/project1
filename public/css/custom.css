@@ -173,3 +173,30 @@
      @media (max-width: 767px) {
         .binary-search #search-input {max-width: 106px; margin-bottom: 10px;}
     }
+
+    .fwbBcc {
+        min-width: 290px;
+        border: 1px solid #DAE1E9;
+        background: #F9FBFC;
+        height: 40px;
+        border-right: none;
+        padding-left: 10px;
+    }
+
+    .fwbCLP {
+        min-width: 355px;
+        border: 1px solid #DAE1E9;
+        background: #F9FBFC;
+        height: 40px;
+        border-right: none;
+        padding-left: 10px;
+    }
+
+    .cp-btc {
+        height: 40px;
+        width: 40px;
+        background: #F9FBFC;
+        border: 1px solid #DAE1E9;
+        padding-left: 0px;
+        margin-left: -4px;
+    }

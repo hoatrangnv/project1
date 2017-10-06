@@ -17,4 +17,8 @@ class BonusBinary extends Model
     public function userData() {
         return $this->hasOne(UserData::class, 'userId', 'userId');
     }
+
+    public function userCoin() {
+        return $this->hasOne(UserCoin::class, 'userId', 'userId');
+    }
 }
