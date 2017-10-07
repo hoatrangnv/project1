@@ -123,7 +123,7 @@ Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 
 
 /***------- END TEST -------***/
-Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef");
+Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef")->name('user.ref');
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
 Route::get('reactive',"Auth\ActiveController@reactiveAccount");
 Route::post('reactive',"Auth\ActiveController@reactiveAccount");

@@ -254,10 +254,24 @@
                 <!-- form start -->
                <div class="box-body">
                    <div class="table-responsive">
-                       <table class="table no-margin">
+                       <table class="table no-margin" style="width: 98%">
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.my_referal_link') }}</td>
-                                <td><input type="text" name="postal_code" value="{{ url('register') }}?referrer={{ Auth::user()->uid }}" class="form-control input-sm" disabled></td>
+                                <td>
+                                <div class="row">
+                                <div class="col-lg-12">
+                                <div class="input-group input-group-sm">
+                                <input type="text" name="ref" id="ref_link" value="{{ route('user.ref', Auth::user()->name) }}" class="form-control" readonly="true">
+                                <!-- <button class="btn_ref_link cp-btc" data-clipboard-target="#ref_link" title="copy">
+                                                <i class="fa fa-clone"></i> -->
+                                        <span class="input-group-btn">
+        <button class="btn btn-default btn_ref_link" data-clipboard-target="#ref_link"><i class="fa fa-clone"></i></button>
+      </span>
+                                            <!-- </button> -->
+                                            </div>
+                                </div>
+                                </div>
+                                </td>
                             </tr> 
                        </table>
                    </div>
@@ -414,11 +428,35 @@
         #myModalPreview img {max-width: 100%;}
     </style>
     <!-- js -->
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
     <link href="/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
     <script src="/bootstrap-switch/bootstrap-switch.js"></script>
     <script type="text/javascript">
         $(function() {
+            $('.btn_ref_link').tooltip({
+                trigger: 'click',
+                placement: 'left'
+            });
+            
+            function setTooltip(message) {
+                $('.btn_ref_link')
+                  .attr('data-original-title', message)
+                  .tooltip('show');
+            }
+            
+            function hideTooltip() {
+                setTimeout(function() {
+                  $('button').tooltip('hide');
+                }, 1000);
+              }
+            
+            var clipboard = new Clipboard('.btn_ref_link');
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+                setTooltip('Copied!');
+                hideTooltip();
+            });
+
             $( '#inputPasswordNew' ).focus(function(){
                 $( '#errorNewPassword' ).hide();
             });
