@@ -148,7 +148,6 @@ class WalletController extends Controller
                 ];
                 Wallet::create($fieldHolidng);
 
-                throw new \Exception("Error Processing Request");
                 
                 return response()->json(array('msg' => trans('adminlte_lang::wallet.msg_transfer_success')));
             } catch ( \Exception $e) {
