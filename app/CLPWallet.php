@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CLPWallet extends Model
 {
     protected $fillable = [
-        'userId', 'address'
+        'userId', 'address', 'transaction'
     ];
 
     public function __construct(array $attributes = [])
