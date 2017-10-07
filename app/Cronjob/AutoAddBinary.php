@@ -17,6 +17,8 @@ use App\BonusBinary;
 class AutoAddBinary {
     
     public static function addBinary(){
+        //Set no limit execution timeout
+        set_time_limit(0);
         //Get this weekYear;
         $weeked = date('W');
         $year = date('Y');
@@ -35,6 +37,9 @@ class AutoAddBinary {
             {
                 //Get left or right is weak
                 $thisWeek = BonusBinary::where('userId', '=', $member->userId)->where('weekYear', '=', $weekYear)->first();
+                if(!$thisWeek) {
+                    continue;
+                }
                 $leftOver = $thisWeek->leftOpen + $thisWeek->leftNew;
                 $rightOver = $thisWeek->rightOpen + $thisWeek->rightNew;
 
