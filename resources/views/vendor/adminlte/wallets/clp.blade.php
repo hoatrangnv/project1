@@ -245,13 +245,15 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                 {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA code E.g. 123456")) }}
                             </div>
                         </div>
+                </div>
+              <div class="pull-right">
+                        <span><i>{{ trans("adminlte_lang::wallet.fee") }}:{{ config("app.fee_withRaw_CLP")}}</i></span>
                     </div>
-                </div>
-                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
-                </div>
           </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
+        </div>
         </div>
         </div>
         <!-- /.modal-dialog -->

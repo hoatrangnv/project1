@@ -187,8 +187,7 @@ class RegisterController extends Controller
                 'name'     => $data['name'],
                 'email'    => $data['email'],
                 'phone'    => $data['phone'],
-                'country'    => $data['country'],
-                'name_country' => $data['name_country'],
+                'country'    => $data['name_country'],
                 'refererId'    => isset($userReferer->id) ? $userReferer->id : null,
                 'password' => bcrypt($data['password']),
                 //'accountCoinBase' => $accountWallet['accountId'],
@@ -240,7 +239,7 @@ class RegisterController extends Controller
            if ( $data ) {
                $referrerId = $data->uid;
                $referrerName = $nameRef;
-               return view('adminlte::auth.register', ['referrerId' =>$referrerId, 'referrerName' => $referrerName]);
+               return view('adminlte::auth.subregister', ['referrerId' =>$referrerId, 'referrerName' => $referrerName]);
            }else{
                return redirect("register");
            }

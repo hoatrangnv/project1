@@ -205,6 +205,9 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             </div>
                         </div>
                     </div>
+                    <div class="pull-right">
+                        <span><i>{{ trans("adminlte_lang::wallet.fee") }}:{{ config("app.fee_withRaw_BTC")}}</i></span>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>

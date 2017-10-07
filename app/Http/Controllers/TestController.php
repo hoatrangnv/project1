@@ -17,7 +17,8 @@ use Log;
 use App\ExchangeRate;
 use App\ExchangeRateAPI;
 use App\Cronjob\AutoAddBinary;
-
+use App\CLPWallet;
+use App\CLPWalletAPI;
 /**
  * Description of TestController
  *
@@ -80,38 +81,31 @@ class TestController {
     }
     
     function test(){
-        $exchrate =  new ExchangeRateAPI();
-        
-        $exchrateClpUsd = $exchrate->getCLPUSDRate();
-        $exchrateBtcUsd = $exchrate->getBTCUSDRate();
-        $exchrateClpBtc = $exchrate->getCLPBTCRate();
-        /* make array insert db*/
-        $dataArrayExrate = [
-            [
-                'from_currency' => ExchangeRate::CLP,
-                'exchrate'      => $exchrateClpUsd,
-                'to_currency'   => ExchangeRate::USD,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now()
-            ],
-            [
-                'from_currency' => ExchangeRate::BTC,
-                'exchrate'      => $exchrateBtcUsd,
-                'to_currency'   => ExchangeRate::USD,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now()
-            ],
-            [
-                'from_currency' => ExchangeRate::CLP,
-                'exchrate'      => $exchrateClpBtc,
-                'to_currency'   => ExchangeRate::BTC,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now()
-            ]
-        ];
-        
-        ExchangeRate::insert($dataArrayExrate);
-        
+        $amountWalletAdd =  config("app.amount_add_wallet");
+        $clpwalletapi = new CLPWalletAPI();
+        if ( $count = CLPWallet::whereNotNull('userId')->whereNull('address')->count() 
+                > 0 ) {
+            $amount = $count + $amountWalletAdd;
+            for ( $i = 0; $i < $amount; $i++ ){
+                $result = $clpwalletapi->generateWallet();
+                if($result){
+                    //update
+                    
+                    //insert
+                    
+                }
+            }
+        } elseif ($count = CLPWallet::whereNull('userId')->whereNotNull('address')->count() 
+                <= $amountWalletAdd){
+            for ( $i = 0; $i < $amount = $amountWalletAdd - $count ; $i++){
+                $result = $clpwalletapi->generateWallet();
+                if($result){
+                    //insert
+                    
+                    
+                }
+            }
+        }
     }
     
 }
