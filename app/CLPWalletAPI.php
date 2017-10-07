@@ -29,6 +29,8 @@ class CLPWalletAPI
         $path = $this->apiUrl . '/generate-wallet';
         $result = $this->client->request('GET', $path);
 
+        //SUCCESS: $result = { success : 1, tx : resETH.transactionHash, gasUsed : gasEstimate, address : resETH.address }
+        //FAIL : { success : 0, err : ex.message }
         $result = json_decode($result);
         
         return $result;
