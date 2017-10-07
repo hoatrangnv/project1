@@ -249,6 +249,16 @@ class PackageController extends Controller
                 $update = UserCoin::where("userId",Auth::user()->id)
                         ->update(["usdAmount" => $money]);
 
+                $fieldUsd = [
+                    'walletType' => Wallet::USD_WALLET,//usd
+                    'type' => Wallet::WITHDRAW_PACK_TYPE,
+                    'inOut' => Wallet::IN,
+                    'userId' => Auth::user()->id,
+                    'amount' => $sum,
+                    'note'   => ''
+                ];
+                Wallet::create($fieldUsd);
+
                 //Update packageId = 0 after withdraw
                 //If over 12 months from release_date then withdraw don't update packageId = 
                 $twelveMonth = strtotime($tempHistoryPackage->release_date . "+ 6 months");

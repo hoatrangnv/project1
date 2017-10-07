@@ -83,10 +83,14 @@ class UsdWalletController extends Controller
 
         //USD Wallet has 5 type: Profit day, farst start, binary, loyalty, buy CLP
         $wallet_type = [];
+        $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
-            if($key == 6) break;
-            $wallet_type[$key] = trans($val);
-
+            if($key == 1) $wallet_type[$key] = trans($val);
+            if($key == 2) $wallet_type[$key] = trans($val);
+            if($key == 3) $wallet_type[$key] = trans($val);
+            if($key == 4) $wallet_type[$key] = trans($val);
+            if($key == 5) $wallet_type[$key] = trans($val);
+            if($key == 16) $wallet_type[$key] = trans($val);
         }
 
         return view('adminlte::wallets.usd', compact('wallets','wallet_type', 'requestQuery'));
@@ -136,6 +140,7 @@ class UsdWalletController extends Controller
         $all_wallet_type = config('cryptolanding.wallet_type');
 
         $wallet_type = [];
+        $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
             if($key == 1) $wallet_type[$key] = trans($val);
             if($key == 3) $wallet_type[$key] = trans($val);

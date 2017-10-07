@@ -64,6 +64,7 @@ return [
     'deposit_btc_type'          => 'Deposit BTC',
     'deposit_clp_type'          => 'Deposit CLP',
     'buy_pack'                  => 'Buy Package',
+    'tl_withdraw_pack'                  => 'Package Withdraw',
 
     //Message
      'msg_sell_clp_success'     => 'Sell CLP successfully!',

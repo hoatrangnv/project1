@@ -60,6 +60,7 @@ class ClpWalletController extends Controller {
 
         //CLP Wallet has 6 type:15-buy pack, 14-Deposit, 10-Withdraw, 7-Buy CLP by BTC, 8-Sell CLP, 5-Buy CLP by USD, 6-Transfer From Holding Wallet
         $wallet_type = [];
+        $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
             if($key == 5) $wallet_type[$key] = trans($val);
             if($key == 6) $wallet_type[$key] = trans($val);
