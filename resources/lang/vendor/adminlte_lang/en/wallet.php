@@ -86,5 +86,6 @@ return [
     'otp_required'=>'The OTP field is required',
     'otp_not_match'=>'The OTP not match',
     'user_required'=>'User is required',
+    'fee' => 'Fee'
 
 ];
