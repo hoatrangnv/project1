@@ -324,6 +324,7 @@ CREATE TABLE `users` (
   `state` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `postal_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `country` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name_country` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `birthday` date DEFAULT NULL,
   `passport` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `uid` int(10) DEFAULT NULL,
@@ -461,6 +462,7 @@ CREATE TABLE `clp_wallets` (
   `transaction` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

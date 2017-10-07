@@ -80,7 +80,7 @@
                                 </tr> 
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
-                                    <td>{{ isset($lstCountry[Auth::user()->country]) ? $lstCountry[Auth::user()->country] : '' }}</td>
+                                    <td>{{ Auth::user()->name_country }}</td>
                                 </tr> 
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
@@ -119,11 +119,11 @@
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.first_name') }}</td>
-                                <td><input type="text" name="firstname" value="{{ Auth::user()->firstname }}" class="form-control input-sm"></td>
+                                <td>{{ Auth::user()->firstname }}</td>
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.last_name') }}</td>
-                                <td><input type="text" name="lastname" value="{{ Auth::user()->lastname }}" class="form-control input-sm"></td>
+                                <td>{{ Auth::user()->lastname }}</td>
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.street_address_1') }}</td>
@@ -147,16 +147,7 @@
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
-                                <td>
-                                    <div class="form-group input-group-sm has-feedback{{ $errors->has('country') ? ' has-error' : '' }}">
-                                        {{ Form::select('country', $lstCountry, Auth::user()->country, ['class' => 'form-control input-sm'], ['placeholder' => 'Choose a country']) }}
-                                        @if ($errors->has('country'))
-                                            <span class="help-block">
-                                                {{ $errors->first('country') }}
-                                            </span>
-                                        @endif
-                                    </div>
-                                </td>
+                                <td>{{ Auth::user()->name_country }}</td>
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
@@ -164,11 +155,19 @@
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.birthday') }}</td>
-                                <td><input type="text" name="birthday" value="{{ Auth::user()->birthday }}" class="form-control input-sm"></td>
+                                @if(Auth::user()->birthday)
+                                    <td>{{Auth::user()->birthday}}</td>
+                                @else
+                                    <td><input type="date" name="birthday" value="{{ Auth::user()->birthday }}" class="form-control input-sm"></td>
+                                @endif
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.passport') }}</td>
-                                <td><input type="text" name="passport" value="{{ Auth::user()->passport }}" class="form-control input-sm"></td>
+                                @if(Auth::user()->passport)
+                                    <td>{{Auth::user()->passport}}</td>
+                                @else
+                                    <td><input type="text" name="passport" value="{{ Auth::user()->passport }}" class="form-control input-sm"></td>
+                                @endif
                             </tr>
                             <tr>
                                 <td class="label-td"></td>
@@ -239,7 +238,7 @@
                                 </tr>
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
-                                    <td>{{ isset($lstCountry[$sponsor->country]) ? $lstCountry[$sponsor->country] : '' }}</td>
+                                    <td>{{ $sponsor->name_country }}</td>
                                 </tr>
                             </tbody>
                          </table>
