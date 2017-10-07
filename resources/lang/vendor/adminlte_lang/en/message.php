@@ -134,4 +134,5 @@ return [
     'loggedin'                => 'Logged in!',
     'entering'                => 'Entering...',
     'registered'              => 'User Registered!',
+    'maintenance_mode'        => 'Site is down for maintenance!',
 ];

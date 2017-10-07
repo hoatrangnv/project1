@@ -28,6 +28,7 @@ class AutoAddBinary {
         
         //Get all member which has isBinary > 0 orderby id
         $allMember = UserData::where('isBinary', 1)->where('packageId', '>', 0)->orderby('userId')->get();
+
         //Foreach each
         foreach($allMember as $member) {
             //Check each member, get all F1 not yet add to binary

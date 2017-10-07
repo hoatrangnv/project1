@@ -45,13 +45,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if(config('app.debug')=== false) {
+        if(config('app.debug')=== true) {
 
             if ($exception instanceof AuthorizationException) {
                 return $this->unauthorized($request, $exception);
             }
 
             if ($this->isHttpException($exception)) {
+                
                 switch ($exception->getStatusCode()) {
                     // not authorized
                     case '403':
@@ -66,6 +67,10 @@ class Handler extends ExceptionHandler
                     // internal error
                     case '500':
                         return \Response::view('adminlte::errors.500', array(), 500);
+                        break;
+                    case '503':
+                        //dd($exception->getMessage());
+                        return \Response::view('adminlte::errors.503', array($exception), 503);
                         break;
                     default:
                         return \Response::view('adminlte::errors.default');
