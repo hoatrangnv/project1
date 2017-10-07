@@ -98,6 +98,7 @@ class RegisterController extends Controller
             'name'     => 'required|without_spaces|max:255|unique:users,name',
             'email'    => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:8|confirmed',
+            'name_country' => 'required',
             //'password' => 'required|min:8|confirmed|regex:/^.*(?=.{3,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%@]).*$/',
             'phone'    => 'required',
             'terms'    => 'required',
@@ -186,7 +187,7 @@ class RegisterController extends Controller
                 'name'     => $data['name'],
                 'email'    => $data['email'],
                 'phone'    => $data['phone'],
-                'country'    => $data['country'],
+                'country'    => $data['name_country'],
                 'refererId'    => isset($userReferer->id) ? $userReferer->id : null,
                 'password' => bcrypt($data['password']),
                 //'accountCoinBase' => $accountWallet['accountId'],
@@ -227,5 +228,23 @@ class RegisterController extends Controller
             \Log::error('Running RegisterController has error: ' . date('Y-m-d') .$e->getMessage());
         }
     }
-
+    /** 
+     * @author huynq
+     * @param type $username
+     * @return type
+     */
+    public function registerWithRef($nameRef){
+        if($nameRef){
+           $data = User::select("uid")->where('name', $nameRef)->first();
+           if ( $data ) {
+               $referrerId = $data->uid;
+               $referrerName = $nameRef;
+               return view('adminlte::auth.subregister', ['referrerId' =>$referrerId, 'referrerName' => $referrerName]);
+           }else{
+               return redirect("register");
+           }
+        }else{
+            return redirect("register");
+        }
+    }
 }

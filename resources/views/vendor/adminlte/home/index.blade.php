@@ -279,7 +279,7 @@
                                        {{ trans('adminlte_lang::home.withdraw_to_usd') }}
                                     </td>
                                     <td  class="right">
-                                        <button class="btn btn-default bg-olive withdraw-package" 
+                                        <button class="btn btn-default bg-olive withdraw-package @if($disabled){{ 'disabled' }} @endif" 
                                                         data-id=""
                                                         data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::home.withdraw_to_usd') }}</button>
                                     </td>
@@ -341,10 +341,11 @@
     </div>
     <script>
         var formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-      });
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+          });
+        @if($disabled){{ "$('[data-toggle=confirmation]').confirmation('hide');" }}@endif
         $('[data-toggle=confirmation]').confirmation({
             rootSelector: '[data-toggle=confirmation]',
             onConfirm: function() {
@@ -376,8 +377,10 @@
                 });
             },
             onCancel: function() {
-               
+
             }
           });
+        
+        
     </script>
 @endsection
