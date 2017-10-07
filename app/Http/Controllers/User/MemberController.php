@@ -331,7 +331,7 @@ class MemberController extends Controller
     }
 	public function pushIntoTree(Request $request){
         //if($request->ajax()){
-        if($request->isMethod('post') && Auth::user()->userData->isBinary > 0){
+        if($request->isMethod('post') && Auth::user()->userData->isBinary > 0 && Auth::user()->userData->packageId > 0){
             if($request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
 
                 //Get user that is added to tree
@@ -378,12 +378,18 @@ class MemberController extends Controller
                     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
                     User::updateUserBinary($userData->userId);
                     return redirect('members/binary')
-                        ->with('flash_message','Push into tree successfully.');
+                        ->with('flash_message', trans('adminlte_lang::member.msg_push_tree_success'));
                     //return response()->json(['status'=>1]);
                 }
             }
         }
-        $request->session()->flash('error', 'Push into tree error');
+
+        if(Auth::user()->userData->packageId == 0) {
+            $request->session()->flash('error', trans('adminlte_lang::member.msg_must_buy_package'));
+        }
+        else {
+            $request->session()->flash('error', trans('adminlte_lang::member.msg_push_tree_error'));
+        }
         return redirect('members/binary');
     }
     

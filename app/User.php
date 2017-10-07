@@ -244,9 +244,9 @@ class User extends Authenticatable
 			
 			//Caculate loyalty bonus for up level of $userRoot in binary tree
 			// $user->userId = $binaryUserId
-            self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
+            if($user->packageId > 0) self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
             
-            if($user->binaryUserId > 0) {    
+            if($user->binaryUserId > 0 && $user->packageId > 0) {    
                 User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $nextLegpos, $isUpgrade, $continue);
             }
         }

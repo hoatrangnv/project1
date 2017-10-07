@@ -317,7 +317,7 @@ CREATE TABLE `users` (
   `is2fa` tinyint(1) DEFAULT '0',
   `refererId` int(10) DEFAULT NULL,
   `google2fa_secret` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL  DEFAULT 0,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -327,12 +327,14 @@ CREATE TABLE `users` (
   `birthday` date DEFAULT NULL,
   `passport` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `uid` int(10) DEFAULT NULL,
+  `photo_verification` text COLLATE utf8mb4_unicode_ci,
+  `approve` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`),
   UNIQUE KEY `users_name_unique` (`name`),
   UNIQUE KEY `uid` (`uid`),
   KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of users
