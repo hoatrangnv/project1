@@ -33,7 +33,7 @@ return [
     'wallet_out'           	=> 'Out',
     'wallet_info'           	=> 'Info',
     'title_selection_filter'               => 'Select type',
-    
+    'btn_sure_transfer'         => 'Transfer',
     'btn_withdraw'           	=> 'Withdraw',
     'bnt_otp'           	=> 'Request OTP',
 
@@ -64,11 +64,17 @@ return [
     'deposit_btc_type'          => 'Deposit BTC',
     'deposit_clp_type'          => 'Deposit CLP',
     'buy_pack'                  => 'Buy Package',
-    'tl_withdraw_pack'                  => 'Package Withdraw',
+    'tl_withdraw_pack'          => 'Package Withdraw',
+    'tl_holding_amount'         => 'Holding',
+    'tl_released_amount'        => 'Released',
 
     //Message
      'msg_sell_clp_success'     => 'Sell CLP successfully!',
      'msg_buy_clp_success'     => 'Buy CLP successfully!',
+     'msg_transfer_confirm'     => 'All your released amount CLP will transfer to CLP Wallet!',
+     'msg_sure_confirm'         => 'Are you sure?',
+     'msg_transfer_success'     => 'Transfer successfully',
+     'msg_transfer_fail'     => 'Transfer fail',
 
     'error_reinvest_to_clp_over' => 'Số tiền chuyển lớn hơn số tiền tối đa có thể chuyển',
     'success' => 'Success',

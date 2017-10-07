@@ -118,6 +118,46 @@ class WalletController extends Controller
         }
         return view('adminlte::wallets.buyclp')->with(compact('user', 'tygia'));
     }
+
+    public function transferFromHolding(Request $request)
+    {
+        if($request->ajax()) {
+            try {
+                $currentuserid = Auth::user()->id;
+
+                $userCoin = Auth::user()->userCoin;
+                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $userCoin->availableAmount;
+                $userCoin->availableAmount = 0;
+                $userCoin->save();
+
+                $fieldCLP = [
+                    'walletType' => Wallet::CLP_WALLET,//btc
+                    'type' => Wallet::REINVEST_CLP_TYPE,//tranfer
+                    'inOut' => Wallet::IN,
+                    'userId' => $currentuserid,
+                    'amount' => $userCoin->availableAmount,
+                ];
+                Wallet::create($fieldCLP);
+
+                $fieldHolidng = [
+                    'walletType' => Wallet::REINVEST_WALLET,//clp
+                    'type' => Wallet::REINVEST_CLP_TYPE,//tranfer
+                    'inOut' => Wallet::OUT,
+                    'userId' => $currentuserid,
+                    'amount' => $userCoin->availableAmount,
+                ];
+                Wallet::create($fieldHolidng);
+
+                throw new \Exception("Error Processing Request");
+                
+                return response()->json(array('msg' => trans('adminlte_lang::wallet.msg_transfer_success')));
+            } catch ( \Exception $e) {
+                return response()->json( array('msg' => trans('adminlte_lang::wallet.msg_transfer_fail')) );
+            }
+        }
+
+        return response()->json( array('err' => true, 'msg' => 'You action is denied!') );
+    }
     
     /**
      * 
