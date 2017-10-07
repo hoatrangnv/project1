@@ -8,6 +8,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Notifications\UpdateBtcCoin;
 use App\Notifications\AvailableAmountController as AvailableAmount;
 use App\Cronjob\UpdateExchangeRate;
+use App\User;
 
 class Kernel extends ConsoleKernel
 {
@@ -53,12 +54,20 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
         
-        try {
+        /*try {
             $schedule->call(function (){
                 UpdateExchangeRate::updateExchangRate();
             })->everyMinute();
         } catch (\Exception $ex) {
             
+        }*/
+		
+		try {
+            $schedule->call(function () {
+                User::bonusDayCron();
+            })->daily();
+        } catch (\Exception $ex) {
+            Log::info($ex);
         }
     }
 
