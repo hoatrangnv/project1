@@ -112,68 +112,37 @@
                                     <table class="table table-bordered table-hover table-striped dataTable">
                                         <tbody>
                                         <tr>
+                                            <td class="loyalty">{{ trans('adminlte_lang::home.f1_vol') }}</td>
+                                            <td>{{$data['f1_left_vol']}}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.silver') }}</td>
                                             <td>
-                                                <?php
-                                                $lstSilverUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isSilver', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstSilverUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstSilverUser);
-                                                ;?>
+                                                {{$data['f1_left_silver_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.gold') }}</td>
                                             <td>
-                                                <?php
-                                                $lstGoldUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isGold', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstGoldUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstGoldUser);
-                                                ;?>
+                                                {{$data['f1_left_gold_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.pear') }}</td>
                                             <td>
-                                                <?php
-                                                $lstPearUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isPear', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstPearUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstPearUser);
-                                                ;?>
+                                                {{$data['f1_left_pear_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.emerald') }}</td>
                                             <td>
-                                                <?php
-                                                $lstEmeraldUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isEmerald', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstEmeraldUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstEmeraldUser);
-                                                ;?>
+                                                {{$data['f1_left_emerald_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.diamond') }}</td>
                                             <td>
-                                                <?php
-                                                $lstDiamondUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isDiamond', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstDiamondUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstDiamondUser);
-                                                ;?>
+                                               {{$data['f1_left_diamond_count']}}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -203,68 +172,37 @@
                                     <table class="table table-bordered table-hover table-striped dataTable">
                                         <tbody>
                                         <tr>
+                                            <td class="loyalty">{{ trans('adminlte_lang::home.f1_vol') }}</td>
+                                            <td>{{$data['f1_right_vol']}}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.silver') }}</td>
                                             <td>
-                                                <?php
-                                                $lstSilverUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isSilver', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstSilverUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstSilverUser);
-                                                ;?>
+                                                {{$data['f1_right_silver_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.gold') }}</td>
                                             <td>
-                                                <?php
-                                                $lstGoldUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isGold', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstGoldUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstGoldUser);
-                                                ;?>
+                                                {{$data['f1_right_gold_count'] }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.pear') }}</td>
                                             <td>
-                                                <?php
-                                                $lstPearUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isPear', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstPearUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstPearUser);
-                                                ;?>
+                                                {{$data['f1_right_pear_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.emerald') }}</td>
                                             <td>
-                                                <?php
-                                                $lstEmeraldUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isEmerald', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstEmeraldUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstEmeraldUser);
-                                                ;?>
+                                                {{$data['f1_right_emerald_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.diamond') }}</td>
                                             <td>
-                                                <?php
-                                                $lstDiamondUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isDiamond', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstDiamondUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstDiamondUser);
-                                                ;?>
+                                               {{$data['f1_right_diamond_count']}}
                                             </td>
                                         </tr>
                                         </tbody>

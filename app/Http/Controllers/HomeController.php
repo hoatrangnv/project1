@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\UserData;
+use App\LoyaltyUser;
 use App\BonusBinary;
 use App\Package;
 use App\UserCoin;
@@ -58,6 +59,82 @@ class HomeController extends Controller
             $data['value'] = Package::where('id',$data['package'])->get()[0]->price;
         }
 
+        //Get F1 lef, right Volume
+        $loyaltyUser =  LoyaltyUser::where('userId', Auth::user()->id)->first();
+        $data['f1_left_vol']     = isset($loyaltyUser->f1Left) ? $loyaltyUser->f1Left : 0;
+        $data['f1_right_vol']     = isset($loyaltyUser->f1Right) ? $loyaltyUser->f1Right : 0;
+
+        //Count loyalty
+        $f1_left_silver_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isSilver', 1)
+                            ->where('isGold', 0)
+                            ->where('isPear', 0)
+                            ->where('isEmerald', 0)
+                            ->where('isDiamond', 0)
+                            ->where('leftRight', '=', 'left')
+                            ->count();
+        $f1_right_silver_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isSilver', 1)
+                            ->where('isGold', 0)
+                            ->where('isPear', 0)
+                            ->where('isEmerald', 0)
+                            ->where('isDiamond', 0)
+                            ->where('leftRight', '=', 'right')
+                            ->count();
+        $f1_left_gold_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isGold', 1)
+                            ->where('isPear', 0)
+                            ->where('isEmerald', 0)
+                            ->where('isDiamond', 0)
+                            ->where('leftRight', '=', 'left')
+                            ->count();
+        $f1_right_gold_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isGold', 1)
+                            ->where('isPear', 0)
+                            ->where('isEmerald', 0)
+                            ->where('isDiamond', 0)
+                            ->where('leftRight', '=', 'right')
+                            ->count();
+        $f1_left_pear_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isPear', 1)
+                            ->where('isEmerald', 0)
+                            ->where('isDiamond', 0)
+                            ->where('leftRight', '=', 'left')
+                            ->count();
+        $f1_right_pear_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isPear', 1)
+                            ->where('isEmerald', 0)
+                            ->where('isDiamond', 0)
+                            ->where('leftRight', '=', 'right')
+                            ->count();
+        $f1_left_emerald_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isEmerald', 1)
+                            ->where('isDiamond', 0)
+                            ->where('leftRight', '=', 'left')
+                            ->count();
+        $f1_right_emerald_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isEmerald', 1)
+                            ->where('isDiamond', 0)
+                            ->where('leftRight', '=', 'right')
+                            ->count();
+        $f1_left_diamond_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isDiamond', 1)
+                            ->where('leftRight', '=', 'left')
+                            ->count();
+        $f1_right_diamond_count = LoyaltyUser::where('refererId', '=', Auth::user()->id)
+                            ->where('isDiamond', 1)
+                            ->where('leftRight', '=', 'right')
+                            ->count();
+        $data['f1_left_silver_count']     = $f1_left_silver_count;
+        $data['f1_right_silver_count']     = $f1_right_silver_count;
+        $data['f1_left_gold_count']     = $f1_left_gold_count;
+        $data['f1_right_gold_count']     = $f1_right_gold_count;
+        $data['f1_left_pear_count']     = $f1_left_pear_count;
+        $data['f1_right_pear_count']     = $f1_right_pear_count;
+        $data['f1_left_emerald_count']     = $f1_left_emerald_count;
+        $data['f1_right_emerald_count']     = $f1_right_emerald_count;
+        $data['f1_left_diamond_count']     = $f1_left_diamond_count;
+        $data['f1_right_diamond_count']     = $f1_right_diamond_count;
         //Doanh so F1 moi
         $newF1InWeek = $this->newF1InWeek();
         //$data['newF1InWeek'] = $newF1InWeek['total'];
@@ -191,22 +268,6 @@ class HomeController extends Controller
         }
     }
 
-    /*
-    *Author huynq
-    *Danh hieu F1
-    */
-    private function appellationF1($value=''){
-
-    }
-
-    /*
-    *Author huynq
-    *Danh hieu F1
-    */
-    private function tichLuy($value=''){
-
-    }
-    
     /*
     *Author huynq
     *Thông tin coin 

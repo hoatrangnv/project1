@@ -142,7 +142,7 @@ CREATE TABLE `model_has_permissions` (
 -- ----------------------------
 -- Records of model_has_permissions
 -- ----------------------------
-INSERT INTO `model_has_permissions` VALUES ('1', '3', 'App\\User');
+INSERT INTO `model_has_permissions` VALUES ('1', '1', 'App\\User');
 
 -- ----------------------------
 -- Table structure for model_has_roles
@@ -184,12 +184,12 @@ CREATE TABLE `packages` (
 -- ----------------------------
 -- Records of packages
 -- ----------------------------
-INSERT INTO `packages` VALUES ('1', 'tiny', '2017-08-16 07:06:07', '2017-09-18 04:14:44', null, '100', '0.001', '1');
-INSERT INTO `packages` VALUES ('2', 'small', '2017-08-16 07:06:33', '2017-09-18 04:14:48', null, '500', '0.002', '2');
-INSERT INTO `packages` VALUES ('3', 'medium', '2017-08-16 07:58:10', '2017-09-18 04:14:55', null, '1000', '0.003', '3');
-INSERT INTO `packages` VALUES ('4', 'large', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '2000', '0.004', '4');
-INSERT INTO `packages` VALUES ('5', 'huge', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '5000', '0.005', '5');
-INSERT INTO `packages` VALUES ('6', 'angel', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '10000', '0.006', '6');
+INSERT INTO `packages` VALUES ('1', 'TINY', '2017-08-16 07:06:07', '2017-09-18 04:14:44', null, '100', '0.001', '1');
+INSERT INTO `packages` VALUES ('2', 'SMALL', '2017-08-16 07:06:33', '2017-09-18 04:14:48', null, '500', '0.002', '2');
+INSERT INTO `packages` VALUES ('3', 'MEDIUM', '2017-08-16 07:58:10', '2017-09-18 04:14:55', null, '1000', '0.003', '3');
+INSERT INTO `packages` VALUES ('4', 'LARGE', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '2000', '0.004', '4');
+INSERT INTO `packages` VALUES ('5', 'HUGE', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '5000', '0.005', '5');
+INSERT INTO `packages` VALUES ('6', 'ANGEL', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '10000', '0.006', '6');
 
 -- ----------------------------
 -- Table structure for password_resets
@@ -456,8 +456,21 @@ CREATE TABLE `clp_wallets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(10) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
+  `transaction` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for clp_api_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `clp_api_logs`;
+CREATE TABLE `clp_api_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `error_msg` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -542,3 +555,4 @@ CREATE TABLE `exchange_rates` (
 INSERT INTO `exchange_rates` VALUES ('1', 'clp', '1', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
 INSERT INTO `exchange_rates` VALUES ('2', 'btc', '4210', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
 INSERT INTO `exchange_rates` VALUES ('3', 'clp', '0.00023809524', 'btc', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
+
