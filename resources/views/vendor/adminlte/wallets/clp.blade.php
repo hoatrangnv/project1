@@ -10,7 +10,8 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
 @section('main-content')
     <style>
         #myTable tbody tr:hover {
-            background-color: #f5f5f5 !important;
+            background-color: #f5f5f5;
+            cursor : pointer;
         }
 
         tr.selected {
@@ -347,7 +348,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 var _packageId = parseInt($(this).data('id'));
                 if (_packageId > 0) {
                     if (_packageId < packageId) {
-                        $('#msg_package').html("<div class='alert alert-danger'>You cant not downgrate package.</div>");
+                        $('#msg_package').html("<div class='alert alert-danger'>You can not downgrate package.</div>");
                     } else if (_packageId == packageId) {
                         $('#msg_package').html("<div class='alert alert-danger'>You purchased this package.</div>");
                     } else {
