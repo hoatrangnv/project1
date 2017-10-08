@@ -11,7 +11,7 @@
     <div id="app">
         <div class="login-box">
             <div class="login-logo">
-                <a href="{{ url('/home') }}"><b>Admin</b>LTE</a>
+                <a href="{{ url('/home') }}"><b>CLP</b></a>
             </div>
 
             @if (session('status'))
@@ -25,7 +25,7 @@
                 </div>
             @endif
             <div class="login-box-body">
-                <p class="login-box-msg">Send link Active Account</p>
+                <p class="login-box-msg">Send link active account</p>
                 <form class="form-horizontal" role="form" method="POST" action="{{ url('reactive') }}">
                     {{ csrf_field() }}
                 <div class="form-group input-group-sm has-feedback{{ $errors->has('email') ? ' has-error' : '' }}">
