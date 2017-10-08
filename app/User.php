@@ -572,31 +572,31 @@ class User extends Authenticatable
             if($loyaltyUser->isSilver==0) {
                 $loyaltyUser->isSilver = $isSilver;
                 if(isset($loyaltyBonus) && isset($loyaltyBonus['silver']) && $loyaltyUser->isSilver == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['silver'], 'silver');
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['silver'], trans('adminlte_lang::mybonus.silver'));
             }
 
             if($loyaltyUser->isGold == 0){
                 $loyaltyUser->isGold = $isGold;
                 if(isset($loyaltyBonus) && isset($loyaltyBonus['gold']) && $loyaltyUser->isGold == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['gold'], 'gold');
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['gold'],  trans('adminlte_lang::mybonus.gold'));
             }
 
             if($loyaltyUser->isPear == 0){
                 $loyaltyUser->isPear = $isPear;
                 if(isset($loyaltyBonus) && isset($loyaltyBonus['pear']) && $loyaltyUser->isPear == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['pear'], 'pear');
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['pear'],  trans('adminlte_lang::mybonus.pear'));
             }
 
             if($loyaltyUser->isEmerald == 0){
                 $loyaltyUser->isEmerald = $isEmerald;
                 if(isset($loyaltyBonus) && isset($loyaltyBonus['emerald']) && $loyaltyUser->isEmerald == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['emerald'], 'emerald');
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['emerald'],  trans('adminlte_lang::mybonus.emerald'));
             }
 
             if($loyaltyUser->isDiamond == 0){
                 $loyaltyUser->isDiamond = $isDiamond;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['diamond']) && $loyaltyUser->isEmerald == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['diamond'], 'diamond');
+                if(isset($loyaltyBonus) && isset($loyaltyBonus['diamond']) && $loyaltyUser->isDiamond == 1)
+                    self::bonusLoyaltyCal($userId, $loyaltyBonus['diamond'],  trans('adminlte_lang::mybonus.diamond'));
             }
 
             $loyaltyUser->save();
