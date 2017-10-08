@@ -53,13 +53,13 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                         <div role="tabpanel" class="tab-pane active wallet-amount" id="home">
                             <div class="col-sm-12" style="padding-top: 5px;">
                                 <span><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" style="position: absolute;"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg></span>
-                                <span class="icon-clp-icon" style="font-size: 16px; margin-left:32px;"></span><strong>{{ number_format($wallets->currencyPair, 5) }}</strong>
+                                <span class="icon-clp-icon" style="font-size: 16px; margin-left:32px;"></span><strong>{{ number_format($wallets->currencyPair, 2) }}</strong>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane wallet-amount-released" id="profile">
                             <div class="col-sm-6" style="padding-top: 5px;">
                                 <span><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" style="position: absolute;"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg></span>
-                                <span class="icon-clp-icon" style="font-size: 16px; margin-left:32px;"></span><strong>{{ number_format(Auth()->user()->userCoin->availableAmount, 5) }}</strong>
+                                <span class="icon-clp-icon" style="font-size: 16px; margin-left:32px;"></span><strong>{{ number_format(Auth()->user()->userCoin->availableAmount, 2) }}</strong>
                             </div>
                             <div class="col-sm-6" style="padding-left: 0px;">
                                 <button class="btn bg-olive" id="btnTransfer" @if(Auth()->user()->userCoin->availableAmount == 0) disabled="true" @endif >{{ trans('adminlte_lang::wallet.btn_transfer_holding_to_clp') }}</button>

@@ -68,14 +68,14 @@
     }
 
     .box .wallet-amount-released {
-        width: 38%;
+        width: 46%;
         padding-top: 8px;
         padding-bottom: 8px;
         font-size: 20px;
         color: #85bb65 
     }
 
-     @media (max-width: 767px) {
+     @media (max-width: 768px) {
         .box .wallet-amount {
         width: 100%;
         padding-top: 8px;

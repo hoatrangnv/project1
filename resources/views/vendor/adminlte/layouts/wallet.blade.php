@@ -17,7 +17,7 @@
                 <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
-                            <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 5) }}</h3>
+                            <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 2) }}</h3>
                             <p>{{ trans('adminlte_lang::home.clp_wallet') }}</p>
                     </div>
                     <div class="icon"><span class="icon-clp-icon"></span></div>
