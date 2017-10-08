@@ -19,7 +19,7 @@
                             <!-- small box -->
                             <div class="small-box bg-aqua">
                                 <div class="inner">
-                                    <h3>{{ number_format(Auth::user()->userCoin->btcCoinAmount, 4) }}</h3>
+                                    <h3>{{ number_format(Auth::user()->userCoin->btcCoinAmount, 5) }}</h3>
                                     <p>{{ trans('adminlte_lang::home.btc_wallet') }}</p>
                                 </div>
                                 <div class="icon"><i class="fa fa-btc"></i></div>
@@ -31,7 +31,7 @@
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                        <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 2) }}</h3>
+                                        <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 5) }}</h3>
                                         <p>{{ trans('adminlte_lang::home.clp_wallet') }}</p>
                                 </div>
                                 <div class="icon"><span class="icon-clp-icon"></span></div>
@@ -90,7 +90,7 @@
                                                 </h4>
                                             </td>
                                             <td class="f1-sale">
-                                                <b>{{ $data['newF1InWeek']}}</b>
+                                                <b>{{ number_format($data['newF1InWeek'], 2)}}</b>
                                             </td>
                                         </tr>
                                         <tr>
@@ -99,7 +99,7 @@
                                                 </h4>
                                             </td>
                                             <td class="f1-sale">
-                                                <b>{{ $data['totalF1Sale'] }}</b>
+                                                <b>{{ number_format($data['totalF1Sale'], 2) }}</b>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -113,7 +113,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.f1_vol') }}</td>
-                                            <td>{{$data['f1_left_vol']}}</td>
+                                            <td>{{ number_format($data['f1_left_vol'], 2)}}</td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.silver') }}</td>
@@ -153,7 +153,7 @@
                                                 {{ trans('adminlte_lang::home.f1_left_new') }}
                                             </td>
                                             <td >
-                                                <b>{{$data['leftNew']}}</b>
+                                                <b>{{ number_format($data['leftNew'], 2)}}</b>
                                             </td>
                                         </tr>
                                         <tr>
@@ -161,7 +161,7 @@
                                                {{ trans('adminlte_lang::home.f1_left_tichluy') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['leftTotal']}}</b>
+                                                <b>{{ number_format($data['leftTotal'], 2)}}</b>
                                             </td>
                                         </tr>
                                     </table>
@@ -173,7 +173,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.f1_vol') }}</td>
-                                            <td>{{$data['f1_right_vol']}}</td>
+                                            <td>{{ number_format($data['f1_right_vol'], 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.silver') }}</td>
@@ -213,7 +213,7 @@
                                                 {{ trans('adminlte_lang::home.f1_right_new') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['rightNew']}}</b>
+                                                <b>{{ number_format($data['rightNew'], 2) }}</b>
                                             </td>
                                         </tr>
                                         <tr>
@@ -221,7 +221,7 @@
                                                {{ trans('adminlte_lang::home.f1_right_tichluy') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['rightTotal']}}</b>
+                                                <b>{{ number_format($data['rightTotal'], 2)}}</b>
                                             </td>
                                         </tr>
                                     </table>

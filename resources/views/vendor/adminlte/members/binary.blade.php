@@ -114,7 +114,7 @@
             -moz-border-radius: 10px;
             border-radius: 10px;
             background-color: #ffffff;
-            border: 0px solid #222d32;
+            border: 2px solid #888888;
             width: 12%;
             font-size: 10px;
             text-align: center;

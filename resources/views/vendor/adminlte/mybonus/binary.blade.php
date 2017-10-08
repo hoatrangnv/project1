@@ -31,17 +31,17 @@
 							@foreach ($binarys as $binary)
 							<tr>
 								<td>{{ date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")) }} - {{ date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")) }}</td>
-								<td>{{ $binary->leftOpen }}</td>
-								<td>{{ $binary->rightOpen }}</td>
-								<td>{{ $binary->leftNew }}</td>
-								<td>{{ $binary->rightNew }}</td>
-								<td>{{ $binary->leftOpen + $binary->leftNew }}</td>
-								<td>{{ $binary->rightOpen + $binary->rightNew }}</td>
-								<td>{{ $binary->settled }}</td>
-								<td>{{ $binary->bonus }}</td>
-								<td>{{ $binary->bonus_tmp }}</td>
-								<td>{{ $binary->bonus > 0 ? round($binary->bonus*40/100) : '' }}</td>
-								<td>{{ $binary->bonus > 0 ? round($binary->bonus*60/100) : '' }}</td>
+								<td>{{ number_format($binary->leftOpen, 2) }}</td>
+								<td>{{ number_format($binary->rightOpen,2) }}</td>
+								<td>{{ number_format($binary->leftNew, 2) }}</td>
+								<td>{{ number_format($binary->rightNew, 2) }}</td>
+								<td>{{ number_format($binary->leftOpen + $binary->leftNew, 2) }}</td>
+								<td>{{ number_format($binary->rightOpen + $binary->rightNew, 2) }}</td>
+								<td>{{ number_format($binary->settled, 2) }}</td>
+								<td>{{ number_format($binary->bonus, 2) }}</td>
+								<td>{{ number_format($binary->bonus_tmp, 2) }}</td>
+								<td>{{ $binary->bonus > 0 ? number_format(($binary->bonus*40/100), 2) : '' }}</td>
+								<td>{{ $binary->bonus > 0 ? number_format(($binary->bonus*60/100), 2) : '' }}</td>
 							</tr>
 							@endforeach
 						</tbody>

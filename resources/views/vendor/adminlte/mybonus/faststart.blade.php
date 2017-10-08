@@ -30,7 +30,7 @@
 									<td>{{ $fastStart->generation }}</td>
 									<td>{{ $fastStart->users->name }}</td>
 									<td>{{ $fastStart->packageId }}</td>
-									<td>{{ $fastStart->amount }}</td>
+									<td>{{ number_format($fastStart->amount, 2) }}</td>
 									<td>{{ number_format(($fastStart->amount*40/100), 2) }}</td>
 									<td>{{ number_format(($fastStart->amount*60/100), 2) }}</td>
 								</tr>							

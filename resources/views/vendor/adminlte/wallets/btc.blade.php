@@ -58,7 +58,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                     </svg>
                                 </th>
                                 <th class="wallet-amount">
-                                    <i class="fa fa-btc"></i><span class="btc-amount">{{ Auth()->user()->userCoin->btcCoinAmount }}</span>
+                                    <i class="fa fa-btc"></i><span class="btc-amount">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 5) }}</span>
                                 </th>
                                 <th>
                                     <button class="btn bg-olive" data-toggle="modal"
@@ -110,12 +110,12 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                 <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
                                 <td>
                                     @if($wallet->inOut=='in')
-                                        +{{ $wallet->amount }}
+                                        +{{ number_format($wallet->amount, 2) }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='out')
-                                        -{{ $wallet->amount }}
+                                        -{{ number_format($wallet->amount, 2) }}
                                     @endif
                                 </td>
                                 <td>{{ $wallet->note }}</td>
