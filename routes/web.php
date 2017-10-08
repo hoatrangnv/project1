@@ -73,6 +73,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/buysellclp', 'WalletController@buysellclp');
     Route::get('wallets/transferholding', 'WalletController@transferFromHolding')->name('holding.transfer');
 
+    Route::post('wallets/buyclpusd', 'Wallet\UsdWalletController@buyCLP')->name('usd.buyclp');
+
   
 
     Route::get('mybonus/faststart', 'MyBonusController@faststart');

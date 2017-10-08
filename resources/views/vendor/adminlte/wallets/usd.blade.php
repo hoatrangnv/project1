@@ -116,39 +116,41 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
         </div>
     </div>
     <!--fORM submit-->
-    <form class="form-horizontal" _lpchecked="1" method="post" action="">
-        <div class="modal fade" id="modal-default">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max usd-amount" data-type="usdwallet">{{ $wallets->currencyPair }}</a></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="box-body">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max usd-amount" data-type="usdwallet">{{ $wallets->currencyPair }}</a></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                                {{ Form::number('usd', '', array('class' => 'form-control input-sm switch-USD-to-CLP', 'step' => '0.01', 'placeholder' => "USD Amount")) }}
+                                {{ Form::number('usdAmount', '', array('class' => 'form-control input-sm switch-USD-to-CLP clp-input', 'id' => 'usdAmount', 'placeholder' => "USD Amount")) }}
                             </div>
-                            <br>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                {{ Form::number('clp', '', array('class' => 'form-control input-sm switch-CLP-to-USD', 'step' => '0.000000001','placeholder' => "CLP Amount")) }}
+                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-USD clp-input', 'id' => 'clpAmount', 'placeholder' => "CLP Amount")) }}
                             </div>
+                            <span class="help-block"></span>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
                 </div>
-              <!-- /.modal-content -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="buyCLP">Submit</button>
+                </div>
             </div>
-          <!-- /.modal-dialog -->
+          <!-- /.modal-content -->
         </div>
-    </form>
+      <!-- /.modal-dialog -->
+    </div>
     <!-- /.modal -->
     <script>
         $(document).ready(function(){
@@ -164,6 +166,64 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             $('#btn_filter_clear').on('click', function () {
                 location.href = '{{ url()->current() }}';
             });
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('.clp-input').on('keyup', function () {
+                $(this).parents("div.form-group").removeClass('has-error');
+                $(this).parents("div.form-group").find('.help-block').text('')
+            });
+
+            $('#buyCLP').on('click', function () {
+                var usdAmount = $('#usdAmount').val();
+                var clpAmount = $('#clpAmount').val();
+                if($.trim(clpAmount) == ''){
+                    $("#clpAmount").parents("div.form-group").addClass('has-error');
+                    $("#clpAmount").parents("div.form-group").find('.help-block').text("CLP Amount is required");
+                }else{
+                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(usdAmount) == ''){
+                    $("#usdAmount").parents("div.form-group").addClass('has-error');
+                    $("#usdAmount").parents("div.form-group").find('.help-block').text("USD Amount is required");
+                }else{
+                    $("#usdAmount").parents("div.form-group").removeClass('has-error');
+                    $("#usdAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                
+                if($.trim(clpAmount) != '' && $.trim(usdAmount) != ''){
+                    $.ajax({
+                        method : 'POST',
+                        url: "{{ route('usd.buyclp') }}",
+                        data: {clpAmount: clpAmount, usdAmount: usdAmount}
+                    }).done(function (data) {
+                        if (data.err) {
+                            if(typeof data.msg !== undefined){
+                                if(data.msg.usdAmount !== '') {
+                                    $("#usdAmount").parents("div.form-group").addClass('has-error');
+                                    $("#usdAmount").parents("div.form-group").find('.help-block').text(data.msg.usdAmountErr);
+                                }else {
+                                    $("#usdAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#usdAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+
+                            }
+                        } else {
+                            $('#tranfer').modal('hide');
+                            location.href = '{{ url()->current() }}';
+                        }
+                    }).fail(function () {
+                        $('#tranfer').modal('hide');
+                        swal("Some things wrong!");
+                    });
+                }
+            });
+
         });
 
         // var getUSDAmount = setInterval(function () {
