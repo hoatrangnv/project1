@@ -22,6 +22,7 @@ use Log;
 use App\CLPWalletAPI;
 use App\CLPWallet;
 use App\ExchangeRate;
+use Google2FA;
 
 /**
  * Description of ClpWalletController
@@ -66,6 +67,7 @@ class ClpWalletController extends Controller {
             if($key == 7) $wallet_type[$key] = trans($val);
             if($key == 8) $wallet_type[$key] = trans($val);
             if($key == 10) $wallet_type[$key] = trans($val);
+            if($key == 12) $wallet_type[$key] = trans($val);
             if($key == 14) $wallet_type[$key] = trans($val);
             if($key == 15) $wallet_type[$key] = trans($val);
         }
@@ -147,5 +149,129 @@ class ClpWalletController extends Controller {
         }
         
     }
-    
+
+    /** 
+     * @author GiangDT
+     * @param Request $request
+     * @return type
+     */
+    public function clptranfer(Request $request){
+        if($request->ajax()){
+
+            $userCoin = Auth::user()->userCoin;
+            $clpAmountErr = $clpUsernameErr = $clpUidErr = $clpOTPErr = $transferRuleErr = '';
+
+            if($request->clpAmount == ''){
+                $clpAmountErr = trans('adminlte_lang::wallet.amount_required');
+            }elseif (!is_numeric($request->clpAmount)){
+                $clpAmountErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif ($userCoin->clpCoinAmount < $request->clpAmount){
+                $clpAmountErr = trans('adminlte_lang::wallet.error_not_enough');
+            }
+
+            if($request->clpUsername == ''){
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_required');
+            }elseif (!preg_match('/^\S*$/u', $request->clpUsername)){
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_notspace');
+            }elseif (!User::where('name', $request->clpUsername)->where('active', 1)->count()){
+                $clpUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
+            }
+
+            if($request->clpUid == ''){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_required');
+            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
+            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
+                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
+            }
+
+            if($request->clpOTP == ''){
+                $clpOTPErr = trans('adminlte_lang::wallet.otp_required');
+            }else{
+                $key = Auth::user()->google2fa_secret;
+                $valid = Google2FA::verifyKey($key, $request->clpOTP);
+                if(!$valid){
+                    $clpOTPErr = trans('adminlte_lang::wallet.otp_not_match');
+                }
+            }
+
+            /******************* Only transfer in Genealogy ***************/
+            // Get all Genealogy current user
+            $lstCurrentGenealogyUser = [];
+            if($userTreePermission = Auth::user()->userTreePermission)
+                $lstCurrentGenealogyUser = explode(',', $userTreePermission->genealogy);
+
+            // Get all Genealogy transfer user
+            $transferUser = User::where('name', '=', $request->clpUsername)->first();
+            $lstTransferGenealogyUser = [];
+            if($userTreePermission = $transferUser->userTreePermission)
+                $lstTransferGenealogyUser = explode(',', $userTreePermission->genealogy);
+
+            if(!in_array($transferUser->id, $lstCurrentGenealogyUser) 
+                && !in_array(Auth::user()->id, $lstTransferGenealogyUser)) {
+                $transferRuleErr = trans('adminlte_lang::wallet.msg_transfer_rule');
+            }
+
+            if($clpAmountErr =='' && $clpUsernameErr == '' && $clpOTPErr == '' && $clpUidErr == '' && $transferRuleErr == ''){
+                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $request->clpAmount;
+                $userCoin->save();
+                $userRi = User::where('name', $request->clpUsername)->where('active', 1)->first();
+                $userRiCoin = $userRi->userCoin;
+                if($userRiCoin){
+                    $userRiCoin->clpCoinAmount = $userRiCoin->clpCoinAmount + $request->clpAmount;
+                    $userRiCoin->save();
+
+                    $field = [
+                        'walletType' => Wallet::CLP_WALLET,//btc
+                        'type' =>  Wallet::TRANSFER_CLP_TYPE,//transfer BTC
+                        'inOut' => Wallet::OUT,
+                        'userId' => $userCoin->userId,
+                        'amount' => $request->clpAmount,
+                        'note' => 'To user ' . $request->clpUsername
+                    ];
+
+                    Wallet::create($field);
+
+                    $field = [
+                        'walletType' => Wallet::CLP_WALLET,//btc
+                        'type' => Wallet::TRANSFER_CLP_TYPE,//transfer BTC
+                        'inOut' => Wallet::IN,
+                        'userId' => $userRiCoin->userId,
+                        'amount' => $request->clpAmount,
+                        'note' => 'From user ' . $request->clpUsername
+                    ];
+
+                    Wallet::create($field);
+
+                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_transfer_success') );
+                    return response()->json(array('err' => false));
+                }else{
+                    $result = [
+                        'err' => true,
+                        'msg' =>[
+                                'clpAmountErr' => '',
+                                'clpUsernameErr' => trans('adminlte_lang::wallet.user_required'),
+                                'clpOTPErr' => '',
+                                'clpUidErr' => '',
+                                'transferRuleErr' => '',
+                            ]
+                    ];
+                    return response()->json($result);
+                }
+            }else{
+                $result = [
+                    'err' => true,
+                    'msg' =>[
+                        'clpAmountErr' => $clpAmountErr,
+                        'clpUsernameErr' => $clpUsernameErr,
+                        'clpOTPErr' => $clpOTPErr,
+                        'clpUidErr' => $clpUidErr,
+                        'transferRuleErr' => $transferRuleErr,
+                    ]
+                ];
+                return response()->json($result);
+            }
+        }
+        return response()->json(array('err' => true, 'msg' => null));
+    }
 }
