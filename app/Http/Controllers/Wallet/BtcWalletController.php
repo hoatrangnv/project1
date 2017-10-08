@@ -49,17 +49,17 @@ class BtcWalletController extends Controller
      */
     public function showBTCWallet(Request $request){
         $currentuserid = Auth::user()->id;
-        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::BTC_WALLET)
-                            //->take(10)
-            ->paginate();
+        //$wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::BTC_WALLET)->paginate();
         $query = Wallet::where('userId', '=',$currentuserid);
+
+        //Filter option
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
 
         $walletAddress = Auth::user()->userCoin->walletAddress;
 
-        $wallets = $query->where('walletType', Wallet::BTC_WALLET)->paginate();
+        $wallets = $query->where('walletType', Wallet::BTC_WALLET)->orderBy('id', 'desc')->paginate();
         $requestQuery = $request->query();
 
 

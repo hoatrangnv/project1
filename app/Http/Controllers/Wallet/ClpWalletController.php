@@ -45,9 +45,8 @@ class ClpWalletController extends Controller {
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
-        $wallets = $query->where('walletType', Wallet::CLP_WALLET)->paginate();
+        $wallets = $query->where('walletType', Wallet::CLP_WALLET)->orderBy('id', 'desc')->paginate();
         //get Packgage
-        $currentuserid = Auth::user()->id;
         $user = Auth::user();
         $packages = Package::all();
         $lstPackSelect = array();
@@ -71,7 +70,8 @@ class ClpWalletController extends Controller {
             if($key == 15) $wallet_type[$key] = trans($val);
         }
 
-        $walletAddress = '0x4BD156D31187Bf0739e6ABc940b9f21898eC0Db7';
+        $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();
+        $walletAddress = isset($clpWallet->address) ? $clpWallet->address : '';
 
         return view('adminlte::wallets.clp', ['packages' => $packages, 
             'user' => $user, 

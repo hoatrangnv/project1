@@ -67,7 +67,7 @@ class UsdWalletController extends Controller
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
-        $wallets = $query->where('walletType', Wallet::USD_WALLET)->paginate();
+        $wallets = $query->where('walletType', Wallet::USD_WALLET)->orderBy('id', 'desc')->paginate();
         //Add thêm tỷ giá vào $wallets
         if(isset($dataCurrencyPair) && count( json_decode($dataCurrencyPair) ) > 0 ) {
             $wallets->currencyPair = Auth()->user()->usercoin->usdAmount ;
@@ -123,7 +123,7 @@ class UsdWalletController extends Controller
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
-        $wallets = $query->where('walletType', Wallet::REINVEST_WALLET)->paginate();
+        $wallets = $query->where('walletType', Wallet::REINVEST_WALLET)->orderBy('id', 'desc')->paginate();
         //Add thêm tỷ giá vào $wallets
         $wallets->currencyPair = Auth()->user()->usercoin->reinvestAmount ;
             

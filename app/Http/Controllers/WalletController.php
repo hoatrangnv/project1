@@ -123,6 +123,9 @@ class WalletController extends Controller
     {
         if($request->ajax()) {
             try {
+                if($userCoin->availableAmount == 0) 
+                    return response()->json(array('msg' => 'Your released amount is zero'));
+
                 $currentuserid = Auth::user()->id;
 
                 $userCoin = Auth::user()->userCoin;
