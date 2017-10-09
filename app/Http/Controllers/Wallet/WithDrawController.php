@@ -410,7 +410,7 @@ class WithDrawController extends Controller
                     $linkConfirm =  URL::to('/confirmWithdraw')."?d=".base64_encode(json_encode($encrypt));
                     $coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'btc'];
                     $user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
-                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_withdraw') );
+                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your email!' );
                     return redirect()->route('wallet.btc');
                 }
             }else {
