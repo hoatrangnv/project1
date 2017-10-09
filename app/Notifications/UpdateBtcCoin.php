@@ -49,7 +49,7 @@ class UpdateBtcCoin {
                     {
                         //Get transaction of this deposit
                         $transactionDetail = $client->getAccountTransaction($account, $temp->additional_data->transaction->id);
-                        if($transactionDetail->status == "completed") 
+                        if($transactionDetail->getStatus() == "completed") 
                         {
                             $amountAddress = $userCoin->btcCoinAmount + $temp->additional_data->amount->amount;
                             $userCoin->btcCoinAmount = $amountAddress;
