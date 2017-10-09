@@ -67,8 +67,8 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                             data-target="#withdraw">{{trans("adminlte_lang::wallet.withdraw")}}</button>
                                     <button class="btn bg-olive" data-toggle="modal"
                                             data-target="#buy">{{trans("adminlte_lang::wallet.tranfer_to_clp")}}</button>
-                                    <button class="btn bg-olive" data-toggle="modal"
-                                            data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>
+                                    <!-- <button class="btn bg-olive" data-toggle="modal"
+                                            data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button> -->
                                 </th>
                             </tr>
                             </tbody>
@@ -257,7 +257,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
     </div>
 
     <!--Tranfer modal-->
-    <div class="modal fade" id="tranfer" style="display: none;">
+    <!-- <div class="modal fade" id="tranfer" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -308,7 +308,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
-    </div>
+    </div> -->
 
     <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>

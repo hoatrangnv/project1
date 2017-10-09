@@ -72,7 +72,7 @@ class BtcWalletController extends Controller
             if($key == 7) $wallet_type[$key] = trans('adminlte_lang::wallet.btc_clp_type_on_btc');
             if($key == 8) $wallet_type[$key] = trans($val);
             if($key == 9) $wallet_type[$key] = trans($val);
-            if($key == 11) $wallet_type[$key] = trans($val);
+            //if($key == 11) $wallet_type[$key] = trans($val);
             if($key == 13) $wallet_type[$key] = trans($val);
         }
 
