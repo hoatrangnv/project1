@@ -215,7 +215,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->btcAmount,
-                    'note'   => 'Buy at rate ' . $clpRate
+                    'note'   => 'Buy at rate ' . $clpRate . ' BTC'
                 ];
                 Wallet::create($fieldBTC);
 
@@ -225,7 +225,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountCLP,
-                    'note'   => 'Buy at rate ' . $clpRate
+                    'note'   => 'Buy at rate ' . $clpRate . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
 
