@@ -203,9 +203,10 @@ class BtcWalletController extends Controller
             // số tiền chuyển đi thì thực hiện giao dịch
             if ( $userCoin->btcCoinAmount >= $request->btcAmount ) {
                 //Amount CLP
-                $amountCLP = ($request->btcAmount / ExchangeRate::getCLPBTCRate()) + $userCoin->clpCoinAmount;
+                $clpRate = ExchangeRate::getCLPBTCRate();
+                $amountCLP = $request->btcAmount / $clpRate;
                 $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
-                $userCoin->clpCoinAmount = $amountCLP;
+                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $amountCLP;
                 $userCoin->save();
 
                 $fieldBTC = [
@@ -214,7 +215,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->btcAmount,
-                    'note'   => 'Buy CLP'
+                    'note'   => 'Buy at rate ' . $clpRate
                 ];
                 Wallet::create($fieldBTC);
 
@@ -224,7 +225,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountCLP,
-                    'note'   => 'Buy CLP by BTC'
+                    'note'   => 'Buy at rate ' . $clpRate
                 ];
                 Wallet::create($fieldCLP);
 
