@@ -128,7 +128,7 @@ class PackageController extends Controller
                 'inOut' => Wallet::OUT,
                 'userId' => Auth::user()->id,
                 'amount' => $amountCLPDecrease,
-                'note'   => 'Buy Package ' . $package->name
+                'note'   => $package->name
             ];
             Wallet::create($fieldUsd);
 
