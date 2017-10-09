@@ -60,7 +60,6 @@ class UsdWalletController extends Controller
             return redirect()->route("wallet.usd");
         }
         //get tỷ giá usd btc
-        $dataCurrencyPair = $this->getRateUSDBTC();
         //get dữ liệu bảng hiển thị trên site
         $currentuserid = Auth::user()->id;
         $query = Wallet::where('userId', '=',$currentuserid);
@@ -68,16 +67,8 @@ class UsdWalletController extends Controller
             $query->where('type', $request->type);
         }
         $wallets = $query->where('walletType', Wallet::USD_WALLET)->orderBy('id', 'desc')->paginate();
-        //Add thêm tỷ giá vào $wallets
-        if(isset($dataCurrencyPair) && count( json_decode($dataCurrencyPair) ) > 0 ) {
-            $wallets->currencyPair = Auth()->user()->usercoin->usdAmount ;
-            $wallets->currencyBtc = round( $wallets->currencyPair / json_decode($dataCurrencyPair)->last , 4);
-            $wallets->currencyClp = $wallets->currencyPair / ExchangeRate::getCLPUSDRate() ;
-            $wallets->rateClpBtc = ExchangeRate::getCLPBTCRate();
-            $wallets->rateClpUsd = ExchangeRate::getCLPUSDRate();
-        } else {
-            Log::info("Cannot get rate");
-        }
+        $wallets->currencyPair = Auth()->user()->usercoin->usdAmount ;
+           
         $requestQuery = $request->query();
         $all_wallet_type = config('cryptolanding.wallet_type');
 
