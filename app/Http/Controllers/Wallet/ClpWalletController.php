@@ -113,9 +113,10 @@ class ClpWalletController extends Controller {
 
             if ( $userCoin->clpCoinAmount >= $request->clpAmount ) {
                 //Amount CLP
-                $amountBTC = ($request->clpAmount * ExchangeRate::getCLPBTCRate()) + $userCoin->btcCoinAmount;
+                $clpRate = ExchangeRate::getCLPBTCRate();
+                $amountBTC = $request->clpAmount * $clpRate;
                 $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount - $request->clpAmount);
-                $userCoin->btcCoinAmount = $amountBTC;
+                $userCoin->btcCoinAmount = $userCoin->btcCoinAmount + $amountBTC;
                 $userCoin->save();
 
                 $fieldCLP = [
@@ -124,7 +125,7 @@ class ClpWalletController extends Controller {
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->clpAmount,
-                    'note'   => 'Sell CLP'
+                    'note'   => 'Sell CLP at rate ' . $clpRate . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
 
@@ -134,7 +135,7 @@ class ClpWalletController extends Controller {
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountBTC,
-                    'note'   => 'Sell CLP'
+                    'note'   => 'Sell CLP at rate ' . $clpRate . ' BTC'
                 ];
                 Wallet::create($fieldBTC);
                 $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_sell_clp_success') );
