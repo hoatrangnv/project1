@@ -59,7 +59,7 @@ class UpdateBtcCoin {
                                 'walletType' => Wallet::BTC_WALLET,
                                 'type' => Wallet::DEPOSIT_BTC_TYPE,
                                 'inOut' => Wallet::IN,
-                                'userId' => $userData->userId,
+                                'userId' => $userCoin->userId,
                                 'amount' => $temp->additional_data->amount->amount
                             ];
                             Wallet::create($fieldBTC);
