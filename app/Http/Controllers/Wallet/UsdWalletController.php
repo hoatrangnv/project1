@@ -237,7 +237,8 @@ class UsdWalletController extends Controller
      
             if($usdAmountErr == '')
             {
-                $amountCLP = $request->usdAmount / ExchangeRate::getCLPUSDRate();
+                $clpRate = ExchangeRate::getCLPUSDRate();
+                $amountCLP = $request->usdAmount / $clpRate;
 
                 $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;
                 $userCoin->clpCoinAmount =  $userCoin->clpCoinAmount + $amountCLP;
@@ -249,6 +250,7 @@ class UsdWalletController extends Controller
                     "inOut"      => Wallet::OUT,
                     "userId"     => Auth::user()->id,
                     "amount"     => $request->usdAmount,
+                    "note"      => "Buy at rate " . $clpRate,
                 ];
                 $result = Wallet::create($usd_to_clp);
 
@@ -258,6 +260,7 @@ class UsdWalletController extends Controller
                     "inOut"      => Wallet::IN,
                     "userId"     => Auth::user()->id,
                     "amount"     => $amountCLP,
+                    "note"      => "Buy at rate " . $clpRate,
                 ];
                 // Bulk insert
                 $result = Wallet::create($clp_from_usd);
