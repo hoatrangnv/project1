@@ -10,7 +10,7 @@ use App\Notifications\AvailableAmountController as AvailableAmount;
 use App\Cronjob\UpdateExchangeRate;
 use App\Cronjob\GetClpWallet;
 use App\User;
-use App\UpdateStatusBTCWithdraw;
+use App\Cronjob\UpdateStatusBTCWithdraw;
 
 class Kernel extends ConsoleKernel
 {
