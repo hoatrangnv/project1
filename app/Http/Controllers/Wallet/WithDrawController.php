@@ -170,76 +170,69 @@ class WithDrawController extends Controller
                 $transaction = Transaction::send([
                     'toBitcoinAddress' => $withdrawConfirm->walletAddress,
                     'amount' => new Money($withdrawConfirm->withdrawAmount, CurrencyCode::BTC),
-                    'description' => 'member request withdraw'
+                    'description' => ''
                 ]);
                 //get object account
                 $account = $client->getAccount(config('app.coinbase_account'));
                 //begin send
                 try {
-                    $resultGiven = $client->createAccountTransaction($account, $transaction);
-                    if (count(json_encode($resultGiven)) == 0) {
-                        //lỗi không thực hiện được giao dịch trên coinbase ghi vào LOG
-                        //insert withdraw -- lưu lịch ví -- trạng thái fail
-                        $dataInsertWithdraw = [
-                            "walletAddress" => $withdrawConfirm->walletAddress,
-                            "userId" => $withdrawConfirm->userId,
-                            "amountBTC" => $withdrawConfirm->withdrawAmount,
-                            "status" => 0
-                        ];
-                        $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
-                        $request->session()->flash('error', "Withdraw Fail!");
-                        //return redirect()->route('wallet.btc');
-                    } else {
-                        //insert withdraw -- lưu lịch sử giao dịch -- trạng thái success
-                        $dataInsertWithdraw = [
-                            "walletAddress" => $withdrawConfirm->walletAddress,
-                            "userId" => $withdrawConfirm->userId,
-                            "amountBTC" => $withdrawConfirm->withdrawAmount,
-                            "detail" => json_encode($resultGiven),
-                            "status" => 1
-                        ];
+                    $client->createAccountTransaction($account, $transaction);
+                   
+                    //Update btCoinAmount
+                    $btcCoinAmount = $user->btcCoinAmount - config('app.fee_withRaw_BTC') - $withdrawConfirm->withdrawAmount;
 
-                        $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
+                    UserCoin::where('userId', '=', $withdrawConfirm->userId)->update(['btcCoinAmount' => $btcCoinAmount]);
 
-                        //Update btCoinAmount
-                        $btcCoinAmount = $user->btcCoinAmount - config('app.fee_withRaw_BTC') - $withdrawConfirm->withdrawAmount;
+                    //Change status withdraw confirm
+                    $withdrawConfirm->status = 1;
+                    $withdrawConfirm->save();
+                    $isConfirm = true;
 
-                        UserCoin::where('userId', '=', $withdrawConfirm->userId)->update(['btcCoinAmount' => $btcCoinAmount]);
+                    //insert wallet -- lưu lịch sử ví
+                    $dataInsertWallet = [
+                        "walletType" => Wallet::BTC_WALLET,
+                        "type" => Wallet::WITH_DRAW_BTC_TYPE,
+                        "userId" => $withdrawConfirm->userId,
+                        "note" => "Pending",
+                        "amount" => $withdrawConfirm->withdrawAmount,
+                        "inOut" => Wallet::OUT
+                    ];
 
-                        //Change status withdraw confirm
-                        $withdrawConfirm->status = 1;
-                        $withdrawConfirm->save();
-                        $isConfirm = true;
+                    $dataInsertWallet = Wallet::create($dataInsertWallet);
 
-                        //insert wallet -- lưu lịch sử ví
-                        $dataInsertWallet = [
-                            "walletType" => Wallet::BTC_WALLET,
-                            "type" => Wallet::WITH_DRAW_BTC_TYPE,
-                            "userId" => $withdrawConfirm->userId,
-                            "note" => $withdrawConfirm->walletAddress,
-                            "amount" => $withdrawConfirm->withdrawAmount,
-                            "inOut" => Wallet::OUT
-                        ];
-
-                        $dataInsertWallet = Wallet::create($dataInsertWallet);
-
+                    //Get transaction request
+                    $transaction_hash = '';
+                    $transaction_id = '';
+                    $allTransactions = $client->getAccountTransactions($account);
+                    foreach($allTransactions as $transaction) {
+                        if($transaction->to->address == trim($withdrawConfirm->walletAddress) {
+                            $transaction_hash = $transaction->network->hash;
+                            $transaction_id = $transaction->id;
+                            break;
+                        }
                     }
 
-                    if ($dataInsertWithdraw && $dataInsertWallet) {
-                        $request->session()->flash('error', trans('adminlte_lang::wallet.success_withdraw'));
-                        //return redirect()->route('wallet.btc');
-                    } else {
-                        //Không kết nối được DB
-                        Log::warning("Error when insert DB in WithdrawBTC!");
-                        $request->session()->flash('error', trans('adminlte_lang::wallet.error_db'));
-                        //return redirect()->route('wallet.btc');
-                    }
+                    //insert withdraw -- lưu lịch sử giao dịch -- trạng thái success
+                    $dataInsertWithdraw = [
+                        "walletAddress" => $withdrawConfirm->walletAddress,
+                        "userId" => $withdrawConfirm->userId,
+                        "amountBTC" => $withdrawConfirm->withdrawAmount,
+                        "wallet_id" => $dataInsertWallet->id,
+                        "transaction_id" => $transaction_id,
+                        "transaction_hash" => $transaction_hash,
+                        "detail" => '',
+                        "status" => 0
+                    ];
+
+                    $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
+
+
+                    $request->session()->flash('error', trans('adminlte_lang::wallet.success_withdraw'));
                 } catch (\Exception $e) {
                     Log::error($e->getTraceAsString());
                     $request->session()->flash('error', "Withdraw Fail!");
                 }
             } else {
-                //nếu không đủ tiền thì báo lỗi
                 $request->session()->flash('error', 'Not enought BTC');
             }
         }

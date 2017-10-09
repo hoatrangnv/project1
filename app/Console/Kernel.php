@@ -9,6 +9,7 @@ use App\Notifications\UpdateBtcCoin;
 use App\Notifications\AvailableAmountController as AvailableAmount;
 use App\Cronjob\UpdateExchangeRate;
 use App\User;
+use App\UpdateStatusBTCWithdraw;
 
 class Kernel extends ConsoleKernel
 {
@@ -66,6 +67,14 @@ class Kernel extends ConsoleKernel
             $schedule->call(function () {
                 User::bonusDayCron();
             })->daily();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
+        try {
+            $schedule->call(function () {
+                UpdateStatusBTCWithdraw::updateStatusWithdraw();
+            })->everyMinute();
         } catch (\Exception $ex) {
             Log::info($ex);
         }
