@@ -78,6 +78,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                 <tr>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
+                                    <th>{{ trans('adminlte_lang::wallet.wallet_release_date') }}</th>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_type') }}</th>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_in') }}</th>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_out') }}</th>
@@ -88,6 +89,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                     <tr>
                                         <td>{{ $key+1 }}</td>
                                         <td>{{ $wallet->created_at }}</td> 
+                                        <td>{{ date('Y-m-d', strtotime("+6 months", strtotime($wallet->created_at))) }}</td> 
                                         <td>
                                             {{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}
                                         </td>
