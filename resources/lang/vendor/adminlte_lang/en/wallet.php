@@ -44,6 +44,8 @@ return [
     'withdraw_fee'           	=> 'Withdrawal Fee',
     'withdraw_status'           => 'Status',
     'error_not_enough'          => 'Not enough Money!',
+    'error_not_enough_clp'          => 'Not enough CLP!',
+    'error_not_enough_btc'          => 'Not enough BTC!',
     'success_withdraw'          => 'Withdraw successfully!',
     'error_db'                  => 'Error conection DATABASE',
 

@@ -101,17 +101,23 @@ class ClpWalletController extends Controller {
 
     }
 
-    public function sellCLP(Request $request){
-        $currentuserid = Auth::user()->id;
-        $userCoin = Auth::user()->userCoin;
-        if ( $request->isMethod('post') ) {
-            //validate
-            $this->validate($request, [
-                'btcAmount'=>'required|numeric',
-                'clpAmount'=>'required|numeric'
-            ]);
+    public function sellCLP(Request $request)
+    {
+        if($request->ajax()) 
+        {
 
-            if ( $userCoin->clpCoinAmount >= $request->clpAmount ) {
+            $userCoin = Auth::user()->userCoin;
+
+            $clpAmountErr = '';
+            if($request->clpAmount == ''){
+                $clpAmountErr = trans('adminlte_lang::wallet.amount_required');
+            }elseif (!is_numeric($request->clpAmount)){
+                $clpAmountErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif ($userCoin->clpCoinAmount < $request->clpAmount){
+                $clpAmountErr = trans('adminlte_lang::wallet.error_not_enough_clp');
+            }
+
+            if ( $clpAmountErr == '') {
                 //Amount CLP
                 $clpRate = ExchangeRate::getCLPBTCRate();
                 $amountBTC = $request->clpAmount * $clpRate;
@@ -139,16 +145,22 @@ class ClpWalletController extends Controller {
                 ];
                 Wallet::create($fieldBTC);
                 $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_sell_clp_success') );
-                return redirect()->route('wallet.clp');
+
+                 return response()->json(array('err' => false));
             } else {
-                //Not enough money
-                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
-                return redirect()->route('wallet.clp');
+                $result = [
+                        'err' => true,
+                        'msg' =>[
+                                'clpAmountErr' => $clpAmountErr,
+                            ]
+                    ];
+                    
+                return response()->json($result);
             }
-        } else { 
-            return redirect()->route('wallet.clp');
+            
         }
-        
+
+        return response()->json(array('err' => false, 'msg' => null));
     }
 
     /** 
