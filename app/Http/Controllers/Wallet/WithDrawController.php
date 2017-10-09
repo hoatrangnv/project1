@@ -205,7 +205,7 @@ class WithDrawController extends Controller
                     $transaction_id = '';
                     $allTransactions = $client->getAccountTransactions($account);
                     foreach($allTransactions as $transaction) {
-                        if($transaction->to->address == trim($withdrawConfirm->walletAddress) {
+                        if($transaction->to->address == trim($withdrawConfirm->walletAddress)) {
                             $transaction_hash = $transaction->network->hash;
                             $transaction_id = $transaction->id;
                             break;
