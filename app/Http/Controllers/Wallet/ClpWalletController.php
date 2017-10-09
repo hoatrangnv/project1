@@ -154,7 +154,7 @@ class ClpWalletController extends Controller {
                                 'clpAmountErr' => $clpAmountErr,
                             ]
                     ];
-                    
+
                 return response()->json($result);
             }
             
@@ -240,7 +240,7 @@ class ClpWalletController extends Controller {
                         'inOut' => Wallet::OUT,
                         'userId' => $userCoin->userId,
                         'amount' => $request->clpAmount,
-                        'note' => 'To user ' . $request->clpUsername
+                        'note' => 'To ' . $request->clpUsername
                     ];
 
                     Wallet::create($field);
@@ -251,7 +251,7 @@ class ClpWalletController extends Controller {
                         'inOut' => Wallet::IN,
                         'userId' => $userRiCoin->userId,
                         'amount' => $request->clpAmount,
-                        'note' => 'From user ' . $request->clpUsername
+                        'note' => 'From ' . $request->clpUsername
                     ];
 
                     Wallet::create($field);
