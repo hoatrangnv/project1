@@ -8,6 +8,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Notifications\UpdateBtcCoin;
 use App\Notifications\AvailableAmountController as AvailableAmount;
 use App\Cronjob\UpdateExchangeRate;
+use App\Cronjob\GetClpWallet;
 
 class Kernel extends ConsoleKernel
 {
@@ -57,6 +58,18 @@ class Kernel extends ConsoleKernel
             $schedule->call(function (){
                 UpdateExchangeRate::updateExchangRate();
             })->everyMinute();
+        } catch (\Exception $ex) {
+            
+        }
+        /** 
+         * get Clp wallet every 5minutes
+         */
+        $stringCronTab = "* * * * * *";
+        try {
+            $schedule->call(function (){
+                $newGetClp = new GetClpWallet();
+                $newGetClp->getClpWallet();
+            })->everyFiveMinutes();
         } catch (\Exception $ex) {
             
         }
