@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 100122
 File Encoding         : 65001
 
-Date: 2017-10-09 14:58:35
+Date: 2017-10-10 00:08:14
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -116,8 +116,8 @@ CREATE TABLE `exchange_rates` (
 -- Records of exchange_rates
 -- ----------------------------
 INSERT INTO `exchange_rates` VALUES ('1', 'clp', '1', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
-INSERT INTO `exchange_rates` VALUES ('2', 'btc', '4000', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
-INSERT INTO `exchange_rates` VALUES ('3', 'clp', '0.00025', 'btc', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
+INSERT INTO `exchange_rates` VALUES ('2', 'btc', '4210', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
+INSERT INTO `exchange_rates` VALUES ('3', 'clp', '0.00023809524', 'btc', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
 
 -- ----------------------------
 -- Table structure for migrations
@@ -549,13 +549,16 @@ CREATE TABLE `withdraws` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `walletAddress` varchar(34) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `walletAddress` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `userId` int(10) NOT NULL,
+  `wallet_id` int(10) DEFAULT NULL,
   `amountCLP` double DEFAULT NULL,
   `amountBTC` double DEFAULT NULL,
+  `transaction_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `transaction_hash` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fee` double DEFAULT NULL,
   `status` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`,`walletAddress`,`userId`)
+  PRIMARY KEY (`id`,`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
