@@ -104,7 +104,7 @@ class User extends Authenticatable
                         'inOut' => Wallet::IN,
                         'userId' => $userData->userId,
                         'amount' => $usdAmount,
-                        'note'   => $user->name . ' ' .  trans('adminlte_lang::wallet.register_package')
+                        'note'   => $user->name . ' bought package'
                     ];
                     Wallet::create($fieldUsd);
                     $fieldInvest = [
@@ -113,7 +113,7 @@ class User extends Authenticatable
                         'inOut' => Wallet::IN,
                         'userId' => $userData->userId,
                         'amount' => $reinvestAmount,
-                        'note'   => $user->name . ' ' . trans('adminlte_lang::wallet.register_package')
+                        'note'   => $user->name . ' bought package'
                     ];
                     Wallet::create($fieldInvest);
                 }
