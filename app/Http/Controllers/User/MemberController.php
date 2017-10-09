@@ -22,19 +22,19 @@ class MemberController extends Controller
     public function index(){
        return view('adminlte::members.genealogy');
     }
-	
-	public function genealogy(Request $request)
+    
+    public function genealogy(Request $request)
     {
-		if($request->ajax()){
-			if(isset($request['action'])) {
-				if($request['action'] == 'getUser') {
-					if(isset($request['username']) && $request['username'] != '') {
+        if($request->ajax()){
+            if(isset($request['action'])) {
+                if($request['action'] == 'getUser') {
+                    if(isset($request['username']) && $request['username'] != '') {
                         $user = Auth::user();
                         $lstGenealogyUser = [];
                         if($userTreePermission = $user->userTreePermission)
                             $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
 
-					    if(is_numeric($request['username'])){
+                        if(is_numeric($request['username'])){
                             $user = User::where('uid', '=', $request['username'])->first();
                         }else{
                             $user = User::where('name', '=', $request['username'])->first();
@@ -55,7 +55,7 @@ class MemberController extends Controller
                         } else {
                             return response()->json(['err'=>1]);
                         }
-					} else {
+                    } else {
                         $user = Auth::user();
                         $fields = [
                             'id'     => $user->id,
@@ -68,9 +68,9 @@ class MemberController extends Controller
                             'dmc' => 3,
                             'generation'     => $this->getQualify($user->userData->packageId),
                         ];
-					}
+                    }
                     return response()->json($fields);
-				} elseif ($request['action'] == 'getChildren') {
+                } elseif ($request['action'] == 'getChildren') {
                     $currentuserid = Auth::user()->id;
                     $user = Auth::user();
                     $lstGenealogyUser = [];
@@ -95,13 +95,13 @@ class MemberController extends Controller
                         }
                     }
                     return response()->json($fields);
-				} else {
+                } else {
                     return response()->json(['err'=>1]);
                 }
-			} else {
+            } else {
                 return response()->json(['err'=>1]);
             }
-		}
+        }
         return view('adminlte::members.genealogy');
     }
 
@@ -113,11 +113,11 @@ class MemberController extends Controller
 
         return $result;
     }
-	
-	public function binary(Request $request){
+    
+    public function binary(Request $request){
         $currentuserid = Auth::user()->id;
-		if($request->ajax()){
-			if(isset($request['id']) && $request['id'] > 0) {
+        if($request->ajax()){
+            if(isset($request['id']) && $request['id'] > 0) {
                 $user = User::find($request['id']);
                 $lstBinaryUser = [];
                 if ($userTreePermission = Auth::user()->userTreePermission)
@@ -188,7 +188,7 @@ class MemberController extends Controller
                 } else {
                     return response()->json(['err' => 1]);
                 }
-			}else{
+            }else{
                 $user = Auth::user();
                 $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                 $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
@@ -214,7 +214,7 @@ class MemberController extends Controller
                     $fields['children'] = $children;
                 }
                 return response()->json($fields);
-			}
+            }
         }
         $lstUsers = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->where('isBinary', '!=', 1)->get();
 
@@ -224,7 +224,7 @@ class MemberController extends Controller
                 $lstUserSelect[$userData->userId] = $userData->user->name;
             }
         }
-		return view('adminlte::members.binary')->with('lstUserSelect', $lstUserSelect);
+        return view('adminlte::members.binary')->with('lstUserSelect', $lstUserSelect);
     }
 
     // Get BV - personal week sale
@@ -320,8 +320,8 @@ class MemberController extends Controller
         }
         return $fields;
     }
-	
-	public function refferals(){
+    
+    public function refferals(){
         $currentuserid = Auth::user()->id;
         
         $users = UserData::with('user')->where('refererId', '=',$currentuserid)->where('status', 1)->orderBy('userId', 'desc')
@@ -329,7 +329,7 @@ class MemberController extends Controller
         
         return view('adminlte::members.refferals')->with('users', $users);
     }
-	public function pushIntoTree(Request $request){
+    public function pushIntoTree(Request $request){
         //if($request->ajax()){
         if($request->isMethod('post') && Auth::user()->userData->isBinary > 0 && Auth::user()->userData->packageId > 0){
             if($request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){

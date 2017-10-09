@@ -7,9 +7,9 @@
  */
 
 namespace App\Http\Controllers;
+
 use App\Notification;
 use App\UserCoin;
-
 use App\User;
 use App\Wallet;
 use DB;
@@ -19,12 +19,23 @@ use App\ExchangeRateAPI;
 use App\Cronjob\AutoAddBinary;
 use App\CLPWallet;
 use App\CLPWalletAPI;
+use App\Helper\Helper;
+use App\Cronjob\GetClpWallet;
 /**
  * Description of TestController
  *
  * @author giangdt
  */
 class TestController {
+     private $helper;
+    private $clpwallet;
+    private $clpwalletapi;
+
+    function __construct(Helper $helper, CLPWallet $clpwallet, CLPWalletAPI $clpwalletapi) {
+        $this->helper = $helper;
+        $this->clpwallet = $clpwallet;
+        $this->clpwalletapi = $clpwalletapi;
+    }
     //put your code here
     function testInterest($param = null) {
         //Get Notification
@@ -43,69 +54,45 @@ class TestController {
         AutoAddBinary::addBinary();
         echo "Return auto add binary successfully!";
     }
-    
+
     function getAvailableAmount() {
-       
+
         try {
-            
-            $passDate = date('Y-m-d',strtotime("-6 months"));
-            
+
+            $passDate = date('Y-m-d', strtotime("-6 months"));
+
             $dataRelaseTimeToday = DB::table('wallets')
-                    ->select('userId','inOut',DB::raw('SUM(amount) as sumamount'))
+                    ->select('userId', 'inOut', DB::raw('SUM(amount) as sumamount'))
                     ->whereDate('created_at', $passDate)
-                    ->groupBy('userId','inOut')
+                    ->groupBy('userId', 'inOut')
                     ->get();
-            
+
             //get all userId from all record from $dataRelaseTimeYesterday
             $availableUser = array();
             foreach ($dataRelaseTimeToday as $value) {
-                if($value->inOut == 'in') 
-                        $availableUser[$value->userId]  = $value->sumamount;
+                if ($value->inOut == 'in')
+                    $availableUser[$value->userId] = $value->sumamount;
             }
             //update available amount
-            if(isset($availableUser) && count($availableUser) > 0 ){
+            if (isset($availableUser) && count($availableUser) > 0) {
                 foreach ($availableUser as $key => $value) {
-                    UserCoin::where("userId",$key)
+                    UserCoin::where("userId", $key)
                             ->update(
-                            ["availableAmount" => 
-                                ( UserCoin::where("userId",$key)->first()->
-                            availableAmount + $value )
-                            ]        
-                            );
+                                    ["availableAmount" =>
+                                        ( UserCoin::where("userId", $key)->first()->
+                                        availableAmount + $value )
+                                    ]
+                    );
                 }
             }
         } catch (\Exception $ex) {
-            Log::error( $ex->gettraceasstring() );
-        }
-       
-    }
-    
-    function test(){
-        $amountWalletAdd =  config("app.amount_add_wallet");
-        $clpwalletapi = new CLPWalletAPI();
-        if ( $count = CLPWallet::whereNotNull('userId')->whereNull('address')->count() 
-                > 0 ) {
-            $amount = $count + $amountWalletAdd;
-            for ( $i = 0; $i < $amount; $i++ ){
-                $result = $clpwalletapi->generateWallet();
-                if($result){
-                    //update
-                    
-                    //insert
-                    
-                }
-            }
-        } elseif ($count = CLPWallet::whereNull('userId')->whereNotNull('address')->count() 
-                <= $amountWalletAdd){
-            for ( $i = 0; $i < $amount = $amountWalletAdd - $count ; $i++){
-                $result = $clpwalletapi->generateWallet();
-                if($result){
-                    //insert
-                    
-                    
-                }
-            }
+            Log::error($ex->gettraceasstring());
         }
     }
-    
+
+    function test() {
+       $newGetClp = new GetClpWallet();
+       GetClpWallet::getClpWallet();
+    }
+
 }

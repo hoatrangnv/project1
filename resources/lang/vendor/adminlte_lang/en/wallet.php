@@ -2,26 +2,25 @@
 
 return [
     //Title
-    'header_title'           	=> 'USD Wallet',
-    'usd'                       => 'USD Wallet',
-    'btc'                       => 'BTC Wallet',
-    'clp'                       => 'CLP Wallet',
-    'reinvest'           	=> 'Holding Wallet',
-	'buy'                   => 'Buy',
-    'buy_package'           	=> 'Buy Package',
-    'buy_clp'           	=> 'Buy CLPCoin',
-    'deposit'           	=> 'Deposit',
-    'withdraw'           	=> 'Withdraw',
-    'transfer'           	=> 'Transfer',
-    'buy_clp'           	=> 'Buy CLP Coin',
-    'sell_clp'           	=> 'Sell CLP',
-    'btctransfer'           	=> 'Btc Coin Transfer',
-    'clptransfer'           	=> 'CLP Coin Transfer',
-    'create_bitcoin'           	=> 'Create Bitcoin address',
-    'create_clpcoin'           	=> 'Create CLPcoin address',
-    'tranfer_to_clp'            => 'Buy CLP',
-    'register_package'            => 'Register Package',
-
+    'header_title' => 'USD Wallet',
+    'usd' => 'USD Wallet',
+    'btc' => 'BTC Wallet',
+    'clp' => 'CLP Wallet',
+    'reinvest' => 'Holding Wallet',
+    'buy' => 'Buy',
+    'buy_package' => 'Buy Package',
+    'buy_clp' => 'Buy CLPCoin',
+    'deposit' => 'Deposit',
+    'withdraw' => 'Withdraw',
+    'transfer' => 'Transfer',
+    'buy_clp' => 'Buy CLP Coin',
+    'sell_clp' => 'Sell CLP',
+    'btctransfer' => 'Btc Coin Transfer',
+    'clptransfer' => 'CLP Coin Transfer',
+    'create_bitcoin' => 'Create Bitcoin address',
+    'create_clpcoin' => 'Create CLPcoin address',
+    'tranfer_to_clp' => 'Buy CLP',
+    'register_package' => 'Register Package',
     //Button
     'btn_transfer_holding_to_clp'            => 'Transfer To CLP Wallet',
 	
@@ -99,6 +98,7 @@ return [
     'otp_required'              =>'The 2FA code is required',
     'otp_not_match'             =>'The 2FA code not match',
     'user_required'             =>'User is required',
-    'fee' => 'Fee'
+    'fee'                       => 'Fee',
+    'wallet_release_date'       => 'Realease Date',
 
 ];

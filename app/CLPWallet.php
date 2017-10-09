@@ -20,4 +20,11 @@ class CLPWallet extends Model
         parent::__construct($attributes);
         $this->setTable('clp_wallets');
     }
+    
+    public function getDataToGetClpWalletOne($checkNullUserId){
+        $data = $checkNullUserId ? self::whereNull('userId')->whereNotNull('address')->get() : 
+            self::whereNotNull('userId')->whereNull('address')->get() ;
+        return $data;
+    }
+    
 }
