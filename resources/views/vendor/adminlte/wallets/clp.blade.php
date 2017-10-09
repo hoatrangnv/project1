@@ -224,7 +224,6 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
         <!-- /.modal-dialog -->
     </div>
     <!--withdrawa modal-->
-    {{ Form::open(array('url' => 'wallets/clpwithdraw'))}}
     <div class="modal fade" id="withdraw" style="display: none;">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -236,21 +235,28 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
           <div class="modal-body">
                 <div class="box no-border">
                     <div class="box-body" style="padding-top:0;">
-                        <div class="input-group">
+                        <div class="form-group">
+                            <div class="input-group">
                                 <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm withdrawclpinput', 'step' => '0.0001', 'placeholder' => "Min 0.0001")) }}
+                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm withdrawclpinput clp-input',  'placeholder' => "Amount CLP", 'id' => 'withdrawAmount')) }}
                             </div>
-                            <br>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
-                                {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm', 'placeholder' => "Ethereum address E.g. 0xbHB5XMLmzFVj8ALj6mfBsbifRoD4miY36v")) }}
+                                {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm clp-input', 'id' => 'walletAddress',  'placeholder' => "Ethereum address E.g. 0xbHB5XMLmzFVj8ALj6mfBsbifRoD4miY36v")) }}
                             </div>
-                            <br>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA code E.g. 123456")) }}
+                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm clp-input', 'id' => 'withdrawOTP',  'placeholder' => "2FA code E.g. 123456")) }}
                             </div>
+                            <span class="help-block"></span>
                         </div>
+                    </div>
                 </div>
               <div class="pull-right">
                         <span><i>{{ trans("adminlte_lang::wallet.fee") }}:{{ config("app.fee_withRaw_CLP")}}</i></span>
@@ -258,13 +264,12 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
           </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-            {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
+            {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'withdraw-clp')) }}
         </div>
         </div>
         </div>
         <!-- /.modal-dialog -->
     </div>
-    {{ Form::close() }}
     <!--Deposit modal-->
     <div class="modal fade" id="deposit" style="display: none;">
         <div class="modal-dialog">
@@ -470,6 +475,84 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             $('.clp-input').on('keyup', function () {
                 $(this).parents("div.form-group").removeClass('has-error');
                 $(this).parents("div.form-group").find('.help-block').text('')
+            }); 
+
+
+            $('#withdraw-clp').on('click', function () {
+                var withdrawAmount = $('#withdrawAmount').val();
+                var walletAddress = $('#walletAddress').val();
+                var withdrawOTP = $('#withdrawOTP').val();
+
+                if($.trim(withdrawAmount) == ''){
+                    $("#withdrawAmount").parents("div.form-group").addClass('has-error');
+                    $("#withdrawAmount").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.amount_required')}}");
+                }else{
+                    $("#withdrawAmount").parents("div.form-group").removeClass('has-error');
+                    $("#withdrawAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(walletAddress) == ''){
+                    $("#walletAddress").parents("div.form-group").addClass('has-error');
+                    $("#walletAddress").parents("div.form-group").find('.help-block').text("Ethereum Address is required");
+                }else{
+                    if(/^(0x)?[0-9a-fA-F]{40}$/.test(walletAddress) == false) {
+                        $("#walletAddress").parents("div.form-group").addClass('has-error');
+                        $("#walletAddress").parents("div.form-group").find('.help-block').text("Ethereum Address is not valid");
+                    } else {
+                        $("#walletAddress").parents("div.form-group").removeClass('has-error');
+                        $("#walletAddress").parents("div.form-group").find('.help-block').text('');
+                    }
+                }
+                    
+                
+                if($.trim(withdrawOTP) == ''){
+                    $("#withdrawOTP").parents("div.form-group").addClass('has-error');
+                    $("#withdrawOTP").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.otp_required')}}");
+                }else{
+                    $("#withdrawOTP").parents("div.form-group").removeClass('has-error');
+                    $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
+                }
+
+                if($.trim(withdrawAmount) != '' && $.trim(walletAddress) != '' && $.trim(withdrawOTP) != ''){
+                    $.ajax({
+                        method : 'POST',
+                        url: "{{ url('wallets/clpwithdraw') }}",
+                        data: {withdrawAmount: withdrawAmount, walletAddress: walletAddress, withdrawOTP: withdrawOTP}
+                    }).done(function (data) {
+                        if (data.err) {
+                            if(typeof data.msg !== undefined){
+                                if(data.msg.withdrawAmountErr !== '') {
+                                    $("#withdrawAmount").parents("div.form-group").addClass('has-error');
+                                    $("#withdrawAmount").parents("div.form-group").find('.help-block').text(data.msg.withdrawAmountErr);
+                                }else {
+                                    $("#withdrawAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#withdrawAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+
+                                if(data.msg.walletAddressErr !== '') {
+                                    $("#walletAddress").parents("div.form-group").addClass('has-error');
+                                    $("#walletAddress").parents("div.form-group").find('.help-block').text(data.msg.walletAddressErr);
+                                }else {
+                                    $("#walletAddress").parents("div.form-group").removeClass('has-error');
+                                    $("#walletAddress").parents("div.form-group").find('.help-block').text('');
+                                }
+
+                                if(data.msg.withdrawOTPErr !== '') {
+                                    $("#withdrawOTP").parents("div.form-group").addClass('has-error');
+                                    $("#withdrawOTP").parents("div.form-group").find('.help-block').text(data.msg.withdrawOTPErr);
+                                }else {
+                                    $("#withdrawOTP").parents("div.form-group").removeClass('has-error');
+                                    $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
+                                }
+                            }
+                        } else {
+                            $('#tranfer').modal('hide');
+                            location.href = '{{ url()->current() }}';
+                        }
+                    }).fail(function () {
+                        $('#tranfer').modal('hide');
+                        swal("Some things wrong!");
+                    });
+                }
             });
 
             

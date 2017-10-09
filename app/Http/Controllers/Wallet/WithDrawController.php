@@ -23,6 +23,7 @@ use Coinbase\Wallet\Client;
 use App\Notifications\WithDrawConfirm as WithDrawConfirmNoti;
 use Carbon\Carbon;
 use URL;
+use Google2FA;
 
 use Log;
 
@@ -201,7 +202,7 @@ class WithDrawController extends Controller
                         $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
 
                         //Update btCoinAmount
-                        $btcCoinAmount = $user->btcCoinAmount - config('app.fee_withRaw_BTC') - $withdrawConfirm->withdrawAmount
+                        $btcCoinAmount = $user->btcCoinAmount - config('app.fee_withRaw_BTC') - $withdrawConfirm->withdrawAmount;
 
                         UserCoin::where('userId', '=', $withdrawConfirm->userId)->update(['btcCoinAmount' => $btcCoinAmount]);
 
@@ -322,13 +323,38 @@ class WithDrawController extends Controller
      * @return type
      */
     public function clpWithDraw( Request $request ) {
-        if($request->isMethod("post")) {
-            $this->validate($request, [
-                'withdrawAmount'=>'required',
-                'walletAddress'=>'required',
-//              'withdrawOPT'=>'required|min:6'
-            ]);
-            if( Auth::user()->userCoin->clpCoinAmount - config('app.fee_withRaw_CLP') >= $request->withdrawAmount ) {
+        if($request->ajax()) 
+        {
+            $userCoin = Auth::user()->userCoin;
+
+            $withdrawAmountErr = $walletAddressErr = $withdrawOTPErr = '';
+            
+            if($request->withdrawAmount == ''){
+                $withdrawAmountErr = trans('adminlte_lang::wallet.amount_required');
+            }elseif (!is_numeric($request->withdrawAmount)){
+                $withdrawAmountErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif (($userCoin->clpCoinAmount - config('app.fee_withRaw_CLP')) < $request->withdrawAmount){
+                $withdrawAmountErr = trans('adminlte_lang::wallet.error_not_enough_clp');
+            }
+
+            if($request->walletAddress == ''){
+                $walletAddressErr = 'Ethereum Address is required';
+            }elseif (!preg_match('/^\S*$/u', $request->clpUsername)){
+                $walletAddressErr = 'Ethereum Address does not have spaces';
+            }
+
+
+            if($request->withdrawOTP == ''){
+                $withdrawOTPErr = trans('adminlte_lang::wallet.otp_required');
+            }else{
+                $key = Auth::user()->google2fa_secret;
+                $valid = Google2FA::verifyKey($key, $request->withdrawOTP);
+                if(!$valid){
+                    $withdrawOTPErr = trans('adminlte_lang::wallet.otp_not_match');
+                }
+            }
+
+            if(  $withdrawAmountErr == '' && $walletAddressErr == '' && $withdrawOTPErr == '') {
                 $user = Auth::user();
                 if($user){
                     $field = [
@@ -343,16 +369,26 @@ class WithDrawController extends Controller
                     $linkConfirm =  URL::to('/confirmWithdraw')."?d=".base64_encode(json_encode($encrypt));
                     $coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'clp'];
                     $user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
-                    $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.success_withdraw') );
-                    return redirect()->route('wallet.clp');
+
+                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your email!' );
+                    return response()->json(array('err' => false));
                 }
             }else {
-                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
-                return redirect()->route('wallet.clp');
+                $result = [
+                    'err' => true,
+                    'msg' =>[
+                            'withdrawAmountErr' => $withdrawAmountErr,
+                            'walletAddressErr' => $walletAddressErr,
+                            'withdrawOTPErr' => $withdrawOTPErr,
+                        ]
+                ];
+                
+                return response()->json($result);
             }
-        }else{
-            return redirect()->route('wallet.clp');
+            
         }
+
+        return response()->json(array('err' => false, 'msg' => null));
     }
     public function btcWithDraw( Request $request ) {
         $user = Auth::user()->userCoin;
