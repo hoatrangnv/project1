@@ -150,70 +150,6 @@ class UsdWalletController extends Controller
         return view('adminlte::wallets.reinvest', compact('wallets','wallet_type', 'requestQuery'));
     }
     
-    /**
-     * @author Huy NQ
-     * @param type $usd
-     * @param type $clp
-     * @param type $request
-     */
-    public function tranferReinvestUSDCLP($usd, $clp, $request){
-        //Kq sau khi tính 
-        $valueAfterTranfer = [];
-        $user = Auth::user()->userCoin;
-
-        try {
-            //action trừ tiền USD và Cộng CLP của user Trong bảng UserCoin
-            $valueAfterTranfer['reinvest_amount']   = $user->reinvestAmount - (double)$usd;
-            $valueAfterTranfer['available_amount']  = $user->availableAmount - (double)$usd;
-            $valueAfterTranfer['clp_amount']        =  $user->clpCoinAmount +  (double)$clp;
-            //Hạn mức tối thiêu khi chuyển USD
-            if( $usd > Auth()->user()->userCoin->availableAmount ){
-                $request->session()->flash( 'errorMessage', trans("adminlte_lang::wallet.error_reinvest_to_clp_over"));
-            } else {
-                $user->reinvestAmount   = $valueAfterTranfer['reinvest_amount'];
-                $user->availableAmount  = $valueAfterTranfer['available_amount'];
-                $user->clpCoinAmount    = $valueAfterTranfer['clp_amount'];
-                
-                $result = $user->save();
-
-                if($result) {
-
-                    $dataInsert = [];
-                    //Lưu LOG 2 report ... 1 : OUT USD và 2 : IN CLP vao bang Wallet
-                    $dataInsert["reinvest_to_clp"] = [
-                        "walletType" => Wallet::REINVEST_WALLET,
-                        "type"       => Wallet::REINVEST_CLP_TYPE,
-                        "inOut"      => Wallet::OUT,
-                        "userId"     => Auth::user()->id,
-                        "amount"     => $usd,
-                        "note"       => trans("adminlte_lang::wallet.tranfer_from_reinves_wallet_to_clp_wallet"),
-                        "updated_at" => date("Y-m-d H:i:s"),
-                        "created_at" => date("Y-m-d H:i:s")
-                    ];
-
-                    $dataInsert["clp_from_reinvest"] = [
-                        "walletType" => Wallet::CLP_WALLET,
-                        "type"       => Wallet::REINVEST_CLP_TYPE,
-                        "inOut"      => Wallet::IN,
-                        "userId"     => Auth::user()->id,
-                        "amount"     => $clp,
-                        "note"       => trans("adminlte_lang::wallet.tranfer_from_reinves_wallet_to_clp_wallet"),
-                        "updated_at" => date("Y-m-d H:i:s"),
-                        "created_at" => date("Y-m-d H:i:s"),
-                    ];
-                    // Bulk insert
-                    $result = Wallet::insert($dataInsert);
-
-                    $request->session()->flash( 'successMessage', trans("adminlte_lang::wallet.success") );
-                } else {
-                    $request->session()->flash( 'errorMessage', trans("adminlte_lang::wallet.fail") );
-                }
-            }
-        } catch (\Exception $ex) {
-            Log::error( $ex->getTraceAsString() );
-            throw $ex;
-        }
-    }
     
     /**
      * @author Huy NQ
@@ -282,22 +218,6 @@ class UsdWalletController extends Controller
         return response()->json(array('err' => false, 'msg' => null));
     }
     
-    /** 
-     * @internal Get tỷ giá Giữa USD / BTC 
-     * @author Huy NQ
-     * @return type json
-     */
-    public function getRateUSDBTC() {
-        try {
-            $ch = curl_init(config('app.link_ty_gia').self::BTCUSD);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $dataCurrencyPair = curl_exec($ch);
-            curl_close($ch);
-            return $dataCurrencyPair;
-        } catch (\Exception $ex) {
-            Log::error($ex->getTraceAsString());
-        }
-    }
     
     public function getDataWallet() {
         //get số liệu 
@@ -317,32 +237,5 @@ class UsdWalletController extends Controller
         
         return $this->responseSuccess($data);
     }
-    
-    /** 
-     * @internal Chuyển đổi giữa USD và CLP
-     * @author Huy NQ
-     * @param Request $request
-     */
-    public function switchUSDCLP(Request $request) {
-        //if have get rq
-        if( $request->method( 'get' ) ) {
-            if( is_numeric( $request->value ) ){
-                
-                if($request->value == 0){
-                    $data = 0;
-                    $this->responseSuccess( $data );
-                }
-                
-                if($request->type ===  self::USDCLP){
-                    $data = $request->value * ( USER::getCLPUSDRate() );
-                    return $this->responseSuccess( $data );
-                } else {
-                    $data = $request->value * ( 1/USER::getCLPUSDRate() );
-                    return $this->responseSuccess( $data );
-                }  
-            }
-        }
-    }
-
 }
 
