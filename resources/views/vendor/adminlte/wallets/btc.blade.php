@@ -222,7 +222,6 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
 
     <!--Buy CLP modal-->
     <div class="modal fade" id="buy" style="display: none;">
-        {{ Form::open(array('url' => 'wallets/btcbuyclp')) }}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -233,82 +232,32 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP', 'step' => '0.00001', 'placeholder' => "Min 0.0001")) }}
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC', 'step' => '0.00001','placeholder' => "CLP Amount")) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-        {{ Form::close() }}
-    </div>
-
-    <!--Tranfer modal-->
-    <!-- <div class="modal fade" id="tranfer" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.transfer")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btc-amount maxbtctranfer" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="box no-border">
-                        <div class="box-body" style="padding-top:0;">
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-tranfer', 'step' => '0.00001', 'placeholder' => "Min 0.0001", 'id' => 'btcAmount' )) }}
+                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP clp-input', 'id' => 'btcAmount', 'placeholder' => "BTC Amount")) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                    {{ Form::text('btcUsername', '', array('class' => 'form-control input-sm', 'id' => 'btcUsername','placeholder' => "Username")) }}
-                                </div>
-                                <span class="help-block"></span>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-id-card-o"></i></span>
-                                    {{ Form::number('btcUid', '', array('class' => 'form-control input-sm', 'id' => 'btcUid', 'placeholder' => "Id")) }}
-                                </div>
-                                <span class="help-block"></span>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                    {{ Form::number('btcOTP', '', array('class' => 'form-control input-sm', 'id' => 'btcOTP' ,'placeholder' => "2FA Code E.g. 123456")) }}
+                                    <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
+                                    {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC clp-input', 'id' => 'clpAmount', 'placeholder' => "CLP Amount")) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'btctranfer')) }}
+                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'buy-clp')) }}
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
-    </div> -->
+    </div>
 
     <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
@@ -401,6 +350,67 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     }, 1000);
                 }
             });
+
+            $('.clp-input').on('keyup', function () {
+                $(this).parents("div.form-group").removeClass('has-error');
+                $(this).parents("div.form-group").find('.help-block').text('')
+            }); 
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('#buy-clp').on('click', function () {
+                var clpAmount = $('#clpAmount').val();
+                var btcAmount = $('#btcAmount').val();
+                if($.trim(clpAmount) == ''){
+                    $("#clpAmount").parents("div.form-group").addClass('has-error');
+                    $("#clpAmount").parents("div.form-group").find('.help-block').text("CLP Amount is required");
+                }else{
+                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(btcAmount) == ''){
+                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                    $("#btcAmount").parents("div.form-group").find('.help-block').text("BTC Amount is required");
+                }else{
+                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
+                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                
+                if($.trim(clpAmount) != '' && $.trim(btcAmount) != ''){
+                    $.ajax({
+                        method : 'POST',
+                        url: "{{ url('wallets/btcbuyclp') }}",
+                        data: {clpAmount: clpAmount, btcAmount: btcAmount}
+                    }).done(function (data) {
+                        if (data.err) {
+                            if(typeof data.msg !== undefined){
+                                if(data.msg.btcAmountErr !== '') {
+                                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.btcAmountErr);
+                                }else {
+                                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+
+                                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+
+                            }
+                        } else {
+                            $('#tranfer').modal('hide');
+                            location.href = '{{ url()->current() }}';
+                        }
+                    }).fail(function () {
+                        $('#tranfer').modal('hide');
+                        swal("Some things wrong!");
+                    });
+                }
+            });
+
             $('#btctranfer').on('click', function () {
                 var btcAmount = $('#btcAmount').val();
                 var btcUsername = $('#btcUsername').val();

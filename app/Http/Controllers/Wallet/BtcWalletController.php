@@ -191,17 +191,21 @@ class BtcWalletController extends Controller
     }
 
     public function buyCLP(Request $request){
-        $currentuserid = Auth::user()->id;
-        $userCoin = Auth::user()->userCoin;
-        if ( $request->isMethod('post') ) {
-            //validate
-            $this->validate($request, [
-                'btcAmount'=>'required|numeric',
-                'clpAmount'=>'required|numeric'
-            ]);
+        if($request->ajax()) 
+        {
+            $userCoin = Auth::user()->userCoin;
+
+            $btcAmountErr = '';
+            if($request->btcAmount == ''){
+                $btcAmountErr = trans('adminlte_lang::wallet.amount_required');
+            }elseif (!is_numeric($request->btcAmount)){
+                $btcAmountErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif ($userCoin->btcCoinAmount < $request->btcAmount){
+                $btcAmountErr = trans('adminlte_lang::wallet.error_not_enough_btc');
+            }
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn 
             // số tiền chuyển đi thì thực hiện giao dịch
-            if ( $userCoin->btcCoinAmount >= $request->btcAmount ) {
+            if ( $btcAmountErr == '' ) {
                 //Amount CLP
                 $clpRate = ExchangeRate::getCLPBTCRate();
                 $amountCLP = $request->btcAmount / $clpRate;
@@ -215,7 +219,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->btcAmount,
-                    'note'   => 'Buy at rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . $clpRate . ' BTC'
                 ];
                 Wallet::create($fieldBTC);
 
@@ -225,21 +229,26 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountCLP,
-                    'note'   => 'Buy at rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . $clpRate . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
 
                 $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_buy_clp_success') );
-                return redirect()->route('wallet.btc');
+                
+                return response()->json(array('err' => false));
             } else {
-                //Not enough money
-                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
-                return redirect()->route('wallet.btc');
+                $result = [
+                        'err' => true,
+                        'msg' =>[
+                                'btcAmountErr' => $btcAmountErr,
+                            ]
+                    ];
+
+                return response()->json($result);
             }
-        } else { 
-            return redirect()->route('wallet.btc');
         }
-        
+
+        return response()->json(array('err' => false, 'msg' => null));
     }
     
 }
