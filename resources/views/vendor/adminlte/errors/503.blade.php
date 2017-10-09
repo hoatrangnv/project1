@@ -7,11 +7,11 @@
 @section('main-content')
 
     <div class="error-page">
-        <h2 class="headline text-red">503</h2>
+        <h2 class="headline text-red">300</h2>
         <div class="error-content">
-            <h3><i class="fa fa-warning text-red"></i> Oops! {{ trans('adminlte_lang::message.somethingwrong') }}</h3>
+            <h3><i class="fa fa-warning text-red"></i> {{ trans('adminlte_lang::message.maintenance_mode') }}</h3>
             <p>
-                {{ trans('adminlte_lang::message.mainwhile') }} <a href='{{ url('/home') }}'>{{ trans('adminlte_lang::message.returndashboard') }}</a>
+                {{ $exception->getMessage(); }}. Please try back in {{ $exception->retryAfter }}
             </p>
         </div>
     </div><!-- /.error-page -->

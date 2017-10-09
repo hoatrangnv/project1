@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50505
-Source Host           : localhost:3306
-Source Database       : acl4
+Source Server         :  localhost
+Source Server Version : 100122
+Source Host           : 127.0.0.1:3306
+Source Database       : clpcoin
 
 Target Server Type    : MYSQL
-Target Server Version : 50505
+Target Server Version : 100122
 File Encoding         : 65001
 
-Date: 2017-09-22 16:14:00
+Date: 2017-10-09 14:58:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -58,54 +58,66 @@ CREATE TABLE `bonus_faststart` (
   PRIMARY KEY (`id`,`partnerId`,`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ----------------------------
+-- Records of bonus_faststart
+-- ----------------------------
 
 -- ----------------------------
--- Table structure for notification
+-- Table structure for clp_api_logs
 -- ----------------------------
-DROP TABLE IF EXISTS `notification`;
-CREATE TABLE `notification` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `data` text NOT NULL,
-  `status` tinyint(4) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+DROP TABLE IF EXISTS `clp_api_logs`;
+CREATE TABLE `clp_api_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `error_msg` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=368 DEFAULT CHARSET=utf8;
-
-
--- ----------------------------
--- Table structure for user_tree_permissions
--- ----------------------------
-DROP TABLE IF EXISTS `user_tree_permissions`;
-CREATE TABLE `user_tree_permissions` (
-  `userId` int(10) unsigned NOT NULL,
-  `binary` text COLLATE utf8mb4_unicode_ci,
-  `genealogy` text COLLATE utf8mb4_unicode_ci,
-  `binary_total` int(11) DEFAULT '0',
-  `genealogy_total` int(11) DEFAULT '0',
-  UNIQUE KEY `userId` (`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for withdraw_confirm
+-- Records of clp_api_logs
 -- ----------------------------
-DROP TABLE IF EXISTS `withdraw_confirm`;
-CREATE TABLE `withdraw_confirm` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+
+-- ----------------------------
+-- Table structure for clp_wallets
+-- ----------------------------
+DROP TABLE IF EXISTS `clp_wallets`;
+CREATE TABLE `clp_wallets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(10) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `transaction` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `walletAddress` varchar(34) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `withdrawAmount` double DEFAULT NULL,
-  `userId` int(10) NOT NULL,
-  `status` tinyint(1) NOT NULL,
-  `type` enum('clp','btc') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`,`walletAddress`,`userId`),
-  KEY `type` (`type`),
-  KEY `userId` (`userId`),
-  KEY `updated_at` (`updated_at`),
-  KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- ----------------------------
+-- Records of clp_wallets
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for exchange_rates
+-- ----------------------------
+DROP TABLE IF EXISTS `exchange_rates`;
+CREATE TABLE `exchange_rates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `from_currency` char(30) NOT NULL,
+  `exchrate` double NOT NULL,
+  `to_currency` char(30) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of exchange_rates
+-- ----------------------------
+INSERT INTO `exchange_rates` VALUES ('1', 'clp', '1', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
+INSERT INTO `exchange_rates` VALUES ('2', 'btc', '4000', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
+INSERT INTO `exchange_rates` VALUES ('3', 'clp', '0.00025', 'btc', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
 
 -- ----------------------------
 -- Table structure for migrations
@@ -163,6 +175,48 @@ CREATE TABLE `model_has_roles` (
 INSERT INTO `model_has_roles` VALUES ('1', '1', 'App\\User');
 
 -- ----------------------------
+-- Table structure for news
+-- ----------------------------
+DROP TABLE IF EXISTS `news`;
+CREATE TABLE `news` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category_id` smallint(6) DEFAULT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `short_desc` text COLLATE utf8mb4_unicode_ci,
+  `desc` text COLLATE utf8mb4_unicode_ci,
+  `public_at` datetime DEFAULT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `priority` int(10) unsigned NOT NULL DEFAULT '0',
+  `views` bigint(20) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of news
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for notification
+-- ----------------------------
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE `notification` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `data` text NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of notification
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for packages
 -- ----------------------------
 DROP TABLE IF EXISTS `packages`;
@@ -218,12 +272,11 @@ CREATE TABLE `permissions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of permissions
 -- ----------------------------
-
 INSERT INTO `permissions` VALUES ('1', 'view_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
 INSERT INTO `permissions` VALUES ('2', 'add_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
 INSERT INTO `permissions` VALUES ('3', 'edit_users', 'web', '2017-09-05 08:54:54', '2017-09-05 08:54:54');
@@ -240,8 +293,6 @@ INSERT INTO `permissions` VALUES ('25', 'view_news', 'web', '2017-09-27 12:00:44
 INSERT INTO `permissions` VALUES ('26', 'add_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
 INSERT INTO `permissions` VALUES ('27', 'edit_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
 INSERT INTO `permissions` VALUES ('28', 'delete_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
-
-
 
 -- ----------------------------
 -- Table structure for roles
@@ -280,7 +331,6 @@ CREATE TABLE `role_has_permissions` (
 -- ----------------------------
 -- Records of role_has_permissions
 -- ----------------------------
-
 INSERT INTO `role_has_permissions` VALUES ('1', '1');
 INSERT INTO `role_has_permissions` VALUES ('2', '1');
 INSERT INTO `role_has_permissions` VALUES ('3', '1');
@@ -317,7 +367,7 @@ CREATE TABLE `users` (
   `is2fa` tinyint(1) DEFAULT '0',
   `refererId` int(10) DEFAULT NULL,
   `google2fa_secret` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `active` tinyint(1) NOT NULL  DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
   `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -340,7 +390,8 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '', null, null, '1');
+INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
+INSERT INTO `users` VALUES ('2', 'root', 'giangitman@gmail.com', '$2y$10$m/400CQhjiCEXSowiAO/c.hz4wnbMGO0qaLYrgY/bN6ylUu.XGoGi', 'kcNnIrEMLkqt7bcRPEoOElC5mziPdzC8rlPHyFWb43ORknanO7RB2UolxEyq', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '0', 'root', 'Giang', '0978708981', '0', '1', '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, null, '1', '1');
 
 -- ----------------------------
 -- Table structure for users_loyalty
@@ -375,7 +426,7 @@ CREATE TABLE `users_loyalty` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `user_coins`
+-- Table structure for user_coins
 -- ----------------------------
 DROP TABLE IF EXISTS `user_coins`;
 CREATE TABLE `user_coins` (
@@ -391,14 +442,11 @@ CREATE TABLE `user_coins` (
   UNIQUE KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
-
-
 -- ----------------------------
 -- Records of user_coins
 -- ----------------------------
 INSERT INTO `user_coins` VALUES ('1', 'admin', 'admin', '0', '0', '0', '0', null, '0');
+INSERT INTO `user_coins` VALUES ('2', 'root', 'root', '0', '0', '0', '0', null, '0');
 
 -- ----------------------------
 -- Table structure for user_datas
@@ -430,7 +478,8 @@ CREATE TABLE `user_datas` (
 -- ----------------------------
 -- Records of user_datas
 -- ----------------------------
-INSERT INTO `user_datas` VALUES ('1', '0', '0', NULL, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
+INSERT INTO `user_datas` VALUES ('1', '0', '0', null, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
+INSERT INTO `user_datas` VALUES ('2', '0', '6', null, '0', '1', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
 
 -- ----------------------------
 -- Table structure for user_packages
@@ -450,33 +499,26 @@ CREATE TABLE `user_packages` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ----------------------------
+-- Records of user_packages
+-- ----------------------------
 
 -- ----------------------------
--- Table structure for clp_wallets
+-- Table structure for user_tree_permissions
 -- ----------------------------
-DROP TABLE IF EXISTS `clp_wallets`;
-CREATE TABLE `clp_wallets` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(10) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `transaction` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `user_tree_permissions`;
+CREATE TABLE `user_tree_permissions` (
+  `userId` int(10) unsigned NOT NULL,
+  `binary` text COLLATE utf8mb4_unicode_ci,
+  `genealogy` text COLLATE utf8mb4_unicode_ci,
+  `binary_total` int(11) DEFAULT '0',
+  `genealogy_total` int(11) DEFAULT '0',
+  UNIQUE KEY `userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Table structure for clp_api_logs
+-- Records of user_tree_permissions
 -- ----------------------------
-DROP TABLE IF EXISTS `clp_api_logs`;
-CREATE TABLE `clp_api_logs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `error_msg` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for wallets
@@ -517,46 +559,30 @@ CREATE TABLE `withdraws` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Table structure for `news`
+-- Records of withdraws
 -- ----------------------------
-DROP TABLE IF EXISTS `news`;
-CREATE TABLE `news` (
+
+-- ----------------------------
+-- Table structure for withdraw_confirm
+-- ----------------------------
+DROP TABLE IF EXISTS `withdraw_confirm`;
+CREATE TABLE `withdraw_confirm` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `category_id` smallint(6) DEFAULT NULL,
-  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `short_desc` text COLLATE utf8mb4_unicode_ci,
-  `desc` text COLLATE utf8mb4_unicode_ci,
-  `public_at` datetime DEFAULT NULL,
-  `created_by` int(10) unsigned NOT NULL,
-  `priority` int(10) unsigned NOT NULL DEFAULT '0',
-  `views` bigint(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
--- ----------------------------
--- Table structure for `exchange_rates`
--- ----------------------------
-DROP TABLE IF EXISTS `exchange_rates`;
-CREATE TABLE `exchange_rates` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_currency` char(30) NOT NULL,
-  `exchrate` double NOT NULL,
-  `to_currency` char(30) NOT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  `walletAddress` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `withdrawAmount` double DEFAULT NULL,
+  `userId` int(10) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `type` enum('clp','btc') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`,`userId`),
+  KEY `type` (`type`),
+  KEY `userId` (`userId`),
+  KEY `updated_at` (`updated_at`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Records of exchange_rates
+-- Records of withdraw_confirm
 -- ----------------------------
-INSERT INTO `exchange_rates` VALUES ('1', 'clp', '1', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
-INSERT INTO `exchange_rates` VALUES ('2', 'btc', '4210', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
-INSERT INTO `exchange_rates` VALUES ('3', 'clp', '0.00023809524', 'btc', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
-
+SET FOREIGN_KEY_CHECKS=1;

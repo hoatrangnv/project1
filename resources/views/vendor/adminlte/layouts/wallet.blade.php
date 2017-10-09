@@ -5,7 +5,7 @@
                 <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3>{{ number_format(Auth::user()->userCoin->btcCoinAmount, 4) }}</h3>
+                        <h3>{{ number_format(Auth::user()->userCoin->btcCoinAmount, 5) }}</h3>
                         <p>{{ trans('adminlte_lang::home.btc_wallet') }}</p>
                     </div>
                     <div class="icon"><i class="fa fa-btc"></i></div>

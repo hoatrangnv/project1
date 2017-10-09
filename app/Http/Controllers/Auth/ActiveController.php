@@ -36,17 +36,12 @@ class ActiveController extends Controller
         if ( strlen( $infoActive ) > 0 ){
             $data = json_decode( base64_decode( $infoActive ) );
             //check neu da active roi va chua login hien thong bao da active kem link login
-            try {
-                $activeUser = User::where('email', '=', $data[1])->first();
-                if($activeUser && $activeUser->active == 1 ) {
-
-                    //chay sang trang thong bao
-                    return redirect("notification/useractived");
-                }
-            } catch (Exception $e) {
-                echo "Error : ket noi";
-                die();
+            $activeUser = User::where('email', '=', $data[1])->first();
+            if($activeUser && $activeUser->active == 1 ) {
+                //chay sang trang thong bao
+                return redirect("notification/useractived");
             }
+            
             $count = User::where('email','=', $data[1])
                             ->where('updated_at','>', Carbon::now()->subDay(3))
                             ->count();

@@ -128,7 +128,7 @@ class PackageController extends Controller
                 'inOut' => Wallet::OUT,
                 'userId' => Auth::user()->id,
                 'amount' => $amountCLPDecrease,
-                'note'   => 'Buy Package ' . $package->name
+                'note'   => $package->name
             ];
             Wallet::create($fieldUsd);
 
@@ -136,8 +136,7 @@ class PackageController extends Controller
             User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
 
             // Case: User already in tree and then upgrade package => re-caculate loyalty
-            /* REMOVE: because User::bonusBinary below already calculate */
-            if($userData->binaryUserId)
+            if($userData->binaryUserId && $userData->packageId > 0)
                 User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
 
             // Case: User already in tree and then upgrade package => re-caculate binary bonus
@@ -249,6 +248,26 @@ class PackageController extends Controller
                 $money = Auth()->user()->userCoin->usdAmount + $sum;
                 $update = UserCoin::where("userId",Auth::user()->id)
                         ->update(["usdAmount" => $money]);
+
+                $fieldUsd = [
+                    'walletType' => Wallet::USD_WALLET,//usd
+                    'type' => Wallet::WITHDRAW_PACK_TYPE,
+                    'inOut' => Wallet::IN,
+                    'userId' => Auth::user()->id,
+                    'amount' => $sum,
+                    'note'   => ''
+                ];
+                Wallet::create($fieldUsd);
+
+                //Update packageId = 0 after withdraw
+                //If over 12 months from release_date then withdraw don't update packageId = 
+                $twelveMonth = strtotime($tempHistoryPackage->release_date . "+ 6 months");
+                $datetime2 = new DateTime(date('Y-m-d H:i:s', $twelveMonth));
+
+                $interval = $datetime1->diff($datetime2);
+
+                if( $interval->format('%R%a') > 0 ) UserData::where('userId', Auth::user()->id)->update(["packageId" => 0]);
+
                 if($update){
                     return $this->responseSuccess( $data = $money );
                 }

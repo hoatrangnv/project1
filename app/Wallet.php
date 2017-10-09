@@ -45,15 +45,17 @@ class Wallet extends Model
     // Withdraw CLP
     const WITH_DRAW_CLP_TYPE = 10;
     // transfer BTC
-    const TRANSFER_BTC_TYPE = 11;
+    const TRANSFER_BTC_TYPE = 11;//REMOVE
     // transfer CLP
-    const TRANSFER_CLP_TYPE = 12; //REMOVE
+    const TRANSFER_CLP_TYPE = 12; 
     // deposit BTC
     const DEPOSIT_BTC_TYPE = 13;
     // deposit CLP
     const DEPOSIT_CLP_TYPE = 14;
     // buy Package
     const BUY_PACK_TYPE = 15;
+    // withdraw Package
+    const WITHDRAW_PACK_TYPE = 16;
     //inOut 
     const IN = "in" ;
     

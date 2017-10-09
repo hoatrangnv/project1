@@ -48,7 +48,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             <th class="icon-wallet">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
                             </th>
-                            <th class="wallet-amount">@isset($wallets->currencyPair)<i class="fa fa-usd" aria-hidden="true"></i><span class="usd-amount">{{ $wallets->currencyPair }}</span>  @endisset</th>
+                            <th class="wallet-amount">@isset($wallets->currencyPair)<i class="fa fa-usd" aria-hidden="true"></i><span class="usd-amount">{{ number_format($wallets->currencyPair, 2) }}</span>  @endisset</th>
                             <th><button class="btn bg-olive" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}</button></th>
                         </tr>
                     </table>
@@ -64,7 +64,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             <div class="box">
                 <div class="box-header">
                     <div class="col-xs-2 no-padding">
-                        {{ Form::select('wallet_type', array_merge(['0' => 'Choose a type'], $wallet_type), ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
+                        {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
                     </div>
                     <div class="col-xs-2">
                         {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
@@ -92,17 +92,17 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='in')
-                                        +{{ $wallet->amount }}
+                                        +{{ number_format($wallet->amount, 2) }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='out')
-                                        -{{ $wallet->amount }}
+                                        -{{ number_format($wallet->amount, 2) }}
                                     @endif
                                 </td>
                                 <td>
+                                    {{ $wallet->note }}
                                 </td>
-                                
                             </tr>
                             @endforeach
                         </tbody>
@@ -116,39 +116,41 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
         </div>
     </div>
     <!--fORM submit-->
-    <form class="form-horizontal" _lpchecked="1" method="post" action="">
-        <div class="modal fade" id="modal-default">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max usd-amount" data-type="usdwallet">{{ $wallets->currencyPair }}</a></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="box-body">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default max usd-amount" data-type="usdwallet">{{ $wallets->currencyPair }}</a></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                                {{ Form::number('usd', '', array('class' => 'form-control input-sm switch-USD-to-CLP', 'step' => '0.01', 'placeholder' => "USD Amount")) }}
+                                {{ Form::number('usdAmount', '', array('class' => 'form-control input-sm switch-USD-to-CLP clp-input', 'id' => 'usdAmount', 'placeholder' => "USD Amount")) }}
                             </div>
-                            <br>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                {{ Form::number('clp', '', array('class' => 'form-control input-sm switch-CLP-to-USD', 'step' => '0.000000001','placeholder' => "CLP Amount")) }}
+                                {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-USD clp-input', 'id' => 'clpAmount', 'placeholder' => "CLP Amount")) }}
                             </div>
+                            <span class="help-block"></span>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
                 </div>
-              <!-- /.modal-content -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="buyCLP">Submit</button>
+                </div>
             </div>
-          <!-- /.modal-dialog -->
+          <!-- /.modal-content -->
         </div>
-    </form>
+      <!-- /.modal-dialog -->
+    </div>
     <!-- /.modal -->
     <script>
         $(document).ready(function(){
@@ -164,6 +166,64 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             $('#btn_filter_clear').on('click', function () {
                 location.href = '{{ url()->current() }}';
             });
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('.clp-input').on('keyup', function () {
+                $(this).parents("div.form-group").removeClass('has-error');
+                $(this).parents("div.form-group").find('.help-block').text('')
+            });
+
+            $('#buyCLP').on('click', function () {
+                var usdAmount = $('#usdAmount').val();
+                var clpAmount = $('#clpAmount').val();
+                if($.trim(clpAmount) == ''){
+                    $("#clpAmount").parents("div.form-group").addClass('has-error');
+                    $("#clpAmount").parents("div.form-group").find('.help-block').text("CLP Amount is required");
+                }else{
+                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(usdAmount) == ''){
+                    $("#usdAmount").parents("div.form-group").addClass('has-error');
+                    $("#usdAmount").parents("div.form-group").find('.help-block').text("USD Amount is required");
+                }else{
+                    $("#usdAmount").parents("div.form-group").removeClass('has-error');
+                    $("#usdAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                
+                if($.trim(clpAmount) != '' && $.trim(usdAmount) != ''){
+                    $.ajax({
+                        method : 'POST',
+                        url: "{{ route('usd.buyclp') }}",
+                        data: {clpAmount: clpAmount, usdAmount: usdAmount}
+                    }).done(function (data) {
+                        if (data.err) {
+                            if(typeof data.msg !== undefined){
+                                if(data.msg.usdAmount !== '') {
+                                    $("#usdAmount").parents("div.form-group").addClass('has-error');
+                                    $("#usdAmount").parents("div.form-group").find('.help-block').text(data.msg.usdAmountErr);
+                                }else {
+                                    $("#usdAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#usdAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+
+                            }
+                        } else {
+                            $('#tranfer').modal('hide');
+                            location.href = '{{ url()->current() }}';
+                        }
+                    }).fail(function () {
+                        $('#tranfer').modal('hide');
+                        swal("Some things wrong!");
+                    });
+                }
+            });
+
         });
 
         // var getUSDAmount = setInterval(function () {

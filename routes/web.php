@@ -71,6 +71,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
 
     Route::get('wallets/buysellclp', 'WalletController@buysellclp');
+    Route::get('wallets/transferholding', 'WalletController@transferFromHolding')->name('holding.transfer');
+
+    Route::post('wallets/buyclpusd', 'Wallet\UsdWalletController@buyCLP')->name('usd.buyclp');
 
   
 
@@ -123,7 +126,7 @@ Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 
 
 /***------- END TEST -------***/
-Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef");
+Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef")->name('user.ref');
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
 Route::get('reactive',"Auth\ActiveController@reactiveAccount");
 Route::post('reactive',"Auth\ActiveController@reactiveAccount");

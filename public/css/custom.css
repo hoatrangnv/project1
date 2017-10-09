@@ -52,19 +52,38 @@
         border: none;
     }
 
-    .box th.icon-wallet {
+    .box .icon-wallet {
         width: 2%;
         padding-top: 12px;
         padding-bottom: 10px;
         padding-right: 0px;
     }
 
-    .box th.wallet-amount {
-        width: 18%;
+    .box .wallet-amount {
+        width: 20%;
         padding-top: 8px;
         padding-bottom: 8px;
         font-size: 20px;
         color: #85bb65 
+    }
+
+    .box .wallet-amount-released {
+        width: 46%;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 20px;
+        color: #85bb65 
+    }
+
+     @media (max-width: 768px) {
+        .box .wallet-amount {
+        width: 100%;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 20px;
+        color: #85bb65 
+    }
+        
     }
 
     .box .wallet-table {

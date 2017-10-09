@@ -129,6 +129,7 @@ return [
     'bitgo_token' => env('BITGO_TOKEN'),
     'bitgo_password' => env('BITGO_PASSWORD'),
     'bitgo_hook' => env('BITGO_HOOK'),
+    'user_referral_register' => env('USER_REFERRAL_REGISTER', 'root'),
     'fee_withRaw_BTC' => 0.0005,
     'fee_withRaw_CLP' => 2,
     'enable_captcha' => false,

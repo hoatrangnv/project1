@@ -67,7 +67,7 @@ class UsdWalletController extends Controller
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
-        $wallets = $query->where('walletType', Wallet::USD_WALLET)->paginate();
+        $wallets = $query->where('walletType', Wallet::USD_WALLET)->orderBy('id', 'desc')->paginate();
         //Add thêm tỷ giá vào $wallets
         if(isset($dataCurrencyPair) && count( json_decode($dataCurrencyPair) ) > 0 ) {
             $wallets->currencyPair = Auth()->user()->usercoin->usdAmount ;
@@ -83,10 +83,14 @@ class UsdWalletController extends Controller
 
         //USD Wallet has 5 type: Profit day, farst start, binary, loyalty, buy CLP
         $wallet_type = [];
+        $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
-            if($key == 6) break;
-            $wallet_type[$key] = trans($val);
-
+            if($key == 1) $wallet_type[$key] = trans($val);
+            if($key == 2) $wallet_type[$key] = trans($val);
+            if($key == 3) $wallet_type[$key] = trans($val);
+            if($key == 4) $wallet_type[$key] = trans($val);
+            if($key == 5) $wallet_type[$key] = trans('adminlte_lang::wallet.usd_clp_type_on_usd');
+            if($key == 16) $wallet_type[$key] = trans($val);
         }
 
         return view('adminlte::wallets.usd', compact('wallets','wallet_type', 'requestQuery'));
@@ -119,7 +123,7 @@ class UsdWalletController extends Controller
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
-        $wallets = $query->where('walletType', Wallet::REINVEST_WALLET)->paginate();
+        $wallets = $query->where('walletType', Wallet::REINVEST_WALLET)->orderBy('id', 'desc')->paginate();
         //Add thêm tỷ giá vào $wallets
         $wallets->currencyPair = Auth()->user()->usercoin->reinvestAmount ;
             
@@ -136,6 +140,7 @@ class UsdWalletController extends Controller
         $all_wallet_type = config('cryptolanding.wallet_type');
 
         $wallet_type = [];
+        $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
             if($key == 1) $wallet_type[$key] = trans($val);
             if($key == 3) $wallet_type[$key] = trans($val);
@@ -216,64 +221,65 @@ class UsdWalletController extends Controller
      * @param type $clp
      * @param type $request
      */
-    public function tranferUSDCLP($usd, $clp, $request){
-        //Kq sau khi tính 
-        $valueAfterTranfer = [];
-        $user = Auth::user()->userCoin;
+    public function buyCLP(Request $request)
+    {
+        if($request->ajax()) {
+            $userCoin = Auth::user()->userCoin;
 
-        try {
-            //action trừ tiền USD và Cộng CLP của user Trong bảng UserCoin
-            $valueAfterTranfer['usd_amount'] = $user->usdAmount - (double)$usd;
-            $valueAfterTranfer['clp_amount'] =  $user->clpCoinAmount +  (double)$clp;
-            //Hạn mức tối thiêu khi chuyển USD
-            if( $usd < Wallet::MIN_TRANFER_USD_CLP ){
-                 $request->session()->flash( 'errorMessage', "Số tiền chuyển nhỏ hơn hạn mức tối thiểu");
+            $usdAmountErr = '';
+            if($request->usdAmount == ''){
+                $usdAmountErr = trans('adminlte_lang::wallet.msg_usd_amount_required');
+            }elseif (!is_numeric($request->usdAmount)){
+                $usdAmountErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif ($userCoin->usdAmount < $request->usdAmount){
+                $usdAmountErr = trans('adminlte_lang::wallet.error_not_enough');
             }
-            //check gía trị sau khi thanh khoản USD mà nhỏ hơn 0 thì Not Accpect
-            elseif( $valueAfterTranfer['usd_amount'] < 0 ) {
-                $request->session()->flash( 'errorMessage', "Số tiền chuyển vượt quá mức cho phép của tài khoản" );
+     
+            if($usdAmountErr == '')
+            {
+                $clpRate = ExchangeRate::getCLPUSDRate();
+                $amountCLP = $request->usdAmount / $clpRate;
+
+                $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;
+                $userCoin->clpCoinAmount =  $userCoin->clpCoinAmount + $amountCLP;
+                $userCoin->save();
+
+                $usd_to_clp = [
+                    "walletType" => Wallet::USD_WALLET,
+                    "type"       => Wallet::USD_CLP_TYPE,
+                    "inOut"      => Wallet::OUT,
+                    "userId"     => Auth::user()->id,
+                    "amount"     => $request->usdAmount,
+                    "note"      => "Rate " . $clpRate . '$',
+                ];
+                $result = Wallet::create($usd_to_clp);
+
+                $clp_from_usd = [
+                    "walletType" => Wallet::CLP_WALLET,
+                    "type"       => Wallet::USD_CLP_TYPE,
+                    "inOut"      => Wallet::IN,
+                    "userId"     => Auth::user()->id,
+                    "amount"     => $amountCLP,
+                    "note"      => "Rate " . $clpRate . '$',
+                ];
+                // Bulk insert
+                $result = Wallet::create($clp_from_usd);
+
+                $request->session()->flash( 'successMessage', "Buy CLP successfully!" );
+                return response()->json(array('err' => false));
+                
             } else {
-                $user->usdAmount = $valueAfterTranfer['usd_amount'];
-                $user->clpCoinAmount =  $valueAfterTranfer['clp_amount'];
-
-                $result = $user->save();
-
-                if($result) {
-
-                    $dataInsert = [];
-                    //Lưu LOG 2 report ... 1 : OUT USD và 2 : IN CLP vao bang Wallet
-                    $dataInsert["usd_to_clp"] = [
-                        "walletType" => Wallet::USD_WALLET,
-                        "type"       => Wallet::USD_CLP_TYPE,
-                        "inOut"      => Wallet::OUT,
-                        "userId"     => Auth::user()->id,
-                        "amount"     => $request->usd,
-                        "note"       => trans("adminlte_lang::wallet.tranfer_from_usd_wallet_to_clp_wallet"),
-                        "updated_at" => date("Y-m-d H:i:s"),
-                        "created_at" => date("Y-m-d H:i:s")
+                $result = [
+                        'err' => true,
+                        'msg' =>[
+                                'usdAmountErr' => $usdAmountErr,
+                            ]
                     ];
-
-                    $dataInsert["clp_from_usd"] = [
-                        "walletType" => Wallet::CLP_WALLET,
-                        "type"       => Wallet::USD_CLP_TYPE,
-                        "inOut"      => Wallet::IN,
-                        "userId"     => Auth::user()->id,
-                        "amount"     => $request->clp,
-                        "note"       => trans("adminlte_lang::wallet.tranfer_from_usd_wallet_to_clp_wallet"),
-                        "updated_at" => date("Y-m-d H:i:s"),
-                        "created_at" => date("Y-m-d H:i:s")
-                    ];
-                    // Bulk insert
-                    $result = Wallet::insert($dataInsert);
-
-                    $request->session()->flash( 'successMessage', "Success" );
-                } else {
-                    $request->session()->flash( 'errorMessage', "Fail" );
-                }
+                return response()->json($result);
             }
-        } catch (\Exception $ex) {
-            Log::error( $ex->getTraceAsString() );
+
         }
+        return response()->json(array('err' => false, 'msg' => null));
     }
     
     /** 

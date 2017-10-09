@@ -10,7 +10,7 @@
 .Treant .collapsed .collapse-switch { background-color: #868DEE; }
 .Treant > .node img {	border: none; float: left; }
 
-.node-loyalty{
+/*.node-loyalty{
      -webkit-border-radius: 10px;
      -moz-border-radius: 10px;
      border-radius: 10px;
@@ -34,4 +34,4 @@
  }
  .node-loyalty-5{
      border: 2px solid #b9f2ff !important;
- }
+ }*/
