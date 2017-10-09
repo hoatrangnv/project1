@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Notification;
 use App\UserCoin;
+use App\Wallet;
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -39,6 +40,15 @@ class UpdateBtcCoin {
                             $result = $userCoin->save();
 
                             if($result == 1) {
+                                $fieldBTC = [
+                                    'walletType' => Wallet::BTC_WALLET,
+                                    'type' => Wallet::DEPOSIT_BTC_TYPE,
+                                    'inOut' => Wallet::IN,
+                                    'userId' => $userData->userId,
+                                    'amount' => $temp->additional_data->amount->amount
+                                ];
+                                Wallet::create($fieldBTC);
+                                
                                 Notification::where("id",$value->id)
                                     ->update(['status' => 1]);
                             }
