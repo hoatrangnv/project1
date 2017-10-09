@@ -131,7 +131,7 @@ class ClpWalletController extends Controller {
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->clpAmount,
-                    'note'   => 'Sell CLP at rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . $clpRate . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
 
@@ -141,12 +141,13 @@ class ClpWalletController extends Controller {
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountBTC,
-                    'note'   => 'Sell CLP at rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . $clpRate . ' BTC'
                 ];
+
                 Wallet::create($fieldBTC);
                 $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_sell_clp_success') );
 
-                 return response()->json(array('err' => false));
+                return response()->json(array('err' => false));
             } else {
                 $result = [
                         'err' => true,
