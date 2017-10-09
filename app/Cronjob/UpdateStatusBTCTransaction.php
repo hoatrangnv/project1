@@ -40,7 +40,7 @@ class UpdateStatusBTCWithdraw
         foreach($listWithdrawNotUpdated as $withdraw) {
             
             $transactionDetail = $client->getAccountTransaction($account, $withdraw->transaction_id);
-            if($transactionDetail->status == "completed") {
+            if($transactionDetail->getStatus() == "completed") {
                 $withdraw->status = 1;
                 $withdraw->save();
 

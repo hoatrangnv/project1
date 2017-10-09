@@ -205,7 +205,7 @@ class WithDrawController extends Controller
                     $transaction_id = '';
                     $allTransactions = $client->getAccountTransactions($account);
                     foreach($allTransactions as $transaction) {
-                        if($transaction->to->address == trim($withdrawConfirm->walletAddress)) {
+                        if($transaction->getTo()->getAddress() == trim($withdrawConfirm->walletAddress)) {
                             $transaction_hash = $transaction->network->hash;
                             $transaction_id = $transaction->id;
                             break;
@@ -229,8 +229,8 @@ class WithDrawController extends Controller
 
                     $request->session()->flash('error', trans('adminlte_lang::wallet.success_withdraw'));
                 } catch (\Exception $e) {
-                    Log::error($e->getTraceAsString());
-                    $request->session()->flash('error', "Withdraw Fail!");
+                    //Log::error($e->getTraceAsString());
+                    $request->session()->flash('error', "Withdraw Fail " . $e->getMessage());
                 }
             } else {
                 $request->session()->flash('error', 'Not enought BTC');
