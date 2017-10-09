@@ -110,12 +110,12 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                 <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
                                 <td>
                                     @if($wallet->inOut=='in')
-                                        +{{ number_format($wallet->amount, 2) }}
+                                        +{{ number_format($wallet->amount, 5) }}
                                     @endif
                                 </td>
                                 <td>
                                     @if($wallet->inOut=='out')
-                                        -{{ number_format($wallet->amount, 2) }}
+                                        -{{ number_format($wallet->amount, 5) }}
                                     @endif
                                 </td>
                                 <td>{{ $wallet->note }}</td>
