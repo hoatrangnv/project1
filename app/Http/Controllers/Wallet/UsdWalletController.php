@@ -250,7 +250,7 @@ class UsdWalletController extends Controller
                     "inOut"      => Wallet::OUT,
                     "userId"     => Auth::user()->id,
                     "amount"     => $request->usdAmount,
-                    "note"      => "Buy at rate " . $clpRate . '$',
+                    "note"      => "Rate " . $clpRate . '$',
                 ];
                 $result = Wallet::create($usd_to_clp);
 
@@ -260,7 +260,7 @@ class UsdWalletController extends Controller
                     "inOut"      => Wallet::IN,
                     "userId"     => Auth::user()->id,
                     "amount"     => $amountCLP,
-                    "note"      => "Buy at rate " . $clpRate . '$',
+                    "note"      => "Rate " . $clpRate . '$',
                 ];
                 // Bulk insert
                 $result = Wallet::create($clp_from_usd);
