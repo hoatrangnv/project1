@@ -8,6 +8,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Notifications\UpdateBtcCoin;
 use App\Notifications\AvailableAmountController as AvailableAmount;
 use App\Cronjob\UpdateExchangeRate;
+use App\Cronjob\GetClpWallet;
 use App\User;
 use App\UpdateStatusBTCWithdraw;
 
@@ -77,6 +78,18 @@ class Kernel extends ConsoleKernel
             })->everyMinute();
         } catch (\Exception $ex) {
             Log::info($ex);
+        }
+        /** 
+         * get Clp wallet every 5minutes
+         */
+        $stringCronTab = "* * * * * *";
+        try {
+            $schedule->call(function (){
+                $newGetClp = new GetClpWallet();
+                $newGetClp->getClpWallet();
+            })->everyFiveMinutes();
+        } catch (\Exception $ex) {
+            
         }
     }
 
