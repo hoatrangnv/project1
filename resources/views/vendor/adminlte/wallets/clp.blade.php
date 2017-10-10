@@ -1,6 +1,3 @@
-<?php
-use App\Http\Controllers\Wallet\Views\WalletViewController;
-?>
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
@@ -46,7 +43,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             </ul>
         </div>
     @endif
-    <?php  echo WalletViewController::viewAllWallet(); ?>
+    @include('adminlte::layouts.wallet')
     <div class="row">
         <div class="col-md-12">
             <!-- Widget: user widget style 1 -->
