@@ -194,12 +194,13 @@
     }
 
     .fwbBcc {
-        min-width: 290px;
+        min-width: 264px;
         border: 1px solid #DAE1E9;
         background: #F9FBFC;
         height: 40px;
         border-right: none;
         padding-left: 10px;
+        font-size: 12px;
     }
 
     .fwbCLP {
