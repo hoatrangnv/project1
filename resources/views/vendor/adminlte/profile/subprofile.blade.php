@@ -19,7 +19,7 @@
                         <table class="table no-margin">
                             <tbody>
                                 <tr>
-                                    <td class="label-td">Id</td>
+                                    <td class="label-td">ID</td>
                                     <td>{{ $user->uid }}</td>
                                 </tr>
                                 <tr>
@@ -60,7 +60,7 @@
                                 </tr> 
                                 <tr>
                                     <td class="label-td">Country</td>
-                                    <td>{{ isset($lstCountry[$user->country]) ? $lstCountry[$user->country] : '' }}</td>
+                                    <td>{{ $user->name_country }}</td>
                                 </tr> 
                                 <tr>
                                     <td class="label-td">Phone Number</td>
@@ -76,7 +76,7 @@
                                 </tr> 
                                 <tr>
                                     <td class="label-td">Registration Date</td>
-                                    <td>{{ $user->created_at }}</td>
+                                    <td>{{ $user->created_at->format('Y-m-d')}}</td>
                                 </tr>
                             </tbody>
                         </table>

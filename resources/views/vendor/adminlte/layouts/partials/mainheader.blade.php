@@ -17,7 +17,7 @@
         </a>
         &nbsp;
         &nbsp;
-        <span class="" style="font-size: 18px;line-height: 50px;text-align: center;color: white">
+        <span class="" style="font-size: 16px;line-height: 50px;text-align: center;color: white">
             <b>
                 <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
                 <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;

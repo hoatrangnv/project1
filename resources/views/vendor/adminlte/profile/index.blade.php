@@ -96,7 +96,7 @@
                                 </tr> 
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.created_at') }}</td>
-                                    <td>{{ Auth::user()->created_at }}</td>
+                                    <td>{{ Auth::user()->created_at->format('Y-m-d') }}</td>
                                 </tr>
                             </tbody>
                         </table>
