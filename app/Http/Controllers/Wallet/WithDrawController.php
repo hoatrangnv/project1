@@ -259,42 +259,37 @@ class WithDrawController extends Controller
                     if ($result) {
                         if ($result["success"] == 1) {
                             $update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
-                            //insert withdraw -- lưu lịch sử giao dịch -- trạng thái ở đây là success
-                            $dataInsertWithdraw = [
-                                "walletAddress" => $withdrawConfirm->walletAddress,
-                                "userId" => $withdrawConfirm->userId,
-                                "amountCLP" => $withdrawConfirm->withdrawAmount,
-                                "detail" => json_encode($result),
-                                "status" => 1
-                            ];
-                            $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
+                            
                             //insert wallet -- lưu lịch sử ví
                             $dataInsertWallet = [
                                 "walletType" => Wallet::CLP_WALLET,
                                 "type" => Wallet::WITH_DRAW_CLP_TYPE,
                                 "userId" => $withdrawConfirm->userId,
-                                "note" => "Withdraw",
+                                "note" => "Pending",
                                 "amount" => $withdrawConfirm->withdrawAmount,
                                 "inOut" => Wallet::OUT
                             ];
 
                             $resultInsert = Wallet::create($dataInsertWallet);
 
+                            //insert withdraw -- lưu lịch sử giao dịch -- trạng thái ở đây là success
+                            $dataInsertWithdraw = [
+                                "walletAddress" => $withdrawConfirm->walletAddress,
+                                "userId" => $withdrawConfirm->userId,
+                                "amountCLP" => $withdrawConfirm->withdrawAmount,
+                                "wallet_id" => $resultInsert->id,
+                                "transaction_id" => '',
+                                "transaction_hash" => $result["tx"],
+                                "status" => 0
+                            ];
+
+                            Withdraw::create($dataInsertWithdraw);
+
                             $request->session()->flash('succeesMessage', trans('adminlte_lang::wallet.success_withdraw'));
                             $withdrawConfirm->status = 1;
                             $withdrawConfirm->save();
                             $isConfirm = true;
                         } else {
-                            //save to withdraw
-                            //insert withdraw -- lưu lịch sử ví -- trạng thái ở đây là fail
-                            $dataInsertWithdraw = [
-                                "walletAddress" => $withdrawConfirm->walletAddress,
-                                "userId" => $withdrawConfirm->userId,
-                                "amountCLP" => $withdrawConfirm->withdrawAmount,
-                                "status" => 0
-                            ];
-
-                            $resultInsert = Withdraw::create($dataInsertWithdraw);
                             $request->session()->flash('succeesError', trans('adminlte_lang::wallet.error'));
                         }
                     }
