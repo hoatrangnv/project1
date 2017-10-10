@@ -23,11 +23,11 @@ class UserRegistered extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->from('no-reply@cryptolending.org', 'CLP')
-            ->subject('Welcome to the CryptoLending')
+            ->from('no-reply@clpcoin.co', 'CLP')
+            ->subject('Welcome to the CLP Coin')
             // ->cc($dataSendMail['mail_to'], $this->user->name)
             ->greeting('Dear '.$this->user->name. ',')
-            ->line('Welcome to the CryptoLending.')
+            ->line('Welcome to the CLP Coin.')
             ->action('Active Account', $this->link_active)
             ->line('Link active account expire 3 days.')
             ->line('If you did not request Active Account, no further action is required. Please contact us if you did not submit this request.');
