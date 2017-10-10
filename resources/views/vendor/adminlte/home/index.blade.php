@@ -311,7 +311,7 @@
                     }
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    alert("some error");
+                    console.log("some error");
                     },
                     complete: function(){
 
