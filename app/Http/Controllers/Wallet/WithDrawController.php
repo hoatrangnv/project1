@@ -198,14 +198,14 @@ class WithDrawController extends Controller
                         "inOut" => Wallet::OUT
                     ];
 
-                    $dataInsertWallet = Wallet::create($dataInsertWallet);
+                    $dataInsert = Wallet::create($dataInsertWallet);
 
                     //Get transaction request
                     $transaction_hash = '';
                     $transaction_id = '';
                     $allTransactions = $client->getAccountTransactions($account);
                     foreach($allTransactions as $transaction) {
-                        if($transaction->getTo()->getAddress() == trim($withdrawConfirm->walletAddress)) {
+                        if($transaction->getTo()->getAddress() == $withdrawConfirm->walletAddress) {
                             $transaction_hash = $transaction->getNetwork()->getHash();
                             $transaction_id = $transaction->getId();
                             break;
@@ -217,7 +217,7 @@ class WithDrawController extends Controller
                         "walletAddress" => $withdrawConfirm->walletAddress,
                         "userId" => $withdrawConfirm->userId,
                         "amountBTC" => $withdrawConfirm->withdrawAmount,
-                        "wallet_id" => $dataInsertWallet->id,
+                        "wallet_id" => $dataInsert->id,
                         "transaction_id" => $transaction_id,
                         "transaction_hash" => $transaction_hash,
                         "status" => 0
@@ -226,7 +226,7 @@ class WithDrawController extends Controller
                     $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
 
 
-                    $request->session()->flash('error', trans('adminlte_lang::wallet.success_withdraw'));
+                    $request->session()->flash('successMessage', trans('adminlte_lang::wallet.success_withdraw'));
                 } catch (\Exception $e) {
                     //Log::error($e->getTraceAsString());
                     $request->session()->flash('error', "Withdraw Fail " . $e->getMessage());
