@@ -1,10 +1,6 @@
 @extends('adminlte::layouts.member')
 
-@section('htmlheader_title')
-    {{ trans('adminlte_lang::profile.profile') }}
-@endsection
-
-@section('contentheader_description')
+@section('contentheader_title')
     {{ trans('adminlte_lang::profile.my_profile') }}
 @endsection
 
