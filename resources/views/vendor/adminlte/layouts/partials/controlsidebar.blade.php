@@ -18,13 +18,13 @@
                 <li title="read more...">
                     <a href="/news/detail/{{ $new->id }}">
                         <i class="@if($i == 0)
-                           menu-icon fa fa-user bg-yellow
+                           menu-icon fa fa-newspaper-o bg-yellow
                            @elseif($i == 1)
-                           menu-icon fa fa-birthday-cake bg-red
+                           menu-icon fa fa-newspaper-o bg-red
                            @elseif($i == 2)
-                           menu-icon fa fa-envelope-o bg-light-blue
+                           menu-icon fa fa-newspaper-o bg-light-blue
                            @else
-                           menu-icon fa fa-file-code-o bg-green
+                           menu-icon fa fa-newspaper-o bg-green
                            @endif
                            "></i>
                         <div class="menu-info">
