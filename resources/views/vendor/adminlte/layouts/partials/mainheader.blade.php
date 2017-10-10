@@ -135,9 +135,9 @@
                             <!-- The user image in the menu -->
                             <li class="user-header">
                                 <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" />
-                                <p>
-                                    {{ Auth::user()->name }}
-                                </p>
+                                <p style="font-size: 14px;margin-bottom: 0px;margin-top: 0px;">ID:{{  Auth::user()->uid }}</p>
+                                <p style="font-size: 14px;margin-bottom: 0px;margin-top: 0px;">Pack:{{ Auth::user()->userData->package->name }}</p>
+                                <p style="font-size: 14px;margin-bottom: 0px;margin-top: 0px;">Loyolatly:{{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}</p>
                             </li>
                             <!-- Menu Body -->
                             <!-- Menu Footer-->
