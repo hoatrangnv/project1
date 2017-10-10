@@ -137,7 +137,7 @@
                                 <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" />
                                 <p style="font-size: 16px;margin-bottom: 0px;margin-top: 0px;">{{ Auth::user()->name }}</p>
                                 <p style="font-size: 14px;margin-bottom: 0px;margin-top: 0px;">ID <i>{{  Auth::user()->uid }}</i></p>
-                                <p style="font-size: 14px;margin-bottom: 0px;margin-top: 0px;">Pack <i>{{ Auth::user()->userData->package->name }}</i></p>
+                                @if(isset(Auth::user()->userData->package->name))<p style="font-size: 14px;margin-bottom: 0px;margin-top: 0px;">Pack <i>{{ Auth::user()->userData->package->name }}</i></p>@endif
                                 @if(Auth::user()->userData->loyaltyId)<p style="font-size: 14px;margin-bottom: 0px;margin-top: 0px;">
                                 Loyalty <i>{{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}</i></p>@endif
                             </li>
