@@ -220,7 +220,6 @@ class WithDrawController extends Controller
                         "wallet_id" => $dataInsertWallet->id,
                         "transaction_id" => $transaction_id,
                         "transaction_hash" => $transaction_hash,
-                        "detail" => '',
                         "status" => 0
                     ];
 
@@ -292,7 +291,6 @@ class WithDrawController extends Controller
                                 "walletAddress" => $withdrawConfirm->walletAddress,
                                 "userId" => $withdrawConfirm->userId,
                                 "amountCLP" => $withdrawConfirm->withdrawAmount,
-                                "detail" => json_encode($result),
                                 "status" => 0
                             ];
 
