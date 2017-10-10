@@ -147,6 +147,16 @@ return [
     'admin_id' => 51,
     'count_down_time_login' => 10,
     'amount_add_wallet'=> 10,
+    'first_private_start'=> env('FIRST_PRIVATE_START', '2017-10-16'),
+    'first_price'=> env('FIRST_PRICE', 0.4),
+    'first_private_end'=> env('FIRST_PRIVATE_END', '2017-10-20'),
+    'second_private_start'=> env('SECOND_PRIVATE_START', '2017-10-21'),
+    'second_price'=> env('SECOND_PRICE', 0.6),
+    'second_private_end'=> env('SECOND_PRIVATE_END', '2017-10-25'),
+    'pre_sale_start'=> env('PRE_SALE_START', '2017-10-26'),
+    'pre_price'=> env('PRE_PRICE', 0.8),
+    'pre_sale_end'=> env('PRE_SALE_END', '2017-10-31'),
+    'clp_price' => env('CLP_PRICE', 1),
     
     /*
     |--------------------------------------------------------------------------

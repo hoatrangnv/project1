@@ -100,7 +100,7 @@
                                     <tr>
                                         <td>{{ $key+1 }}</td>
                                         <td>{{ $wallet->created_at }}</td> 
-                                        <td>{{ date('Y-m-d', strtotime("+6 months", strtotime($wallet->created_at))) }}</td> 
+                                        <td>{{ date('Y-m-d', strtotime("+6 months", strtotime($wallet->updated_at))) }}</td> 
                                         <td>
                                             {{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}
                                         </td>

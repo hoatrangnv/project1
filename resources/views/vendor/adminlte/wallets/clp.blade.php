@@ -211,8 +211,13 @@
                 <div class="modal-footer">
                     <input type="hidden" name="packageId" id="packageId"
                            value="{{ Auth::user()->userData->packageId }}">
-                    <button class="btn btn-success btn-block"
+                    @if( date('Y-m-d') > date('Y-m-d', strtotime(config('app.pre_sale_end'))) )
+                        <button class="btn btn-success btn-block"
                             id="btn_submit">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
+                    @else
+                        <button class="btn btn-success btn-block"
+                            id="btn_submit" disabled="true">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
+                    @endif
                 </div>
                 {{ Form::close() }}
             </div>

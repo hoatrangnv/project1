@@ -52,20 +52,27 @@ class PackageController extends Controller
     /**
     * Buy package action( upgrade package)
     */
-    public function invest(Request $request){
+    public function invest(Request $request)
+    {
         $currentuserid = Auth::user()->id;
         $user = Auth::user();
-        if ($user && $request->isMethod('post')) {
+        $currentDate = date("Y-m-d");
+        $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
+        if($user && $request->isMethod('post') && ($currentDate > $preSaleEnd)) 
+        {
             Validator::extend('packageCheck', function ($attribute, $value) {
                 $user = Auth::user();
-                if($user->userData->packageId < $value){
+                if($user->userData->packageId < $value)
+                {
                     $package = Package::find($value);
                     if($package){
                         $packageOldId = $user->userData->packageId;
                         $usdCoinAmount = $package->price;
+
                         if($packageOldId > 0){
                             $usdCoinAmount = $usdCoinAmount - $user->userData->package->price;
                         }
+
                         $clpCoinAmount = $usdCoinAmount / ExchangeRate::getCLPUSDRate();
                         if($user->userCoin->clpCoinAmount >= $clpCoinAmount){
                             return true;
@@ -78,7 +85,7 @@ class PackageController extends Controller
             $this->validate($request, [
                 'packageId' => 'required|not_in:0|packageCheck',
                 'terms'    => 'required',
-            ],['packageId.package_check' => 'CLP Coin not money buy package']);
+            ],['packageId.package_check' => 'You selected wrong package']);
 
             $amount_increase = $packageOldId = 0;
             $userData = $user->userData;

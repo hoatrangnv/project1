@@ -22,8 +22,8 @@ class AvailableAmountController {
 
         $dataRelaseTimeToday = DB::table('wallets')
                 ->select('userId','inOut',DB::raw('SUM(amount) as sumamount'))
-                ->where('walletType',Wallet::REINVEST_WALLET)
-                ->whereDate('created_at', $passDate)
+                ->where('walletType',Wallet::REINVEST_WALLET) 
+                ->whereDate('updated_at', $passDate) //use updated_at because of private sale issue
                 ->groupBy('userId','inOut')
                 ->get();
 
@@ -36,13 +36,9 @@ class AvailableAmountController {
         //update available amount
         if(isset($availableUser) && count($availableUser) > 0 ){
             foreach ($availableUser as $key => $value) {
+                $availableAmount = UserCoin::where("userId",$key)->first()->availableAmount + $value;
                 UserCoin::where("userId",$key)
-                        ->update(
-                        ["availableAmount" => 
-                            ( UserCoin::where("userId",$key)->first()->
-                        availableAmount + $value )
-                        ]        
-                        );
+                        ->update(["availableAmount" => $availableAmount]);
             }
         }
     }

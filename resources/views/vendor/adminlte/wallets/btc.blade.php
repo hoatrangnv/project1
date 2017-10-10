@@ -409,16 +409,16 @@
             });
 
             $('#btctranfer').on('click', function () {
-                var btcAmount = $('#btcAmount').val();
+                var btcAmount = $('#btcAmountTransfer').val();
                 var btcUsername = $('#btcUsername').val();
                 var btcOTP = $('#btcOTP').val();
                 var btcUid = $('#btcUid').val();
                 if($.trim(btcAmount) == ''){
-                    $("#btcAmount").parents("div.form-group").addClass('has-error');
-                    $("#btcAmount").parents("div.form-group").find('.help-block').text('The Amount field is required');
+                    $("#btcAmountTransfer").parents("div.form-group").addClass('has-error');
+                    $("#btcAmountTransfer").parents("div.form-group").find('.help-block').text('The Amount field is required');
                 }else{
-                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
-                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+                    $("#btcAmountTransfer").parents("div.form-group").removeClass('has-error');
+                    $("#btcAmountTransfer").parents("div.form-group").find('.help-block').text('');
                 }
                 if($.trim(btcUsername) == ''){
                     $("#btcUsername").parents("div.form-group").addClass('has-error');
@@ -449,11 +449,11 @@
                         if (data.err) {
                             if(typeof data.msg !== undefined){
                                 if(data.msg.btcAmountErr !== '') {
-                                    $("#btcAmount").parents("div.form-group").addClass('has-error');
-                                    $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.btcAmountErr);
+                                    $("#btcAmountTransfer").parents("div.form-group").addClass('has-error');
+                                    $("#btcAmountTransfer").parents("div.form-group").find('.help-block').text(data.msg.btcAmountErr);
                                 }else {
-                                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
-                                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+                                    $("#btcAmountTransfer").parents("div.form-group").removeClass('has-error');
+                                    $("#btcAmountTransfer").parents("div.form-group").find('.help-block').text('');
                                 }
 
                                 if(data.msg.btcUsernameErr !== '') {

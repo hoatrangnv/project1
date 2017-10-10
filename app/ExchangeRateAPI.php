@@ -21,9 +21,38 @@ class ExchangeRateAPI
         $this->client = new Client();
     }
 
-    public static function getCLPUSDRate()
+    public function getCLPUSDRate()
     {
-        return 1;
+        $clpPrice = config('app.clp_price');
+        $currentDate = date('Y-m-d');
+
+        $privateSaleStart = date('Y-m-d', strtotime(config('app.first_private_start')));
+        $privateSaleEnd = date('Y-m-d', strtotime(config('app.first_private_end')));
+
+        $secondSaleStart = date('Y-m-d', strtotime(config('app.second_private_start')));
+        $secondSaleEnd = date('Y-m-d', strtotime(config('app.second_private_end')));
+
+        $preSaleStart = date('Y-m-d', strtotime(config('app.pre_sale_start')));
+        $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
+
+        if($privateSaleStart <= $currentDate && $currentDate <= $privateSaleEnd)
+        {
+            $clpPrice = config('app.first_price');
+        }
+
+        //Private sale 2
+        if($secondSaleStart <= $currentDate && $currentDate <= $secondSaleEnd)
+        {
+            $clpPrice = config('app.second_price');
+        }
+
+        //Pre sale
+        if($preSaleStart <= $currentDate && $currentDate <= $preSaleEnd)
+        {
+            $clpPrice = config('app.pre_price');
+        }
+        
+        return $clpPrice;
     }
 
     public function getBTCUSDRate() 

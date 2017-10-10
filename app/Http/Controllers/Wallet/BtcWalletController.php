@@ -26,6 +26,7 @@ use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
 use Google2FA;
 use App\ExchangeRate;
+use DateTime;
 
 use Log;
 
@@ -196,6 +197,7 @@ class BtcWalletController extends Controller
             $userCoin = Auth::user()->userCoin;
 
             $btcAmountErr = '';
+            $clpAmountErr = '';
             if($request->btcAmount == ''){
                 $btcAmountErr = trans('adminlte_lang::wallet.amount_required');
             }elseif (!is_numeric($request->btcAmount)){
@@ -203,14 +205,63 @@ class BtcWalletController extends Controller
             }elseif ($userCoin->btcCoinAmount < $request->btcAmount){
                 $btcAmountErr = trans('adminlte_lang::wallet.error_not_enough_btc');
             }
+
+            //Amount CLP
+            $clpRate = ExchangeRate::getCLPBTCRate();
+            $amountCLP = $request->btcAmount / $clpRate;
+            $holdingAmount = 0;
+
+            $currentDate = date('Y-m-d');
+
+            $privateSaleStart = date('Y-m-d', strtotime(config('app.first_private_start')));
+            $privateSaleEnd = date('Y-m-d', strtotime(config('app.first_private_end')));
+
+            $secondSaleStart = date('Y-m-d', strtotime(config('app.second_private_start')));
+            $secondSaleEnd = date('Y-m-d', strtotime(config('app.second_private_end')));
+
+            $preSaleStart = date('Y-m-d', strtotime(config('app.pre_sale_start')));
+            $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
+            //Private sale 1
+            if($privateSaleStart <= $currentDate && $currentDate <= $privateSaleEnd)
+            {
+                if($request->clpAmount != 25000 || $amountCLP < 24950) {
+                    $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                }
+
+                $amountCLP = 10000;
+                $holdingAmount = 15000;
+            }
+
+            //Private sale 2
+            if($secondSaleStart <= $currentDate && $currentDate <= $secondSaleEnd)
+            {
+                if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
+                    $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                }
+
+                $amountCLP = 10000;
+                $holdingAmount = 6666.66;
+            }
+
+            //Pre sale
+            if($preSaleStart <= $currentDate && $currentDate <= $preSaleEnd)
+            {
+                if($request->clpAmount != 12500 || $amountCLP < 12475) {
+                    $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                }
+
+                $amountCLP = 10000;
+                $holdingAmount = 2500;
+            }
+            
+
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn 
             // số tiền chuyển đi thì thực hiện giao dịch
-            if ( $btcAmountErr == '' ) {
-                //Amount CLP
-                $clpRate = ExchangeRate::getCLPBTCRate();
-                $amountCLP = $request->btcAmount / $clpRate;
+            if ( $btcAmountErr == '' && $clpAmountErr == '') {
+                
                 $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;
                 $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $amountCLP;
+                $userCoin->reinvestAmount = $userCoin->reinvestAmount + $holdingAmount;
                 $userCoin->save();
 
                 $fieldBTC = [
@@ -232,6 +283,21 @@ class BtcWalletController extends Controller
                     'note'   => 'Rate ' . $clpRate . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
+
+                if($holdingAmount > 0) {
+                    $fieldCLPHolding = [
+                        'created_at' => date("Y-m-d H:i:s"),
+                        'updated_at' => date("Y-m-d H:i:s", strtotime('2017-11-01')),
+                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                        'type' => Wallet::BTC_CLP_TYPE,//bonus f1
+                        'inOut' => Wallet::IN,
+                        'userId' => Auth::user()->id,
+                        'amount' => $holdingAmount,
+                        'note'   => 'Rate ' . $clpRate . ' BTC'
+                    ];
+                    Wallet::create($fieldCLPHolding);
+                }
+                
 
                 $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_buy_clp_success') );
                 
