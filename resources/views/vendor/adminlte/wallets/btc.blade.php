@@ -55,7 +55,7 @@
                                     </svg>
                                 </th>
                                 <th class="wallet-amount">
-                                    <i class="fa fa-btc"></i><span class="btc-amount">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 5) }}</span>
+                                    <i class="fa fa-btc"></i><span class="btcAmount">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 5) }}</span>
                                 </th>
                                 <th>
                                     <button class="btn bg-olive" data-toggle="modal"
@@ -181,7 +181,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btc-amount maxbtcwithdraw" data-type="btcwithdraw">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
+                    <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbtcwithdraw" data-type="btcwithdraw">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -224,7 +224,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btc-amount maxbuyclp" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbuyclp" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -490,9 +490,9 @@
             });
         });
         
-        setInterval(function () {
-            $(".btc-amount").html($(".btcAmount").html());
-        },{{ config("app.time_interval") + 1000 }});
+        // setInterval(function () {
+        //     $(".btc-amount").html($(".btcAmount").html());
+        // },{{ config("app.time_interval") + 1000 }});
 
         var qrcode = new QRCode(document.getElementById("qrcode"), {
                     width: 180,
