@@ -1,6 +1,3 @@
-<?php
-use App\Http\Controllers\Wallet\Views\WalletViewController;
-?>
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
@@ -41,7 +38,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             </ul>
         </div>
     @endif
-    <?php echo WalletViewController::viewAllWallet();?>
+    @include('adminlte::layouts.wallet')
     <div class="row">
         <div class="col-md-12">
             <!-- Widget: user widget style 1 -->
@@ -492,12 +489,10 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 }
             });
         });
-
-        var getBtcCoin = setInterval(function () {
-            $.get("getbtccoin", function (data) {
-                $(".btc-amount").html(data);
-            });
-        },{{ config("app.time_interval")}});
+        
+        setInterval(function () {
+            $(".btc-amount").html($(".btcAmount").html());
+        },{{ config("app.time_interval") + 1000 }});
 
         var qrcode = new QRCode(document.getElementById("qrcode"), {
                     width: 180,

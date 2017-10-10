@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
-    {{ trans('adminlte_lang::home.dashboard') }}
+{{ trans('adminlte_lang::home.dashboard') }}
 @endsection
 
 @section('custome_css')
@@ -10,107 +10,50 @@
 @endsection
 
 @section('main-content')
-    <div class="row">
-        <div class="col-xs-12 clp-home">
-            <div class="box">
-                <div class="box-header clp-dashboard">
-                    <div class="row">
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-aqua">
-                                <div class="inner">
-                                    <h3>{{ number_format(Auth::user()->userCoin->btcCoinAmount, 5) }}</h3>
-                                    <p>{{ trans('adminlte_lang::home.btc_wallet') }}</p>
-                                </div>
-                                <div class="icon"><i class="fa fa-btc"></i></div>
-                                <a href="{{ route('wallet.btc') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-green">
-                                <div class="inner">
-                                        <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 2) }}</h3>
-                                        <p>{{ trans('adminlte_lang::home.clp_wallet') }}</p>
-                                </div>
-                                <div class="icon"><span class="icon-clp-icon"></span></div>
-                                <a href="{{ route('wallet.clp') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- /.col -->
+<div class="row">
+    <div class="col-xs-12">
+        @include('adminlte::layouts.wallet')
+        <!-- body -->
 
-                        <!-- fix for small devices only -->
-                        <div class="clearfix visible-sm-block"></div>
-
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-yellow">
-                                <div class="inner">
-                                    <h3 class="usd-amount">{{ number_format(Auth::user()->userCoin->usdAmount, 2) }}</h3>
-                                    <p>{{ trans('adminlte_lang::home.usd_wallet') }}</p>
-                                </div>
-                                <div class="icon"><i class="fa fa-usd"></i></div>
-                                <a href="{{ route('wallet.usd') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-red">
-                                <div class="inner">
-                                    <h3>{{ number_format(Auth::user()->userCoin->reinvestAmount, 2) }}</h3>
-                                    <p>{{ trans('adminlte_lang::home.re_invest_wallet') }}</p>
-                                </div>
-                                <div class="icon"><span class="icon-clp-icon"></span></div>
-                                <a href="{{ route('wallet.reinvest') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- /.col -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <center><h3 class="text-uppercase"><b>{{ trans('adminlte_lang::home.statistical_bussiness') }}</b></h3>
+                        </center>
                     </div>
-                </div>
-            </div>
-            <!-- body -->
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="box box-solid">
-                        <div class="box-header with-border">
-                            <center><h3 class="text-uppercase"><b>{{ trans('adminlte_lang::home.statistical_bussiness') }}</b></h3>
-                            </center>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div>
+                            <table class="table table-bordered table-hover table-striped business-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-right">
+                                            <h4>{{ trans('adminlte_lang::home.sale_f1') }}
+                                            </h4>
+                                        </td>
+                                        <td class="f1-sale">
+                                            <b>{{ number_format($data['newF1InWeek'], 2)}}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">
+                                            <h4>{{ trans('adminlte_lang::home.total_sale_f1') }}
+                                            </h4>
+                                        </td>
+                                        <td class="f1-sale">
+                                            <b>{{ number_format($data['totalF1Sale'], 2) }}</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <div>
-                                <table class="table table-bordered table-hover table-striped business-table">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="text-center"
+                                     style="margin-bottom: 5px; font-weight: bold;">{{ trans('adminlte_lang::home.f1_left') }}</div>
+                                <table class="table table-bordered table-hover table-striped dataTable">
                                     <tbody>
-                                        <tr>
-                                            <td class="text-right">
-                                                <h4>{{ trans('adminlte_lang::home.sale_f1') }}
-                                                </h4>
-                                            </td>
-                                            <td class="f1-sale">
-                                                <b>{{ number_format($data['newF1InWeek'], 2)}}</b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-right">
-                                                <h4>{{ trans('adminlte_lang::home.total_sale_f1') }}
-                                                </h4>
-                                            </td>
-                                            <td class="f1-sale">
-                                                <b>{{ number_format($data['totalF1Sale'], 2) }}</b>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="text-center"
-                                         style="margin-bottom: 5px; font-weight: bold;">{{ trans('adminlte_lang::home.f1_left') }}</div>
-                                    <table class="table table-bordered table-hover table-striped dataTable">
-                                        <tbody>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.f1_vol') }}</td>
                                             <td>{{ number_format($data['f1_left_vol'], 2)}}</td>
@@ -142,35 +85,35 @@
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.diamond') }}</td>
                                             <td>
-                                               {{$data['f1_left_diamond_count']}}
+                                                {{$data['f1_left_diamond_count']}}
                                             </td>
                                         </tr>
-                                        </tbody>
-                                    </table>
-                                    <table class="table table-bordered table-hover table-striped award-table">
-                                        <tr>
-                                            <td class="sale-left">
-                                                {{ trans('adminlte_lang::home.f1_left_new') }}
-                                            </td>
-                                            <td >
-                                                <b>{{ number_format($data['leftNew'], 2)}}</b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="sale-left">
-                                               {{ trans('adminlte_lang::home.f1_left_tichluy') }}
-                                            </td>
-                                            <td>
-                                                <b>{{ number_format($data['leftTotal'], 2)}}</b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="text-center"
-                                         style="margin-bottom: 5px; font-weight: bold;">{{ trans('adminlte_lang::home.f1_right') }}</div>
-                                    <table class="table table-bordered table-hover table-striped dataTable">
-                                        <tbody>
+                                    </tbody>
+                                </table>
+                                <table class="table table-bordered table-hover table-striped award-table">
+                                    <tr>
+                                        <td class="sale-left">
+                                            {{ trans('adminlte_lang::home.f1_left_new') }}
+                                        </td>
+                                        <td >
+                                            <b>{{ number_format($data['leftNew'], 2)}}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="sale-left">
+                                            {{ trans('adminlte_lang::home.f1_left_tichluy') }}
+                                        </td>
+                                        <td>
+                                            <b>{{ number_format($data['leftTotal'], 2)}}</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-center"
+                                     style="margin-bottom: 5px; font-weight: bold;">{{ trans('adminlte_lang::home.f1_right') }}</div>
+                                <table class="table table-bordered table-hover table-striped dataTable">
+                                    <tbody>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.f1_vol') }}</td>
                                             <td>{{ number_format($data['f1_right_vol'], 2) }}</td>
@@ -202,185 +145,185 @@
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.diamond') }}</td>
                                             <td>
-                                               {{$data['f1_right_diamond_count']}}
+                                                {{$data['f1_right_diamond_count']}}
                                             </td>
                                         </tr>
-                                        </tbody>
-                                    </table>
-                                    <table class="table table-bordered table-hover table-striped award-table">
-                                        <tr>
-                                            <td class="sale-left">
-                                                {{ trans('adminlte_lang::home.f1_right_new') }}
-                                            </td>
-                                            <td>
-                                                <b>{{ number_format($data['rightNew'], 2) }}</b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="sale-left">
-                                               {{ trans('adminlte_lang::home.f1_right_tichluy') }}
-                                            </td>
-                                            <td>
-                                                <b>{{ number_format($data['rightTotal'], 2)}}</b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                    </tbody>
+                                </table>
+                                <table class="table table-bordered table-hover table-striped award-table">
+                                    <tr>
+                                        <td class="sale-left">
+                                            {{ trans('adminlte_lang::home.f1_right_new') }}
+                                        </td>
+                                        <td>
+                                            <b>{{ number_format($data['rightNew'], 2) }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="sale-left">
+                                            {{ trans('adminlte_lang::home.f1_right_tichluy') }}
+                                        </td>
+                                        <td>
+                                            <b>{{ number_format($data['rightTotal'], 2)}}</b>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
-                        <!-- /.box-body -->
                     </div>
-                    <!-- /.box -->
+                    <!-- /.box-body -->
                 </div>
-                <!-- /.col (left) -->
-                <div class="col-md-6">
-                    <div class="box box-solid">
-                        <div class="box-header with-border">
-                            <center><h3 class="text-uppercase"><b>{{ trans('adminlte_lang::home.investment_status') }}</b></h3>
-                            </center>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table class="table table-bordered table-hover table-striped award-table">
-                                <tr>
-                                    <td>
-                                        {{ trans('adminlte_lang::home.your_pack') }}
-                                    </td>
-                                    <td  class="right text-uppercase">
-                                        <b>{{ Auth::user()->userData->package ? Auth::user()->userData->package->name : '' }}</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                       {{ trans('adminlte_lang::home.value') }}
-                                    </td>
-                                    <td  class="right">
-                                        <b>{{ Auth::user()->userData->package ? '$'. number_format(Auth::user()->userData->package->price, 0) : '' }}</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                       {{ trans('adminlte_lang::home.active') }}
-                                    </td>
-                                    <td  class="right">
-                                        <b>{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate)) : '' }}</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                       {{ trans('adminlte_lang::home.release') }}
-                                    </td>
-                                    <td  class="right">
-                                        <b>{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate ."+ 180 days")) : '' }}</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle;">
-                                       {{ trans('adminlte_lang::home.withdraw_to_usd') }}
-                                    </td>
-                                    <td  class="right">
-                                        <button class="btn btn-default bg-olive withdraw-package @if($disabled){{ 'disabled' }} @endif" 
-                                                        data-id=""
-                                                        data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::home.withdraw_to_usd') }}</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
-                    <!-- /.box -->
-                    @if(count($data["history_package"]) > 1)
-                     <div class="box box-solid">
-                        <div class="box-header with-border">
-                            <center><h3 class="text-uppercase"><b>{{ trans('adminlte_lang::home.package_history') }}</b></h3>
-                            </center>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table class="table table-bordered table-hover table-striped dataTable">
-                                <thead>
-                                    <tr>
-                                        <th>{{ trans('adminlte_lang::home.package') }}</th>
-                                        <th>{{ trans('adminlte_lang::home.buy_date') }}</th>
-                                        <th>{{ trans('adminlte_lang::home.release_date') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach( $data["history_package"] as $package)
-                                        <tr>
-                                            <td class="text-uppercase">
-                                            {{ $package->name }}
-                                            </td>
-                                            <td>
-                                            {{  date("Y-m-d", strtotime($package->buy_date)) }}
-                                            </td>
-                                            <td>
-                                            {{  date("Y-m-d", strtotime($package->release_date)) }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
-                    @endif
-                </div>
-                <!-- /.col (right) -->
+                <!-- /.box -->
             </div>
-            
-
-            <!-- end body -->
+            <!-- /.col (left) -->
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <center><h3 class="text-uppercase"><b>{{ trans('adminlte_lang::home.investment_status') }}</b></h3>
+                        </center>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-bordered table-hover table-striped award-table">
+                            <tr>
+                                <td>
+                                    {{ trans('adminlte_lang::home.your_pack') }}
+                                </td>
+                                <td  class="right text-uppercase">
+                                    <b>{{ Auth::user()->userData->package ? Auth::user()->userData->package->name : '' }}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ trans('adminlte_lang::home.value') }}
+                                </td>
+                                <td  class="right">
+                                    <b>{{ Auth::user()->userData->package ? '$'. number_format(Auth::user()->userData->package->price, 0) : '' }}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ trans('adminlte_lang::home.active') }}
+                                </td>
+                                <td  class="right">
+                                    <b>{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate)) : '' }}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ trans('adminlte_lang::home.release') }}
+                                </td>
+                                <td  class="right">
+                                    <b>{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate ."+ 180 days")) : '' }}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: middle;">
+                                    {{ trans('adminlte_lang::home.withdraw_to_usd') }}
+                                </td>
+                                <td  class="right">
+                                    <button class="btn btn-default bg-olive withdraw-package @if($disabled){{ 'disabled' }} @endif" 
+                                            data-id=""
+                                            data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::home.withdraw_to_usd') }}</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+                @if(count($data["history_package"]) > 1)
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <center><h3 class="text-uppercase"><b>{{ trans('adminlte_lang::home.package_history') }}</b></h3>
+                        </center>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-bordered table-hover table-striped dataTable">
+                            <thead>
+                                <tr>
+                                    <th>{{ trans('adminlte_lang::home.package') }}</th>
+                                    <th>{{ trans('adminlte_lang::home.buy_date') }}</th>
+                                    <th>{{ trans('adminlte_lang::home.release_date') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach( $data["history_package"] as $package)
+                                <tr>
+                                    <td class="text-uppercase">
+                                        {{ $package->name }}
+                                    </td>
+                                    <td>
+                                        {{  date("Y-m-d", strtotime($package->buy_date)) }}
+                                    </td>
+                                    <td>
+                                        {{  date("Y-m-d", strtotime($package->release_date)) }}
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                @endif
+            </div>
+            <!-- /.col (right) -->
         </div>
+
+
+        <!-- end body -->
     </div>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="errorwithdraw">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+</div>
+<div class="alert alert-warning alert-dismissible fade show" role="alert" id="errorwithdraw">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
-      </button>
-      <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-    </div>
-    <script>
-        var formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
+    </button>
+    <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+</div>
+<script>
+    var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
             currency: 'USD',
             minimumFractionDigits: 2,
-          });
-        @if($disabled){{ "$('[data-toggle=confirmation]').confirmation('hide');" }}@endif
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
+    });
+    @if ($disabled){{ "$('[data-toggle=confirmation]').confirmation('hide');" }}@endif
+            $('[data-toggle=confirmation]').confirmation({
+    rootSelector: '[data-toggle=confirmation]',
             onConfirm: function() {
-                $.ajax({
-                    beforeSend: function(){
-                      // Handle the beforeSend event
-                    },
+            $.ajax({
+            beforeSend: function(){
+            // Handle the beforeSend event
+            },
                     url:"packages/withdraw",
                     type:"post",
                     data : {
-                        type: "withdraw",
-                        _token:  $('meta[name="csrf-token"]').attr('content')
+                    type: "withdraw",
+                            _token:  $('meta[name="csrf-token"]').attr('content')
                     },
                     success : function(result){
-                        if(result.success){
-                            $(".usd-amount").html(formatter.format(result.result).replace("$",""));
-                            alert("{{ trans('adminlte_lang::wallet.success')}}");
-                        }else{
-                            alert(result.message);
-                        }
+                    if (result.success){
+                    $(".usd-amount").html(formatter.format(result.result).replace("$", ""));
+                    alert("{{ trans('adminlte_lang::wallet.success')}}");
+                    } else{
+                    alert(result.message);
+                    }
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        alert("some error");
+                    alert("some error");
                     },
                     complete: function(){
 
                     }
-                    // ......
-                });
+            // ......
+            });
             },
             onCancel: function() {
 
             }
-          });
-        
-        
-    </script>
+    });
+
+
+</script>
 @endsection
