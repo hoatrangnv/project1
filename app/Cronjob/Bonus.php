@@ -12,6 +12,9 @@ use App\User;
 use App\Wallet;
 use App\BonusBinary;
 use App\ExchangeRate;
+use App\CronProfitLogs;
+use App\CronBinaryLogs;
+use DB;
 
 /**
  * Description of UpdateStatusBTCTransaction
@@ -29,6 +32,10 @@ class Bonus
         try {
             $lstUser = User::where('active', '=', 1)->get();
             foreach($lstUser as $user){
+                //Get cron status
+                $cronStatus = CronProfitLogs::where('userId', $user->id)->first();
+                if(isset($cronStatus) && $cronStatus->status == 1) continue;
+
                 $userData = $user->userData;
                 //Get all pack in user_packages
                 $package = UserPackage::where('userId', $user->id)
@@ -56,8 +63,15 @@ class Bonus
                     ];
 
                     Wallet::create($fieldUsd);
+
+                    //Update cron status from 0 => 1
+                    $cronStatus->status = 1;
+                    $cronStatus->save();
                 }
             }
+
+            //Update status from 1 => 0 after run all user
+            DB::table('cron_profit_day_logs')->update(['status' => 0]);
 
         } catch(\Exception $e) {
             \Log::error('Running bonusDayCron has error: ' . date('Y-m-d') .$e->getMessage());
@@ -69,7 +83,8 @@ class Bonus
     /**
     * This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
     */
-    public static function bonusBinaryWeekCron(){
+    public static function bonusBinaryWeekCron()
+    {
         set_time_limit(0);
         /* Get previous weekYear */
         /* =======BEGIN ===== */
@@ -94,7 +109,12 @@ class Bonus
         /* =======END ===== */
 
         $lstBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->get();
-        foreach ($lstBinary as $binary) {
+        foreach ($lstBinary as $binary) 
+        {
+            //Get cron status
+            $cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
+            if(isset($cronStatus) && $cronStatus->status == 1) continue;
+
             $leftOver = $binary->leftOpen + $binary->leftNew;
             $rightOver = $binary->rightOpen + $binary->rightNew;
 
@@ -110,19 +130,22 @@ class Bonus
 
             $bonus = 0;
             $userPackage = $binary->userData->package;
-            if (User::checkBinaryCount($binary->userId, 1)) {
-                if ($userPackage->pack_id == 1) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
-                } elseif ($userPackage->pack_id == 2) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_2_pay');
-                } elseif ($userPackage->pack_id == 3) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_3_pay');
-                } elseif ($userPackage->pack_id == 4) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_4_pay');
-                } elseif ($userPackage->pack_id == 5) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
-                } elseif ($userPackage->pack_id == 6) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
+            if(isset($userPackage))
+            {
+                if (User::checkBinaryCount($binary->userId, 1)) {
+                    if ($userPackage->pack_id == 1) {
+                        $bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
+                    } elseif ($userPackage->pack_id == 2) {
+                        $bonus = $settled * config('cryptolanding.binary_bonus_2_pay');
+                    } elseif ($userPackage->pack_id == 3) {
+                        $bonus = $settled * config('cryptolanding.binary_bonus_3_pay');
+                    } elseif ($userPackage->pack_id == 4) {
+                        $bonus = $settled * config('cryptolanding.binary_bonus_4_pay');
+                    } elseif ($userPackage->pack_id == 5) {
+                        $bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
+                    } elseif ($userPackage->pack_id == 6) {
+                        $bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
+                    }
                 }
             }
 
@@ -174,7 +197,7 @@ class Bonus
 
             $week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
             // Yes => update L-Open, R-Open
-            if($week && $week->id > 0) {
+            if(isset($week) && $week->id > 0) {
                 $week->leftOpen = $leftOpen;
                 $week->rightOpen = $rightOpen;
 
@@ -194,6 +217,13 @@ class Bonus
 
                 BonusBinary::create($field);
             }
+
+            //Update cron status from 0 => 1
+            $cronStatus->status = 1;
+            $cronStatus->save();
         }
+
+        //Update status from 1 => 0 after run all user
+        DB::table('cron_binary_logs')->update(['status' => 0]);
     }
 }

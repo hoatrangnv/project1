@@ -586,6 +586,31 @@ CREATE TABLE `withdraw_confirm` (
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Records of withdraw_confirm
+-- Table structure for cron_binary_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `cron_binary_logs`;
+CREATE TABLE `cron_binary_logs` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `userId` int(10) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT 0,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- ----------------------------
+-- Table structure for cron_profit_day_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `cron_profit_day_logs`;
+CREATE TABLE `cron_profit_day_logs` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `userId` int(10) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- ----------------------------
 SET FOREIGN_KEY_CHECKS=1;

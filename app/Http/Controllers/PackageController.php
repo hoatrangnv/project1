@@ -16,6 +16,8 @@ use Validator;
 use DateTime;
 use App\ExchangeRate;
 use App\Wallet;
+use App\CronProfitLogs;
+use App\CronBinaryLogs;
 
 class PackageController extends Controller
 {
@@ -101,6 +103,15 @@ class PackageController extends Controller
             if ($package) {
                 $amount_increase = $package->price;
             }
+
+            //Insert to cron logs for binary, profit
+            if($packageOldId == 0) {
+                if(CronProfitLogs::where('userId', $currentuserid)->count() < 1) 
+                    CronProfitLogs::create(['userId' => $currentuserid]);
+                if(CronBinaryLogs::where('userId', $currentuserid)->count() < 1) 
+                    CronBinaryLogs::create(['userId' => $currentuserid]);
+            }
+
             if($packageOldId > 0){
                 $amount_increase = $package->price - $packageOldPrice;
             }
