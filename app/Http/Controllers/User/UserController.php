@@ -189,7 +189,20 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+    public function reset2fa(Request $request)
+    {
+        if($request->userid && $request->userid > 0){
+            if( User::find($request->userid)->update([ 'is2fa' => 0, 'google2fa_secret' => Google2FA::generateSecretKey(16) ]) ) {
+                flash()->success('User has been reset 2FA');
+            } else {
+                flash()->success('User not reset 2FA');
+            }
 
+        }else{
+            flash()->success('User not reset 2FA.');
+        }
+        return redirect()->back();
+    }
     /**
      * Sync roles and permissions
      *

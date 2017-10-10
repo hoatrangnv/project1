@@ -10,13 +10,16 @@ Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('users/root', 'User\UserController@root')->name('users.root');
+    Route::post('users/reset2fa', 'User\UserController@reset2fa')->name('users.reset2fa');
     Route::get('users/photo_approve', 'User\UserController@photo_approve')->name('users.photo_approve');
     Route::post('users/approve_ok/{id}', 'User\UserController@approve_ok')->name('approve.ok');
     Route::post('users/approve_cancel/{id}', 'User\UserController@approve_cancel')->name('approve.cancel');
     Route::resource('users', 'User\UserController');
     Route::resource('roles', 'User\RoleController');
     Route::resource('posts', 'User\PostController');
-    
+
+    Route::get('/report/member', 'Backend\ReportController@member')->name('report.member');
+    Route::get('/report/member_pack', 'Backend\ReportController@member_pack')->name('report.member_pack');
 
 
     Route::get('members/genealogy', 'User\MemberController@genealogy');

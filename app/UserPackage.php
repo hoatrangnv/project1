@@ -16,6 +16,7 @@ class UserPackage extends Model
         'buy_date', 
         'release_date', 
         'weekYear',
+        'dt',
 	];
     
     public function __construct(array $attributes = []) {

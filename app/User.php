@@ -70,7 +70,7 @@ class User extends Authenticatable
         if($refererId > 0){
             $packageBonus = 0;
             $userData = UserData::find($refererId);
-            if($userData && $level <= 3 && $userData->packageId > 0){
+            if($userData && $level <= 3 && $userData->packageId > 0&& self::checkMonthsBonus($refererId)){
                 if($level == 1){//F1
                     $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f1_pay');
                     $userData->totalBonus = $userData->totalBonus + $packageBonus;
@@ -254,44 +254,47 @@ class User extends Authenticatable
 
     public static function bonusBinaryWeek($binaryUserId = 0, $usdCoinAmount = 0, $legpos)
     {
-        $weeked = date('W');
-        $year = date('Y');
-        $weekYear = $year.$weeked;
+        if(self::checkMonthsBonus($binaryUserId)){
+            $weeked = date('W');
+            $year = date('Y');
+            $weekYear = $year . $weeked;
 
-        if($weeked < 10) $weekYear = $year.'0'.$weeked;
+            if($weeked < 10)
+                $weekYear = $year . '0' . $weeked;
 
-        $week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
-        if($week && $week->id > 0) { //If already have record just update amount increase 
-            if($legpos == 1){
-                $week->leftNew = $week->leftNew + $usdCoinAmount;
+            $week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
+            if($week && $week->id > 0){ //If already have record just update amount increase
+                if($legpos == 1){
+                    $week->leftNew = $week->leftNew + $usdCoinAmount;
+                }else{
+                    $week->rightNew = $week->rightNew + $usdCoinAmount;
+                }
+                $week->save();
             }else{
-                $week->rightNew = $week->rightNew + $usdCoinAmount;
+                $fields = [
+                    'userId' => $binaryUserId,
+                    'weeked' => $weeked,
+                    'year' => $year,
+                    'weekYear' => $weekYear,
+                ];
+
+                $fields['leftOpen'] = 0;
+                $fields['rightOpen'] = 0;
+
+                if($legpos == 1){
+                    $fields['leftNew'] = $usdCoinAmount;
+                    $fields['rightNew'] = 0;
+                }else{
+                    $fields['rightNew'] = $usdCoinAmount;
+                    $fields['leftNew'] = 0;
+                }
+
+                BonusBinary::create($fields);
             }
-            $week->save();
-        } else {
-            $fields = [
-                'userId'     => $binaryUserId,
-                'weeked'     => $weeked,
-                'year'     => $year,
-                'weekYear'     => $weekYear,
-            ];
 
-            $fields['leftOpen'] = 0;
-            $fields['rightOpen'] = 0;
-
-            if($legpos == 1){
-                $fields['leftNew'] = $usdCoinAmount;
-                $fields['rightNew'] = 0;
-            }else{
-                $fields['rightNew'] = $usdCoinAmount;
-                $fields['leftNew'] = 0;
-            }
-
-            BonusBinary::create($fields);
+            //Caculate temporary binary bonus this week right after have a new user in tree
+            self::bonusBinaryThisWeek($binaryUserId);
         }
-
-        //Caculate temporary binary bonus this week right after have a new user in tree
-        self::bonusBinaryThisWeek($binaryUserId);
     }
 
     /**
@@ -372,104 +375,112 @@ class User extends Authenticatable
 
         $lstBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->get();
         foreach ($lstBinary as $binary) {
-            $leftOver = $binary->leftOpen + $binary->leftNew;
-            $rightOver = $binary->rightOpen + $binary->rightNew;
+            if(self::checkMonthsBonus($binary->userId)){
+                $leftOver = $binary->leftOpen + $binary->leftNew;
+                $rightOver = $binary->rightOpen + $binary->rightNew;
 
-            if ($leftOver >= $rightOver) {
-                $leftOpen = $leftOver - $rightOver;
-                $rightOpen = 0;
-                $settled = $rightOver;
-            } else {
-                $leftOpen = 0;
-                $rightOpen = $rightOver - $leftOver;
-                $settled = $leftOver;
-            }
-
-            $bonus = 0;
-            $userPackage = $binary->userData->package;
-            if (self::checkBinaryCount($binary->userId, 1)) {
-                if ($userPackage->pack_id == 1) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
-                } elseif ($userPackage->pack_id == 2) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_2_pay');
-                } elseif ($userPackage->pack_id == 3) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_3_pay');
-                } elseif ($userPackage->pack_id == 4) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_4_pay');
-                } elseif ($userPackage->pack_id == 5) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
-                } elseif ($userPackage->pack_id == 6) {
-                    $bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
+                if($leftOver >= $rightOver){
+                    $leftOpen = $leftOver - $rightOver;
+                    $rightOpen = 0;
+                    $settled = $rightOver;
+                }else{
+                    $leftOpen = 0;
+                    $rightOpen = $rightOver - $leftOver;
+                    $settled = $leftOver;
                 }
-            }
 
-            $binary->settled = $settled;
+                $bonus = 0;
+                $userPackage = $binary->userData->package;
+                if(self::checkBinaryCount($binary->userId, 1)){
+                    if($userPackage->pack_id == 1){
+                        $bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
+                    }elseif($userPackage->pack_id == 2){
+                        $bonus = $settled * config('cryptolanding.binary_bonus_2_pay');
+                    }elseif($userPackage->pack_id == 3){
+                        $bonus = $settled * config('cryptolanding.binary_bonus_3_pay');
+                    }elseif($userPackage->pack_id == 4){
+                        $bonus = $settled * config('cryptolanding.binary_bonus_4_pay');
+                    }elseif($userPackage->pack_id == 5){
+                        $bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
+                    }elseif($userPackage->pack_id == 6){
+                        $bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
+                    }
+                }
 
-            //Bonus canot over maxout $35,000
-            if($bonus > config('cryptolanding.bonus_maxout')) $bonus = config('cryptolanding.bonus_maxout');
+                $binary->settled = $settled;
 
-            $binary->bonus = $bonus;
-            $binary->save();
+                //Bonus canot over maxout $35,000
+                if($bonus > config('cryptolanding.bonus_maxout'))
+                    $bonus = config('cryptolanding.bonus_maxout');
 
-            if($bonus > 0){
-                $usdAmount = $bonus * config('cryptolanding.usd_bonus_pay');
-                $reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                $binary->bonus = $bonus;
+                $binary->save();
 
-                $userCoin = $binary->userCoin;
-                $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
-                $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-                $userCoin->save();
+                if($bonus > 0){
+                    $usdAmount = $bonus * config('cryptolanding.usd_bonus_pay');
+                    $reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
 
-                $fieldUsd = [
-                    'walletType' => Wallet::USD_WALLET,//usd
-                    'type' =>  Wallet::BINARY_TYPE,//bonus week
-                    'inOut' => Wallet::IN,
-                    'userId' => $binary->userId,
-                    'amount' => $usdAmount,
-                ];
+                    $userCoin = $binary->userCoin;
+                    $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+                    $userCoin->save();
 
-                Wallet::create($fieldUsd);
+                    $fieldUsd = [
+                        'walletType' => Wallet::USD_WALLET,
+                        //usd
+                        'type' => Wallet::BINARY_TYPE,
+                        //bonus week
+                        'inOut' => Wallet::IN,
+                        'userId' => $binary->userId,
+                        'amount' => $usdAmount,
+                    ];
 
-                $fieldInvest = [
-                    'walletType' => Wallet::REINVEST_WALLET,//reinvest
-                    'type' => Wallet::BINARY_TYPE,//bonus week
-                    'inOut' => Wallet::IN,
-                    'userId' => $binary->userId,
-                    'amount' => $reinvestAmount,
-                ];
+                    Wallet::create($fieldUsd);
 
-                Wallet::create($fieldInvest);
-            }
+                    $fieldInvest = [
+                        'walletType' => Wallet::REINVEST_WALLET,
+                        //reinvest
+                        'type' => Wallet::BINARY_TYPE,
+                        //bonus week
+                        'inOut' => Wallet::IN,
+                        'userId' => $binary->userId,
+                        'amount' => $reinvestAmount,
+                    ];
 
-            //Check already have record for this week?
-            
-            $weeked = date('W');
-            $year = date('Y');
-            $weekYear = $year.$weeked;
+                    Wallet::create($fieldInvest);
+                }
 
-            if($weeked < 10) $weekYear = $year.'0'.$weeked;
+                //Check already have record for this week?
 
-            $week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
-            // Yes => update L-Open, R-Open
-            if($week && $week->id > 0) {
-                $week->leftOpen = $leftOpen;
-                $week->rightOpen = $rightOpen;
+                $weeked = date('W');
+                $year = date('Y');
+                $weekYear = $year . $weeked;
 
-                $week->save();
-            } else {
-                // No => create new
-                $field = [
-                    'userId' => $binary->userId,
-                    'weeked' => $weeked,
-                    'year' => $year,
-                    'leftNew' => 0,
-                    'rightNew' => 0,
-                    'leftOpen' => $leftOpen,
-                    'rightOpen' => $rightOpen,
-                    'weekYear' => $weekYear,
-                ];
+                if($weeked < 10)
+                    $weekYear = $year . '0' . $weeked;
 
-                BonusBinary::create($field);
+                $week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
+                // Yes => update L-Open, R-Open
+                if($week && $week->id > 0){
+                    $week->leftOpen = $leftOpen;
+                    $week->rightOpen = $rightOpen;
+
+                    $week->save();
+                }else{
+                    // No => create new
+                    $field = [
+                        'userId' => $binary->userId,
+                        'weeked' => $weeked,
+                        'year' => $year,
+                        'leftNew' => 0,
+                        'rightNew' => 0,
+                        'leftOpen' => $leftOpen,
+                        'rightOpen' => $rightOpen,
+                        'weekYear' => $weekYear,
+                    ];
+
+                    BonusBinary::create($field);
+                }
             }
         }
     }
@@ -614,35 +625,41 @@ class User extends Authenticatable
     * Return amount loyalty bonus to usd wallet, reinvest wallet
     */
     public static function bonusLoyaltyCal($userId, $amount, $type){
-        $usdAmount = $amount * config('cryptolanding.usd_bonus_pay');
-        $reinvestAmount = $amount * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+        if(self::checkMonthsBonus($userId)){
+            $usdAmount = $amount * config('cryptolanding.usd_bonus_pay');
+            $reinvestAmount = $amount * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
 
-        $userCoin = UserCoin::where('userId', $userId)->get()->first();
-        $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
-        $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-        $userCoin->save();
+            $userCoin = UserCoin::where('userId', $userId)->get()->first();
+            $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+            $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+            $userCoin->save();
 
-        $fieldUsd = [
-            'walletType' => Wallet::USD_WALLET,//usd
-            'type' => Wallet::LTOYALTY_TYPE,//bonus f1
-            'inOut' => Wallet::IN,
-            'userId' => $userId,
-            'amount' => $usdAmount,
-            'note' => $type,
-        ];
+            $fieldUsd = [
+                'walletType' => Wallet::USD_WALLET,
+                //usd
+                'type' => Wallet::LTOYALTY_TYPE,
+                //bonus f1
+                'inOut' => Wallet::IN,
+                'userId' => $userId,
+                'amount' => $usdAmount,
+                'note' => $type,
+            ];
 
-        Wallet::create($fieldUsd);
+            Wallet::create($fieldUsd);
 
-        $fieldInvest = [
-            'walletType' => Wallet::REINVEST_WALLET,//reinvest
-            'type' => Wallet::LTOYALTY_TYPE,//bonus f1
-            'inOut' => Wallet::IN,
-            'userId' => $userId,
-            'amount' => $reinvestAmount,
-            'note' => $type,
-        ];
-        
-        Wallet::create($fieldInvest);
+            $fieldInvest = [
+                'walletType' => Wallet::REINVEST_WALLET,
+                //reinvest
+                'type' => Wallet::LTOYALTY_TYPE,
+                //bonus f1
+                'inOut' => Wallet::IN,
+                'userId' => $userId,
+                'amount' => $reinvestAmount,
+                'note' => $type,
+            ];
+
+            Wallet::create($fieldInvest);
+        }
     }
 
     /**
@@ -759,8 +776,26 @@ class User extends Authenticatable
             \Log::error('Running bonusDayCron has error: ' . date('Y-m-d') .$e->getMessage());
             //throw new \Exception("Running bonusDayCron has error");
         }
-    }    
-
+    }
+    private function checkMonthsBonus($userId){
+        $lastPackage = UserPackage::where('userId', $userId)->orderByDesc('packageId')->first();
+        $isBonus = false;
+        if($lastPackage){
+            if($lastPackage->withdraw == 1){
+                $release_date = strtotime(date("Y-m-d", strtotime($lastPackage->release_date)));
+                $release_date_12 = strtotime(date("Y-m-d", strtotime($lastPackage->release_date) . " + 6 months"));
+                $withdraw_date = strtotime(date("Y-m-d", strtotime($lastPackage->updated_at)));
+                if($release_date != $withdraw_date){
+                    if($withdraw_date >= $release_date_12){
+                        $isBonus = true;
+                    }
+                }
+            }else{
+                $isBonus = true;
+            }
+        }
+        return $isBonus;
+    }
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswords($token));

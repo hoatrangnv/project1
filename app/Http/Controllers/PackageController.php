@@ -109,6 +109,7 @@ class PackageController extends Controller
                 'userId' => $currentuserid,
                 'packageId' => $userData->packageId,
                 'amount_increase' => $amount_increase,
+                'dt' => date('Y-m-d'),
                 'buy_date' => date('Y-m-d H:i:s'),
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 6 months")),
                 'weekYear' => $weekYear,

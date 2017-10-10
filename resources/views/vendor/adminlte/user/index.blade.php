@@ -41,9 +41,13 @@
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->roles->implode('name', ', ') }}</td>
                                     <td>{{ $item->created_at->toFormattedDateString() }}</td>
-
                                     @can('edit_users')
                                     <td class="text-center">
+                                        {!! Form::open( ['method' => 'post', 'url' => route('users.reset2fa', ['userid' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure wanted to reset 2FA it?")']) !!}
+                                        <button type="submit" class="btn btn-xs btn-info">
+                                            Reset 2FA
+                                        </button>
+                                        {!! Form::close() !!}
                                         @include('shared._actions', [
                                             'entity' => 'users',
                                             'id' => $item->id

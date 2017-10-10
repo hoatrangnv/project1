@@ -49,16 +49,16 @@ class WalletController extends Controller
      */
     public function clp(){
         $currentuserid = Auth::user()->id;
-        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::CLP_WALLET)
-       ->paginate();
+        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::CLP_WALLET)->paginate();
         
         //get Packgage
-        $currentuserid = Auth::user()->id;
         $user = Auth::user();
         $packages = Package::all();
         $lstPackSelect = array();
-        foreach ($packages as $package){
-            $lstPackSelect[$package->id] = $package->name;
+        if($packages){
+            foreach ($packages as $package){
+                $lstPackSelect[$package->id] = $package->name;
+            }
         }
         
         return view('adminlte::wallets.clp', ['packages' => $packages, 
