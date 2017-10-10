@@ -130,18 +130,18 @@ class WithDrawController extends Controller
                                     }
                                 }
                             }else{
-                                $request->session()->flash('error', 'Something wrongs. We cannot Confirm Withdraw!');
+                                $request->session()->flash('error', 'Something wrongs. We cannot confirm withdraw!');
                             }
                         }
                     }elseif($withdrawConfirm->status == 2){
                         $isConfirm = true;
-                        $request->session()->flash('status', 'Withdraw have Cancel!');
+                        $request->session()->flash('status', 'Withdraw have cancelled!');
                     }else{
                         $isConfirm = true;
                         $request->session()->flash('status', 'Withdraw have done Confirm!');
                     }
                 }else{
-                    $request->session()->flash('error', 'Something wrongs. We cannot Confirm Withdraw!');
+                    $request->session()->flash('error', 'Something wrongs. We cannot confirm withdraw!');
                 }
             }
         }else{
@@ -408,7 +408,7 @@ class WithDrawController extends Controller
                     $linkConfirm =  URL::to('/confirmWithdraw')."?d=".base64_encode(json_encode($encrypt));
                     $coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'btc'];
                     $user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
-                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your email!' );
+                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation email was sent to your mail box' );
                     return redirect()->route('wallet.btc');
                 }
             }else {
