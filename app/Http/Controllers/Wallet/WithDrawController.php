@@ -252,50 +252,47 @@ class WithDrawController extends Controller
             if ($user->clpCoinAmount - config('app.fee_withRaw_CLP') >= $withdrawConfirm->withdrawAmount) {
                 
                 $clpApi = new CLPWalletAPI();
-                try {
-                    //Transfer CLP to investor
-                    $result = $clpApi->addInvestor($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
-                    $newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withrawAmount;
-                    if ($result) {
-                        if ($result["success"] == 1) {
-                            $update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
-                            
-                            //insert wallet -- lưu lịch sử ví
-                            $dataInsertWallet = [
-                                "walletType" => Wallet::CLP_WALLET,
-                                "type" => Wallet::WITH_DRAW_CLP_TYPE,
-                                "userId" => $withdrawConfirm->userId,
-                                "note" => "Pending",
-                                "amount" => $withdrawConfirm->withdrawAmount,
-                                "inOut" => Wallet::OUT
-                            ];
+                //Transfer CLP to investor
+                $result = $clpApi->addInvestor($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
 
-                            $resultInsert = Wallet::create($dataInsertWallet);
+                $newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withrawAmount;
+                
+                if ($result["success"] == 1) {
+                    $update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
+                    
+                    //insert wallet -- lưu lịch sử ví
+                    $dataInsertWallet = [
+                        "walletType" => Wallet::CLP_WALLET,
+                        "type" => Wallet::WITH_DRAW_CLP_TYPE,
+                        "userId" => $withdrawConfirm->userId,
+                        "note" => "Pending",
+                        "amount" => $withdrawConfirm->withdrawAmount,
+                        "inOut" => Wallet::OUT
+                    ];
 
-                            //insert withdraw -- lưu lịch sử giao dịch -- trạng thái ở đây là success
-                            $dataInsertWithdraw = [
-                                "walletAddress" => $withdrawConfirm->walletAddress,
-                                "userId" => $withdrawConfirm->userId,
-                                "amountCLP" => $withdrawConfirm->withdrawAmount,
-                                "wallet_id" => $resultInsert->id,
-                                "transaction_id" => '',
-                                "transaction_hash" => $result["tx"],
-                                "status" => 0
-                            ];
+                    $resultInsert = Wallet::create($dataInsertWallet);
 
-                            Withdraw::create($dataInsertWithdraw);
+                    //insert withdraw -- lưu lịch sử giao dịch -- trạng thái ở đây là success
+                    $dataInsertWithdraw = [
+                        "walletAddress" => $withdrawConfirm->walletAddress,
+                        "userId" => $withdrawConfirm->userId,
+                        "amountCLP" => $withdrawConfirm->withdrawAmount,
+                        "wallet_id" => $resultInsert->id,
+                        "transaction_id" => '',
+                        "transaction_hash" => $result["tx"],
+                        "status" => 0
+                    ];
 
-                            $request->session()->flash('succeesMessage', trans('adminlte_lang::wallet.success_withdraw'));
-                            $withdrawConfirm->status = 1;
-                            $withdrawConfirm->save();
-                            $isConfirm = true;
-                        } else {
-                            $request->session()->flash('succeesError', trans('adminlte_lang::wallet.error'));
-                        }
-                    }
-                } catch (\Exception $ex) {
-                    Log::error($ex->getTraceAsString());
+                    Withdraw::create($dataInsertWithdraw);
+
+                    $request->session()->flash('succeesMessage', trans('adminlte_lang::wallet.success_withdraw'));
+                    $withdrawConfirm->status = 1;
+                    $withdrawConfirm->save();
+                    $isConfirm = true;
+                } else {
+                    $request->session()->flash('succeesError', trans('adminlte_lang::wallet.error'));
                 }
+               
             } else {
                 $request->session()->flash('errorMessage', 'Not enought CLP');
             }
