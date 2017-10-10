@@ -11,7 +11,7 @@ use GuzzleHttp\Client;
 class CLPWalletAPI
 {
 
-    const DEFAULT_API_URL = 'http://99.193.6.228:3080/api';
+    const DEFAULT_API_URL = 'http://199.193.6.228:3080/api';
 
     private $apiUrl;
 
