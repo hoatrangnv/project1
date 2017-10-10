@@ -25,6 +25,7 @@ return [
     'f1_left_new'               => 'Current Vol',
     'f1_left_tichluy'           => 'Total Vol',
     'f1_right'                  => 'Right',
+    'f1_vol'                    => 'F1 Volume',
     'f1_right_new'              => 'Current Vol',
     'f1_right_tichluy'          => 'Total Vol',
     'investment_status'         => 'Investment Status',
@@ -48,4 +49,5 @@ return [
     'type_your_code' => 'Enter your 2FA code',
     'valid' => 'VALID',
     'in_valid' => 'Invalid',
+    'not_buy_package'=> 'You have not purchased the package yet !',
 ];

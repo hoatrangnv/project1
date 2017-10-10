@@ -85,8 +85,8 @@ return [
     'friends'                 => 'Friends',
     'profile'                 => 'Profile',
     'signout'                 => 'Sign out',
-    'landingdescription'      => 'Laravel 5 package that switchs default Laravel scaffolding/boilerplate to AdminLTE template with Bootstrap 3.0 and Pratt Landing page',
-    'landingdescriptionpratt' => 'Acacha AdminLTE Laravel package template Landing page - Using Pratt',
+    'landingdescription'      => 'CLP - a peer-to-pear lending project that built on blockchain Ethereum',
+    'landingdescriptionpratt' => 'CLP',
     'description'             => 'Description',
     'showcase'                => 'Showcase',
     'contact'                 => 'Contact',
@@ -134,4 +134,5 @@ return [
     'loggedin'                => 'Logged in!',
     'entering'                => 'Entering...',
     'registered'              => 'User Registered!',
+    'maintenance_mode'        => 'Site is down for maintenance!',
 ];

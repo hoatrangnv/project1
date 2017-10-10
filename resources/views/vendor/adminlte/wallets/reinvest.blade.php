@@ -41,18 +41,32 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             <div class="box">
               <!-- Add the bg color to the header using any of the bg-* classes -->
                 <div class="box-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped wallet-table">
-                            <tbody>
-                                <tr>
-                                    <th class="icon-wallet">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
-                                    </th>
-                                    <th class="wallet-amount"><span class="icon-clp-icon" style="font-size: 16px;"></span>@isset($wallets->currencyPair){{ $wallets->currencyPair }} / <span class="icon-clp-icon" style="font-size: 16px;"></span>{{ Auth()->user()->userCoin->availableAmount }}@endisset  </th>
-                                    <th><button class="btn bg-olive" data-toggle="modal" data-target="#modal-default">{{ trans('adminlte_lang::wallet.btn_transfer_holding_to_clp') }}</button></th>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div>
+                      <!-- Nav tabs -->
+                      <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">{{ trans('adminlte_lang::wallet.tl_holding_amount') }}</a></li>
+                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">{{ trans('adminlte_lang::wallet.tl_released_amount') }}</a></li>
+                      </ul>
+
+                      <!-- Tab panes -->
+                      <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active wallet-amount" id="home">
+                            <div class="col-sm-12" style="padding-top: 5px;">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" style="position: absolute;"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg></span>
+                                <span class="icon-clp-icon" style="font-size: 16px; margin-left:32px;"></span><strong>{{ number_format($wallets->currencyPair, 2) }}</strong>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane wallet-amount-released" id="profile">
+                            <div class="col-sm-6" style="padding-top: 5px;">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" style="position: absolute;"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg></span>
+                                <span class="icon-clp-icon" style="font-size: 16px; margin-left:32px;"></span><strong>{{ number_format(Auth()->user()->userCoin->availableAmount, 2) }}</strong>
+                            </div>
+                            <div class="col-sm-6" style="padding-left: 0px;">
+                                <button class="btn bg-olive" id="btnTransfer" @if(Auth()->user()->userCoin->availableAmount == 0) disabled="true" @endif >{{ trans('adminlte_lang::wallet.btn_transfer_holding_to_clp') }}</button>
+                            </div>
+                        </div>
+                      </div>
+
                     </div>
                 </div>
             <!-- /.widget-user -->
@@ -65,7 +79,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
 			<div class="box">
                 <div class="box-header">
                     <div class="col-xs-2 no-padding">
-                        {{ Form::select('wallet_type', array_merge(['0' => 'Choose a type'], $wallet_type), ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
+                        {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
                     </div>
                     <div class="col-xs-2">
                         {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
@@ -78,6 +92,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                 <tr>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
+                                    <th>{{ trans('adminlte_lang::wallet.wallet_release_date') }}</th>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_type') }}</th>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_in') }}</th>
                                     <th>{{ trans('adminlte_lang::wallet.wallet_out') }}</th>
@@ -88,21 +103,21 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                     <tr>
                                         <td>{{ $key+1 }}</td>
                                         <td>{{ $wallet->created_at }}</td> 
+                                        <td>{{ date('Y-m-d', strtotime("+6 months", strtotime($wallet->created_at))) }}</td> 
                                         <td>
                                             {{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}
                                         </td>
                                         <td>
                                             @if($wallet->inOut=='in')
-                                                +{{ $wallet->amount }}
+                                                +{{ number_format($wallet->amount, 2) }}
                                             @endif
                                         </td>
                                         <td>
                                             @if($wallet->inOut=='out')
-                                                -{{ $wallet->amount }}
+                                                -{{ number_format($wallet->amount, 2) }}
                                             @endif
                                         </td>
-                                        <td>
-                                        </td>
+                                        <td>{{ $wallet->note }}</td>
                                         
                                     </tr>
                                     @endforeach
@@ -117,44 +132,6 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
 		</div>
 	</div>
  <!--fORM submit-->
-    <form class="form-horizontal" _lpchecked="1" method="post" action="reinvest">
-        <div class="modal fade" id="modal-default">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">{{ trans('adminlte_lang::wallet.tranfer_to_clp') }}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxusdbuyclp" data-type="maxusdbuyclp">{{ Auth()->user()->userCoin->availableAmount }}</a></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="box-body">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">USD</label>
-
-                                <div class="col-sm-10">
-                                  <input type="number" step="0.01" class="form-control switch-USD-to-CLP" id="inputEmail3" name="usd" placeholder="USD" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">CLP</label>
-
-                                <div class="col-sm-10">
-                                  <input type="number" step="0.000000001" class="form-control switch-CLP-to-USD" id="inputPassword3" name="clp" placeholder="CLP" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-              <!-- /.modal-content -->
-            </div>
-          <!-- /.modal-dialog -->
-        </div>
-    </form>
     <!-- /.modal -->
     <script>
         $(document).ready(function(){
@@ -170,63 +147,45 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             $('#btn_filter_clear').on('click', function () {
                 location.href = '{{ url()->current() }}';
             });
-        });
-        $( ".switch-USD-to-CLP" ).keyup(function() {
-             var value = $(this).val();
-             var type = "UsdToClp";
-             //send
-             var result = switchChange(value,type);
-        });
-        
-        $( ".switch-CLP-to-USD" ).keyup(function() {
-             var value = $(this).val();
-            var type = "ClpToUsd";
-            //send
-           var result = switchChange(value,type);
-        });
-        
-        
-        function switchChange(value,type){
-            $.ajax({
-                beforeSend: function(){
-                  // Handle the beforeSend event
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('#btnTransfer').on('click', function() {
+                swal({
+                  title: "{{trans('adminlte_lang::wallet.msg_sure_confirm')}}",
+                  text: '{{trans('adminlte_lang::wallet.msg_transfer_confirm')}}',
+                  type: "info",
+                  showCancelButton: true,
+                  confirmButtonClass: "btn-blue",
+                  confirmButtonText: "{{trans('adminlte_lang::wallet.btn_sure_transfer')}}",
+                  showLoaderOnConfirm: true,
+                  closeOnConfirm: false
                 },
-                url:"switchusdclp",
-                type:"get",
-                data : {
-                     type: type,
-                    value: value
-                },
-                success : function(result){
-                     if( type == "UsdToClp" ){
-                         if(result.success) {
-                             $(".switch-CLP-to-USD").val(result.result);
-                        }
-                    } else {
-                        if(result.success) {
-                            $(".switch-USD-to-CLP").val(result.result); 
-                        }
-                    }
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    alert("some error");
-                 },
-                complete: function(){
-                  
-                 }
-                 // ......
-             });
-            
-          
-        }
-        
-        //get total value;
-        var data = {{ Auth()->user()->userCoin->availableAmount }};
-        $( ".maxusdbuyclp" ).click(function() {
-            $(".switch-USD-to-CLP").val(data)
-            var type = "UsdToClp";
-            var result = switchChange(data,type);
+                function(){
+                    mytimer = setTimeout(function(){
+                        $.ajax({
+                            type: "GET",
+                            url: "{{route('holding.transfer')}}",
+                            dataType: 'json',
+                        }).done(function(data){
+                            if(data.msg) {
+                                swal(data.msg);
+                            } else {
+                                swal('somethings wrong!');
+                            }
+                        }).fail(function(){
+                            swal('somethings wrong!');
+                        });
+                    }, 1000);
+                   
+                });
+            });
         });
+
   
     </script>
 @endsection

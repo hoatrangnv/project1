@@ -6,7 +6,7 @@
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><img src="{{ url('/') }}/img/logo_gold.png"/></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><img src="{{ url('/') }}/img/logo_gold.png"/><b>CRYPTOLENDING</b></span>
+        <span class="logo-lg"><img src="{{ url('/') }}/img/logo_gold.png"/><b>CLP</b></span>
     </a>
 
     <!-- Header Navbar -->

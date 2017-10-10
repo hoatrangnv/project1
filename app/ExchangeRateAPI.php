@@ -28,7 +28,7 @@ class ExchangeRateAPI
 
     public function getBTCUSDRate() 
     {
-        $url = config('app.link_ty_giaff') ?  config('app.link_ty_gia') : self::DEFAULT_BTC_EXCHANGE_URL;
+        $url = config('app.link_ty_gia') ?  config('app.link_ty_gia') : self::DEFAULT_BTC_EXCHANGE_URL;
         $path = rtrim($url, '/') . '/btcusd';
 
         $response = $this->client->request('GET', $path);

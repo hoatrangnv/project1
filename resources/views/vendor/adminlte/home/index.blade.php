@@ -19,7 +19,7 @@
                             <!-- small box -->
                             <div class="small-box bg-aqua">
                                 <div class="inner">
-                                    <h3>{{ number_format(Auth::user()->userCoin->btcCoinAmount, 4) }}</h3>
+                                    <h3>{{ number_format(Auth::user()->userCoin->btcCoinAmount, 5) }}</h3>
                                     <p>{{ trans('adminlte_lang::home.btc_wallet') }}</p>
                                 </div>
                                 <div class="icon"><i class="fa fa-btc"></i></div>
@@ -90,7 +90,7 @@
                                                 </h4>
                                             </td>
                                             <td class="f1-sale">
-                                                <b>{{ $data['newF1InWeek']}}</b>
+                                                <b>{{ number_format($data['newF1InWeek'], 2)}}</b>
                                             </td>
                                         </tr>
                                         <tr>
@@ -99,7 +99,7 @@
                                                 </h4>
                                             </td>
                                             <td class="f1-sale">
-                                                <b>{{ $data['totalF1Sale'] }}</b>
+                                                <b>{{ number_format($data['totalF1Sale'], 2) }}</b>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -112,68 +112,37 @@
                                     <table class="table table-bordered table-hover table-striped dataTable">
                                         <tbody>
                                         <tr>
+                                            <td class="loyalty">{{ trans('adminlte_lang::home.f1_vol') }}</td>
+                                            <td>{{ number_format($data['f1_left_vol'], 2)}}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.silver') }}</td>
                                             <td>
-                                                <?php
-                                                $lstSilverUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isSilver', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstSilverUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstSilverUser);
-                                                ;?>
+                                                {{$data['f1_left_silver_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.gold') }}</td>
                                             <td>
-                                                <?php
-                                                $lstGoldUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isGold', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstGoldUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstGoldUser);
-                                                ;?>
+                                                {{$data['f1_left_gold_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.pear') }}</td>
                                             <td>
-                                                <?php
-                                                $lstPearUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isPear', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstPearUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstPearUser);
-                                                ;?>
+                                                {{$data['f1_left_pear_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.emerald') }}</td>
                                             <td>
-                                                <?php
-                                                $lstEmeraldUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isEmerald', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstEmeraldUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstEmeraldUser);
-                                                ;?>
+                                                {{$data['f1_left_emerald_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.diamond') }}</td>
                                             <td>
-                                                <?php
-                                                $lstDiamondUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isDiamond', 1)->where('leftRight', '=', 'left')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstDiamondUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstDiamondUser);
-                                                ;?>
+                                               {{$data['f1_left_diamond_count']}}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -184,7 +153,7 @@
                                                 {{ trans('adminlte_lang::home.f1_left_new') }}
                                             </td>
                                             <td >
-                                                <b>{{$data['leftNew']}}</b>
+                                                <b>{{ number_format($data['leftNew'], 2)}}</b>
                                             </td>
                                         </tr>
                                         <tr>
@@ -192,7 +161,7 @@
                                                {{ trans('adminlte_lang::home.f1_left_tichluy') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['leftTotal']}}</b>
+                                                <b>{{ number_format($data['leftTotal'], 2)}}</b>
                                             </td>
                                         </tr>
                                     </table>
@@ -203,68 +172,37 @@
                                     <table class="table table-bordered table-hover table-striped dataTable">
                                         <tbody>
                                         <tr>
+                                            <td class="loyalty">{{ trans('adminlte_lang::home.f1_vol') }}</td>
+                                            <td>{{ number_format($data['f1_right_vol'], 2) }}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.silver') }}</td>
                                             <td>
-                                                <?php
-                                                $lstSilverUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isSilver', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstSilverUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstSilverUser);
-                                                ;?>
+                                                {{$data['f1_right_silver_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.gold') }}</td>
                                             <td>
-                                                <?php
-                                                $lstGoldUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isGold', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstGoldUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstGoldUser);
-                                                ;?>
+                                                {{$data['f1_right_gold_count'] }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.pear') }}</td>
                                             <td>
-                                                <?php
-                                                $lstPearUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isPear', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstPearUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstPearUser);
-                                                ;?>
+                                                {{$data['f1_right_pear_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.emerald') }}</td>
                                             <td>
-                                                <?php
-                                                $lstEmeraldUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isEmerald', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstEmeraldUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstEmeraldUser);
-                                                ;?>
+                                                {{$data['f1_right_emerald_count']}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="loyalty">{{ trans('adminlte_lang::home.diamond') }}</td>
                                             <td>
-                                                <?php
-                                                $lstDiamondUser = [];
-                                                $loyaltyUsers = \App\LoyaltyUser::where('refererId', '=', Auth::user()->id)->where('isDiamond', 1)->where('leftRight', '=', 'right')->get();
-                                                foreach ($loyaltyUsers as $loyaltyUser) {
-                                                    $lstDiamondUser[] = $loyaltyUser->user->name;
-                                                }
-                                                echo implode(', ', $lstDiamondUser);
-                                                ;?>
+                                               {{$data['f1_right_diamond_count']}}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -275,7 +213,7 @@
                                                 {{ trans('adminlte_lang::home.f1_right_new') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['rightNew']}}</b>
+                                                <b>{{ number_format($data['rightNew'], 2) }}</b>
                                             </td>
                                         </tr>
                                         <tr>
@@ -283,7 +221,7 @@
                                                {{ trans('adminlte_lang::home.f1_right_tichluy') }}
                                             </td>
                                             <td>
-                                                <b>{{$data['rightTotal']}}</b>
+                                                <b>{{ number_format($data['rightTotal'], 2)}}</b>
                                             </td>
                                         </tr>
                                     </table>
@@ -341,7 +279,7 @@
                                        {{ trans('adminlte_lang::home.withdraw_to_usd') }}
                                     </td>
                                     <td  class="right">
-                                        <button class="btn btn-default bg-olive withdraw-package" 
+                                        <button class="btn btn-default bg-olive withdraw-package @if($disabled){{ 'disabled' }} @endif" 
                                                         data-id=""
                                                         data-toggle="confirmation" data-singleton="true"> {{ trans('adminlte_lang::home.withdraw_to_usd') }}</button>
                                     </td>
@@ -403,10 +341,11 @@
     </div>
     <script>
         var formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-      });
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+          });
+        @if($disabled){{ "$('[data-toggle=confirmation]').confirmation('hide');" }}@endif
         $('[data-toggle=confirmation]').confirmation({
             rootSelector: '[data-toggle=confirmation]',
             onConfirm: function() {
@@ -438,8 +377,10 @@
                 });
             },
             onCancel: function() {
-               
+
             }
           });
+        
+        
     </script>
 @endsection

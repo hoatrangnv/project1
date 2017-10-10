@@ -80,7 +80,7 @@
                                 </tr> 
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
-                                    <td>{{ isset($lstCountry[Auth::user()->country]) ? $lstCountry[Auth::user()->country] : '' }}</td>
+                                    <td>{{ Auth::user()->name_country }}</td>
                                 </tr> 
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
@@ -119,11 +119,11 @@
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.first_name') }}</td>
-                                <td><input type="text" name="firstname" value="{{ Auth::user()->firstname }}" class="form-control input-sm"></td>
+                                <td>{{ Auth::user()->firstname }}</td>
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.last_name') }}</td>
-                                <td><input type="text" name="lastname" value="{{ Auth::user()->lastname }}" class="form-control input-sm"></td>
+                                <td>{{ Auth::user()->lastname }}</td>
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.street_address_1') }}</td>
@@ -147,16 +147,7 @@
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
-                                <td>
-                                    <div class="form-group input-group-sm has-feedback{{ $errors->has('country') ? ' has-error' : '' }}">
-                                        {{ Form::select('country', $lstCountry, Auth::user()->country, ['class' => 'form-control input-sm'], ['placeholder' => 'Choose a country']) }}
-                                        @if ($errors->has('country'))
-                                            <span class="help-block">
-                                                {{ $errors->first('country') }}
-                                            </span>
-                                        @endif
-                                    </div>
-                                </td>
+                                <td>{{ Auth::user()->name_country }}</td>
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
@@ -164,11 +155,19 @@
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.birthday') }}</td>
-                                <td><input type="text" name="birthday" value="{{ Auth::user()->birthday }}" class="form-control input-sm"></td>
+                                @if(Auth::user()->birthday)
+                                    <td>{{Auth::user()->birthday}}</td>
+                                @else
+                                    <td><input type="date" name="birthday" value="{{ Auth::user()->birthday }}" class="form-control input-sm"></td>
+                                @endif
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.passport') }}</td>
-                                <td><input type="text" name="passport" value="{{ Auth::user()->passport }}" class="form-control input-sm"></td>
+                                @if(Auth::user()->passport)
+                                    <td>{{Auth::user()->passport}}</td>
+                                @else
+                                    <td><input type="text" name="passport" value="{{ Auth::user()->passport }}" class="form-control input-sm"></td>
+                                @endif
                             </tr>
                             <tr>
                                 <td class="label-td"></td>
@@ -239,7 +238,7 @@
                                 </tr>
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
-                                    <td>{{ isset($lstCountry[$sponsor->country]) ? $lstCountry[$sponsor->country] : '' }}</td>
+                                    <td>{{ $sponsor->name_country }}</td>
                                 </tr>
                             </tbody>
                          </table>
@@ -255,10 +254,24 @@
                 <!-- form start -->
                <div class="box-body">
                    <div class="table-responsive">
-                       <table class="table no-margin">
+                       <table class="table no-margin" style="width: 98%">
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.my_referal_link') }}</td>
-                                <td><input type="text" name="postal_code" value="{{ url('register') }}?referrer={{ Auth::user()->uid }}" class="form-control input-sm" disabled></td>
+                                <td>
+                                <div class="row">
+                                <div class="col-lg-12">
+                                <div class="input-group input-group-sm">
+                                <input type="text" name="ref" id="ref_link" value="{{ route('user.ref', Auth::user()->name) }}" class="form-control" readonly="true">
+                                <!-- <button class="btn_ref_link cp-btc" data-clipboard-target="#ref_link" title="copy">
+                                                <i class="fa fa-clone"></i> -->
+                                        <span class="input-group-btn">
+        <button class="btn btn-default btn_ref_link" data-clipboard-target="#ref_link"><i class="fa fa-clone"></i></button>
+      </span>
+                                            <!-- </button> -->
+                                            </div>
+                                </div>
+                                </div>
+                                </td>
                             </tr> 
                        </table>
                    </div>
@@ -415,11 +428,35 @@
         #myModalPreview img {max-width: 100%;}
     </style>
     <!-- js -->
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
     <link href="/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
     <script src="/bootstrap-switch/bootstrap-switch.js"></script>
     <script type="text/javascript">
         $(function() {
+            $('.btn_ref_link').tooltip({
+                trigger: 'click',
+                placement: 'left'
+            });
+            
+            function setTooltip(message) {
+                $('.btn_ref_link')
+                  .attr('data-original-title', message)
+                  .tooltip('show');
+            }
+            
+            function hideTooltip() {
+                setTimeout(function() {
+                  $('button').tooltip('hide');
+                }, 1000);
+              }
+            
+            var clipboard = new Clipboard('.btn_ref_link');
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+                setTooltip('Copied!');
+                hideTooltip();
+            });
+
             $( '#inputPasswordNew' ).focus(function(){
                 $( '#errorNewPassword' ).hide();
             });

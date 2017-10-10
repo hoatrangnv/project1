@@ -43,19 +43,22 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $lstCountry = config('cryptolanding.lstCountry');
-        $lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
+        //$lstCountry = config('cryptolanding.lstCountry');
+        //$lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
         $sponsor = User::where('id', Auth::user()->refererId)->first();
         $google2faUrl = Google2FA::getQRCodeGoogleUrl(
             config('app.name'),
             Auth::user()->email,
             Auth::user()->google2fa_secret
         );
-        return view('adminlte::profile.index', compact('lstCountry', 'sponsor', 'google2faUrl'));
+        return view('adminlte::profile.index', compact('sponsor', 'google2faUrl'));
     }
     public function update(Request $request, $id)
     {
         $user = User::find($id);
+        $time = strtotime($request->birdthday);
+        $request->birdthday = date('Y-m-d',$time);
+
         if($user){
             $user->fill($request->except('password'));
             $user->save();

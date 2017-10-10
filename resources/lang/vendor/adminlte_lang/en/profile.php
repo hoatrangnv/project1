@@ -39,7 +39,7 @@ return [
     'btn_close'					=> 'Close',
     'change_password'					=> 'Change Password',
     'two_factor_authen'					=> 'Two - Factor Authentication',
-    'my_referal_link'					=> 'My Referral Link',
+    'my_referal_link'					=> 'My Ref Link',
     'sponsor_id'					=> 'Referral Id',
     'sponsor_username'					=> 'Referral Username',
     'scan_photo'					=> 'Scan of photo id',

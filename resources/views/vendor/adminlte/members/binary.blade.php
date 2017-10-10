@@ -50,16 +50,18 @@
 							<!-- </span> -->
                             </div>
                         <!-- </div> -->
-                    <div class="col-xs-5 col-lg-6" style="padding-top: 15px;position: absolute;right:0;">
-                        <div class="col-xs-12 col-lg-6" style="position: absolute;right:0;">
-                            <div class="input-group input-group-sm">
-                                <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
-                                <span class="input-group-btn">
-                                    <button type="button" id="search-button" class="btn btn-primary btn-flat" >{{ trans('adminlte_lang::member.btn_search') }}</button>
-                                </span>
-                            </div>
-                        </div>
+                            <!-- <div class="col-xs-5 col-lg-6" style="padding-top: 15px;position: absolute;right:0;">
+                                 <div class="col-xs-12 col-lg-6" style="position: absolute;right:0;">
+                                     <div class="input-group input-group-sm">
+                                         <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
+                                         <span class="input-group-btn">
+                                             <button type="button" id="search-button" class="btn btn-primary btn-flat" >{{ trans('adminlte_lang::member.btn_search') }}</button>
+                                         </span>
+                                     </div>
+                                 </div>
+                            </div> -->
                     </div>
+                    
                     <div style="margin-top: 15px;text-align:center;">
                         <center>
                             <button class="btn btn-app btn-xs binary-control" type="button" id="refresh-tree"
@@ -112,7 +114,7 @@
             -moz-border-radius: 10px;
             border-radius: 10px;
             background-color: #ffffff;
-            border: 0px solid #222d32;
+            border: 2px solid #888888;
             width: 12%;
             font-size: 10px;
             text-align: center;
@@ -348,9 +350,9 @@
                                     weeklySale: -1,
                                     avatarURL: 'default-avatar',
                                     children: [],
+                                    loyaltyId: 0,
                                     pos: 1,
                                     level: 0,
-                                    loyaltyId: 0,
                                     lMembers: 0,
                                     rMembers: 0
                                 });
@@ -361,9 +363,9 @@
                                     weeklySale: -1,
                                     avatarURL: 'default-avatar',
                                     children: [],
+                                    loyaltyId: 0,
                                     pos: 2,
                                     level: 0,
-                                    loyaltyId: 0,
                                     lMembers: 0,
                                     rMembers: 0
                                 });
@@ -374,11 +376,11 @@
                                         levelTitle: null,
                                         pkg: -1,
                                         weeklySale: -1,
+                                        loyaltyId: 0,
                                         avatarURL: 'default-avatar',
                                         children: [],
                                         pos: 1,
                                         level: 0,
-                                        loyaltyId: 0,
                                         lMembers: 0,
                                         rMembers: 0
                                     });
@@ -388,11 +390,11 @@
                                         levelTitle: null,
                                         pkg: -1,
                                         weeklySale: -1,
+                                        loyaltyId: 0,
                                         avatarURL: 'default-avatar',
                                         children: [],
                                         pos: 2,
                                         level: 0,
-                                        loyaltyId: 0,
                                         lMembers: 0,
                                         rMembers: 0
                                     });

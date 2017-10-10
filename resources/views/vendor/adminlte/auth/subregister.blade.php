@@ -25,8 +25,6 @@
 
                 <form role="form" method="POST" action="{{ URL::to("/register") }}">
                     {!! csrf_field() !!}
-                    <input type="hidden" name="refererId" value="{{$refererId}}" />
-                    <input type="hidden" name="referrerName" value="{{$referrerName}}" />
                     <div class="form-group input-group-sm has-feedback{{ $errors->has('firstname') ? ' has-error' : '' }}">
                         <input type="text" placeholder="{{ trans('adminlte_lang::user.firstname') }}" name="firstname" value="{{ old('firstname') }}" autofocus="autofocus" class="form-control">
                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -91,6 +89,23 @@
                             </span>
                         @endif
                     </div>
+                    <div class="form-group input-group-sm has-feedback{{ $errors->has('referrerId') ? ' has-error' : '' }}">
+                        <input type="text" value="{{ $referrerId }}" name="refererId" id="refererId" class="form-control" placeholder="Referral Id">
+                        @if ($errors->has('refererId'))
+                            <span class="help-block">
+                                {{ $errors->first('refererId') }}
+                             </span>
+                        @endif
+                    </div>
+                    <div class="form-group input-group-sm has-feedback{{ $errors->has('referrerName') ? ' has-error' : '' }}">
+                        <input type="text" value="{{ $referrerName }}" name="referrerName" id="referrerName" class="form-control" placeholder="Referral User">
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                        @if ($errors->has('referrerName'))
+                            <span class="help-block">
+                                {{ $errors->first('referrerName') }}
+                             </span>
+                        @endif
+                    </div>
                     @if (Config::get('app.enable_captcha'))
                     <div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">
                         {!! app('captcha')->display()!!}
@@ -144,14 +159,14 @@
         $(document).ready(function(){
             var changurl = changeUrl();
             $("#phone").intlTelInput({
-                //initialCountry: "auto",
+                // initialCountry: "auto",
                 // geoIpLookup: function(callback) {
                 //     $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
                 //     var countryCode = (resp && resp.country) ? resp.country : "";
                 //     callback(countryCode);
                 //   });
                 // },
-                //preferredCountries:["us"]
+                // preferredCountries:["us"]
             });
             
             $('form').submit(function(){

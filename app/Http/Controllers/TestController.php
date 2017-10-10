@@ -7,22 +7,35 @@
  */
 
 namespace App\Http\Controllers;
+
 use App\Notification;
 use App\UserCoin;
-
 use App\User;
 use App\Wallet;
 use DB;
 use Log;
 use App\ExchangeRate;
 use App\ExchangeRateAPI;
-
+use App\Cronjob\AutoAddBinary;
+use App\CLPWallet;
+use App\CLPWalletAPI;
+use App\Helper\Helper;
+use App\Cronjob\GetClpWallet;
 /**
  * Description of TestController
  *
  * @author giangdt
  */
 class TestController {
+     private $helper;
+    private $clpwallet;
+    private $clpwalletapi;
+
+    function __construct(Helper $helper, CLPWallet $clpwallet, CLPWalletAPI $clpwalletapi) {
+        $this->helper = $helper;
+        $this->clpwallet = $clpwallet;
+        $this->clpwalletapi = $clpwalletapi;
+    }
     //put your code here
     function testInterest($param = null) {
         //Get Notification
@@ -35,76 +48,51 @@ class TestController {
         User::bonusBinaryWeekCron();
         echo "Return binary bonus this week for user successfully!";
     }
-    
+
+    function testAutoAddBinary($param = null) {
+        //Get Notification
+        AutoAddBinary::addBinary();
+        echo "Return auto add binary successfully!";
+    }
+
     function getAvailableAmount() {
-       
+
         try {
-            
-            $passDate = date('Y-m-d',strtotime("-6 months"));
-            
+
+            $passDate = date('Y-m-d', strtotime("-6 months"));
+
             $dataRelaseTimeToday = DB::table('wallets')
-                    ->select('userId','inOut',DB::raw('SUM(amount) as sumamount'))
+                    ->select('userId', 'inOut', DB::raw('SUM(amount) as sumamount'))
                     ->whereDate('created_at', $passDate)
-                    ->groupBy('userId','inOut')
+                    ->groupBy('userId', 'inOut')
                     ->get();
-            
+
             //get all userId from all record from $dataRelaseTimeYesterday
             $availableUser = array();
             foreach ($dataRelaseTimeToday as $value) {
-                if($value->inOut == 'in') 
-                        $availableUser[$value->userId]  = $value->sumamount;
+                if ($value->inOut == 'in')
+                    $availableUser[$value->userId] = $value->sumamount;
             }
             //update available amount
-            if(isset($availableUser) && count($availableUser) > 0 ){
+            if (isset($availableUser) && count($availableUser) > 0) {
                 foreach ($availableUser as $key => $value) {
-                    UserCoin::where("userId",$key)
+                    UserCoin::where("userId", $key)
                             ->update(
-                            ["availableAmount" => 
-                                ( UserCoin::where("userId",$key)->first()->
-                            availableAmount + $value )
-                            ]        
-                            );
+                                    ["availableAmount" =>
+                                        ( UserCoin::where("userId", $key)->first()->
+                                        availableAmount + $value )
+                                    ]
+                    );
                 }
             }
         } catch (\Exception $ex) {
-            Log::error( $ex->gettraceasstring() );
+            Log::error($ex->gettraceasstring());
         }
-       
     }
-    
-    function test(){
-        $exchrate =  new ExchangeRateAPI();
-        
-        $exchrateClpUsd = $exchrate->getCLPUSDRate();
-        $exchrateBtcUsd = $exchrate->getBTCUSDRate();
-        $exchrateClpBtc = $exchrate->getCLPBTCRate();
-        /* make array insert db*/
-        $dataArrayExrate = [
-            [
-                'from_currency' => ExchangeRate::CLP,
-                'exchrate'      => $exchrateClpUsd,
-                'to_currency'   => ExchangeRate::USD,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now()
-            ],
-            [
-                'from_currency' => ExchangeRate::BTC,
-                'exchrate'      => $exchrateBtcUsd,
-                'to_currency'   => ExchangeRate::USD,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now()
-            ],
-            [
-                'from_currency' => ExchangeRate::CLP,
-                'exchrate'      => $exchrateClpBtc,
-                'to_currency'   => ExchangeRate::BTC,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now()
-            ]
-        ];
-        
-        ExchangeRate::insert($dataArrayExrate);
-        
+
+    function test() {
+       $newGetClp = new GetClpWallet();
+       GetClpWallet::getClpWallet();
     }
-    
+
 }

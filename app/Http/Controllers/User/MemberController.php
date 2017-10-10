@@ -22,19 +22,19 @@ class MemberController extends Controller
     public function index(){
        return view('adminlte::members.genealogy');
     }
-	
-	public function genealogy(Request $request)
+    
+    public function genealogy(Request $request)
     {
-		if($request->ajax()){
-			if(isset($request['action'])) {
-				if($request['action'] == 'getUser') {
-					if(isset($request['username']) && $request['username'] != '') {
+        if($request->ajax()){
+            if(isset($request['action'])) {
+                if($request['action'] == 'getUser') {
+                    if(isset($request['username']) && $request['username'] != '') {
                         $user = Auth::user();
                         $lstGenealogyUser = [];
                         if($userTreePermission = $user->userTreePermission)
                             $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
 
-					    if(is_numeric($request['username'])){
+                        if(is_numeric($request['username'])){
                             $user = User::where('uid', '=', $request['username'])->first();
                         }else{
                             $user = User::where('name', '=', $request['username'])->first();
@@ -55,7 +55,7 @@ class MemberController extends Controller
                         } else {
                             return response()->json(['err'=>1]);
                         }
-					} else {
+                    } else {
                         $user = Auth::user();
                         $fields = [
                             'id'     => $user->id,
@@ -68,9 +68,9 @@ class MemberController extends Controller
                             'dmc' => 3,
                             'generation'     => $this->getQualify($user->userData->packageId),
                         ];
-					}
+                    }
                     return response()->json($fields);
-				} elseif ($request['action'] == 'getChildren') {
+                } elseif ($request['action'] == 'getChildren') {
                     $currentuserid = Auth::user()->id;
                     $user = Auth::user();
                     $lstGenealogyUser = [];
@@ -87,7 +87,7 @@ class MemberController extends Controller
                                 'u' => $userData->user->name,
                                 'totalMembers' => $userData->userTreePermission ? $userData->userTreePermission->genealogy_total : 0,
                                 'packageId' => $userData->packageId,
-                                'loyaltyId' => $userData->loyaltyId,
+                                'loyaltyId' => $this->getLoyalty($userData->userId),
                                 'leg' => $userData->leftRight == 'left' ? 'L' : ($userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $userData->userTreePermission && $userData->userTreePermission->genealogy_total ? 1 : 0,
                                 'generation'     => $this->getQualify($userData->packageId),
@@ -95,13 +95,13 @@ class MemberController extends Controller
                         }
                     }
                     return response()->json($fields);
-				} else {
+                } else {
                     return response()->json(['err'=>1]);
                 }
-			} else {
+            } else {
                 return response()->json(['err'=>1]);
             }
-		}
+        }
         return view('adminlte::members.genealogy');
     }
 
@@ -113,11 +113,11 @@ class MemberController extends Controller
 
         return $result;
     }
-	
-	public function binary(Request $request){
+    
+    public function binary(Request $request){
         $currentuserid = Auth::user()->id;
-		if($request->ajax()){
-			if(isset($request['id']) && $request['id'] > 0) {
+        if($request->ajax()){
+            if(isset($request['id']) && $request['id'] > 0) {
                 $user = User::find($request['id']);
                 $lstBinaryUser = [];
                 if ($userTreePermission = Auth::user()->userTreePermission)
@@ -134,9 +134,9 @@ class MemberController extends Controller
                         'childLeftId' => $childLeft ? $childLeft->userId : 0,
                         'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
-                        'weeklySale' => self::getBV($user->id),
-                        'left' => $weeklySale['left'],
-                        'right' => $weeklySale['right'],
+                        'weeklySale' => number_format(self::getBV($user->id)),
+                        'left' => number_format($weeklySale['left'], 2),
+                        'right' => number_format($weeklySale['right'], 2),
                         'loyaltyId' => $user->userData->loyaltyId,
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
@@ -172,9 +172,9 @@ class MemberController extends Controller
                         'childLeftId' => $childLeft ? $childLeft->userId : 0,
                         'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
-                        'weeklySale' => self::getBV($user->id),
-                        'left' => $weeklySale['left'],
-                        'right' => $weeklySale['right'],
+                        'weeklySale' => number_format(self::getBV($user->id)),
+                        'left' => number_format($weeklySale['left']),
+                        'right' => number_format($weeklySale['right']),
                         'loyaltyId' => $user->userData->loyaltyId,
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
@@ -188,7 +188,7 @@ class MemberController extends Controller
                 } else {
                     return response()->json(['err' => 1]);
                 }
-			}else{
+            }else{
                 $user = Auth::user();
                 $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                 $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
@@ -201,9 +201,9 @@ class MemberController extends Controller
                     'childLeftId' => $childLeft ? $childLeft->userId : 0,
                     'childRightId' => $childRight ? $childRight->userId : 0,
                     'level'     => 0,
-                    'weeklySale'     => self::getBV($user->id),
-                    'left'     => $weeklySale['left'],
-                    'right'     => $weeklySale['right'],
+                    'weeklySale'     => number_format(self::getBV($user->id)),
+                    'left'     => number_format($weeklySale['left']),
+                    'right'     => number_format($weeklySale['right']),
                     'loyaltyId' => $user->userData->loyaltyId,
                     'pkg'     => 2000,
                     'lMembers'     => $user->userData->leftMembers,
@@ -214,7 +214,7 @@ class MemberController extends Controller
                     $fields['children'] = $children;
                 }
                 return response()->json($fields);
-			}
+            }
         }
         $lstUsers = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->where('isBinary', '!=', 1)->get();
 
@@ -224,7 +224,7 @@ class MemberController extends Controller
                 $lstUserSelect[$userData->userId] = $userData->user->name;
             }
         }
-		return view('adminlte::members.binary')->with('lstUserSelect', $lstUserSelect);
+        return view('adminlte::members.binary')->with('lstUserSelect', $lstUserSelect);
     }
 
     // Get BV - personal week sale
@@ -302,9 +302,9 @@ class MemberController extends Controller
                         'childLeftId' => $childLeft ? $childLeft->userId : 0,
                         'childRightId' => $childRight ? $childRight->userId : 0,
                         'level' => 0,
-                        'weeklySale'     =>  self::getBV($user->user->id),
-                        'left'     => $weeklySale['left'],
-                        'right'     => $weeklySale['right'],
+                        'weeklySale'     => number_format(self::getBV($user->user->id)),
+                        'left'     => number_format($weeklySale['left']),
+                        'right'     => number_format($weeklySale['right']),
                         'loyaltyId' => $user->loyaltyId,
                         'pkg'     => 2000,
                         'lMembers' => $user->leftMembers,
@@ -320,8 +320,8 @@ class MemberController extends Controller
         }
         return $fields;
     }
-	
-	public function refferals(){
+    
+    public function refferals(){
         $currentuserid = Auth::user()->id;
         
         $users = UserData::with('user')->where('refererId', '=',$currentuserid)->where('status', 1)->orderBy('userId', 'desc')
@@ -329,9 +329,9 @@ class MemberController extends Controller
         
         return view('adminlte::members.refferals')->with('users', $users);
     }
-	public function pushIntoTree(Request $request){
+    public function pushIntoTree(Request $request){
         //if($request->ajax()){
-        if($request->isMethod('post') && Auth::user()->userData->isBinary > 0){
+        if($request->isMethod('post') && Auth::user()->userData->isBinary > 0 && Auth::user()->userData->packageId > 0){
             if($request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
 
                 //Get user that is added to tree
@@ -378,12 +378,18 @@ class MemberController extends Controller
                     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
                     User::updateUserBinary($userData->userId);
                     return redirect('members/binary')
-                        ->with('flash_message','Push into tree successfully.');
+                        ->with('flash_message', trans('adminlte_lang::member.msg_push_tree_success'));
                     //return response()->json(['status'=>1]);
                 }
             }
         }
-        $request->session()->flash('error', 'Push into tree error');
+
+        if(Auth::user()->userData->packageId == 0) {
+            $request->session()->flash('error', trans('adminlte_lang::member.msg_must_buy_package'));
+        }
+        else {
+            $request->session()->flash('error', trans('adminlte_lang::member.msg_push_tree_error'));
+        }
         return redirect('members/binary');
     }
     

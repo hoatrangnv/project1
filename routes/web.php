@@ -16,7 +16,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('users', 'User\UserController');
     Route::resource('roles', 'User\RoleController');
     Route::resource('posts', 'User\PostController');
-
+    
 
 
     Route::get('members/genealogy', 'User\MemberController@genealogy');
@@ -71,6 +71,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
 
     Route::get('wallets/buysellclp', 'WalletController@buysellclp');
+    Route::get('wallets/transferholding', 'WalletController@transferFromHolding')->name('holding.transfer');
+
+    Route::post('wallets/buyclpusd', 'Wallet\UsdWalletController@buyCLP')->name('usd.buyclp');
 
   
 
@@ -118,11 +121,12 @@ Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoAct
 
 Route::get('test-binary', 'TestController@testBinary');
 Route::get('test-interest',"TestController@testInterest");
+Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 
 
 
 /***------- END TEST -------***/
-
+Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef")->name('user.ref');
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
 Route::get('reactive',"Auth\ActiveController@reactiveAccount");
 Route::post('reactive',"Auth\ActiveController@reactiveAccount");

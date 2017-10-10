@@ -22,13 +22,13 @@ class MyBonusController extends Controller
 
 	public function faststart(Request $request){
 		$currentuserid = Auth::user()->id;
-        $fastStarts = BonusFastStart::where('userId', '=',$currentuserid)->paginate();
+        $fastStarts = BonusFastStart::where('userId', '=',$currentuserid)->orderBy('id', 'desc')->paginate();
         return view('adminlte::mybonus.faststart')->with('fastStarts', $fastStarts);
     }
 	
 	public function binary(Request $request){
 		$currentuserid = Auth::user()->id;
-        $binarys = BonusBinary::where('userId', '=',$currentuserid)->paginate();
+        $binarys = BonusBinary::where('userId', '=',$currentuserid)->orderBy('id', 'desc')->paginate();
         return view('adminlte::mybonus.binary')->with('binarys', $binarys);
     }
     public function binaryCalculatorBonus(Request $request){
