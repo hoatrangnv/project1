@@ -456,8 +456,21 @@ CREATE TABLE `clp_wallets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(10) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
+  `transaction` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for clp_api_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `clp_api_logs`;
+CREATE TABLE `clp_api_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `error_msg` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -542,3 +555,4 @@ CREATE TABLE `exchange_rates` (
 INSERT INTO `exchange_rates` VALUES ('1', 'clp', '1', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
 INSERT INTO `exchange_rates` VALUES ('2', 'btc', '4210', 'usd', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
 INSERT INTO `exchange_rates` VALUES ('3', 'clp', '0.00023809524', 'btc', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
+
