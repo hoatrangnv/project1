@@ -193,7 +193,7 @@
         .binary-search #search-input {max-width: 106px; margin-bottom: 10px;}
     }
 
-    .fwbBcc {
+    /*.fwbBcc {
         min-width: 264px;
         border: 1px solid #DAE1E9;
         background: #F9FBFC;
@@ -219,4 +219,4 @@
         border: 1px solid #DAE1E9;
         padding-left: 0px;
         margin-left: -4px;
-    }
+    }*/

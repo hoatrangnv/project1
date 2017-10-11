@@ -142,12 +142,15 @@
                                     <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your BTC Wallet
                                         address</h5>
                                     <div class="form-group">
-                                        <input type="text" value="{{ $walletAddress }}" class="wallet-address fwbBcc" id="wallet-address" readonly="true">
-                                            <button class="btnwallet-address cp-btc" data-clipboard-target="#wallet-address" title="copy">
+                                    <div class="input-group input-group-md col-xs-12 col-lg-8" style="margin: 0 auto;">
+                                        <input type="text" value="{{ $walletAddress }}" class="wallet-address form-control" id="wallet-address" readonly="true">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btnwallet-address" data-clipboard-target="#wallet-address" title="copy">
                                                 <i class="fa fa-clone"></i>
                                             </button>
+                                        </span>
                                     </div>
-                                   
+                                    </div>
                                     <!-- Trigger -->
                                     
                                     <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">BTC
