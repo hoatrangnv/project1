@@ -123,13 +123,14 @@ class WalletController extends Controller
     {
         if($request->ajax()) {
             try {
+                $userCoin = Auth::user()->userCoin;
+
                 if($userCoin->availableAmount == 0) 
                     return response()->json(array('msg' => 'Your released amount is zero'));
 
                 $currentuserid = Auth::user()->id;
-
-                $userCoin = Auth::user()->userCoin;
-                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $userCoin->availableAmount;
+                $amountTransfer = $userCoin->availableAmount;
+                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $amountTransfer;
                 $userCoin->availableAmount = 0;
                 $userCoin->save();
 
@@ -138,7 +139,7 @@ class WalletController extends Controller
                     'type' => Wallet::REINVEST_CLP_TYPE,//tranfer
                     'inOut' => Wallet::IN,
                     'userId' => $currentuserid,
-                    'amount' => $userCoin->availableAmount,
+                    'amount' => $amountTransfer,
                 ];
                 Wallet::create($fieldCLP);
 
@@ -147,7 +148,7 @@ class WalletController extends Controller
                     'type' => Wallet::REINVEST_CLP_TYPE,//tranfer
                     'inOut' => Wallet::OUT,
                     'userId' => $currentuserid,
-                    'amount' => $userCoin->availableAmount,
+                    'amount' => $amountTransfer,
                 ];
                 Wallet::create($fieldHolidng);
 
@@ -158,7 +159,7 @@ class WalletController extends Controller
             }
         }
 
-        return response()->json( array('err' => true, 'msg' => 'You action is denied!') );
+        return response()->json( array('err' => true, 'msg' => 'Your action is denied!') );
     }
     
     /**
