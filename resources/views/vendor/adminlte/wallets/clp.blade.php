@@ -290,7 +290,7 @@
                                         address</h5>
                                         <div class="form-group">
                                         <div class="input-group input-group-md col-xs-12 col-lg-10" style="margin: 0 auto;">
-                                        <input type="text" value="0xaBE38e8E3Fe1A5E55E4CE94F2911E82203538797" class="wallet-address form-control" id="wallet-address" readonly="true">
+                                        <input type="text" value="{{ $walletAddress }}" class="wallet-address form-control" id="wallet-address" readonly="true">
                                         <span class="input-group-btn">
                                          <button class="btn btn-default btnwallet-address" data-clipboard-target="#wallet-address" title="copy">
                                                     <i class="fa fa-clone"></i>
