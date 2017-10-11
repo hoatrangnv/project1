@@ -32,9 +32,9 @@
                         </div>
                         <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
                             <input type="hidden" name="legpos" id="legpos" value="0">
-                            {!! Form::button('Push to Left', ['class' => 'btn btn-xs btn-info', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
+                            {!! Form::button('Push to the Left', ['class' => 'btn btn-xs btn-info', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
                             <br>
-                            {!! Form::button('Push to Right', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
+                            {!! Form::button('Push to ther Right', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
 
                         </div>
                         {!! Form::close() !!}
@@ -179,28 +179,43 @@
             });
             $('#btn_submit_left').on('click', function () {
                 if($("#userSelect option:selected").length == 0){
-                    alert('You choose a user.');
+                    swal("Please select one username");
                     return false;
                 }else{
-                    if (confirm("Are you sure?")) {
+                    swal({
+                      title: "Are you sure?",
+                      text: $("#userSelect option:selected").html() + " will be push on the Left!",
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonClass: "btn-danger",
+                      confirmButtonText: "Yes, do it!",
+                      closeOnConfirm: false
+                    },
+                    function(){
                         $('#legpos').val(1);
                         $('#pushIntoTreeForm').submit();
-                        return true;
-                    }
-                    return false;
+                    });
+
                 }
             });
             $('#btn_submit_right').on('click', function () {
                 if($("#userSelect option:selected").length == 0){
-                    alert('You choose a user.');
+                    swal("Please select one username");
                     return false;
                 }else{
-                    if (confirm("Are you sure?")) {
+                    swal({
+                      title: "Are you sure?",
+                      text: $("#userSelect option:selected").html() + " will be push on the Right!",
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonClass: "btn-danger",
+                      confirmButtonText: "Yes, do it!",
+                      closeOnConfirm: false
+                    },
+                    function(){
                         $('#legpos').val(2);
                         $('#pushIntoTreeForm').submit();
-                        return true;
-                    }
-                    return false;
+                    });
                 }
             });
         });
