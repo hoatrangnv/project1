@@ -229,10 +229,6 @@
                                     <td>{{ $sponsor->email }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
-                                    <td>{{ $sponsor->phone }}</td>
-                                </tr>
-                                <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
                                     <td>{{ $sponsor->name_country }}</td>
                                 </tr>
