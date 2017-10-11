@@ -16,13 +16,10 @@
             <span class="sr-only">{{ trans('adminlte_lang::message.togglenav') }}</span>
         </a>
         &nbsp;
-        &nbsp;
-        <span class="" style="font-size: 16px;line-height: 50px;text-align: center;color: white">
-            <b>
-                <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
-                <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;
-                <span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
-            </b>
+        <span class="hidden-xs" style="font-size: 14px;line-height: 50px;text-align: center;color: white">
+            <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
+            <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;
+            <span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
         </span>
        
         <!-- Navbar Right Menu -->
@@ -175,7 +172,14 @@
     </nav>
 </header>
 <script>
-    
+    var formatter = new Intl.NumberFormat('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 2,
+        });
+    var formatterBTC = new Intl.NumberFormat('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 8,
+        });
     function doLogout(){
          document.cookie = "open=1";
     }
@@ -185,9 +189,9 @@
             dataType: "json",
             url: '{{ URL::to("exchange") }}',
             success: function(data){
-               $('.btcusd').html(data[1].exchrate);
-               $('.clpusd').html(data[2].exchrate);
-               $('.clpbtc').html(data[0].exchrate);
+               $('.btcusd').html(formatter.format(data[1].exchrate));
+               $('.clpusd').html(formatter.format(data[2].exchrate));
+               $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
                globalBTCUSD = data[1].exchrate;
                globalCLPUSD = data[2].exchrate; //clpUSD
                globalCLPBTC = data[0].exchrate;
