@@ -238,11 +238,13 @@ CREATE TABLE `news` (
 -- ----------------------------
 DROP TABLE IF EXISTS `notification`;
 CREATE TABLE `notification` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `data` text NOT NULL,
-  `status` tinyint(4) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `wallet_id` int(10) DEFAULT NULL,
+  `completed_status` tinyint(1) DEFAULT NULL,
+  `pending_status` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
