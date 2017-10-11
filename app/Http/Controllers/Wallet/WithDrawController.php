@@ -381,10 +381,28 @@ class WithDrawController extends Controller
             $this->validate($request, [
                 'withdrawAmount'=>'required|numeric',
                 'walletAddress'=>'required'
-                //'withdrawOPT'=>'required|min:6'
+                'withdrawOPT'=>'required'
             ]);
+
+            $btcOTPErr = '';
+            if($request->withdrawOPT == ''){
+                $btcOTPErr = trans('adminlte_lang::wallet.otp_required');
+            }else{
+                $key = Auth::user()->google2fa_secret;
+                $valid = Google2FA::verifyKey($key, $request->withdrawOPT);
+                if(!$valid){
+                    $btcOTPErr = trans('adminlte_lang::wallet.otp_not_match');
+                }
+            }
+
+            if($btcOTPErr != ''){
+                $request->session()->flash( 'errorMessage', $btcOTPErr );
+                return redirect()->route('wallet.btc');
+            }
+
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn
             // số tiền chuyển đi thì thực hiện giao dịch
+
             if ( $user->btcCoinAmount - config('app.fee_withRaw_BTC') >= $request->withdrawAmount ) {
                 $user = Auth::user();
                 if($user){
@@ -405,7 +423,7 @@ class WithDrawController extends Controller
                 }
             }else {
                 //nếu không đủ tiền thì báo lỗi
-                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
+                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough_btc') );
                 return redirect()->route('wallet.btc');
             }
         }else{

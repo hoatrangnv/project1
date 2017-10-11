@@ -175,7 +175,7 @@
     </div>
 
     <!--Withdraw modal-->
-    {{ Form::open(array('url' => 'wallets/btcwithdraw'))}}
+    {{ Form::open(array('url' => 'wallets/btcwithdraw', 'id' => 'form-withdraw-btc'))}}
     <div class="modal fade" id="withdraw" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -187,19 +187,26 @@
                 <div class="modal-body">
                     <div class="box no-border">
                         <div class="box-body" style="padding-top:0;">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm btcwithdraw ', 'step' => '0.0001', 'placeholder' => "Min 0.0001", )) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                                    {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm btcwithdraw clp-input', 'placeholder' => "Amount BTC", 'id' => 'withdraw-btc-amount')) }}
+                                </div>
+                                <span class="help-block"></span>
                             </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
-                                {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm', 'placeholder' => "Bitcoin address E.g. 1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v")) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
+                                    {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm clp-input', 'placeholder' => "Bitcoin address E.g. 1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v", 'id' => 'withdraw-address')) }}
+                                </div>
+                                <span class="help-block"></span>
                             </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm', 'placeholder' => "2FA Code E.g. 123456")) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                    {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm clp-input', 'placeholder' => "2FA Code E.g. 123456", 'id' => 'withdraw-otp')) }}
+                                </div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                     </div>
@@ -209,7 +216,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary')) }}
+                    {{ Form::button(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'btn-withdraw-btc')) }}
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -494,6 +501,38 @@
         // setInterval(function () {
         //     $(".btc-amount").html($(".btcAmount").html());
         // },{{ config("app.time_interval") + 1000 }});
+        $('#btn-withdraw-btc').on('click', function () {
+            var btcAmount = $('#withdraw-btc-amount').val();
+            var address = $('#withdraw-address').val();
+            var btcOTP = $('#withdraw-otp').val();
+            if($.trim(btcAmount) == ''){
+                $("#withdraw-btc-amount").parents("div.form-group").addClass('has-error');
+                $("#withdraw-btc-amount").parents("div.form-group").find('.help-block').text('The Amount field is required');
+            }else{
+                $("#withdraw-btc-amount").parents("div.form-group").removeClass('has-error');
+                $("#withdraw-btc-amount").parents("div.form-group").find('.help-block').text('');
+            }
+            if($.trim(address) == ''){
+                $("#withdraw-address").parents("div.form-group").addClass('has-error');
+                $("#withdraw-address").parents("div.form-group").find('.help-block').text('The Username field is required');
+            }else{
+                $("#withdraw-address").parents("div.form-group").removeClass('has-error');
+                $("#withdraw-address").parents("div.form-group").find('.help-block').text('');
+            }
+            
+            if($.trim(btcOTP) == ''){
+                $("#withdraw-otp").parents("div.form-group").addClass('has-error');
+                $("#withdraw-otp").parents("div.form-group").find('.help-block').text('The OTP field is required');
+            }else{
+                $("#withdraw-otp").parents("div.form-group").removeClass('has-error');
+                $("#withdraw-otp").parents("div.form-group").find('.help-block').text('');
+            }
+
+            if($.trim(btcAmount) != '' && $.trim(address) != '' && $.trim(btcOTP) != ''){
+                $('#form-withdraw-btc').submit();
+            }
+        });
+
 
         var qrcode = new QRCode(document.getElementById("qrcode"), {
                     width: 180,
