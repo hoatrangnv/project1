@@ -50,7 +50,7 @@ class UpdateBtcCoin {
                         $transactionDetail = $client->getAccountTransaction($account, $temp->additional_data->transaction->id);
                         $rawData = $transactionDetail->getRawData();
 
-                        if($rawData['network']['confirmations'] > 0 && $notify->pending_status == 0)
+                        if($rawData['network']['status'] == 'confirmed' && $notify->pending_status == 0)
                         {
                             $fieldBTC = [
                                 'walletType' => Wallet::BTC_WALLET,
