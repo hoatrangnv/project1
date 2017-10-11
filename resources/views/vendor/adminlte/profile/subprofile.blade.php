@@ -71,7 +71,7 @@
                                     <td>{{ $user->birthday }}</td>
                                 </tr> 
                                 <tr>
-                                    <td class="label-td">Passport/Id Card</td>
+                                    <td class="label-td">Passport/ID Card</td>
                                     <td>{{ $user->passport }}</td>
                                 </tr> 
                                 <tr>

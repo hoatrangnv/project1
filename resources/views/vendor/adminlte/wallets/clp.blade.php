@@ -331,7 +331,7 @@
                         <div class="box-body" style="padding-top:0;">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                                    <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
                                     {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm clp-input amount-clp-tranfer',  'placeholder' => "Amount CLP", 'id' => 'clpAmount' )) }}
                                 </div>
                                 <span class="help-block"></span>

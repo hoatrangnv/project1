@@ -218,7 +218,7 @@ class MemberController extends Controller
         }
         $lstUsers = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->where('isBinary', '!=', 1)->get();
 
-        $lstUserSelect = array('0'=> 'Choose a user');
+        $lstUserSelect = array('0'=> 'Choose a username');
         if(Auth::user()->userData->isBinary > 0){
             foreach ($lstUsers as $userData){
                 $lstUserSelect[$userData->userId] = $userData->user->name;

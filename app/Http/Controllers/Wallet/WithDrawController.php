@@ -380,7 +380,7 @@ class WithDrawController extends Controller
             //validate
             $this->validate($request, [
                 'withdrawAmount'=>'required|numeric',
-                'walletAddress'=>'required'
+                'walletAddress'=>'required',
                 'withdrawOPT'=>'required'
             ]);
 

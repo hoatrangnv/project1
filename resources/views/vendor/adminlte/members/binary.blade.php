@@ -28,7 +28,7 @@
                     <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
                         {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
                         <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
-                            {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an user'], ['placeholder' => 'Choose an user']) }}
+                            {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username']) }}
                         </div>
                         <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
                             <input type="hidden" name="legpos" id="legpos" value="0">
