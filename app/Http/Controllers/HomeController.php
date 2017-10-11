@@ -14,6 +14,7 @@ use App\BonusBinary;
 use App\Package;
 use App\UserCoin;
 use App\UserPackage;
+use App\Wallet;
 use Auth;
 use Log;
 use DB;
@@ -58,6 +59,23 @@ class HomeController extends Controller
         }else{
             $data['value'] = Package::where('id',$data['package'])->get()[0]->price;
         }
+
+        //Caculate total bonus from start
+        $totalBonus = Wallet::where('userId', Auth::user()->id)
+                            ->where('walletType', Wallet::USD_WALLET)
+                            ->where('inOut', Wallet::IN)
+                            ->get();
+        $amount = 0;
+
+        foreach($totalBonus as $bonus) {
+            if($bonus->type == Wallet::FAST_START_TYPE 
+                || $bonus->type == Wallet::BINARY_TYPE 
+                || $bonus->type == Wallet::LTOYALTY_TYPE) {
+                $amount += $bonus->amount;
+            }
+        }
+
+        $data['total_bonus'] = $amount * 1 / 0.6;
 
         //Get F1 lef, right Volume
         $loyaltyUser =  LoyaltyUser::where('userId', Auth::user()->id)->first();
@@ -168,6 +186,11 @@ class HomeController extends Controller
             $disabled = true;
         }
         return view('adminlte::home.index')->with(compact('data','disabled'));
+    }
+
+    private static function caculateTotalLoyalty($userId)
+    {
+        
     }
 
     /*

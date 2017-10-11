@@ -20,6 +20,7 @@ return [
     're_invest_wallet'          => 'Holding Wallet',
     'statistical_bussiness'     => 'Business Statistics',
     'sale_f1'                   => 'New F1 Volume',
+    'total_bonus'               => 'Total Bonus',
     'total_sale_f1'             => 'Total F1 Volume',
     'f1_left'                   => 'Left',
     'f1_left_new'               => 'Current Vol',

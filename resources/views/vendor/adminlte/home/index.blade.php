@@ -29,6 +29,15 @@
                                 <tbody>
                                     <tr>
                                         <td class="text-right">
+                                            <h4>{{ trans('adminlte_lang::home.total_bonus') }}
+                                            </h4>
+                                        </td>
+                                        <td class="f1-sale">
+                                            <b>{{ number_format($data['total_bonus'], 2)}}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right">
                                             <h4>{{ trans('adminlte_lang::home.sale_f1') }}
                                             </h4>
                                         </td>
