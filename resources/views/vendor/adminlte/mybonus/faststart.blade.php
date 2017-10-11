@@ -11,7 +11,7 @@
 				<div class="box-header">
 					
 				</div>
-				<div class="box-body" style="padding-top:0;">
+				<div class="box-body table-responsive" style="padding-top:0;">
 					<table class="table table-bordered table-hover table-striped dataTable">
 						<tr>
 							

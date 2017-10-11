@@ -88,7 +88,7 @@
                         {!! Form::button('Clear', ['class' => 'btn btn-sm bg-olive', 'id' => 'btn_filter_clear']) !!}
                     </div>
                 </div>
-                <div class="box-body" style="padding-top:0;">
+                <div class="box-body table-responsive" style="padding-top:0;">
                     <table class="table table-bordered table-hover table-striped dataTable">
                         <tr>
                             <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>

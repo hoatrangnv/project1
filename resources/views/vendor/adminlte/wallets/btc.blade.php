@@ -44,33 +44,31 @@
             <!-- Widget: user widget style 1 -->
             <div class="box">
                 <!-- Add the bg color to the header using any of the bg-* classes -->
-                <div class="box-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped wallet-table">
-                            <tbody>
-                            <tr>
-                                <th class="icon-wallet">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                        <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path>
-                                    </svg>
-                                </th>
-                                <th class="wallet-amount">
-                                    <i class="fa fa-btc"></i><span class="btcAmount">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 5) }}</span>
-                                </th>
-                                <th>
-                                    <button class="btn bg-olive" data-toggle="modal"
-                                            data-target="#deposit">{{trans("adminlte_lang::wallet.deposit")}}</button>
-                                    <button class="btn bg-olive" data-toggle="modal"
-                                            data-target="#withdraw">{{trans("adminlte_lang::wallet.withdraw")}}</button>
-                                    <button class="btn bg-olive" data-toggle="modal"
-                                            data-target="#buy">{{trans("adminlte_lang::wallet.tranfer_to_clp")}}</button>
-                                    <!-- <button class="btn bg-olive" data-toggle="modal"
-                                            data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>-->
-                                </th>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover table-striped wallet-table">
+                        <tbody>
+                        <tr>
+                            <th class="icon-wallet">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path>
+                                </svg>
+                            </th>
+                            <th class="wallet-amount">
+                                <i class="fa fa-btc"></i><span class="btcAmount">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 5) }}</span>
+                            </th>
+                            <th>
+                                <button class="btn bg-olive" data-toggle="modal"
+                                        data-target="#deposit">{{trans("adminlte_lang::wallet.deposit")}}</button>
+                                <button class="btn bg-olive" data-toggle="modal"
+                                        data-target="#withdraw">{{trans("adminlte_lang::wallet.withdraw")}}</button>
+                                <button class="btn bg-olive" data-toggle="modal"
+                                        data-target="#buy">{{trans("adminlte_lang::wallet.tranfer_to_clp")}}</button>
+                                <!-- <button class="btn bg-olive" data-toggle="modal"
+                                        data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>-->
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <!-- /.widget-user -->
             </div>
@@ -89,7 +87,7 @@
                         {!! Form::button('Clear', ['class' => 'btn btn-sm bg-olive', 'id' => 'btn_filter_clear']) !!}
                     </div>
                 </div>
-                <div class="box-body" style="padding-top:0;">
+                <div class="box-body table-responsive" style="padding-top:0;">
                     <table class="table table-bordered table-hover table-striped dataTable">
                         <tr>
                             <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
