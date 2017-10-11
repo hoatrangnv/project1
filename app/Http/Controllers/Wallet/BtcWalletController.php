@@ -213,6 +213,7 @@ class BtcWalletController extends Controller
 
             $currentDate = date('Y-m-d');
 
+
             $privateSaleStart = date('Y-m-d', strtotime(config('app.first_private_start')));
             $privateSaleEnd = date('Y-m-d', strtotime(config('app.first_private_end')));
 
@@ -221,37 +222,55 @@ class BtcWalletController extends Controller
 
             $preSaleStart = date('Y-m-d', strtotime(config('app.pre_sale_start')));
             $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
-            //Private sale 1
-            if($privateSaleStart <= $currentDate && $currentDate <= $privateSaleEnd)
+
+            if($currentDate <= $preSaleEnd) 
             {
-                if($request->clpAmount != 25000 || $amountCLP < 24950) {
-                    $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+
+                //Calculate package already sales
+                $totalSaleAngel = UserCoin::where('clpCoinAmount', '=', 10000)->count();
+
+                //Private sale 1
+                if($privateSaleStart <= $currentDate && $currentDate <= $privateSaleEnd)
+                {
+                    if($totalSaleAngel == 60){
+                        $clpAmountErr = 'All packages in first private sale already sold out';
+                    } else {
+
+                        if($request->clpAmount != 25000 || $amountCLP < 24950) {
+                            $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                        }
+
+                        $amountCLP = 10000;
+                        $holdingAmount = 15000;
+                    }
                 }
 
-                $amountCLP = 10000;
-                $holdingAmount = 15000;
-            }
+                //Private sale 2
+                if($secondSaleStart <= $currentDate && $currentDate <= $secondSaleEnd)
+                {
+                    if($totalSaleAngel == 160){
+                        $clpAmountErr = 'All packages in second private sale already sold out';
+                    } else {
+                        if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
+                            $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                        }
 
-            //Private sale 2
-            if($secondSaleStart <= $currentDate && $currentDate <= $secondSaleEnd)
-            {
-                if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
-                    $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                        $amountCLP = 10000;
+                        $holdingAmount = 6666.66;
+                    }
                 }
 
-                $amountCLP = 10000;
-                $holdingAmount = 6666.66;
-            }
+                //Pre sale
+                if($preSaleStart <= $currentDate && $currentDate <= $preSaleEnd)
+                {
+                    if($request->clpAmount != 12500 || $amountCLP < 12475) {
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                    }
 
-            //Pre sale
-            if($preSaleStart <= $currentDate && $currentDate <= $preSaleEnd)
-            {
-                if($request->clpAmount != 12500 || $amountCLP < 12475) {
-                    $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                    $amountCLP = 10000;
+                    $holdingAmount = 2500;
                 }
 
-                $amountCLP = 10000;
-                $holdingAmount = 2500;
             }
             
 
@@ -307,6 +326,7 @@ class BtcWalletController extends Controller
                         'err' => true,
                         'msg' =>[
                                 'btcAmountErr' => $btcAmountErr,
+                                'clpAmountErr' => $clpAmountErr,
                             ]
                     ];
 

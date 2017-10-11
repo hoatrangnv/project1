@@ -404,6 +404,14 @@
                                     $("#clpAmount").parents("div.form-group").find('.help-block').text('');
                                 }
 
+                                if(data.msg.clpAmountErr !== '') {
+                                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.clpAmountErr);
+                                }else {
+                                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+
                             }
                         } else {
                             $('#tranfer').modal('hide');
