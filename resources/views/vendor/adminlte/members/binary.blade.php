@@ -32,9 +32,9 @@
                         </div>
                         <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
                             <input type="hidden" name="legpos" id="legpos" value="0">
-                            {!! Form::button('Push to the Left', ['class' => 'btn btn-xs btn-info', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
+                            {!! Form::button('Push to Left', ['class' => 'btn btn-xs btn-info', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
                             <br>
-                            {!! Form::button('Push to ther Right', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
+                            {!! Form::button('Push to Right', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
 
                         </div>
                         {!! Form::close() !!}
