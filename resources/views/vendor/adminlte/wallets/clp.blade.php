@@ -58,7 +58,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
                                     </th>
                                     <th class="wallet-amount"><span class="icon-clp-icon" style="font-size: 16px;"></span>{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}  </th>
-                                    <th>
+                                    <th style="min-width: 500px;">
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#sell">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#buy-package">{{ trans("adminlte_lang::wallet.buy_package") }}</a>
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
@@ -213,10 +213,10 @@
                            value="{{ Auth::user()->userData->packageId }}">
                     @if( date('Y-m-d') > date('Y-m-d', strtotime(config('app.pre_sale_end'))) )
                         <button class="btn btn-success btn-block"
-                            id="btn_submit">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
+                            id="btn_submit" type="button">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
                     @else
                         <button class="btn btn-success btn-block"
-                            id="btn_submit" disabled="true">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
+                            id="btn_submit" disabled="true" type="button">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
                     @endif
                 </div>
                 {{ Form::close() }}
@@ -730,9 +730,20 @@
                     $("#termsPackage").parents("div.form-group").removeClass('has-error');
                     $("#termsPackage").parents("div.form-group").find('.help-block').text('');
                     if (packageIdPick > packageId) {
-                        $('#formPackage').submit();
+                        swal({
+                          title: "Are you sure?",
+                          type: "warning",
+                          showCancelButton: true,
+                          confirmButtonClass: "btn-info",
+                          confirmButtonText: "Yes, buy it!",
+                          closeOnConfirm: false
+                        },
+                        function(){
+                          $('#formPackage').submit();
+                        });
+                        
                     } else {
-                        alert('You cant not this package');
+                        swal('You select invalid package')
                         return false;
                     }
                 }
