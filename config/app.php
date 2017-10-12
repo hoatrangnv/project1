@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'CryptoLending'),
+    'name' => env('APP_NAME', 'CLP'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'Asia/Ho_Chi_Minh',
+    'timezone' => 'Europe/Copenhagen',
 
     /*
     |--------------------------------------------------------------------------
