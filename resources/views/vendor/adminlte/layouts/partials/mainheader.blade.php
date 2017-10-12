@@ -184,7 +184,7 @@
          document.cookie = "open=1";
     }
     
-    function getTyGia(){
+    function getRate(){
         $.ajax({
             dataType: "json",
             url: '{{ URL::to("exchange") }}',
@@ -200,8 +200,8 @@
     }
    
     $(function() {
-        getTyGia();
-        setInterval(function(){ getTyGia() }, {{ config('app.time_interval') }});
+        getRate();
+        setInterval(function(){ getRate() }, {{ config('app.time_interval') }});
     });  
     
 </script>
