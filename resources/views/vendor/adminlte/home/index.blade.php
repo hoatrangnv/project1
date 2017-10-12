@@ -223,7 +223,7 @@
                                     {{ trans('adminlte_lang::home.release') }}
                                 </td>
                                 <td  class="right">
-                                    <b>{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate ."+ 180 days")) : '' }}</b>
+                                    <b>{{ Auth::user()->userData->packageDate ? date("Y-m-d", strtotime(Auth::user()->userData->packageDate ."+ 6 months")) : '' }}</b>
                                 </td>
                             </tr>
                             <tr>
@@ -297,6 +297,13 @@
             currency: 'USD',
             minimumFractionDigits: 2,
     });
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     @if ($disabled){{ "$('[data-toggle=confirmation]').confirmation('hide');" }}@endif
             $('[data-toggle=confirmation]').confirmation({
     rootSelector: '[data-toggle=confirmation]',
@@ -314,13 +321,13 @@
                     success : function(result){
                     if (result.success){
                     $(".usd-amount").html(formatter.format(result.result).replace("$", ""));
-                    alert("{{ trans('adminlte_lang::wallet.success')}}");
+                        swal("{{ trans('adminlte_lang::wallet.success')}}");
                     } else{
-                    alert(result.message);
+                        swal(result.message);
                     }
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    console.log("some error");
+                
                     },
                     complete: function(){
 
