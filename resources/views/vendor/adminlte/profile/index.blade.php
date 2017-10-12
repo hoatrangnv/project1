@@ -223,6 +223,10 @@
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.sponsor_username') }}</td>
                                     <td>{{ $sponsor->name }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-td">{{ trans('adminlte_lang::profile.my_email') }}</td>
+                                    <td>{{ $sponsor->email }}</td>
                                 </tr> 
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
