@@ -50,16 +50,6 @@
 							<!-- </span> -->
                             </div>
                         <!-- </div> -->
-                            <!-- <div class="col-xs-5 col-lg-6" style="padding-top: 15px;position: absolute;right:0;">
-                                 <div class="col-xs-12 col-lg-6" style="position: absolute;right:0;">
-                                     <div class="input-group input-group-sm">
-                                         <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
-                                         <span class="input-group-btn">
-                                             <button type="button" id="search-button" class="btn btn-primary btn-flat" >{{ trans('adminlte_lang::member.btn_search') }}</button>
-                                         </span>
-                                     </div>
-                                 </div>
-                            </div> -->
                     </div>
                     
                     <div style="margin-top: 15px;text-align:center;">

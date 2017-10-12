@@ -63,8 +63,6 @@
                                         data-target="#withdraw">{{trans("adminlte_lang::wallet.withdraw")}}</button>
                                 <button class="btn bg-olive" data-toggle="modal"
                                         data-target="#buy">{{trans("adminlte_lang::wallet.tranfer_to_clp")}}</button>
-                                <!-- <button class="btn bg-olive" data-toggle="modal"
-                                        data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>-->
                             </th>
                         </tr>
                         </tbody>
