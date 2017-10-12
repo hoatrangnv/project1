@@ -69,6 +69,7 @@ class ExchangeRateAPI
 
     public function getCLPBTCRate()
     {
-        return self::getCLPUSDRate() / self::getBTCUSDRate();
+        $clpBTCRate = self::getCLPUSDRate() / self::getBTCUSDRate();
+        return round($clpBTCRate, 8);
     }
 }
