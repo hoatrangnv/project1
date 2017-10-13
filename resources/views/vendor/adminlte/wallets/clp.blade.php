@@ -134,7 +134,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">Sell CLP&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxsellclp"
-                                                                               data-type="maxsellclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a>
+                                                                               data-type="maxsellclp">{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}</a>
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -155,6 +155,9 @@
                                 <span class="help-block"></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="pull-right">
+                        <span>Rate:<i class="clpbtc">{{number_format(App\ExchangeRate::getCLPBTCRate() * 0.95, 8)}}</i></span>
                     </div>
                 </div>
                   <div class="modal-footer">
@@ -232,7 +235,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span></button>
-            <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp" data-type="withdrawclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a></h4>
+            <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp" data-type="withdrawclp">{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}</a></h4>
           </div>
           <div class="modal-body">
                 <div class="box no-border">
@@ -767,13 +770,13 @@
 
         $(".switch-BTC-to-CLP-sellclp").on('keyup change mousewheel', function () {
             var value = $(this).val();
-            var result = value / globalCLPBTC;
-            $(".switch-CLP-to-BTC-sellclp").val(result.toFixed(5));
+            var result = value / (globalCLPBTC * 0.95) ;
+            $(".switch-CLP-to-BTC-sellclp").val(result.toFixed(2));
         });
 
         $(".switch-CLP-to-BTC-sellclp").on('keyup change mousewheel', function () {
             var value = $(this).val();
-            var result = value * globalCLPBTC;
+            var result = value * globalCLPBTC * 0.95;
             $(".switch-BTC-to-CLP-sellclp").val(result.toFixed(5));
         });
 
