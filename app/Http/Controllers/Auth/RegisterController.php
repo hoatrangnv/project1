@@ -103,7 +103,7 @@ class RegisterController extends Controller
     
     public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
+        //$this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
 
@@ -173,6 +173,11 @@ class RegisterController extends Controller
             //get userid from uid
             $userReferer = User::where('uid', $data['refererId'])->get()->first();
 
+            $currentDate = date('Y-m-d');
+            $secondSaleEnd = date('Y-m-d', strtotime(config('app.second_private_end')));
+
+            $active = 0;
+            if($currentDate <= $secondSaleEnd) $active = 1;
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['firstname'],
@@ -186,6 +191,7 @@ class RegisterController extends Controller
                 'password' => bcrypt($data['password']),
                 //'accountCoinBase' => $accountWallet['accountId'],
                 'status' => 0,
+                'active' => $active,
                 'activeCode' => md5($data['email']),
                 'uid' => User::getUid(),
                 'google2fa_secret' => Google2FA::generateSecretKey(16)
@@ -193,6 +199,7 @@ class RegisterController extends Controller
             if (config('auth.providers.users.field','email') === 'username' && isset($data['username'])) {
                 $fields['username'] = $data['username'];
             }
+
             $user = User::create($fields);
 
             //SAVE to User_datas
@@ -209,11 +216,14 @@ class RegisterController extends Controller
 
             //gui mail
             //ma hoa send link active qua mail
-            if($user) {
-                $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
-                $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
-                $user->notify(new UserRegistered($user, $linkActive));
+            //in private sale don't send active email
 
+            if($currentDate <= $secondSaleEnd) {
+                if($user) {
+                    $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
+                    $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
+                    $user->notify(new UserRegistered($user, $linkActive));
+                }
             }
 
             return $user;
