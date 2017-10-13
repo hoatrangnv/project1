@@ -69,19 +69,16 @@
                                 <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" />
                                 <p style="font-size: 16px;margin-bottom: 0px;margin-top: 0px;">{{ Auth::user()->name }}</p>
                                 <div class="row" style="color:white">
-                                    <div class="col-md-4 col-md-push-2">ID</div>
-                                    <div class="col-md-4">:</div>
-                                    <div class="col-md-4 col-md-pull-2"><i>{{  Auth::user()->uid }}</i></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">ID:</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">{{  Auth::user()->uid }}</i></div>
                                 </div>
                                 <div class="row" style="color:white">
-                                    <div class="col-md-4 col-md-push-2">Pack</div>
-                                    <div class="col-md-4">:</div>
-                                    <div class="col-md-4 col-md-pull-2"><i>@if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</i></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Pack:</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</i></div>
                                 </div>
                                 <div class="row" style="color:white">
-                                    <div class="col-md-4 col-md-push-2">Loyalty</div>
-                                    <div class="col-md-4">:</div>
-                                    <div class="col-md-4 col-md-pull-2"><i>@if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</i></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Loyalty:</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</i></div>
                                 </div>
                             </li>
                             <!-- Menu Body -->
