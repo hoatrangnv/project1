@@ -8,8 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 
-class ForgotPasswordController extends Controller
-{
+class ForgotPasswordController extends Controller{
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -29,9 +28,11 @@ class ForgotPasswordController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendResetLinkEmail(Request $request)
-    {
-        $this->validate($request, ['email' => 'required|email']);
+    public function sendResetLinkEmail(Request $request){
+        $this->validate($request, [
+            'email' => 'required|email',
+            'g-recaptcha-response' => config('app.enable_captcha') ? 'required|captcha' : '',
+        ]);
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
@@ -48,12 +49,11 @@ class ForgotPasswordController extends Controller
     /**
      * Get the response for a successful password reset link.
      *
-     * @param  string  $response
+     * @param  string $response
      * @return mixed
      */
-    protected function sendResetLinkResponse(Request $request, $response)
-    {
-        if ($request->expectsJson()) {
+    protected function sendResetLinkResponse(Request $request, $response){
+        if($request->expectsJson()){
             return response()->json([
                 'status' => trans($response)
             ]);
@@ -68,10 +68,9 @@ class ForgotPasswordController extends Controller
      * @param $response
      * @return mixed
      */
-    protected function sendResetLinkFailedResponse(Request $request, $response)
-    {
-        if ($request->expectsJson()) {
-            return new JsonResponse(['email' => trans($response) ], 422);
+    protected function sendResetLinkFailedResponse(Request $request, $response){
+        if($request->expectsJson()){
+            return new JsonResponse(['email' => trans($response)], 422);
         }
         return back()->withErrors(
             ['email' => trans($response)]
@@ -83,8 +82,7 @@ class ForgotPasswordController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLinkRequestForm()
-    {
+    public function showLinkRequestForm(){
         return view('adminlte::auth.passwords.email');
     }
 
@@ -93,8 +91,7 @@ class ForgotPasswordController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('guest');
     }
 }
