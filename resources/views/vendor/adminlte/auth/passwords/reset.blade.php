@@ -55,6 +55,16 @@
                         </span>
                     @endif
                 </div>
+                    @if (Config::get('app.enable_captcha'))
+                        <div class="form-group">
+                            {!! app('captcha')->display()!!}
+                            @if ($errors->has('g-recaptcha-response'))
+                                <span class="help-block">
+						        {{ $errors->first('g-recaptcha-response') }}
+					        </span>
+                            @endif
+                        </div>
+                    @endif
                 <div class="row">
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">
