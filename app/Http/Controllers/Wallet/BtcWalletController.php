@@ -226,38 +226,29 @@ class BtcWalletController extends Controller
             if($currentDate <= $preSaleEnd) 
             {
 
-                //Calculate package already sales
-                $totalSaleAngel = UserCoin::where('clpCoinAmount', '=', 10000)->count();
 
                 //Private sale 1
                 if($privateSaleStart <= $currentDate && $currentDate <= $privateSaleEnd)
                 {
-                    if($totalSaleAngel == 60){
-                        $clpAmountErr = 'All packages in first private sale already sold out';
-                    } else {
 
-                        if($request->clpAmount != 25000 || $amountCLP < 24950) {
-                            $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
-                        }
-
-                        $amountCLP = 10000;
-                        $holdingAmount = 15000;
+                    if($request->clpAmount != 25000 || $amountCLP < 24950) {
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
                     }
+
+                    $amountCLP = 10000;
+                    $holdingAmount = 15000;
                 }
 
                 //Private sale 2
                 if($secondSaleStart <= $currentDate && $currentDate <= $secondSaleEnd)
                 {
-                    if($totalSaleAngel == 160){
-                        $clpAmountErr = 'All packages in second private sale already sold out';
-                    } else {
-                        if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
-                            $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
-                        }
-
-                        $amountCLP = 10000;
-                        $holdingAmount = 6666.66;
+                    
+                    if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
                     }
+
+                    $amountCLP = 10000;
+                    $holdingAmount = 6666.66;
                 }
 
                 //Pre sale
