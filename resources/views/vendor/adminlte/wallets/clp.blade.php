@@ -715,7 +715,7 @@
                 var _packageId = parseInt($(this).data('id'));
                 if (_packageId > 0) {
                     if (_packageId < packageId) {
-                        $('#msg_package').html("<div class='alert alert-danger'>You can not downgrate package.</div>");
+                        $('#msg_package').html("<div class='alert alert-danger'>You can not downgrade package.</div>");
                     } else if (_packageId == packageId) {
                         $('#msg_package').html("<div class='alert alert-danger'>You purchased this package.</div>");
                     } else {
