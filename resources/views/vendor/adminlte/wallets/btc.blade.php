@@ -504,9 +504,7 @@
             });
         });
         
-        // setInterval(function () {
-        //     $(".btc-amount").html($(".btcAmount").html());
-        // },{{ config("app.time_interval") + 1000 }});
+        
         $('#btn-withdraw-btc').on('click', function () {
             var btcAmount = $('#withdraw-btc-amount').val();
             var address = $('#withdraw-address').val();
@@ -535,6 +533,7 @@
             }
 
             if($.trim(btcAmount) != '' && $.trim(address) != '' && $.trim(btcOTP) != ''){
+                $('#btn-withdraw-btc').attr('disabled', true);
                 $('#form-withdraw-btc').submit();
             }
         });

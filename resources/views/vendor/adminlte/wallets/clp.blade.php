@@ -519,6 +519,7 @@
                 }
 
                 if($.trim(withdrawAmount) != '' && $.trim(walletAddress) != '' && $.trim(withdrawOTP) != ''){
+                    $('#withdraw-clp').attr('disabled', true);
                     $.ajax({
                         method : 'POST',
                         url: "{{ url('wallets/clpwithdraw') }}",
@@ -549,12 +550,15 @@
                                     $("#withdrawOTP").parents("div.form-group").removeClass('has-error');
                                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
                                 }
+
+                                $('#withdraw-clp').attr('disabled', false);
                             }
                         } else {
                             $('#tranfer').modal('hide');
                             location.href = '{{ url()->current() }}';
                         }
                     }).fail(function () {
+                        $('#withdraw-clp').attr('disabled', false);
                         $('#tranfer').modal('hide');
                         swal("Some things wrong!");
                     });
