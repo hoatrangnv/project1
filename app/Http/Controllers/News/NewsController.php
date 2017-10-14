@@ -38,7 +38,7 @@ class NewsController extends Controller{
      * @return type
      */
     public function newManagent(Request $request) {
-        $news=News::paginate(5);
+        $news=News::orderBy('id', 'desc')->paginate(5);
         return view('adminlte::news.manage',compact('news'))->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -68,10 +68,11 @@ class NewsController extends Controller{
                 $request->session()->flash( 'successMessage', 
                         trans("adminlte_lang::news.success") );
             }else{
-                Log::error("Loi ko tao duoc post new");
                 $request->session()->flash( 'errorMessage', 
                         trans("adminlte_lang::news.error") );
             }
+
+            return redirect("news/manage");
         }
         return view('adminlte::news.add');
     }

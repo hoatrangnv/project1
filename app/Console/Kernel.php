@@ -71,7 +71,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 AutoAddBinary::addBinary();
-            })->weekly()->sundays()->at('23:30');
+            })->weekly()->saturdays()->at('23:00'); //->weekly()->sundays()->at('23:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -89,7 +89,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
-            })->weekly()->mondays()->at('00:30');
+            })->weekly()->sundays()->at('00:30'); //->weekly()->mondays()->at('00:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
