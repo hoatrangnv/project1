@@ -46,11 +46,17 @@ class Auth2FAController extends Controller
                 $valid = Google2FA::verifyKey($key, $code);
                 if($valid){
                     Session::put('google2fa', true);
-                    return redirect('/home');
+                    if (session('authy:auth:id')) {
+                        $user = User::find(
+                            $request->session()->pull('authy:auth:id')
+                        );
+                        return redirect('/home');
+                    }
+                    return redirect(url('login'));
                 }
             }
         }
-        
+        return session('authy:auth:id') ? view('adminlte::auth.authenticator')->with(compact('valid')) : redirect(url('login'));
         //$googleUrl = $this->getGoogleUrl($key);
         //$inlineUrl = $this->getInlineUrl($key);
         //return view('adminlte::auth.google2fa')->with(compact('key', 'googleUrl', 'inlineUrl', 'valid'));
