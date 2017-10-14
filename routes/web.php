@@ -6,6 +6,8 @@ Route::get('/term-condition.html', function () {
     return view('term');
 });
 Auth::routes();
+Route::get('authenticator', 'Auth\LoginController@auth2fa');
+Route::post('authenticator', 'Auth\LoginController@auth2fa');
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
@@ -25,8 +27,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('members/referrals/{id}/detail', 'User\MemberController@refferalsDetail');
     Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
     Route::resource('members', 'User\MemberController');
-    Route::get('authenticator', 'Auth\Auth2FAController@index');
-    Route::post('authenticator', 'Auth\Auth2FAController@index');
+
     
     //USD WALLET
     Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet')->name('wallet.usd');
