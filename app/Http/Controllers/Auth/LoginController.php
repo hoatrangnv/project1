@@ -118,13 +118,16 @@ class LoginController extends Controller{
                                $user, Session::get('authy:auth:remember')
                             );
                             Session::put('google2fa', true);
-                            return redirect('/home');
+                            return redirect('home');
                         }
                     }
                     return redirect(url('login'));
                 }
             }
         }
-        return Session('authy:auth:id') ? view('adminlte::auth.authenticator')->with(compact('valid')) : redirect(url('login'));
+        if(Session('authy:auth:id'))
+            return view('adminlte::auth.authenticator')->with(compact('valid'));
+        else
+            redirect(url('login'));
     }
 }
