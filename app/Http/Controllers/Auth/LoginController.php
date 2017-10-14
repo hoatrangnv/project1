@@ -55,8 +55,9 @@ class LoginController extends Controller{
     }
 
     protected function attemptLogin(Request $request){
-        if($this->username() === 'email')
+        if($this->username() === 'email'){
             return $this->attemptLoginAtAuthenticatesUsers($request);
+        }
         if(!$this->attemptLoginAtAuthenticatesUsers($request)){
             return $this->attempLoginUsingUsernameAsAnEmail($request);
         }
@@ -96,26 +97,30 @@ class LoginController extends Controller{
             }
         }
     }
-    public function auth2fa(Request $request)
-    {
-        if(Session::get('google2fa')) return redirect('/home');
+
+    public function auth2fa(Request $request){
+        if(Session::get('google2fa'))
+            return redirect('/home');
         $valid = true;
-        if ( $request->isMethod('post') ) {
+        if($request->isMethod('post')){
             $key = Session::get('authy:auth:2fa');
             $code = $request->get('code');
-            if (!$code){
+            if(!$code){
                 $valid = false;
             }else{
                 $valid = Google2FA::verifyKey($key, $code);
                 if($valid){
-                    if (Session::get('authy:auth:id')) {
+                    if(Session::get('authy:auth:id')){
                         $user = User::findOrFail(
                             Session::get('authy:auth:id')
                         )->toArray();
                         if($user){
-                            $user = ['email'=>Session::get('authy:auth:email'), 'password'=>Session::get('authy:auth:password')];
+                            $user = [
+                                'email' => Session::get('authy:auth:email'),
+                                'password' => Session::get('authy:auth:password')
+                            ];
                             $this->guard()->attempt(
-                               $user, Session::get('authy:auth:remember')
+                                $user, Session::get('authy:auth:remember')
                             );
                             Session::put('google2fa', true);
                             return redirect('home');
@@ -125,9 +130,10 @@ class LoginController extends Controller{
                 }
             }
         }
-        if(Session('authy:auth:id'))
+        if(Session('authy:auth:id')){
             return view('adminlte::auth.authenticator')->with(compact('valid'));
-        else
+        }else{
             redirect(url('login'));
+        }
     }
 }
