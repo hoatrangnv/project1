@@ -128,7 +128,7 @@ class NewsController extends Controller{
                 $request->session()->flash( 'successMessage', 
                         trans("adminlte_lang::news.success_update") );
             }else{
-                Log::error("Loi ko tao duoc post new");
+                Log::error("Cannot create post new");
                 $request->session()->flash( 'errorMessage', 
                         trans("adminlte_lang::news.error_update") );
             }

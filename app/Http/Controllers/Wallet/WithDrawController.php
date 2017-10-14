@@ -119,7 +119,7 @@ class WithDrawController extends Controller
                             ->count();
                         if($count == 0){
                             $isConfirm = true;
-                            $request->session()->flash('error', 'Link Confirm Withdraw expired!');
+                            $request->session()->flash('error', 'Link confirmation withdrawal expired!');
                         }else{
                             if ( $token == hash( "sha256", md5( md5( $id ) ) ) ) {
                                 if ($request->isMethod('post')){
@@ -130,22 +130,22 @@ class WithDrawController extends Controller
                                     }
                                 }
                             }else{
-                                $request->session()->flash('error', 'Something wrongs. We cannot confirm withdraw!');
+                                $request->session()->flash('error', 'Something wrongs. We cannot confirm withdrawal!');
                             }
                         }
                     }elseif($withdrawConfirm->status == 2){
                         $isConfirm = true;
-                        $request->session()->flash('status', 'Withdraw have cancelled!');
+                        $request->session()->flash('status', 'Withdrawal have cancelled!');
                     }else{
                         $isConfirm = true;
-                        $request->session()->flash('status', 'Withdraw have done Confirm!');
+                        $request->session()->flash('status', 'Withdrawal have confirmed!');
                     }
                 }else{
-                    $request->session()->flash('error', 'Something wrongs. We cannot confirm withdraw!');
+                    $request->session()->flash('error', 'Something wrongs. We cannot confirm withdrawal!');
                 }
             }
         }else{
-            $request->session()->flash('error', 'Something wrongs. We cannot Confirm Withdraw!');
+            $request->session()->flash('error', 'Something wrongs. We cannot confirm withdrawal!');
         }
 
         return view('adminlte::wallets.confirmWithdraw', compact('isConfirm', 'withdrawConfirm'));

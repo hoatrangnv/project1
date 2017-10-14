@@ -157,7 +157,7 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <span><i>Rate:</i><i class="clpbtc">{{number_format(App\ExchangeRate::getCLPBTCRate() * 0.95, 8)}}</i></span>
+                        <span><i>Rate:</i><i class="clpbtcsell">{{number_format(App\ExchangeRate::getCLPBTCRate() * 0.95, 8)}}</i></span>
                     </div>
                 </div>
                   <div class="modal-footer">

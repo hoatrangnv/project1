@@ -141,6 +141,7 @@
                $('.btcusd').html(formatter.format(data[1].exchrate));
                $('.clpusd').html(formatter.format(data[2].exchrate));
                $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
+               $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
                globalBTCUSD = data[1].exchrate;
                globalCLPUSD = data[2].exchrate; //clpUSD
                globalCLPBTC = data[0].exchrate;

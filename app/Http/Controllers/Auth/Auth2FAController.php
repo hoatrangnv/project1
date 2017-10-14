@@ -19,7 +19,7 @@ class Auth2FAController extends Controller
 {
     private $fileName = 'google2fasecret.key';
     private $name = 'PragmaRX';
-    private $email = 'namhong1983@gmail.com';
+    private $email = 'henry@cryptolending.org';
     private $secretKey;
     private $keySize = 16;
     private $keyPrefix = '';

@@ -156,7 +156,7 @@ class RegisterController extends Controller
                           "walletAddress" => $addresses->getAddress() ];
                 return $data;
             default:
-                echo "chưa chọn lựa loại ví";
+                echo "Net select wallet yet";
         }
     }
     

@@ -70,7 +70,7 @@ class LoginController extends Controller{
             'password' => 'required|string',
             'g-recaptcha-response' => config('app.enable_captcha') ? 'required|captcha' : '',
         ], [
-            $this->username() . '.exists' => 'The selected email is invalid or the account has been disabled or the account not active.'
+            $this->username() . '.exists' => 'The selected email is invalid or the account is not active.'
         ]);
     }
 
