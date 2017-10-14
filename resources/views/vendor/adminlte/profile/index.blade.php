@@ -189,19 +189,19 @@
                         <table class="table no-margin">
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.scan_photo') }}</td>
-                                <td>
+                                <!-- <td>
                                     <button id="scan_photo_view" class="btn btn-xs btn-info">Preview</button>
                                     <input type="file" name="scan_photo" id="scan_photo" accept="image/*" />
                                     <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['scan_photo']) ? $photo_verification['scan_photo'] : '') }}" id="scan_photo_thumb"/>
-                                </td>
+                                </td> -->
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.holding_photo') }}</td>
-                                <td>
+                                <!-- <td>
                                     <button id="holding_photo_view" class="btn btn-xs btn-info">Preview</button>
                                     <input type="file" name="holding_photo" id="holding_photo" accept="image/*" />
                                     <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['holding_photo']) ? $photo_verification['holding_photo'] : '') }}" id="holding_photo_thumb"/>
-                                </td>
+                                </td> -->
                             </tr>
                         </table>
                     </div>
@@ -487,7 +487,7 @@
                         success: function (response) {
                             if(!response.err){
                                 $('#scan_photo_thumb').val(response.image);
-                                $('#photo_msg').text('Upload successful.');
+                                $('#photo_msg').text('Upload successfully.');
                             }else{
                                 alert(response.msg);
                             }
@@ -519,7 +519,7 @@
                         success: function (response) {
                             if(!response.err){
                                 $('#holding_photo_thumb').val(response.image);
-                                $('#photo_msg').text('Upload successful.');
+                                $('#photo_msg').text('Upload successfully.');
                             }else{
                                 alert(response.msg);
                             }
