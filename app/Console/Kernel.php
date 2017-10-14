@@ -13,6 +13,7 @@ use App\Cronjob\Bonus;
 use App\Cronjob\AutoAddBinary;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
+use Log;
 
 class Kernel extends ConsoleKernel
 {

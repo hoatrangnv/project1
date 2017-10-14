@@ -315,7 +315,7 @@
                         }).done(function(data){
                             if(data.err) {
                                 $("#btcUid").parents("div.form-group").addClass('has-error');
-                                $("#btcUid").parents("div.form-group").find('.help-block').text('The Uid field is required');
+                                $("#btcUid").parents("div.form-group").find('.help-block').text('The ID field is required');
                                 $('#btcUsername').val('');
                             }else{
                                 $('#btcUid').parent().removeClass('has-error');

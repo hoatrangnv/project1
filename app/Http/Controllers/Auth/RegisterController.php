@@ -228,7 +228,7 @@ class RegisterController extends Controller
 
             return $user;
         } catch (Exception $e) {
-            Session()->flash('error', 'Register Account not successfully!');
+            Session()->flash('error', 'Register Account is not success!');
             \Log::error('Running RegisterController has error: ' . date('Y-m-d') .$e->getMessage());
         }
     }

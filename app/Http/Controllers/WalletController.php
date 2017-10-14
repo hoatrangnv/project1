@@ -42,82 +42,6 @@ class WalletController extends Controller
     public function index() {
        return view('adminlte::wallets.genealogy');
     }
-    
-    /** 
-     * @author 
-     * @return type
-     */
-    public function clp(){
-        $currentuserid = Auth::user()->id;
-        $wallets = Wallet::where('userId', '=',$currentuserid)->where('walletType', Wallet::CLP_WALLET)
-       ->paginate();
-        
-        //get Packgage
-        $currentuserid = Auth::user()->id;
-        $user = Auth::user();
-        $packages = Package::all();
-        $lstPackSelect = array();
-        foreach ($packages as $package){
-            $lstPackSelect[$package->id] = $package->name;
-        }
-        
-        return view('adminlte::wallets.clp', ['packages' => $packages, 
-            'user' => $user, 
-            'lstPackSelect' => $lstPackSelect, 
-            'wallets'=> $wallets
-        ]);
-        
-    }
-    
-    /**
-     * 
-     * @param Request $request
-     * @return type
-     */
-    public function buyclp(Request $request){
-        $currentuserid = Auth::user()->id;
-        $tygia = 1;
-        if ($request->isMethod('post')) {
-            Validator::extend('usdAmount', function ($attribute, $value) {
-                $userId = Auth::user()->id;
-                $userCoin = UserCoin::where('userId', '=', $userId)->first();
-                if ($userCoin->usdAmount < $value)
-                    return false;
-                return true;
-            });
-            $this->validate($request, [
-                'amount' => 'required|usdAmount',
-            ]);
-
-            $amount = $request->get('amount');
-
-            $userCoin = Auth::user()->userCoin;
-            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + ($tygia * $amount);
-            $userCoin->usdAmount = $userCoin->usdAmount - $amount;
-            $userCoin->save();
-
-            $fieldUsd = [
-                'walletType' => Wallet::USD_WALLET,//usd
-                'type' => Wallet::USD_CLP_TYPE,//buy
-                'inOut' => Wallet::OUT,
-                'userId' => $currentuserid,
-                'amount' => $amount,
-            ];
-            Wallet::create($fieldUsd);
-            $fieldClp = [
-                'walletType' => Wallet::CLP_WALLET,//clp
-                'type' => Wallet::USD_CLP_TYPE,//buy
-                'inOut' => Wallet::IN,
-                'userId' => $currentuserid,
-                'amount' => $amount,
-            ];
-            Wallet::create($fieldClp);
-            return redirect('wallets/buyclp')
-                ->with('flash_message',
-                    'Buy clpCoin successfully.');
-        }
-        return view('adminlte::wallets.buyclp')->with(compact('user', 'tygia'));
-    }
 
     public function transferFromHolding(Request $request)
     {
@@ -259,16 +183,4 @@ class WalletController extends Controller
         }
         return view('adminlte::wallets.clptransfer')->with(compact('user', 'tygia'));
     }
-    
-    /**
-     * 
-     * @return type
-     */
-    public function buysellclp(){
-        $currentuserid = Auth::user()->id;
-        $user = Auth::user();
-        $tygia = 1;
-        return view('adminlte::wallets.buysellclp')->with(compact('user', 'tygia'));
-    }
-    
 }

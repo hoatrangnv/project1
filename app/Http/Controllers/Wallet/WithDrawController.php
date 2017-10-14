@@ -353,7 +353,7 @@ class WithDrawController extends Controller
                     $coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'clp'];
                     $user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
 
-                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your email!' );
+                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your mail box!' );
                     return response()->json(array('err' => false));
                 }
             }else {
