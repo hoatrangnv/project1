@@ -265,15 +265,16 @@ class HomeController extends Controller
 
 
         $lstUserLeft = $lstUserRight = [];
-        if($binaryUserLeft){
+        if(isset($binaryUserLeft->userId)){
             $lstUserLeft = $this->userBinaryLoop($lstUserLeft, $binaryUserLeft->userId);
         }
-        if($binaryUserRight){
+        if(isset($binaryUserRight->userId)){
             $lstUserRight = $this->userBinaryLoop($lstUserRight, $binaryUserRight->userId);
         }
-        $lstUserLeft[] = $binaryUserLeft->userId;
-        $lstUserRight[] = $binaryUserRight->userId;
-        
+
+        if( isset($binaryUserLeft->userId) ) $lstUserLeft[] = $binaryUserLeft->userId;
+        if( isset($binaryUserRight->userId) ) $lstUserRight[] = $binaryUserRight->userId;
+
         if($lstUserLeft){
             $lstLoyalty = LoyaltyUser::whereIn('userId', $lstUserLeft)->get();
             if($lstLoyalty){
