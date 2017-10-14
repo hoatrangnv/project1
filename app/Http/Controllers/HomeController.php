@@ -251,15 +251,6 @@ class HomeController extends Controller
     }
 
     private function userStaticsLoyalty(){
-        $binaryUserLeft = UserData::where('binaryUserId', '=', Auth::user()->id)->where('leftRight', '=', 'left')->first();
-        $binaryUserRight = UserData::where('binaryUserId', '=', Auth::user()->id)->where('leftRight', '=', 'right')->first();
-        $lstUserLeft = $lstUserRight = [];
-        if($binaryUserLeft){
-            $lstUserLeft = $this->userBinaryLoop($lstUserLeft, $binaryUserLeft->userId);
-        }
-        if($binaryUserRight){
-            $lstUserRight = $this->userBinaryLoop($lstUserRight, $binaryUserRight->userId);
-        }
         $loyaltyLeft = $loyaltyRight = [
             'isSilver' => 0,
             'isGold' => 0,
@@ -267,6 +258,22 @@ class HomeController extends Controller
             'isEmerald' => 0,
             'isDiamond' => 0
         ];
+
+        $binaryUserLeft = UserData::where('binaryUserId', '=', Auth::user()->id)->where('leftRight', '=', 'left')->first();
+        $binaryUserRight = UserData::where('binaryUserId', '=', Auth::user()->id)->where('leftRight', '=', 'right')->first();
+
+
+
+        $lstUserLeft = $lstUserRight = [];
+        if($binaryUserLeft){
+            $lstUserLeft = $this->userBinaryLoop($lstUserLeft, $binaryUserLeft->userId);
+        }
+        if($binaryUserRight){
+            $lstUserRight = $this->userBinaryLoop($lstUserRight, $binaryUserRight->userId);
+        }
+        $lstUserLeft[] = $binaryUserLeft->userId;
+        $lstUserRight[] = $binaryUserRight->userId;
+        
         if($lstUserLeft){
             $lstLoyalty = LoyaltyUser::whereIn('userId', $lstUserLeft)->get();
             if($lstLoyalty){
@@ -305,6 +312,7 @@ class HomeController extends Controller
         }
         return ['loyaltyLeft' => $loyaltyLeft, 'loyaltyRight' => $loyaltyRight];
     }
+
     private function userBinaryLoop($lstUser = [], $userId){
         $binaryUser = UserData::where('binaryUserId', '=', $userId)->get();
         if($binaryUser){
