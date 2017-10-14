@@ -52,7 +52,6 @@ class Handler extends ExceptionHandler
             }
 
             if ($this->isHttpException($exception)) {
-                
                 switch ($exception->getStatusCode()) {
                     // not authorized
                     case '403':
@@ -63,17 +62,19 @@ class Handler extends ExceptionHandler
                         return \Response::view('adminlte::errors.404', array(), 404);
                         break;
                     case '401':
-                        return \Response::view('adminlte::errors.401', array(), 404);    
+                        return \Response::view('adminlte::errors.401', array(), 404);
+                        break;
                     // internal error
                     case '500':
                         return \Response::view('adminlte::errors.500', array(), 500);
                         break;
                     case '503':
-                        //dd($exception->getMessage());
-                        return \Response::view('adminlte::errors.503', array($exception), 503);
+                        $message = $exception->getMessage();
+                        $retryAfter = $exception->retryAfter;
+                        return \Response::view('adminlte::errors.503', array('message' => $message, 'retryAfter' => $retryAfter), 503);
                         break;
                     default:
-                        return \Response::view('adminlte::errors.default');
+                        \Response::view('adminlte::errors.default', array(), 503);
                         break;
                 }
             } else {
