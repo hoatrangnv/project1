@@ -116,14 +116,14 @@ Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');
 
 /***------- TEST -------***/
-Route::get('ethereumtest', 'EthereumTestController@index');
+//Route::get('ethereumtest', 'EthereumTestController@index');
 Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
-Route::get('test-binary', 'TestController@testBinary');
-Route::get('test-interest',"TestController@testInterest");
-Route::get('test-auto-binary',"TestController@testAutoAddBinary");
-
+//Route::get('test-binary', 'TestController@testBinary');
+//Route::get('test-interest',"TestController@testInterest");
+//Route::get('test-auto-binary',"TestController@testAutoAddBinary");
+//Route::get('test',"TestController@test");
 
 
 /***------- END TEST -------***/
@@ -136,4 +136,3 @@ Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
 Route::any('confirmWithdraw',"Wallet\WithDrawController@confirmWithdraw");
 
-Route::get('test',"TestController@test");
