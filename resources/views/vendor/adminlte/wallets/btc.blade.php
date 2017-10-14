@@ -180,7 +180,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbtcwithdraw" data-type="btcwithdraw">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
+                    <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbtcwithdraw" data-type="btcwithdraw">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 5) }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -230,7 +230,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbuyclp" data-type="btctranfer">{{ Auth()->user()->userCoin->btcCoinAmount }}</a></h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbuyclp" data-type="btctranfer">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 2) }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -551,7 +551,7 @@
         $(".switch-BTC-to-CLP").on('keyup change mousewheel', function () {
             var value = $(this).val();
             var result = value / globalCLPBTC;
-            $(".switch-CLP-to-BTC").val(result.toFixed(5));
+            $(".switch-CLP-to-BTC").val(result.toFixed(2));
         });
 
         $(".switch-CLP-to-BTC").on('keyup change mousewheel', function () {
