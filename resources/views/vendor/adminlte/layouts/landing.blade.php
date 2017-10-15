@@ -112,7 +112,7 @@
                                     </h4>
                                 </div>
 
-                                <a href="#features" data-offset="100" class="btn btn-rounded btn-cyan-2 wow fadeInUp" data-wow-delay="0.2s">Login</a>
+                                <a href="/login" >Login</a>
                             </div>
                         </div>
                     </div>
@@ -279,7 +279,7 @@
                             <br>
                             <strong>OPEN AI</strong>
                             <div class="mt-1">
-                                <p>Open AI Could Unlock Better Livings With Robust Technology.</p>
+                                <p>Open AI Could Unlock Better Living With Robust Technology.</p>
                             </div>
                         </div>
                     </div>
@@ -679,7 +679,7 @@
                         <div class="testimonial">
                             <!--Avatar-->
                             <div class="avatar">
-                                <img src="../bbh/img/clp/Jorgen.jpg" class="rounded-circle img-fluid">
+                                <img src="bbh/img/clp/Jorgen.jpg" class="rounded-circle img-fluid">
                             </div>
                             <!--Content-->
                             <h4>Jorgen A. Hedegreen</h4>
@@ -711,7 +711,7 @@
                         <div class="testimonial">
                             <!--Avatar-->
                             <div class="avatar">
-                                <img src="../bbh/img/clp/Jacob.png" class="rounded-circle btn-indigo-clp">
+                                <img src="bbh/img/clp/Jacob.png" class="rounded-circle btn-indigo-clp">
                             </div>
 
                             <!--Content-->
@@ -739,7 +739,7 @@
                         <div class="testimonial">
                             <!--Avatar-->
                             <div class="avatar">
-                                <img src="../bbh/img/clp/allan.jpg" class="rounded-circle img-fluid">
+                                <img src="bbh/img/clp/allan.jpg" class="rounded-circle img-fluid">
                             </div>
 
                             <!--Content-->
