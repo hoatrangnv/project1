@@ -61,8 +61,16 @@
                                     <th style="min-width: 500px;">
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#sell">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#buy-package">{{ trans("adminlte_lang::wallet.buy_package") }}</a>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
+                                    @if($active)
+                                        <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
+                                    @else
+                                        <a href="#" class="btn bg-olive" disabled="true" data-toggle="modal" >{{ trans("adminlte_lang::wallet.withdraw") }}</a>
+                                    @endif
+                                    @if($active)
+                                        <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
+                                    @else
+                                        <a href="#" class="btn bg-olive" disabled="true" data-toggle="modal">{{ trans("adminlte_lang::wallet.deposit") }}</a>
+                                    @endif
                                     <button class="btn bg-olive" data-toggle="modal"
                                             data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>
                                     </th>
