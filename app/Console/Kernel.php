@@ -39,13 +39,13 @@ class Kernel extends ConsoleKernel
          * run every 30s update notification
          */
         $stringCronTab = "* * * * * *";
-        // try {
-        //     $schedule->call(function () {
-        //         UpdateBtcCoin::UpdateBtcCoinAmount();
-        //     })->everyMinute();
-        // } catch (\Exception $ex) {
-        //     Log::info($ex);
-        // }
+        try {
+            $schedule->call(function () {
+                UpdateBtcCoin::UpdateBtcCoinAmount();
+            })->everyMinute();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
         /** 
          * @author Huynq
          * run every day update availableAmount(from holding wallet) table usercoin
