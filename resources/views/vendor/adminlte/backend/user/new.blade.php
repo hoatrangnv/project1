@@ -1,4 +1,4 @@
-@extends('adminlte::layouts.app')
+@extends('adminlte::backend.layouts.app')
 
 @section('htmlheader_title')
     {{ trans('adminlte_lang::user.header_title') }}
@@ -12,16 +12,16 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
-                {!! Form::model($user, ['method' => 'PUT', 'route' => ['users.update',  $user->id ] ]) !!}
+                {!! Form::open(['route' => ['users.store'] ]) !!}
                 <div class="box-header"></div>
                 <div class="box-body" style="padding-top:0;">
                     @include('user._form')
                 </div>
                 <div class="box-footer">
-                    {!! Form::submit('Save Changes', ['class' => 'btn btn-primary']) !!}
+                    {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
                 </div>
                 {!! Form::close() !!}
-             </div>
+            </div>
         </div>
     </div>
 @endsection
