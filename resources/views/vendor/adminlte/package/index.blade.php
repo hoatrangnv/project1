@@ -18,7 +18,7 @@
 				<div class="box-body" style="padding-top:0;">
 					<table class="table table-bordered table-hover table-striped dataTable">
 						<tr>
-							<th>{{ trans('adminlte_lang::package.pack_id') }}</th>
+							<th>Pack Id</th>
 							<th>{{ trans('adminlte_lang::package.name') }}</th>
 							<th>{{ trans('adminlte_lang::package.price') }}</th>
 							<th>{{ trans('adminlte_lang::package.token') }}</th>
@@ -32,7 +32,7 @@
 								<td>{{ $package->pack_id }}</td>
 								<td>{{ $package->name }}</td>
 								<td>${{ number_format($package->price) }}</td>
-								<td>{{ number_format($package->price / \App\User::getCLPUSDRate()) }}</td>
+								<td>{{ number_format($package->price / \App\ExchangeRate::getCLPUSDRate()) }}</td>
 								@can('edit_packages')
 									<td class="text-center">
 										@include('shared._actions', [

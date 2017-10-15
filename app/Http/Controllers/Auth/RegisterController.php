@@ -204,9 +204,6 @@ class RegisterController extends Controller
 
             //SAVE to User_datas
             $fields['userId'] = $user->id;
-            if($userReferer->name == config('app.root_name')) {
-                $fields['isBinary'] = 1;
-            }
             //$fields['walletAddress'] = $accountWallet['walletAddress'];
             $userData = UserData::create($fields);
 

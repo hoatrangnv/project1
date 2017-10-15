@@ -167,9 +167,7 @@ class TestRegisterController extends Controller
             $fields['userId'] = $user->id;
             
             $fields['clpCoinAmount'] = '20000';
-            if($userReferer->name == config('app.root_name')) {
-                $fields['isBinary'] = 1;
-            }
+            
             $userData = UserData::create($fields);
 
             //Luu thong tin ca nhan vao bang user_coin
