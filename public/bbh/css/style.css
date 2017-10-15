@@ -1,0 +1,89 @@
+/* YOUR CUSTOM STYLES */
+.medical-lp .icon-area .circle-icon i{
+    width: 90px;
+    height: 90px;
+    background: #1c4369;
+}
+
+.medical-lp .icon-area .circle-icon i:hover{
+    width: 90px;
+    height: 90px;
+    background: #2a9892;
+}
+
+.btn-indigo-clp{
+        background: #1c4369;
+}
+
+.testimonial p {
+    text-align: justify;
+}
+
+.navbar-brand .nav-logo{
+    height: 50px;
+    
+    display: block;
+    margin:auto;
+}
+
+
+.cascading-admin-card .admin-up .fa {
+    padding: 1.7rem;
+    font-size: 2rem;
+    color: #fff;
+    text-align: left;
+    margin-right: 3rem;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.cascading-admin-card .admin-up {
+    margin-left: 4%;
+    margin-right: 4%;
+    margin-top: -20px;
+}
+
+.cascading-admin-card .admin-up .data {
+    float: left;
+    margin-top: 2rem;
+    text-align: left;
+}
+.card-cascade{
+    width:100%
+}
+
+.clpcenter{
+    margin:auto;
+}
+
+.card-body{
+    -ms-flex: 1 1 auto;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 1.25rem;
+    line-height: 1.7; 
+    color: #626262; 
+    font-size: .9rem; 
+    font-weight: 300;  
+}
+
+.footer-copyrightclp{
+    overflow: hidden;
+    height: 50px;
+    line-height: 50px;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: #1c4369;
+    text-align: center;
+}
+
+.testimonial p{
+    text-align: justify;
+}
+
+.fa-5x-clp{
+    font-size: 16em;
+}
