@@ -67,7 +67,7 @@ class ProfileController extends Controller
         }else{
             return redirect()->route('profile.index')
                 ->with('error',
-                    'Profile not update!');
+                    'Profile cannot update!');
         }
     }
     /**
@@ -118,7 +118,7 @@ class ProfileController extends Controller
                         if($is2fa == 0){
                             return Response::json([
                                 "success" => false,
-                                "msg"  => "2Fa is off"
+                                "msg"  => "2FA is off"
                             ]);
                         }else{
                             User::where('id',Auth::user()->id) ->update( [ 'is2fa' => 0, 'google2fa_secret' => Google2FA::generateSecretKey(16) ] );
@@ -130,13 +130,13 @@ class ProfileController extends Controller
                     }else{
                         return Response::json([
                             "success" => false,
-                            "msg"  => "code OTP no  match"
+                            "msg"  => "2FA code not match"
                         ]);
                     }
                 }else{
                     return Response::json([
                         "success" => false,
-                        "msg"  => "Error codeOtp inv"
+                        "msg"  => "Error 2FA code"
                     ]);
                 }
             }else{//on 2fa
@@ -147,7 +147,7 @@ class ProfileController extends Controller
                         if ($is2fa == 1) {
                             return Response::json([
                                 "success" => false,
-                                "msg" => "2Fa is on"
+                                "msg" => "2FA is on"
                             ]);
                         } else {
                             User::where('id', Auth::user()->id)->update(['is2fa' => 1]);
@@ -159,13 +159,13 @@ class ProfileController extends Controller
                     }else{
                         return Response::json([
                             "success" => false,
-                            "msg"  => "code OTP no  match"
+                            "msg"  => "2FA code not  match"
                         ]);
                     }
                 }else{
                     return Response::json([
                         "success" => false,
-                        "msg"  => "Error codeOtp inv"
+                        "msg"  => "Error 2FA code"
                     ]);
                 }
             }

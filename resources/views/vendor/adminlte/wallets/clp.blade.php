@@ -1,6 +1,3 @@
-<?php
-use App\Http\Controllers\Wallet\Views\WalletViewController;
-?>
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
@@ -46,7 +43,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
             </ul>
         </div>
     @endif
-    <?php  echo WalletViewController::viewAllWallet(); ?>
+    @include('adminlte::layouts.wallet')
     <div class="row">
         <div class="col-md-12">
             <!-- Widget: user widget style 1 -->
@@ -61,7 +58,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
                                     </th>
                                     <th class="wallet-amount"><span class="icon-clp-icon" style="font-size: 16px;"></span>{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}  </th>
-                                    <th>
+                                    <th style="min-width: 500px;">
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#sell">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#buy-package">{{ trans("adminlte_lang::wallet.buy_package") }}</a>
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
@@ -83,15 +80,15 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <div class="col-xs-2 no-padding">
+                    <div class="col-xs-6 col-md-2 col-lg-2">
                         {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
                     </div>
-                    <div class="col-xs-1">
+                    <div class="col-xs-6 col-md-2 col-lg-2">
                         {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
                         {!! Form::button('Clear', ['class' => 'btn btn-sm bg-olive', 'id' => 'btn_filter_clear']) !!}
                     </div>
                 </div>
-                <div class="box-body" style="padding-top:0;">
+                <div class="box-body table-responsive" style="padding-top:0;">
                     <table class="table table-bordered table-hover table-striped dataTable">
                         <tr>
                             <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
@@ -137,7 +134,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">Sell CLP&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxsellclp"
-                                                                               data-type="maxsellclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a>
+                                                                               data-type="maxsellclp">{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}</a>
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -159,6 +156,9 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                             </div>
                         </div>
                     </div>
+                    <div class="pull-right">
+                        <span><i>Rate:</i><i class="clpbtcsell">{{number_format(App\ExchangeRate::getCLPBTCRate() * 0.95, 8)}}</i></span>
+                    </div>
                 </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -175,7 +175,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Investment Package</h4>
+                    <h4 class="modal-title">Mining Package</h4>
                 </div>
                 {{ Form::open(array('url' => 'packages/invest', 'id'=>'formPackage')) }}
                 <div class="modal-body">
@@ -214,8 +214,13 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 <div class="modal-footer">
                     <input type="hidden" name="packageId" id="packageId"
                            value="{{ Auth::user()->userData->packageId }}">
-                    <button class="btn btn-success btn-block"
-                            id="btn_submit">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
+                    @if( date('Y-m-d') > date('Y-m-d', strtotime(config('app.pre_sale_end'))) )
+                        <button class="btn btn-success btn-block"
+                            id="btn_submit" type="button">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
+                    @else
+                        <button class="btn btn-success btn-block"
+                            id="btn_submit" disabled="true" type="button">{{ trans('adminlte_lang::wallet.buy_package') }}</button>
+                    @endif
                 </div>
                 {{ Form::close() }}
             </div>
@@ -230,7 +235,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span></button>
-            <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp" data-type="withdrawclp">{{ Auth()->user()->userCoin->clpCoinAmount }}</a></h4>
+            <h4 class="modal-title">Withdraw&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default withdrawclp" data-type="withdrawclp">{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}</a></h4>
           </div>
           <div class="modal-body">
                 <div class="box no-border">
@@ -281,16 +286,20 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 </div>
                 <div class="modal-body">
                     <div class="col-lg-12">
-                        <div class="card box">
-                            <div class="card-body">
+                        <div class="box no-border">
+                            <div class="box-body">
                                 <div class="form-group" style="text-align: center">
                                     <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your CLP Wallet
                                         address</h5>
                                         <div class="form-group">
-                                        <input type="text" value="{{ $walletAddress }}" class="wallet-address fwbCLP" id="wallet-address" readonly="true">
-                                         <button class="btnwallet-address cp-btc" data-clipboard-target="#wallet-address" title="copy">
+                                        <div class="input-group input-group-md col-xs-12 col-lg-10" style="margin: 0 auto;">
+                                        <input type="text" value="{{ $walletAddress }}" class="wallet-address form-control" id="wallet-address" readonly="true">
+                                        <span class="input-group-btn">
+                                         <button class="btn btn-default btnwallet-address" data-clipboard-target="#wallet-address" title="copy">
                                                     <i class="fa fa-clone"></i>
                                                 </button>
+                                        </span>
+                                        </div>
                                         </div>
                                     <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">CLP
                                         Wallet link</h5>
@@ -325,7 +334,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                         <div class="box-body" style="padding-top:0;">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                                    <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
                                     {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm clp-input amount-clp-tranfer',  'placeholder' => "Amount CLP", 'id' => 'clpAmount' )) }}
                                 </div>
                                 <span class="help-block"></span>
@@ -513,6 +522,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 }
 
                 if($.trim(withdrawAmount) != '' && $.trim(walletAddress) != '' && $.trim(withdrawOTP) != ''){
+                    $('#withdraw-clp').attr('disabled', true);
                     $.ajax({
                         method : 'POST',
                         url: "{{ url('wallets/clpwithdraw') }}",
@@ -543,12 +553,15 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                                     $("#withdrawOTP").parents("div.form-group").removeClass('has-error');
                                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
                                 }
+
+                                $('#withdraw-clp').attr('disabled', false);
                             }
                         } else {
                             $('#tranfer').modal('hide');
                             location.href = '{{ url()->current() }}';
                         }
                     }).fail(function () {
+                        $('#withdraw-clp').attr('disabled', false);
                         $('#tranfer').modal('hide');
                         swal("Some things wrong!");
                     });
@@ -702,7 +715,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                 var _packageId = parseInt($(this).data('id'));
                 if (_packageId > 0) {
                     if (_packageId < packageId) {
-                        $('#msg_package').html("<div class='alert alert-danger'>You can not downgrate package.</div>");
+                        $('#msg_package').html("<div class='alert alert-danger'>You can not downgrade package.</div>");
                     } else if (_packageId == packageId) {
                         $('#msg_package').html("<div class='alert alert-danger'>You purchased this package.</div>");
                     } else {
@@ -724,9 +737,20 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
                     $("#termsPackage").parents("div.form-group").removeClass('has-error');
                     $("#termsPackage").parents("div.form-group").find('.help-block').text('');
                     if (packageIdPick > packageId) {
-                        $('#formPackage').submit();
+                        swal({
+                          title: "Are you sure?",
+                          type: "warning",
+                          showCancelButton: true,
+                          confirmButtonClass: "btn-info",
+                          confirmButtonText: "Yes, buy it!",
+                          closeOnConfirm: false
+                        },
+                        function(){
+                          $('#formPackage').submit();
+                        });
+                        
                     } else {
-                        alert('You cant not this package');
+                        swal('You select invalid package')
                         return false;
                     }
                 }
@@ -746,13 +770,13 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
 
         $(".switch-BTC-to-CLP-sellclp").on('keyup change mousewheel', function () {
             var value = $(this).val();
-            var result = value / globalCLPBTC;
-            $(".switch-CLP-to-BTC-sellclp").val(result.toFixed(5));
+            var result = value / (globalCLPBTC * 0.95) ;
+            $(".switch-CLP-to-BTC-sellclp").val(result.toFixed(2));
         });
 
         $(".switch-CLP-to-BTC-sellclp").on('keyup change mousewheel', function () {
             var value = $(this).val();
-            var result = value * globalCLPBTC;
+            var result = value * globalCLPBTC * 0.95;
             $(".switch-BTC-to-CLP-sellclp").val(result.toFixed(5));
         });
 

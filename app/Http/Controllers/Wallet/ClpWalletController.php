@@ -119,7 +119,7 @@ class ClpWalletController extends Controller {
 
             if ( $clpAmountErr == '') {
                 //Amount CLP
-                $clpRate = ExchangeRate::getCLPBTCRate();
+                $clpRate = ExchangeRate::getCLPBTCRate() * 0.95;
                 $amountBTC = $request->clpAmount * $clpRate;
                 $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount - $request->clpAmount);
                 $userCoin->btcCoinAmount = $userCoin->btcCoinAmount + $amountBTC;

@@ -234,6 +234,7 @@ body.stop-scrolling {
   width: 478px;
   padding: 17px;
   border-radius: 5px;
+  border: 1px #cccccc solid;
   text-align: center;
   position: fixed;
   left: 50%;

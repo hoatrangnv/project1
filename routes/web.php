@@ -6,6 +6,8 @@ Route::get('/term-condition.html', function () {
     return view('term');
 });
 Auth::routes();
+Route::get('authenticator', 'Auth\LoginController@auth2fa');
+Route::post('authenticator', 'Auth\LoginController@auth2fa');
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
@@ -28,8 +30,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('members/referrals/{id}/detail', 'User\MemberController@refferalsDetail');
     Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
     Route::resource('members', 'User\MemberController');
-    Route::get('authenticator', 'Auth\Auth2FAController@index');
-    Route::post('authenticator', 'Auth\Auth2FAController@index');
+
     
     //USD WALLET
     Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet')->name('wallet.usd');
@@ -62,10 +63,6 @@ Route::group( ['middleware' => ['auth']], function() {
     
     //Get total value
     Route::get('wallets/totalvalue','WalletController@getMaxTypeWallet');
-    
-
-    Route::get('wallets/buyclp', 'WalletController@buyclp');
-    Route::post('wallets/buyclp', 'WalletController@buyclp');
         
     Route::get('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
     Route::post('wallets/buyclpbybtc', 'WalletController@buyclpbybtc');
@@ -73,7 +70,6 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
     Route::post('wallets/sellclpbybtc', 'WalletController@sellclpbybtc');
 
-    Route::get('wallets/buysellclp', 'WalletController@buysellclp');
     Route::get('wallets/transferholding', 'WalletController@transferFromHolding')->name('holding.transfer');
 
     Route::post('wallets/buyclpusd', 'Wallet\UsdWalletController@buyCLP')->name('usd.buyclp');
@@ -118,14 +114,14 @@ Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');
 
 /***------- TEST -------***/
-Route::get('ethereumtest', 'EthereumTestController@index');
+//Route::get('ethereumtest', 'EthereumTestController@index');
 Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
 Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
-Route::get('test-binary', 'TestController@testBinary');
-Route::get('test-interest',"TestController@testInterest");
-Route::get('test-auto-binary',"TestController@testAutoAddBinary");
-
+//Route::get('test-binary', 'TestController@testBinary');
+//Route::get('test-interest',"TestController@testInterest");
+//Route::get('test-auto-binary',"TestController@testAutoAddBinary");
+//Route::get('test',"TestController@test");
 
 
 /***------- END TEST -------***/
@@ -138,4 +134,3 @@ Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
 Route::any('confirmWithdraw',"Wallet\WithDrawController@confirmWithdraw");
 
-Route::get('test',"TestController@test");

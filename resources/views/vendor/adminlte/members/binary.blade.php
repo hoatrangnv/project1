@@ -28,7 +28,7 @@
                     <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
                         {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
                         <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
-                            {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an user'], ['placeholder' => 'Choose an user']) }}
+                            {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username']) }}
                         </div>
                         <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
                             <input type="hidden" name="legpos" id="legpos" value="0">
@@ -50,16 +50,6 @@
 							<!-- </span> -->
                             </div>
                         <!-- </div> -->
-                            <!-- <div class="col-xs-5 col-lg-6" style="padding-top: 15px;position: absolute;right:0;">
-                                 <div class="col-xs-12 col-lg-6" style="position: absolute;right:0;">
-                                     <div class="input-group input-group-sm">
-                                         <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
-                                         <span class="input-group-btn">
-                                             <button type="button" id="search-button" class="btn btn-primary btn-flat" >{{ trans('adminlte_lang::member.btn_search') }}</button>
-                                         </span>
-                                     </div>
-                                 </div>
-                            </div> -->
                     </div>
                     
                     <div style="margin-top: 15px;text-align:center;">
@@ -179,28 +169,43 @@
             });
             $('#btn_submit_left').on('click', function () {
                 if($("#userSelect option:selected").length == 0){
-                    alert('You choose a user.');
+                    swal("Please select one username");
                     return false;
                 }else{
-                    if (confirm("Are you sure?")) {
+                    swal({
+                      title: "Are you sure?",
+                      text: $("#userSelect option:selected").html() + " will be push on the Left!",
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonClass: "btn-danger",
+                      confirmButtonText: "Yes, do it!",
+                      closeOnConfirm: false
+                    },
+                    function(){
                         $('#legpos').val(1);
                         $('#pushIntoTreeForm').submit();
-                        return true;
-                    }
-                    return false;
+                    });
+
                 }
             });
             $('#btn_submit_right').on('click', function () {
                 if($("#userSelect option:selected").length == 0){
-                    alert('You choose a user.');
+                    swal("Please select one username");
                     return false;
                 }else{
-                    if (confirm("Are you sure?")) {
+                    swal({
+                      title: "Are you sure?",
+                      text: $("#userSelect option:selected").html() + " will be push on the Right!",
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonClass: "btn-danger",
+                      confirmButtonText: "Yes, do it!",
+                      closeOnConfirm: false
+                    },
+                    function(){
                         $('#legpos').val(2);
                         $('#pushIntoTreeForm').submit();
-                        return true;
-                    }
-                    return false;
+                    });
                 }
             });
         });

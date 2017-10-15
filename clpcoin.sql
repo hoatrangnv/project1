@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 100122
 File Encoding         : 65001
 
-Date: 2017-10-10 00:08:14
+Date: 2017-10-11 14:39:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -95,6 +95,40 @@ CREATE TABLE `clp_wallets` (
 
 -- ----------------------------
 -- Records of clp_wallets
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for cron_binary_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `cron_binary_logs`;
+CREATE TABLE `cron_binary_logs` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `userId` int(10) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of cron_binary_logs
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for cron_profit_day_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `cron_profit_day_logs`;
+CREATE TABLE `cron_profit_day_logs` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `userId` int(10) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of cron_profit_day_logs
 -- ----------------------------
 
 -- ----------------------------
@@ -193,7 +227,7 @@ CREATE TABLE `news` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of news
@@ -204,13 +238,15 @@ CREATE TABLE `news` (
 -- ----------------------------
 DROP TABLE IF EXISTS `notification`;
 CREATE TABLE `notification` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `data` text NOT NULL,
-  `status` tinyint(4) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `wallet_id` int(10) DEFAULT NULL,
+  `completed_status` tinyint(1) DEFAULT NULL,
+  `pending_status` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of notification
@@ -390,8 +426,8 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '2N8RNXCGHTWkdimArM27XW9EzUAmri5uVe1', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
-INSERT INTO `users` VALUES ('2', 'root', 'giangitman@gmail.com', '$2y$10$m/400CQhjiCEXSowiAO/c.hz4wnbMGO0qaLYrgY/bN6ylUu.XGoGi', 'kcNnIrEMLkqt7bcRPEoOElC5mziPdzC8rlPHyFWb43ORknanO7RB2UolxEyq', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '0', 'root', 'Giang', '0978708981', '0', '1', '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, null, '1', '1');
+INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
+INSERT INTO `users` VALUES ('2', 'root', 'giangitman@gmail.com', '$2y$10$m/400CQhjiCEXSowiAO/c.hz4wnbMGO0qaLYrgY/bN6ylUu.XGoGi', '7GrJboRlsJAzUi4ABh9BN0RUW8wD5RQAuA1vXGfDUYpQWQDwZW4UU8F3WU2a', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '1', 'root', 'Giang', '0978708981', '0', null, '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, '99', '1', '1');
 
 -- ----------------------------
 -- Table structure for users_loyalty
@@ -480,6 +516,41 @@ CREATE TABLE `user_datas` (
 -- ----------------------------
 INSERT INTO `user_datas` VALUES ('1', '0', '0', null, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
 INSERT INTO `user_datas` VALUES ('2', '0', '6', null, '0', '1', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
+
+-- ----------------------------
+-- Table structure for user_has_permissions
+-- ----------------------------
+DROP TABLE IF EXISTS `user_has_permissions`;
+CREATE TABLE `user_has_permissions` (
+  `user_id` int(10) unsigned NOT NULL,
+  `permission_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`user_id`,`permission_id`),
+  KEY `user_has_permissions_permission_id_foreign` (`permission_id`),
+  CONSTRAINT `user_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_has_permissions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of user_has_permissions
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for user_has_roles
+-- ----------------------------
+DROP TABLE IF EXISTS `user_has_roles`;
+CREATE TABLE `user_has_roles` (
+  `role_id` int(10) unsigned NOT NULL,
+  `user_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`role_id`,`user_id`),
+  KEY `user_has_roles_user_id_foreign` (`user_id`),
+  CONSTRAINT `user_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_has_roles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of user_has_roles
+-- ----------------------------
+INSERT INTO `user_has_roles` VALUES ('2', '1');
 
 -- ----------------------------
 -- Table structure for user_packages

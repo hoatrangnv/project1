@@ -11,7 +11,7 @@
     <div id="app">
         <div class="login-box">
             <div class="login-logo">
-                <a href="#"><b>CLP</b></a>
+                <a href="#"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CLP</b></a>
             </div>
             @if (session('error'))
                 <div class="alert alert-danger">
@@ -37,7 +37,7 @@
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-3">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary" id="confirm_submit">
                                         Confirm
                                     </button>
                                     <input type="hidden" value="0" name="status" id="withdraw_status">
@@ -67,6 +67,15 @@
             $('#withdraw_cancel').on('click', function () {
                 if (confirm("Are you sure?")) {
                     $('#withdraw_status').val("1");
+                    $('#withdraw_confirm').submit();
+                    return true;
+                }
+                return false;
+            });
+
+            $('#confirm_submit').on('click', function(){
+                if (confirm("Are you sure?")) {
+                    $('#confirm_submit').attr('disabled', true);
                     $('#withdraw_confirm').submit();
                     return true;
                 }

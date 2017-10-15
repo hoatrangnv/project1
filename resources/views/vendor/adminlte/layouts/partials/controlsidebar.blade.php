@@ -6,7 +6,7 @@
     $i = 1;
 ?>
 <!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark">
+<aside class="control-sidebar control-sidebar-dark control-sidebar-close" style="max-height: 1200px; overflow-y: scroll;">
     <!-- Tab panes -->
     <div class="tab-content">
         <!-- Home tab content -->
@@ -18,13 +18,13 @@
                 <li title="read more...">
                     <a href="/news/detail/{{ $new->id }}">
                         <i class="@if($i == 0)
-                           menu-icon fa fa-user bg-yellow
+                           menu-icon fa fa-newspaper-o bg-yellow
                            @elseif($i == 1)
-                           menu-icon fa fa-birthday-cake bg-red
+                           menu-icon fa fa-newspaper-o bg-red
                            @elseif($i == 2)
-                           menu-icon fa fa-envelope-o bg-light-blue
+                           menu-icon fa fa-newspaper-o bg-light-blue
                            @else
-                           menu-icon fa fa-file-code-o bg-green
+                           menu-icon fa fa-newspaper-o bg-green
                            @endif
                            "></i>
                         <div class="menu-info">
@@ -64,28 +64,3 @@
 <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
 <div class='control-sidebar-bg'></div>
-<script>
-    
-if(getCookie("open") != 0 && getCookie("open") != 1 ){
-    document.cookie = "open=1";
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-if(getCookie("open") == 1)
-    $(".control-sidebar").addClass("control-sidebar-open")
-</script>

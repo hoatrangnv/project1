@@ -9,8 +9,11 @@ use App\Notifications\UpdateBtcCoin;
 use App\Notifications\AvailableAmountController as AvailableAmount;
 use App\Cronjob\UpdateExchangeRate;
 use App\Cronjob\GetClpWallet;
-use App\User;
+use App\Cronjob\Bonus;
+use App\Cronjob\AutoAddBinary;
 use App\Cronjob\UpdateStatusBTCWithdraw;
+use App\Cronjob\UpdateStatusCLPWithdraw;
+use Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -45,7 +48,7 @@ class Kernel extends ConsoleKernel
         }
         /** 
          * @author Huynq
-         * run every dây update availAmount table usercoin
+         * run every day update availableAmount(from holding wallet) table usercoin
          */
         $stringCronTab = "* * * * * *";
         try {
@@ -56,29 +59,60 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
         
-        /*try {
+        // Cronjob update exchange BTC, CLP rate
+        try {
             $schedule->call(function (){
                 UpdateExchangeRate::updateExchangRate();
             })->everyMinute();
         } catch (\Exception $ex) {
             
-        }*/
+        }
+
+        // Auto add to binary at 23:30 every sunday
+        try {
+            $schedule->call(function () {
+                AutoAddBinary::addBinary();
+            })->weekly()->saturdays()->at('23:00'); //->weekly()->sundays()->at('23:30');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
 		
+        // Profit run everyday
 		try {
             $schedule->call(function () {
-                User::bonusDayCron();
+                Bonus::bonusDayCron();
             })->daily();
         } catch (\Exception $ex) {
             Log::info($ex);
         }
 
+        // Binary bonus run on monday each week
         try {
             $schedule->call(function () {
-                UpdateStatusBTCWithdraw::updateStatusWithdraw();
-            })->everyMinute();
+                Bonus::bonusBinaryWeekCron();
+            })->weekly()->sundays()->at('00:30'); //->weekly()->mondays()->at('00:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
+
+        // Cron job update status withdraw BTC
+        try {
+            $schedule->call(function () {
+                UpdateStatusBTCWithdraw::updateStatusWithdraw();
+            })->everyFiveMinutes();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
+        // Cron job update status withdraw CLP
+        try {
+            $schedule->call(function () {
+                UpdateStatusCLPWithdraw::updateStatusWithdraw();
+            })->everyFiveMinutes();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
         /** 
          * get Clp wallet every 5minutes
          */
@@ -89,7 +123,7 @@ class Kernel extends ConsoleKernel
                 $newGetClp->getClpWallet();
             })->everyFiveMinutes();
         } catch (\Exception $ex) {
-            
+            Log::info($ex);
         }
     }
 

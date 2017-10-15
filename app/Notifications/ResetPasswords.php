@@ -7,7 +7,7 @@ class ResetPasswords extends ResetPassword{
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->from('no-reply@cryptolending.org', 'CLP')
+            ->from('no-reply@clpcoin.co', 'CLP')
             ->subject('Reset Password')
             //->greeting('Dear '.$this->name. ',')
             //->greeting('Dear Your')

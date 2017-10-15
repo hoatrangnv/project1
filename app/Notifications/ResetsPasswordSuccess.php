@@ -16,9 +16,9 @@ class ResetsPasswordSuccess extends Notification
     public function toMail()
     {
         return (new MailMessage)
-            ->from('no-reply@cryptolending.org', 'CLP')
+            ->from('no-reply@clpcoin.co', 'CLP')
             ->subject('Reset password sussefullly')
             ->greeting('Dear '.$this->user->name. ',')
-            ->line('Welcome to the crypyto.');
+            ->line('Welcome to the CLP Coin.');
     }
 }

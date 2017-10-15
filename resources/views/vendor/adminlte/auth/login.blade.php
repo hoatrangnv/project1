@@ -9,7 +9,7 @@
     <div id="app" v-cloak>
         <div class="login-box">
             <div class="login-logo">
-                <a href="{{ url('/home') }}"><b>CLP</b></a>
+                <a href="{{ url('/home') }}"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CLP</b></a>
             </div>
             <div class="login-box-body">
                 <p class="login-box-msg"> {{ trans('adminlte_lang::message.siginsession') }} </p>
