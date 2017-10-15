@@ -159,6 +159,67 @@ class RegisterController extends Controller
                 echo "Net select wallet yet";
         }
     }
+
+    /*
+    * @author GiangDT
+    * 
+    * Generate new address
+    *
+    */
+    private function GenerateAddress( $type, $name = null ) {
+        $data = [];
+        switch ($type) {
+            case "bitgo":
+                $bitgo = new BitGoSDK();
+                $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
+                $wallet = $bitgo->wallets();
+                //set mat khau mac dinh
+                $createWallet = $wallet->createWallet($data['email'],config('app.bitgo_password'),"keyternal");
+                $addressWallet = $idWallet = $createWallet['wallet']->getID();
+                //backup key ...
+                $backupKey = json_encode($createWallet);
+                //add hook ...
+                $wallet = $bitgo->wallets()->getWallet($idWallet);
+                $createWebhook = $wallet->createWebhook("transaction",config('app.bitgo_hook'));
+                return $data = [ 'idWallet' => $idWallet ];
+            case self::COINBASE:
+                // tạo acc ví cho tk
+                $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
+                $client = Client::create($configuration);
+
+                //Account detail
+                $account = $client->getAccount(config('app.coinbase_account'));
+
+                // Generate new address and get this adress
+                $address = new Address([
+                    'name' => $name
+                ]);
+
+                //Generate new address
+                $client->createAccountAddress($account, $address);
+
+                //Get all address
+                $listAddresses = $client->getAccountAddresses($account);
+
+                $address = '';
+                $id = '';
+                foreach($listAddresses as $add) {
+                    if($add->getName() == $name) {
+                        $address = $add->getAddress();
+                        $id = $add->getId();
+                        break;
+                    }
+                }
+
+                $data = [ "accountId" => $id,
+                    "walletAddress" => $address ];
+
+                return $data;
+            default:
+                throw new \Exception("Not select type of api yet");
+                
+        }
+    }
     
     /**
      * Create a new user instance after a valid registration.
@@ -177,7 +238,9 @@ class RegisterController extends Controller
             $secondSaleEnd = date('Y-m-d', strtotime(config('app.second_private_end')));
 
             $active = 0;
-            if($currentDate <= $secondSaleEnd) $active = 1;
+            if($currentDate <= $secondSaleEnd) {
+                $active = 1;
+            }
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['firstname'],
@@ -202,6 +265,12 @@ class RegisterController extends Controller
 
             $user = User::create($fields);
 
+            if($currentDate <= $secondSaleEnd) {
+                $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
+                $fields['accountCoinBase'] = $accountWallet['accountId'];
+                $fields['walletAddress'] = $accountWallet['walletAddress'];
+            }
+
             //SAVE to User_datas
             $fields['userId'] = $user->id;
             //$fields['walletAddress'] = $accountWallet['walletAddress'];
@@ -215,7 +284,7 @@ class RegisterController extends Controller
             //ma hoa send link active qua mail
             //in private sale don't send active email
 
-            if($currentDate <= $secondSaleEnd) {
+            if($currentDate > $secondSaleEnd) {
                 if($user) {
                     $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
                     $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));
