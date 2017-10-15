@@ -143,7 +143,7 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'bail|required|min:2',
             'email' => 'required|email|unique:users,email,' . $id,
-            'roles' => 'required|min:1'
+            //'roles' => 'required|min:1'
         ]);
 
         // Get the user
