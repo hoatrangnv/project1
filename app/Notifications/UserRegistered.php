@@ -29,7 +29,7 @@ class UserRegistered extends Notification
             ->greeting('Dear '.$this->user->name. ',')
             ->line('Welcome to the CLP Coin.')
             ->action('Active Account', $this->link_active)
-            ->line('Link active account expire 3 days.')
-            ->line('If you did not request Active Account, no further action is required. Please contact us if you did not submit this request.');
+            ->line('Link active account will expire in 3 days.')
+            ->line('If you did not request register account, no further action is required. Please contact us if you did not submit this request.');
     }
 }

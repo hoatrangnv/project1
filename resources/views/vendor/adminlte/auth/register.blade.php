@@ -19,7 +19,15 @@
             <div class="register-logo">
                 <a href="{{ url('/home') }}"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CLP</b></a>
             </div>
-
+            <div class="signupSteps">
+                <h2>
+                    <span class="fa-stack fa-lg"><i class="fa fa-circle step"></i></span>Register 
+                    <i class="fa fa-long-arrow-right"></i> 
+                    <span class="fa-stack fa-lg"><i class="fa fa-circle-thin step"></i></span>Activate
+                    <i class="fa fa-long-arrow-right"></i>
+                    <span class="fa-stack fa-lg"><i class="fa fa-circle-thin step"></i></span>Complete
+                </h2>
+            </div>
             <div class="register-box-body">
                 <p class="login-box-msg">{{ trans('adminlte_lang::message.registermember') }}</p>
 

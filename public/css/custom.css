@@ -192,3 +192,56 @@
      @media (max-width: 767px) {
         .binary-search #search-input {max-width: 106px; margin-bottom: 10px;}
     }
+
+    .signupSteps h2 {
+        text-align: center;
+        font-size: 18px;
+        margin-top: 8px;
+        color: #3c8dbc;
+        font-weight: 400;
+    }
+
+    .noti-active {
+        width: 780px;
+    }
+
+    @media (max-width: 767px) {
+        .signupSteps h2 {
+            font-size: 16px;
+        }
+
+        .noti-active {
+            width: 100%;
+        }
+    }
+
+    .signupSteps .fa-stack {
+        width: 1em;
+        margin-left: 0.3em;
+    }
+
+    .thanks-header {
+        text-align: center;
+        color: #3c8dbc;
+        font-size: 16px;
+    }
+
+    .thanks-body {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .thanks-footer {
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .thanks-login {
+        cursor: pointer;
+        text-align: center;
+        color: #3c8dbc;
+        text-decoration: underline;
+        font-size: 14px;
+        font-weight: bold;
+    }
