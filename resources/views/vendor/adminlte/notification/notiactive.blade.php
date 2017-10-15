@@ -22,8 +22,10 @@
             </div>
             <div class="login-box-body">
                 <div class="thanks-header">Thank you for creating your account.</div>
-                <div class="thanks-body">Please check your email for confirmation letter.</div>
-                <div class="thanks-footer">Be sure to check your spam box if it does not arrive within a few minutues.</div>
+                @if($private_sale_end)
+                    <div class="thanks-body">Please check your email for confirmation letter.</div>
+                    <div class="thanks-footer">Be sure to check your spam box if it does not arrive within a few minutues.</div>
+                @endif
                 <div class="thanks-login"><a href="/login">Go to login.</a></div>
             </div>
         </div>

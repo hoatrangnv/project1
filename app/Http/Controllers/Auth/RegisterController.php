@@ -18,6 +18,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Notifications\UserRegistered;
 use App\UserData;
 use App\UserCoin;
+use App\CLPWallet;
 use URL;
 use Session;
 
@@ -220,6 +221,27 @@ class RegisterController extends Controller
                 
         }
     }
+
+    /*
+    * @author GiangDT
+    * 
+    * Generate new address
+    *
+    */
+    private function assignCLPAddress( $userId ) 
+    {
+        $clpAddress = CLPWallet::whereNull('userId')
+                            ->orderby('id', 'asc')
+                            ->get()
+                            ->first();
+
+        if(isset($clpAddress->address)) {
+            $clpAddress->userId = $userId;
+            $clpAddress->save();
+        } else {
+            CLPWallet::create(['userId' => $userId]);
+        }
+    }
     
     /**
      * Create a new user instance after a valid registration.
@@ -276,6 +298,8 @@ class RegisterController extends Controller
                 $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
                 $fields['accountCoinBase'] = $accountWallet['accountId'];
                 $fields['walletAddress'] = $accountWallet['walletAddress'];
+
+                $this->assignCLPAddress($user->id);
             }
             //Luu thong tin ca nhan vao bang user_coin
             //$fields['backupKey'] = $backupKey;

@@ -27,7 +27,15 @@ class NotificationController extends Controller
         if(Auth::user()){
             redirect('home');
         }
-        return view('adminlte::notification.notiactive');
+
+        $currentDate = date('Y-m-d');
+        $secondSaleEnd = date('Y-m-d', strtotime(config('app.second_private_end')));
+        
+        $private_sale_end = 0;
+        if($currentDate > $secondSaleEnd) {
+            $private_sale_end = 1;
+        }
+        return view('adminlte::notification.notiactive', array('private_sale_end' => $private_sale_end));
     }
 }
 
