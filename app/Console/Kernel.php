@@ -39,13 +39,13 @@ class Kernel extends ConsoleKernel
          * run every 30s update notification
          */
         $stringCronTab = "* * * * * *";
-        try {
-            $schedule->call(function () {
-                UpdateBtcCoin::UpdateBtcCoinAmount();
-            })->everyMinute();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // try {
+        //     $schedule->call(function () {
+        //         UpdateBtcCoin::UpdateBtcCoinAmount();
+        //     })->everyMinute();
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
         /** 
          * @author Huynq
          * run every day update availableAmount(from holding wallet) table usercoin
@@ -69,13 +69,13 @@ class Kernel extends ConsoleKernel
         }
 
         // Auto add to binary at 23:30 every sunday
-        try {
-            $schedule->call(function () {
-                AutoAddBinary::addBinary();
-            })->weekly()->saturdays()->at('23:00'); //->weekly()->sundays()->at('23:30');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // try {
+        //     $schedule->call(function () {
+        //         AutoAddBinary::addBinary();
+        //     })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
 		
         // Profit run everyday
 		try {
