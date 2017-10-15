@@ -265,17 +265,18 @@ class RegisterController extends Controller
 
             $user = User::create($fields);
 
-            if($currentDate <= $secondSaleEnd) {
-                $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
-                $fields['accountCoinBase'] = $accountWallet['accountId'];
-                $fields['walletAddress'] = $accountWallet['walletAddress'];
-            }
+            
 
             //SAVE to User_datas
             $fields['userId'] = $user->id;
             //$fields['walletAddress'] = $accountWallet['walletAddress'];
             $userData = UserData::create($fields);
 
+            if($currentDate <= $secondSaleEnd) {
+                $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
+                $fields['accountCoinBase'] = $accountWallet['accountId'];
+                $fields['walletAddress'] = $accountWallet['walletAddress'];
+            }
             //Luu thong tin ca nhan vao bang user_coin
             //$fields['backupKey'] = $backupKey;
             $userCoin = UserCoin::create($fields);
