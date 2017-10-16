@@ -10,12 +10,12 @@
     <meta content="The next generation of on-chain Exchange & Payment Service" name="description" />
     <meta content="blockchain, exchange network, ethereum, bitcoin, decentralize, free" name="keywords" />
     <meta content="index, follow" name="robots" />
-    <meta content="Crypto Lending Project" property="og:title" />
+    <meta content="CLP Coin" property="og:title" />
     <meta content="website" property="og:type" />
     <meta content="Crypto Lending is a decentralized peer-to-peer lending platform that applies Blockchain technology and CLP coin as material.."
         property="og:description" />
 
-    <meta content="https://avatars1.githubusercontent.com/u/19280161?v=4&s=200" property="og:image" />
+    <meta content="http://clp.wan2save.vn/front/images/img_web/Logo1.png" property="og:image" />
     <meta content="The next generation of on-chain Exchange & Payment Service" name="twitter:card" />
     <meta content="CLP is an open source coin that is written on Blockchain of Ethereum platform and based on ERC20 Standard."
         name="twitter:description" />
@@ -75,7 +75,7 @@
                             <a class="nav-link" href="#team" data-offset="100">Team</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="modal" data-target="#faqa">FAQ</a>
+                            <a class="nav-link" href="#faqa" data-target="#faqa">FAQ</a>
                         </li>
 
                     </ul>
@@ -89,7 +89,7 @@
                             <a class="nav-link" href="https://twitter.com/CLPcoins?lang=de"><i class="fa fa-twitter"></i></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://clpcoin.co"><i class="fa fa-user"></i></a>
+                            <a class="nav-link" href="https://clpcoin.co/login"><i class="fa fa-user"></i></a>
                         </li>
                     </ul>
 
@@ -394,14 +394,14 @@
                 <div class="row mt-2">
                     <!--Second column-->
                     <div class="col-md-7 mb-2 smooth-scroll wow fadeIn" data-wow-delay="0.3s">
-                        <h3 class="cyan-text-4">WHAT IS CRYTO LENDING COIN (CLP COIN)?</h3>
+                        <h3 class="cyan-text-4">WHAT IS CRYPTO LENDING COIN (CLP COIN)?</h3>
                         <h4 class="font-bold mb-1-half">A powerful, secure and global Coin</h1>
                             <p class="grey-text" align="justify">CLP is an open source coin that is written on Blockchain and based on ERC20 Standard of Ethereum
                                 - a prestigious platform with flexible and powerful Smart Contract. CLP is characterized
                                 by a peer protocol with highly personalization, fast transaction, safety storage.</p>
-                            <p class="grey-text" align="justify">Of which 50% CLP coin is used for offering, rewarding and marketing. 26% CLP coin will be paid
+                            <p class="grey-text" align="justify">Of which 58% CLP coin is used for offering, rewarding and marketing. 26% CLP coin will be paid
                                 to partners, individual providing / voting user credit data. 16% CLP coin will be given to
-                                Team Development, 8% CLP coin will be paid to mining cost.</p>
+                                Team Development.</p>
                             <p class="grey-text" align="justify">With the smart community development approach, we believe that CLP coin will increase from $
                                 1 to a considerable higher value in a relatively short time.</p>
                             <!-- <a href="#!" class="btn btn-rounded btn-indigo-clp">Read more</a> -->
@@ -482,7 +482,7 @@
                                     <!-- <h5>Basic plan</h5> -->
                                     <img src="bbh/img/clp/p1.jpg" class="mb-2">
                                     <!--Price-->
-                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -503,7 +503,7 @@
 
                                     <!--Price-->
 
-                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -521,7 +521,7 @@
                             <div class="text-center">
                                 <div class="card-block">
                                     <img src="bbh/img/clp/p3.jpg" class="mb-2">
-                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -547,7 +547,7 @@
                                     <!-- <h5>Basic plan</h5> -->
                                     <img src="bbh/img/clp/p4.jpg" class="mb-2">
                                     <!--Price-->
-                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -568,7 +568,7 @@
 
                                     <!--Price-->
 
-                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -656,7 +656,7 @@
                             </div>
 
                             <!--Content-->
-                            <h4>Kristen Brandt</h4>
+                            <h4>Kristian Brandt</h4>
                             <h5>Executive and Legal Advisor</h5>
                             <p><i class="fa fa-quote-left"></i> Kristian Brandt is Industry leader with proven ability to start-up
                                 and manage rapid sales growth while maintaining a full focus on all areas of public relations</p>
@@ -843,10 +843,8 @@
                                 CLP is an open source coin that is written on Blockchain and based on the ERC20 Standard of Ethereum - a prestigious platform
                                 with flexible and powerful Smart Contract. CLP is characterized by a peer protocol with highly
                                 personalization, fast transaction and safety storage. The supply of CLP is limited to 150
-                                million coins of which 50% CLP is used for offering, rewarding, and marketing, 26% CLP for
-                                partners, individual providing / voting user credit data, 16% CLP for Team Development, and
-                                8% CLP for mining cost. With the smart community development approach, we believe that CLP
-                                coin can increase quickly in a short time.
+                                million coins of which 58% CLP is used for offering, rewarding, and marketing, 26% CLP for
+                                partners, individual providing / voting user credit data, 16% CLP for Team Development
 
                             </div>
                         </div>
@@ -1173,12 +1171,70 @@
     <!--/Main content-->
 
     <!--Footer-->
-    <footer class="page-footer center-on-small-only" style="padding-top:0">
+    <footer class="page-footer center-on-small-only">
+
+        <!--Footer Links-->
+        <div class="container-fluid">
+
+
+
+
+
+            <!--Second row-->
+            <div class="row mt-2 mb-1 text-center wow fadeIn" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeIn;">
+
+
+
+                <hr class="w-100 hidden-md-up">
+
+                <!--Second column-->
+                <div class="col-xl-6 col-md-6">
+
+                    <!--Title-->
+                    <h5 class="title">Location</h5>
+
+                    <!--Address-->
+                    <p>Hamad Bin Abdulla Rd - Fujairah - UAE</p>
+
+                    <!--Title-->
+                    <!-- <h5 class="title">Contact</h5> -->
+
+                    <!--Contact info-->
+                    <!-- <p>Mr. Danny Smith + 01 234 567 89 info@gmail.com
+                    </p> -->
+
+                </div>
+                <!--/Second column-->
+
+                <hr class="w-100 hidden-md-up">
+
+                <!--Third column-->
+                <div class="col-xl-6 col-md-6">
+
+                    <!--Title-->
+                    <h5 class="title">Stay in touch</h5>
+
+                    <!--Social buttons-->
+                    <ul class="inline-ul">
+                        <li><a class="btn-floating btn-small btn-fb waves-effect waves-light" href="https://www.facebook.com/CLPcoin-125929678066347/"><i class="fa fa-facebook"> </i></a></li>
+                        <li><a class="btn-floating btn-small btn-tw waves-effect waves-light" href="https://twitter.com/CLPcoins?lang=de"><i class="fa fa-twitter"> </i></a></li>
+
+                    </ul>
+                    <!--/Social buttons-->
+
+                </div>
+                <!--/Third column-->
+
+            </div>
+            <!--/Second row-->
+
+        </div>
+        <!--/Footer Links-->
 
         <!--Copyright-->
-        <div class="footer-copyright wow fadeIn" style="padding-top:0" data-wow-delay="0.3s">
+        <div class="footer-copyrightclp wow fadeIn" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeIn;">
             <div class="container-fluid">
-                © 2017 Copyright: <a href="http://clpcoin.co"> clpcoin.co </a>
+                © 2017 Copyright: <a href="http://www.clpcoin.co"> clpcoin.co </a>
             </div>
         </div>
         <!--/Copyright-->
