@@ -174,7 +174,7 @@
                 }else{
                     swal({
                       title: "Are you sure?",
-                      text: $("#userSelect option:selected").html() + " will be push on the Left!",
+                      text: $("#userSelect option:selected").html() + " will be push to the Left!",
                       type: "warning",
                       showCancelButton: true,
                       confirmButtonClass: "btn-danger",
@@ -195,7 +195,7 @@
                 }else{
                     swal({
                       title: "Are you sure?",
-                      text: $("#userSelect option:selected").html() + " will be push on the Right!",
+                      text: $("#userSelect option:selected").html() + " will be push to the Right!",
                       type: "warning",
                       showCancelButton: true,
                       confirmButtonClass: "btn-danger",
