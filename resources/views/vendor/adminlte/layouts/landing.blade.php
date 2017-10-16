@@ -396,9 +396,9 @@
                             <p class="grey-text" align="justify">CLP is an open source coin that is written on Blockchain and based on ERC20 Standard of Ethereum
                                 - a prestigious platform with flexible and powerful Smart Contract. CLP is characterized
                                 by a peer protocol with highly personalization, fast transaction, safety storage.</p>
-                            <p class="grey-text" align="justify">Of which 50% CLP coin is used for offering, rewarding and marketing. 26% CLP coin will be paid
+                            <p class="grey-text" align="justify">Of which 58% CLP coin is used for offering, rewarding and marketing. 26% CLP coin will be paid
                                 to partners, individual providing / voting user credit data. 16% CLP coin will be given to
-                                Team Development, 8% CLP coin will be paid to mining cost.</p>
+                                Team Development.</p>
                             <p class="grey-text" align="justify">With the smart community development approach, we believe that CLP coin will increase from $
                                 1 to a considerable higher value in a relatively short time.</p>
                             <!-- <a href="#!" class="btn btn-rounded btn-indigo-clp">Read more</a> -->
@@ -621,7 +621,7 @@
 
                             <!--Content-->
                             <h4>Carsten</h4>
-                            <h5>Advisor</h5>
+                            <h5>CEO</h5>
                             <p><i class="fa fa-quote-left"></i> Carsten Berner has a broad and extensive business experience
                                 in key positions in major international companies and he is also founder of several successful
                                 companies.
@@ -654,7 +654,7 @@
 
                             <!--Content-->
                             <h4>Kristen</h4>
-                            <h5>CEO</h5>
+                            <h5>Advisor</h5>
                             <p><i class="fa fa-quote-left"></i> Kristian Brandt is Industry leader with proven ability to start-up
                                 and manage rapid sales growth while maintaining a full focus on all areas of public relations</p>
                             <div class="collapse" id="collapseKristen">
