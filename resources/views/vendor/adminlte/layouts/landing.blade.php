@@ -52,7 +52,7 @@
                 </button>
 
                 <a class="navbar-brand" href="#">
-                     <img src="bbh/http://clp.wan2save.vn/front/images/img_web/Logo1.png" alt="" class="nav-logo">
+                     <img src="bbh/img/Logo1.png" alt="" class="nav-logo">
                 </a>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
