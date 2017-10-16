@@ -26,13 +26,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 
     <!-- Bootstrap core CSS -->
-    <link href="/bbh/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bbh/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Material Design Bootstrap -->
-    <link href="/bbh/css/mdb.css" rel="stylesheet">
+    <link href="bbh/css/mdb.css" rel="stylesheet">
 
     <!-- Your custom styles (optional) -->
-    <link href="/bbh/css/style.css" rel="stylesheet">
+    <link href="bbh/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -52,7 +52,7 @@
                 </button>
 
                 <a class="navbar-brand" href="#">
-                     <img src="http://clp.wan2save.vn/front/images/img_web/Logo1.png" alt="" class="nav-logo">
+                     <img src="bbh/http://clp.wan2save.vn/front/images/img_web/Logo1.png" alt="" class="nav-logo">
                 </a>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -88,6 +88,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="https://twitter.com/CLPcoins?lang=de"><i class="fa fa-twitter"></i></a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://clpcoin.co"><i class="fa fa-user"></i></a>
+                        </li>
                     </ul>
 
                 </div>
@@ -100,7 +103,7 @@
             <div class="hm-black-strong-1">
                 <div class="full-bg-img flex-center">
                     <div class="container">
-                        <div class="row smooth-scroll">
+                        <div class="row ">
                             <div class="col-md-12 white-text text-center">
                                 <div class="wow fadeInDown" data-wow-delay="0.2s">
                                     <h2 class="brand-name font-up font-bold mb-2">CLP Coin</h2>
@@ -112,7 +115,7 @@
                                     </h4>
                                 </div>
 
-                                <a href="/login" >Login</a>
+
                             </div>
                         </div>
                     </div>
@@ -396,9 +399,9 @@
                             <p class="grey-text" align="justify">CLP is an open source coin that is written on Blockchain and based on ERC20 Standard of Ethereum
                                 - a prestigious platform with flexible and powerful Smart Contract. CLP is characterized
                                 by a peer protocol with highly personalization, fast transaction, safety storage.</p>
-                            <p class="grey-text" align="justify">Of which 58% CLP coin is used for offering, rewarding and marketing. 26% CLP coin will be paid
+                            <p class="grey-text" align="justify">Of which 50% CLP coin is used for offering, rewarding and marketing. 26% CLP coin will be paid
                                 to partners, individual providing / voting user credit data. 16% CLP coin will be given to
-                                Team Development.</p>
+                                Team Development, 8% CLP coin will be paid to mining cost.</p>
                             <p class="grey-text" align="justify">With the smart community development approach, we believe that CLP coin will increase from $
                                 1 to a considerable higher value in a relatively short time.</p>
                             <!-- <a href="#!" class="btn btn-rounded btn-indigo-clp">Read more</a> -->
@@ -432,9 +435,9 @@
                             team and a unique business model, we bring needed financial solutions to everyone. We are not
                             a bank, we are a community.
                         </p>
-                        
 
-                        <a href="doc/clpinfor.docx" download  class="btn btn-rounded btn-indigo-clp"><i class="fa fa-download"></i>Read more</a>
+
+                        <a href="doc/clpinfor.docx" download class="btn btn-rounded btn-indigo-clp"><i class="fa fa-download"></i>Read more</a>
                         <!--Button-->
 
 
@@ -479,7 +482,7 @@
                                     <!-- <h5>Basic plan</h5> -->
                                     <img src="bbh/img/clp/p1.jpg" class="mb-2">
                                     <!--Price-->
-                                    <a class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -499,8 +502,8 @@
                                     <img src="bbh/img/clp/p2.jpg" class="mb-2">
 
                                     <!--Price-->
-                                    
-                                    <a class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+
+                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -518,7 +521,7 @@
                             <div class="text-center">
                                 <div class="card-block">
                                     <img src="bbh/img/clp/p3.jpg" class="mb-2">
-                                    <a class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -544,7 +547,7 @@
                                     <!-- <h5>Basic plan</h5> -->
                                     <img src="bbh/img/clp/p4.jpg" class="mb-2">
                                     <!--Price-->
-                                    <a class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -564,8 +567,8 @@
                                     <img src="bbh/img/clp/p5.jpg" class="mb-2">
 
                                     <!--Price-->
-                                    
-                                    <a class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+
+                                    <a href="https://clpcoin.co" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -583,7 +586,7 @@
                             <div class="text-center">
                                 <div class="card-block">
                                     <img src="bbh/img/clp/p6.jpg" class="mb-2">
-                                    <a class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -603,7 +606,7 @@
             <section id="team" class="section team-section">
 
                 <!--Section heading-->
-                <h1 class="text-center mb-3 wow fadeIn" data-wow-delay="0.2s">Team</h1>
+                <h1 class="text-center mb-3 font-big font-bold wow fadeIn" data-wow-delay="0.2s">Team</h1>
 
 
 
@@ -620,7 +623,7 @@
                             </div>
 
                             <!--Content-->
-                            <h4>Carsten</h4>
+                            <h4>Carsten Berner</h4>
                             <h5>CEO</h5>
                             <p><i class="fa fa-quote-left"></i> Carsten Berner has a broad and extensive business experience
                                 in key positions in major international companies and he is also founder of several successful
@@ -653,16 +656,15 @@
                             </div>
 
                             <!--Content-->
-                            <h4>Kristen</h4>
-                            <h5>Advisor</h5>
+                            <h4>Kristen Brandt</h4>
+                            <h5>Executive and Legal Advisor</h5>
                             <p><i class="fa fa-quote-left"></i> Kristian Brandt is Industry leader with proven ability to start-up
                                 and manage rapid sales growth while maintaining a full focus on all areas of public relations</p>
                             <div class="collapse" id="collapseKristen">
                                 <p>First class negotiation skills, committed to developing win-win partnerships with Key customers,
                                     direct sales channels, on-line marketing, franchisees and Service providers.</p>
                                 <p>Substantial track record of introducing profitable business from SME, Corp. and Wholesale
-                                    market segments.
-                                </p>
+                                    market segments.</p>
                                 <p>Creative and innovative with first class commercial skills. Extensive International Business
                                     Network within the Crypto world.</p>
                                 <p>Very strong analytical skills with associated problem-solving ability.</p>
@@ -706,7 +708,7 @@
                 <div class="row text-center">
 
                     <!--First column-->
-                    <div class="col-md-4 mb-r wow fadeIn" data-wow-delay="0.4s">
+                    <div class="col-md-4 offset-md-1 mb-r wow fadeIn" data-wow-delay="0.4s">
 
                         <div class="testimonial">
                             <!--Avatar-->
@@ -735,7 +737,7 @@
                     <!--/First column-->
 
                     <!--Second column-->
-                    <div class="col-md-4 mb-r wow fadeIn" data-wow-delay="0.4s">
+                    <div class="col-md-4 offset-md-1 mb-r wow fadeIn" data-wow-delay="0.4s">
                         <div class="testimonial">
                             <!--Avatar-->
                             <div class="avatar">
@@ -743,8 +745,8 @@
                             </div>
 
                             <!--Content-->
-                            <h4>Allan</h4>
-                            <h5>Developer</h5>
+                            <h4>Allan Man</h4>
+                            <h5>CTO</h5>
                             <p><i class="fa fa-quote-left"></i> Allan’s work has 30 years’ experience in IT industry and span
                                 across multiple line of business. He started his career with Union Bank of Switzerland to
                                 provide support service in the Forex Dealing system. </p>
@@ -1171,39 +1173,12 @@
     <!--/Main content-->
 
     <!--Footer-->
-    <footer class="page-footer center-on-small-only">
-
-        <!--Footer Links-->
-        <div class="container">
-
-            <!--First row-->
-            <div class="row mb-3 wow fadeIn" data-wow-delay="0.3s">
-
-                <!--First column-->
-                <div class="col-lg-8 offset-lg-2 text-center smooth-scroll">
-
-                    <!--Icon-->
-                    <i class="fa fa-check fa-4x white-text pt-1 pb-2"></i>
-                    <!--Title-->
-                    <h2 class="mb-2">Make an appointment with a leader today</h2>
-
-                    <!--Button-->
-                    <a href="#contact" data-toggle="modal" data-target="#modal-contact" data-offset="100" class="btn btn-rounded btn-unique">Make An Appointment</a>
-
-                </div>
-                <!--/First column-->
-
-            </div>
-            <!--/First row-->
-
-        </div>
-        <!--/Footer Links-->
+    <footer class="page-footer center-on-small-only" style="padding-top:0">
 
         <!--Copyright-->
-        <div class="footer-copyright wow fadeIn" data-wow-delay="0.3s">
+        <div class="footer-copyright wow fadeIn" style="padding-top:0" data-wow-delay="0.3s">
             <div class="container-fluid">
-                © 2017 Copyright: <a href="http://www.EPICICLES.COM"> EPICICLES.COM </a>
-
+                © 2017 Copyright: <a href="http://clpcoin.co"> clpcoin.co </a>
             </div>
         </div>
         <!--/Copyright-->
