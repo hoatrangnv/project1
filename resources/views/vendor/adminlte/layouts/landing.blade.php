@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/png" href="/img/favicon.png" />
     <meta content="The next generation of on-chain Exchange & Payment Service" name="description" />
     <meta content="blockchain, exchange network, ethereum, bitcoin, decentralize, free" name="keywords" />
     <meta content="index, follow" name="robots" />
@@ -89,7 +88,7 @@
                             <a class="nav-link" href="https://twitter.com/CLPcoins?lang=de"><i class="fa fa-twitter"></i></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://clpcoin.co/login"><i class="fa fa-user"></i></a>
+                            <a class="nav-link" href="/login"><i class="fa fa-user"></i></a>
                         </li>
                     </ul>
 
@@ -482,7 +481,7 @@
                                     <!-- <h5>Basic plan</h5> -->
                                     <img src="bbh/img/clp/p1.jpg" class="mb-2">
                                     <!--Price-->
-                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -503,7 +502,7 @@
 
                                     <!--Price-->
 
-                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -521,7 +520,7 @@
                             <div class="text-center">
                                 <div class="card-block">
                                     <img src="bbh/img/clp/p3.jpg" class="mb-2">
-                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -547,7 +546,7 @@
                                     <!-- <h5>Basic plan</h5> -->
                                     <img src="bbh/img/clp/p4.jpg" class="mb-2">
                                     <!--Price-->
-                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -568,7 +567,7 @@
 
                                     <!--Price-->
 
-                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -586,7 +585,7 @@
                             <div class="text-center">
                                 <div class="card-block">
                                     <img src="bbh/img/clp/p6.jpg" class="mb-2">
-                                    <a href="https://clpcoin.co/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
+                                    <a href="/login" class="btn btn-indigo-clp btn-rounded waves-effect waves-light">Buy now</a>
                                 </div>
                             </div>
 
@@ -1264,12 +1263,6 @@
         $('#myModal').on('shown.bs.modal', function () {
             $('#contact').focus()
         })
-    </script>
-    <!--Google Maps-->
-    <script src="https://maps.google.com/maps/api/js"></script>
-
-    <script>
-
     </script>
 
 </body>
