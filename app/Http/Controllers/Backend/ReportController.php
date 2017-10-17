@@ -37,13 +37,13 @@ class ReportController extends Controller{
             $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
         }
 
-        $data = UserPackage::selectRaw('user_packages.dt as date, SUM(packages.price) as totalPrice')
+        $data = UserPackage::selectRaw('user_packages.created_at as date, SUM(packages.price) as totalPrice')
             ->join('packages', 'packages.id', 'user_packages.packageId')
-            ->whereBetween('user_packages.dt', array(
+            ->whereBetween('user_packages.created_at', array(
                                 $from_date,
                                 $to_date
                             ))
-            ->groupBy('user_packages.dt')
+            ->groupBy('user_packages.created_at')
             ->get()
             ->toArray();
         $chart['data'] = json_encode($data);//058DC7

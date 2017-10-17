@@ -1,4 +1,4 @@
-@extends('adminlte::layouts.member')
+@extends('adminlte::backend.layouts.member')
 
 @section('htmlheader_title')
     {{ trans('adminlte_lang::user.header_title') }}

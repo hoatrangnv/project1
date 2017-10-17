@@ -9,44 +9,35 @@ namespace App\Cronjob;
 
 use App\Withdraw;
 use App\Wallet;
-use Coinbase\Wallet\Enum\CurrencyCode;
-use Coinbase\Wallet\Resource\Transaction;
-use Coinbase\Wallet\Value\Money;
-use Coinbase\Wallet\Configuration;
-use Coinbase\Wallet\Client;
-
+use DateTime;
 /**
  * Description of UpdateStatusBTCTransaction
  *
  * @author giangdt
  */
-class UpdateStatusBTCWithdraw
+class UpdateStatusCLPWithdraw
 {
     
     public static function updateStatusWithdraw()
     {
 
-        $configuration = Configuration::apiKey( 
-                    config('app.coinbase_key'), 
-                    config('app.coinbase_secret') );
-            
-        $client = Client::create($configuration);
-
-        $account = $client->getAccount(config('app.coinbase_account'));
-
         //List withdraw not completed
         $listWithdrawNotUpdated = Withdraw::where("status", 0)->whereNotNull('amountCLP')->get();
 
         foreach($listWithdrawNotUpdated as $withdraw) {
-            
-            $transactionDetail = $client->getAccountTransaction($account, $withdraw->transaction_id);
-            if($transactionDetail->getStatus() == "completed") {
-                $withdraw->status = 1;
-                $withdraw->save();
 
+            $datetime1 = new DateTime(date("Y-m-d H:i:s"));
+            //get release date của package cuối cùng <-> max id
+            $enoughtTime = strtotime($withdraw->created_at . "+ 3 minutes");
+            $datetime2 = new DateTime(date('Y-m-d H:i:s', $enoughtTime));
+
+            $interval = $datetime2->diff($datetime1);
+            //compare
+            if( $interval->format('%i') >= 0 ) {
                 //Updat status in table wallets from "Pending" => "Completed"
                 Wallet::find($withdraw->wallet_id)->update(['note' => "Completed"]);
             }
+            
         }
     }
 }

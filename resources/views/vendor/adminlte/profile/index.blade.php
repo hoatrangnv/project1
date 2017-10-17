@@ -1,10 +1,6 @@
 @extends('adminlte::layouts.member')
 
-@section('htmlheader_title')
-    {{ trans('adminlte_lang::profile.profile') }}
-@endsection
-
-@section('contentheader_description')
+@section('contentheader_title')
     {{ trans('adminlte_lang::profile.my_profile') }}
 @endsection
 
@@ -96,7 +92,7 @@
                                 </tr> 
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.created_at') }}</td>
-                                    <td>{{ Auth::user()->created_at }}</td>
+                                    <td>{{ Auth::user()->created_at->format('Y-m-d') }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -193,19 +189,19 @@
                         <table class="table no-margin">
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.scan_photo') }}</td>
-                                <td>
+                                <!-- <td>
                                     <button id="scan_photo_view" class="btn btn-xs btn-info">Preview</button>
                                     <input type="file" name="scan_photo" id="scan_photo" accept="image/*" />
                                     <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['scan_photo']) ? $photo_verification['scan_photo'] : '') }}" id="scan_photo_thumb"/>
-                                </td>
+                                </td> -->
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.holding_photo') }}</td>
-                                <td>
+                                <!-- <td>
                                     <button id="holding_photo_view" class="btn btn-xs btn-info">Preview</button>
                                     <input type="file" name="holding_photo" id="holding_photo" accept="image/*" />
                                     <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['holding_photo']) ? $photo_verification['holding_photo'] : '') }}" id="holding_photo_thumb"/>
-                                </td>
+                                </td> -->
                             </tr>
                         </table>
                     </div>
@@ -227,15 +223,11 @@
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.sponsor_username') }}</td>
                                     <td>{{ $sponsor->name }}</td>
-                                </tr> 
+                                </tr>
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.my_email') }}</td>
                                     <td>{{ $sponsor->email }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="label-td">{{ trans('adminlte_lang::profile.phone') }}</td>
-                                    <td>{{ $sponsor->phone }}</td>
-                                </tr>
+                                </tr> 
                                 <tr>
                                     <td class="label-td">{{ trans('adminlte_lang::profile.country') }}</td>
                                     <td>{{ $sponsor->name_country }}</td>
@@ -495,7 +487,7 @@
                         success: function (response) {
                             if(!response.err){
                                 $('#scan_photo_thumb').val(response.image);
-                                $('#photo_msg').text('Upload successful.');
+                                $('#photo_msg').text('Upload successfully.');
                             }else{
                                 alert(response.msg);
                             }
@@ -527,7 +519,7 @@
                         success: function (response) {
                             if(!response.err){
                                 $('#holding_photo_thumb').val(response.image);
-                                $('#photo_msg').text('Upload successful.');
+                                $('#photo_msg').text('Upload successfully.');
                             }else{
                                 alert(response.msg);
                             }

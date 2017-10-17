@@ -6,7 +6,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <html lang="en">
 
 @section('htmlheader')
-    @include('adminlte::layouts.partials.htmlheader')
+    @include('adminlte::backend.layouts.partials.htmlheader')
 @show
 
 <script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>

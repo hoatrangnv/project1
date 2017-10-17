@@ -40,7 +40,7 @@ class MemberController extends Controller
                             $user = User::where('name', '=', $request['username'])->first();
                         }
 
-                        if(true || $user && $lstGenealogyUser && (in_array($user->id, $lstGenealogyUser) || $user->id == Auth::user()->id)) {
+                        if($user && $lstGenealogyUser && (in_array($user->id, $lstGenealogyUser) || $user->id == Auth::user()->id)) {
                             $fields = [
                                 'id'     => $user->id,
                                 'uid'     => $user->uid,
@@ -77,7 +77,7 @@ class MemberController extends Controller
                     if($userTreePermission = $user->userTreePermission)
                         $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
                     $fields = array();
-                    if(true || isset($request['id']) && $request['id'] > 0 && (($lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)) || $currentuserid == $request['id']) ){
+                    if(isset($request['id']) && $request['id'] > 0 && (($lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)) || $currentuserid == $request['id']) ){
                         $userDatas = UserData::where('refererId', $request['id'])->get();
                         $fields = array();
                         foreach ($userDatas as $userData) {
@@ -218,7 +218,7 @@ class MemberController extends Controller
         }
         $lstUsers = UserData::where('refererId', '=',$currentuserid)->where('status', 1)->where('isBinary', '!=', 1)->get();
 
-        $lstUserSelect = array('0'=> 'Choose a user');
+        $lstUserSelect = array('0'=> 'Choose a username');
         if(Auth::user()->userData->isBinary > 0){
             foreach ($lstUsers as $userData){
                 $lstUserSelect[$userData->userId] = $userData->user->name;

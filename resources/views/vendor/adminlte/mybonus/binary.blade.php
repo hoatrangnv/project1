@@ -11,7 +11,7 @@
 				<div class="box-header">
 					
 				</div>
-				<div class="box-body" style="padding-top:0;">
+				<div class="box-body table-responsive" style="padding-top:0;">
 					<table class="table table-bordered table-hover table-striped dataTable">
 						<tr>
 							<th>{{ trans('adminlte_lang::mybonus.week') }}</th>
@@ -23,7 +23,6 @@
 							<th>{{ trans('adminlte_lang::mybonus.rover') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.settled') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.bonus') }}</th>
-							<th>Tempo Bonus</th>
 							<th>{{ trans('adminlte_lang::mybonus.reinvest') }}</th>
 							<th>{{ trans('adminlte_lang::mybonus.transfer_withdraw') }}</th>
 						</tr>
@@ -39,7 +38,6 @@
 								<td>{{ number_format($binary->rightOpen + $binary->rightNew, 2) }}</td>
 								<td>{{ number_format($binary->settled, 2) }}</td>
 								<td>{{ number_format($binary->bonus, 2) }}</td>
-								<td>{{ number_format($binary->bonus_tmp, 2) }}</td>
 								<td>{{ $binary->bonus > 0 ? number_format(($binary->bonus*40/100), 2) : '' }}</td>
 								<td>{{ $binary->bonus > 0 ? number_format(($binary->bonus*60/100), 2) : '' }}</td>
 							</tr>

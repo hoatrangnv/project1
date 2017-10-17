@@ -1,4 +1,4 @@
-<?php 
+<?php
     use App\Http\Controllers\Backend\News\DisplayNewsController as News;
     $tempNews = new News();
     $news = $tempNews->getNewsDataDisplay();

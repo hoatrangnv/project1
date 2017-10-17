@@ -1,6 +1,3 @@
-<?php 
-use App\Http\Controllers\Wallet\Views\WalletViewController;
-?>
 @extends('adminlte::layouts.member')
 
 @section('contentheader_title')
@@ -35,7 +32,7 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
         </ul>
     </div>
     @endif
-    <?php echo WalletViewController::viewAllWallet();?>
+    @include('adminlte::layouts.wallet')
     <div class="row">
         <div class="col-md-12">
           <!-- Widget: user widget style 1 -->
@@ -63,10 +60,10 @@ use App\Http\Controllers\Wallet\Views\WalletViewController;
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <div class="col-xs-2 no-padding">
+                    <div class="col-xs-6 col-md-2 col-lg-2">
                         {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control input-sm', 'id' => 'wallet_type']) }}
                     </div>
-                    <div class="col-xs-2">
+                    <div class="col-xs-6 col-md-2 col-lg-2">
                         {!! Form::button('Filter', ['class' => 'btn btn-sm btn-primary', 'id' => 'btn_filter']) !!}
                         {!! Form::button('Clear', ['class' => 'btn btn-sm bg-olive', 'id' => 'btn_filter_clear']) !!}
                     </div>

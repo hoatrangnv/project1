@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend\User;
+namespace App\Http\Controllers\User;
 
 use App\User;
 use App\UserData;
@@ -62,10 +62,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'id');
-<<<<<<< HEAD:app/Http/Controllers/Backend/User/UserController.php
-=======
 
->>>>>>> 28b49a4c236816ef9ed91d2075add5ac5653a2c0:app/Http/Controllers/User/UserController.php
         return view('adminlte::backend.user.new', compact('roles'));
     }
 
@@ -146,7 +143,7 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'bail|required|min:2',
             'email' => 'required|email|unique:users,email,' . $id,
-            //'roles' => 'required|min:1'
+            'roles' => 'required|min:1'
         ]);
 
         // Get the user

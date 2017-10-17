@@ -79,6 +79,10 @@ return [
      'msg_transfer_success'     => 'Transfer successfully',
      'msg_transfer_fail'        => 'Transfer fail',
      'msg_transfer_rule'        => 'You can transfer to user in genealogy only!',
+     'msg_private_sale_1'        => 'You can buy',
+     'msg_private_sale_2'        => 'You can buy',
+     'msg_pre_sale'             => 'You can buy',
+     'msg_sale_tail'             => 'only',
 
     'error_reinvest_to_clp_over' => 'The amount is bigger than the amount you have',
     'success'                   => 'Success',

@@ -16,13 +16,10 @@
             <span class="sr-only">{{ trans('adminlte_lang::message.togglenav') }}</span>
         </a>
         &nbsp;
-        &nbsp;
-        <span class="" style="font-size: 18px;line-height: 50px;text-align: center;color: white">
-            <b>
-                <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
-                <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;
-                <span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
-            </b>
+        <span class="hidden-xs" style="font-size: 14px;line-height: 50px;text-align: center;color: white">
+            <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
+            <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;
+            <span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
         </span>
        
         <!-- Navbar Right Menu -->
@@ -46,78 +43,13 @@
                                             <!-- User Image -->
                                             <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image"/>
                                         </div>
-                                        <!-- Message title and timestamp -->
-                                        <h4>
-                                            {{ trans('adminlte_lang::message.supteam') }}
-                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                        </h4>
-                                        <!-- The message -->
-                                        <p>{{ trans('adminlte_lang::message.awesometheme') }}</p>
                                     </a>
                                 </li><!-- end message -->
                             </ul><!-- /.menu -->
                         </li>
-                        <li class="footer"><a href="#">c</a></li>
                     </ul>
                 </li><!-- /.messages-menu -->
 
-                <!-- Notifications Menu -->
-                <li class="dropdown notifications-menu" style="display: none">
-                    <!-- Menu toggle button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">10</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans('adminlte_lang::message.notifications') }}</li>
-                        <li>
-                            <!-- Inner Menu: contains the notifications -->
-                            <ul class="menu">
-                                <li><!-- start notification -->
-                                    <a href="#">
-                                        <i class="fa fa-users text-aqua"></i> {{ trans('adminlte_lang::message.newmembers') }}
-                                    </a>
-                                </li><!-- end notification -->
-                            </ul>
-                        </li>
-                        <li class="footer"><a href="#">{{ trans('adminlte_lang::message.viewall') }}</a></li>
-                    </ul>
-                </li>
-                <!-- Tasks Menu -->
-                <li class="dropdown tasks-menu" style="display: none">
-                    <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-flag-o"></i>
-                        <span class="label label-danger">9</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans('adminlte_lang::message.tasks') }}</li>
-                        <li>
-                            <!-- Inner menu: contains the tasks -->
-                            <ul class="menu">
-                                <li><!-- Task item -->
-                                    <a href="#">
-                                        <!-- Task title and progress text -->
-                                        <h3>
-                                            {{ trans('adminlte_lang::message.tasks') }}
-                                            <small class="pull-right">20%</small>
-                                        </h3>
-                                        <!-- The progress bar -->
-                                        <div class="progress xs">
-                                            <!-- Change the css width attribute to simulate progress -->
-                                            <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                <span class="sr-only">20% {{ trans('adminlte_lang::message.complete') }}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li><!-- end task item -->
-                            </ul>
-                        </li>
-                        <li class="footer">
-                            <a href="#">{{ trans('adminlte_lang::message.alltasks') }}</a>
-                        </li>
-                    </ul>
-                </li>
                 @if (Auth::guest())
                     <li><a href="{{ url('/register') }}">{{ trans('adminlte_lang::message.register') }}</a></li>
                     <li><a href="{{ url('/login') }}">{{ trans('adminlte_lang::message.login') }}</a></li>
@@ -133,11 +65,21 @@
                         </a>
                         <ul class="dropdown-menu">
                             <!-- The user image in the menu -->
-                            <li class="user-header">
+                            <li class="user-header" style="height: 190px;">
                                 <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" />
-                                <p>
-                                    {{ Auth::user()->name }}
-                                </p>
+                                <p style="font-size: 16px;margin-bottom: 0px;margin-top: 0px;">{{ Auth::user()->name }}</p>
+                                <div class="row" style="color:white">
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">ID:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">{{  Auth::user()->uid }}</i></div>
+                                </div>
+                                <div class="row" style="color:white">
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Pack:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</i></div>
+                                </div>
+                                <div class="row" style="color:white">
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Loyalty:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</i></div>
+                                </div>
                             </li>
                             <!-- Menu Body -->
                             <!-- Menu Footer-->
@@ -173,19 +115,33 @@
     </nav>
 </header>
 <script>
-    
+    var formatter = new Intl.NumberFormat('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 2,
+        });
+    var formatterBTC = new Intl.NumberFormat('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 8,
+        });
     function doLogout(){
          document.cookie = "open=1";
     }
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
     
-    function getTyGia(){
+    function getRate(){
         $.ajax({
             dataType: "json",
             url: '{{ URL::to("exchange") }}',
             success: function(data){
-               $('.btcusd').html(data[1].exchrate);
-               $('.clpusd').html(data[2].exchrate);
-               $('.clpbtc').html(data[0].exchrate);
+               $('.btcusd').html(formatter.format(data[1].exchrate));
+               $('.clpusd').html(formatter.format(data[2].exchrate));
+               $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
+               $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
                globalBTCUSD = data[1].exchrate;
                globalCLPUSD = data[2].exchrate; //clpUSD
                globalCLPBTC = data[0].exchrate;
@@ -194,8 +150,8 @@
     }
    
     $(function() {
-        getTyGia();
-        setInterval(function(){ getTyGia() }, {{ config('app.time_interval') }});
+        getRate();
+        setInterval(function(){ getRate() }, {{ config('app.time_interval') }});
     });  
     
 </script>

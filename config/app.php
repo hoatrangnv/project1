@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'CryptoLending'),
+    'name' => env('APP_NAME', 'CLP'),
 
     /*
     |--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', true),
+    'debug' => env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'Asia/Ho_Chi_Minh',
+    'timezone' => 'Europe/Copenhagen',
 
     /*
     |--------------------------------------------------------------------------
@@ -119,7 +119,6 @@ return [
     | Available Settings: "single", "daily", "syslog", "errorlog"
     |
     */
-    'root_name' => 'root',
     'log' => env('APP_LOG', 'single'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
@@ -130,16 +129,15 @@ return [
     'bitgo_password' => env('BITGO_PASSWORD'),
     'bitgo_hook' => env('BITGO_HOOK'),
     'user_referral_register' => env('USER_REFERRAL_REGISTER', 'root'),
-    'fee_withRaw_BTC' => 0.0005,
-    'fee_withRaw_CLP' => 2,
-    'enable_captcha' => false,
+    'fee_withRaw_BTC' => env('FEE_WITHDRAW_BTC', 0.0005),
+    'fee_withRaw_CLP' => env('FEE_WITHDRAW_CLP', 2),
+    'enable_captcha' => true,
     'f1_bonus' => 0.1,
     'f2_bonus' => 0.02,
     'f3_bonus' => 0.01,
     'percent_reserve' => 0.4,
     'link_ty_gia' => 'https://www.bitstamp.net/api/v2/ticker/',
     'time_interval'=> 30000,
-    'btc_wallet_admin'=> '12iU4tEb6hf6Hx5RjP2ANPAhr7jsjsCEVb',
     'news_crypto' => 3,
     'news_blockchain' => 3,
     'news_clp' => 3,
@@ -147,6 +145,16 @@ return [
     'admin_id' => 1,
     'count_down_time_login' => 10,
     'amount_add_wallet'=> 10,
+    'first_private_start'=> env('FIRST_PRIVATE_START', '2017-10-16'),
+    'first_price'=> env('FIRST_PRICE', 0.4),
+    'first_private_end'=> env('FIRST_PRIVATE_END', '2017-10-20'),
+    'second_private_start'=> env('SECOND_PRIVATE_START', '2017-10-21'),
+    'second_price'=> env('SECOND_PRICE', 0.6),
+    'second_private_end'=> env('SECOND_PRIVATE_END', '2017-10-25'),
+    'pre_sale_start'=> env('PRE_SALE_START', '2017-10-26'),
+    'pre_price'=> env('PRE_PRICE', 0.8),
+    'pre_sale_end'=> env('PRE_SALE_END', '2017-10-31'),
+    'clp_price' => env('CLP_PRICE', 1),
     
     /*
     |--------------------------------------------------------------------------

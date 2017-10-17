@@ -6,21 +6,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <html lang="en">
 
 @section('htmlheader')
-    @include('adminlte::layouts.partials.htmlheader')
+    @include('adminlte::backend.layouts.partials.htmlheader')
 @show
 <body class="skin-blue sidebar-mini">
 <div id="app" v-cloak>
     <div class="wrapper">
+    @include('adminlte::backend.layouts.partials.mainheader')
 
-    @include('adminlte::layouts.partials.mainheader')
-
-    @include('adminlte::layouts.partials.sidebar')
+    @include('adminlte::backend.layouts.partials.sidebar')
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-
-        @include('adminlte::layouts.partials.contentheader')
-
+        @include('adminlte::backend.layouts.partials.contentheader')
         <!-- Main content -->
         <section class="content">
             @include('flash::message')
@@ -28,15 +25,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             @yield('main-content')
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
-
-    @include('adminlte::layouts.partials.controlsidebar')
-
-    @include('adminlte::layouts.partials.footer')
+    @include('adminlte::backend.layouts.partials.controlsidebar')
+    @include('adminlte::backend.layouts.partials.footer')
 
 </div><!-- ./wrapper -->
 </div>
 @section('scripts')
-    @include('adminlte::layouts.partials.scripts')
+    @include('adminlte::backend.layouts.partials.scripts')
 @show
 
 </body>

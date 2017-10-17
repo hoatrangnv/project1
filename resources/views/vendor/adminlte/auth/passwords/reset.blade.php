@@ -11,7 +11,7 @@
     <div id="app">
         <div class="login-box">
             <div class="login-logo">
-                <a href="{{ url('/home') }}"><b>CLP</b></a>
+                <a href="{{ url('/home') }}"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CLP</b></a>
             </div>
 
             @if (session('status'))
@@ -55,6 +55,16 @@
                         </span>
                     @endif
                 </div>
+                    @if (Config::get('app.enable_captcha'))
+                        <div class="form-group">
+                            {!! app('captcha')->display()!!}
+                            @if ($errors->has('g-recaptcha-response'))
+                                <span class="help-block">
+						        {{ $errors->first('g-recaptcha-response') }}
+					        </span>
+                            @endif
+                        </div>
+                    @endif
                 <div class="row">
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">

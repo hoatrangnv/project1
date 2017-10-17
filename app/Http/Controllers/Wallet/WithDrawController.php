@@ -119,7 +119,7 @@ class WithDrawController extends Controller
                             ->count();
                         if($count == 0){
                             $isConfirm = true;
-                            $request->session()->flash('error', 'Link Confirm Withdraw expired!');
+                            $request->session()->flash('error', 'Link confirmation withdrawal expired!');
                         }else{
                             if ( $token == hash( "sha256", md5( md5( $id ) ) ) ) {
                                 if ($request->isMethod('post')){
@@ -130,22 +130,22 @@ class WithDrawController extends Controller
                                     }
                                 }
                             }else{
-                                $request->session()->flash('error', 'Something wrongs. We cannot Confirm Withdraw!');
+                                $request->session()->flash('error', 'Something wrongs. We cannot confirm withdrawal!');
                             }
                         }
                     }elseif($withdrawConfirm->status == 2){
                         $isConfirm = true;
-                        $request->session()->flash('status', 'Withdraw have Cancel!');
+                        $request->session()->flash('status', 'Withdrawal have cancelled!');
                     }else{
                         $isConfirm = true;
-                        $request->session()->flash('status', 'Withdraw have done Confirm!');
+                        $request->session()->flash('status', 'Withdrawal have confirmed!');
                     }
                 }else{
-                    $request->session()->flash('error', 'Something wrongs. We cannot Confirm Withdraw!');
+                    $request->session()->flash('error', 'Something wrongs. We cannot confirm withdrawal!');
                 }
             }
         }else{
-            $request->session()->flash('error', 'Something wrongs. We cannot Confirm Withdraw!');
+            $request->session()->flash('error', 'Something wrongs. We cannot confirm withdrawal!');
         }
 
         return view('adminlte::wallets.confirmWithdraw', compact('isConfirm', 'withdrawConfirm'));
@@ -198,16 +198,16 @@ class WithDrawController extends Controller
                         "inOut" => Wallet::OUT
                     ];
 
-                    $dataInsertWallet = Wallet::create($dataInsertWallet);
+                    $dataInsert = Wallet::create($dataInsertWallet);
 
                     //Get transaction request
                     $transaction_hash = '';
                     $transaction_id = '';
                     $allTransactions = $client->getAccountTransactions($account);
                     foreach($allTransactions as $transaction) {
-                        if($transaction->getTo()->getAddress() == trim($withdrawConfirm->walletAddress)) {
-                            $transaction_hash = $transaction->network->hash;
-                            $transaction_id = $transaction->id;
+                        if($transaction->getTo()->getAddress() == $withdrawConfirm->walletAddress) {
+                            $transaction_hash = $transaction->getNetwork()->getHash();
+                            $transaction_id = $transaction->getId();
                             break;
                         }
                     }
@@ -217,17 +217,16 @@ class WithDrawController extends Controller
                         "walletAddress" => $withdrawConfirm->walletAddress,
                         "userId" => $withdrawConfirm->userId,
                         "amountBTC" => $withdrawConfirm->withdrawAmount,
-                        "wallet_id" => $dataInsertWallet->id,
+                        "wallet_id" => $dataInsert->id,
                         "transaction_id" => $transaction_id,
                         "transaction_hash" => $transaction_hash,
-                        "detail" => '',
                         "status" => 0
                     ];
 
                     $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
 
 
-                    $request->session()->flash('error', trans('adminlte_lang::wallet.success_withdraw'));
+                    $request->session()->flash('successMessage', trans('adminlte_lang::wallet.success_withdraw'));
                 } catch (\Exception $e) {
                     //Log::error($e->getTraceAsString());
                     $request->session()->flash('error', "Withdraw Fail " . $e->getMessage());
@@ -253,56 +252,47 @@ class WithDrawController extends Controller
             if ($user->clpCoinAmount - config('app.fee_withRaw_CLP') >= $withdrawConfirm->withdrawAmount) {
                 
                 $clpApi = new CLPWalletAPI();
-                try {
-                    //Transfer CLP to investor
-                    $result = $clpApi->addInvestor($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
-                    $newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withrawAmount;
-                    if ($result) {
-                        if ($result["success"] == 1) {
-                            $update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
-                            //insert withdraw -- lưu lịch sử giao dịch -- trạng thái ở đây là success
-                            $dataInsertWithdraw = [
-                                "walletAddress" => $withdrawConfirm->walletAddress,
-                                "userId" => $withdrawConfirm->userId,
-                                "amountCLP" => $withdrawConfirm->withdrawAmount,
-                                "detail" => json_encode($result),
-                                "status" => 1
-                            ];
-                            $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
-                            //insert wallet -- lưu lịch sử ví
-                            $dataInsertWallet = [
-                                "walletType" => Wallet::CLP_WALLET,
-                                "type" => Wallet::WITH_DRAW_CLP_TYPE,
-                                "userId" => $withdrawConfirm->userId,
-                                "note" => "Withdraw",
-                                "amount" => $withdrawConfirm->withdrawAmount,
-                                "inOut" => Wallet::OUT
-                            ];
+                //Transfer CLP to investor
+                $result = $clpApi->addInvestor($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
 
-                            $resultInsert = Wallet::create($dataInsertWallet);
+                $newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withrawAmount;
+                
+                if ($result["success"] == 1) {
+                    $update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
+                    
+                    //insert wallet -- lưu lịch sử ví
+                    $dataInsertWallet = [
+                        "walletType" => Wallet::CLP_WALLET,
+                        "type" => Wallet::WITH_DRAW_CLP_TYPE,
+                        "userId" => $withdrawConfirm->userId,
+                        "note" => "Pending",
+                        "amount" => $withdrawConfirm->withdrawAmount,
+                        "inOut" => Wallet::OUT
+                    ];
 
-                            $request->session()->flash('succeesMessage', trans('adminlte_lang::wallet.success_withdraw'));
-                            $withdrawConfirm->status = 1;
-                            $withdrawConfirm->save();
-                            $isConfirm = true;
-                        } else {
-                            //save to withdraw
-                            //insert withdraw -- lưu lịch sử ví -- trạng thái ở đây là fail
-                            $dataInsertWithdraw = [
-                                "walletAddress" => $withdrawConfirm->walletAddress,
-                                "userId" => $withdrawConfirm->userId,
-                                "amountCLP" => $withdrawConfirm->withdrawAmount,
-                                "detail" => json_encode($result),
-                                "status" => 0
-                            ];
+                    $resultInsert = Wallet::create($dataInsertWallet);
 
-                            $resultInsert = Withdraw::create($dataInsertWithdraw);
-                            $request->session()->flash('succeesError', trans('adminlte_lang::wallet.error'));
-                        }
-                    }
-                } catch (\Exception $ex) {
-                    Log::error($ex->getTraceAsString());
+                    //insert withdraw -- lưu lịch sử giao dịch -- trạng thái ở đây là success
+                    $dataInsertWithdraw = [
+                        "walletAddress" => $withdrawConfirm->walletAddress,
+                        "userId" => $withdrawConfirm->userId,
+                        "amountCLP" => $withdrawConfirm->withdrawAmount,
+                        "wallet_id" => $resultInsert->id,
+                        "transaction_id" => '',
+                        "transaction_hash" => $result["tx"],
+                        "status" => 0
+                    ];
+
+                    Withdraw::create($dataInsertWithdraw);
+
+                    $request->session()->flash('succeesMessage', trans('adminlte_lang::wallet.success_withdraw'));
+                    $withdrawConfirm->status = 1;
+                    $withdrawConfirm->save();
+                    $isConfirm = true;
+                } else {
+                    $request->session()->flash('succeesError', trans('adminlte_lang::wallet.error'));
                 }
+               
             } else {
                 $request->session()->flash('errorMessage', 'Not enought CLP');
             }
@@ -363,7 +353,7 @@ class WithDrawController extends Controller
                     $coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'clp'];
                     $user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
 
-                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your email!' );
+                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your mail box!' );
                     return response()->json(array('err' => false));
                 }
             }else {
@@ -390,11 +380,29 @@ class WithDrawController extends Controller
             //validate
             $this->validate($request, [
                 'withdrawAmount'=>'required|numeric',
-                'walletAddress'=>'required'
-                //'withdrawOPT'=>'required|min:6'
+                'walletAddress'=>'required',
+                'withdrawOPT'=>'required'
             ]);
+
+            $btcOTPErr = '';
+            if($request->withdrawOPT == ''){
+                $btcOTPErr = trans('adminlte_lang::wallet.otp_required');
+            }else{
+                $key = Auth::user()->google2fa_secret;
+                $valid = Google2FA::verifyKey($key, $request->withdrawOPT);
+                if(!$valid){
+                    $btcOTPErr = trans('adminlte_lang::wallet.otp_not_match');
+                }
+            }
+
+            if($btcOTPErr != ''){
+                $request->session()->flash( 'errorMessage', $btcOTPErr );
+                return redirect()->route('wallet.btc');
+            }
+
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn
             // số tiền chuyển đi thì thực hiện giao dịch
+
             if ( $user->btcCoinAmount - config('app.fee_withRaw_BTC') >= $request->withdrawAmount ) {
                 $user = Auth::user();
                 if($user){
@@ -410,12 +418,12 @@ class WithDrawController extends Controller
                     $linkConfirm =  URL::to('/confirmWithdraw')."?d=".base64_encode(json_encode($encrypt));
                     $coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'btc'];
                     $user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
-                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your email!' );
+                    $request->session()->flash( 'successMessage', 'The withdrawal confirmation email was sent to your mail box' );
                     return redirect()->route('wallet.btc');
                 }
             }else {
                 //nếu không đủ tiền thì báo lỗi
-                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough') );
+                $request->session()->flash( 'errorMessage', trans('adminlte_lang::wallet.error_not_enough_btc') );
                 return redirect()->route('wallet.btc');
             }
         }else{

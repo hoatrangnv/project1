@@ -1,9 +1,10 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url('/favicon.ico') }}" />
-    <title> CLP - @yield('htmlheader_title', 'Your title here') </title>
+    <title> CLP - @yield('htmlheader_title', 'Lending Project') </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- CSRF Token -->
+    <meta name="google-site-verification" content="YoKxcLBO-buCnESjlFmmFeZqaNULyT4Z88cVN4OLqN0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="{{ mix('/css/all.css') }}" rel="stylesheet" type="text/css" />
@@ -19,7 +20,6 @@
     <![endif]-->
 
     <script>
-        //See https://laracasts.com/discuss/channels/vue/use-trans-in-vuejs
         window.trans = @php
             // copy all translations from /resources/lang/CURRENT_LOCALE/* to global JS variable
             $lang_files = File::files(resource_path() . '/lang/' . App::getLocale());
@@ -31,5 +31,14 @@
             $trans['adminlte_lang_message'] = trans('adminlte_lang::message');
             echo json_encode($trans);
         @endphp
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107989535-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-107989535-1');
     </script>
 </head>

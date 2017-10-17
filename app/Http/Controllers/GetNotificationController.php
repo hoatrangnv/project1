@@ -22,7 +22,8 @@ class GetNotificationController extends Controller
             $notification = Notification::create(
             [
                 'data' => $data,
-                'status' => 0
+                'pending_status' => 0,
+                'completed_status' => 0
             ]
         );
         } catch (Exception $e) {

@@ -134,7 +134,7 @@ class ActiveController extends Controller
                     "walletAddress" => $addresses->getAddress() ];
                 return $data;
             default:
-                echo "chưa chọn lựa loại ví";
+                echo "Not select wallet yet";
         }
     }
 

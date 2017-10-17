@@ -17,7 +17,7 @@
     <div id="app" v-cloak>
         <div class="register-box">
             <div class="register-logo">
-                <a href="{{ url('/home') }}"><b>CLP</b></a>
+                <a href="{{ url('/home') }}"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CLP</b></a>
             </div>
 
             <div class="register-box-body">
@@ -144,14 +144,6 @@
         $(document).ready(function(){
             var changurl = changeUrl();
             $("#phone").intlTelInput({
-                //initialCountry: "auto",
-                // geoIpLookup: function(callback) {
-                //     $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
-                //     var countryCode = (resp && resp.country) ? resp.country : "";
-                //     callback(countryCode);
-                //   });
-                // },
-                //preferredCountries:["us"]
             });
             
             $('form').submit(function(){

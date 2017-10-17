@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace App\Http\Controllers\Backend\News;
+namespace App\Http\Controllers\News;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -38,14 +38,8 @@ class NewsController extends Controller{
      * @return type
      */
     public function newManagent(Request $request) {
-<<<<<<< HEAD:app/Http/Controllers/Backend/News/NewsController.php
         $news=News::paginate(5);
-        return view('adminlte::backend.news.manage',compact('news'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
-=======
-        $news=News::orderBy('id', 'desc')->paginate(5);
         return view('adminlte::backend.news.manage',compact('news'))->with('i', ($request->input('page', 1) - 1) * 5);
->>>>>>> 28b49a4c236816ef9ed91d2075add5ac5653a2c0:app/Http/Controllers/News/NewsController.php
     }
     
     /** 
@@ -55,27 +49,29 @@ class NewsController extends Controller{
      */
     public function newAdd(Request $request) {
         if ($request->isMethod("post")) {
+            
             //action add a new
             $this->validate($request, [
                 'title'=>'required',
                 'category'=>'required|numeric|isTypeCategory'
             ]);
             //category ??
+            
             $new = new News;
             $new->title = $request->title;
             $new->category_id = $request->category;
             $new->desc = $request->body;
             $new->short_desc = $this->shortDescription($request->body);
             $new->created_by = Auth::user()->id;
+            
             if($new->save()){
                 $request->session()->flash( 'successMessage', 
                         trans("adminlte_lang::news.success") );
             }else{
+                Log::error("Loi ko tao duoc post new");
                 $request->session()->flash( 'errorMessage', 
                         trans("adminlte_lang::news.error") );
             }
-
-            return redirect("news/manage");
         }
         return view('adminlte::backend.news.add');
     }
@@ -87,7 +83,9 @@ class NewsController extends Controller{
      */
     private function shortDescription($fullDescription) {
         $shortDescription = "";
+
         $fullDescription = trim(strip_tags($fullDescription));
+
         if ($fullDescription) {
             $initialCount = 125;
             if (strlen($fullDescription) > $initialCount) {
@@ -98,6 +96,7 @@ class NewsController extends Controller{
                 return $fullDescription;
             }
         }
+
         return $shortDescription;
     }
     
@@ -115,6 +114,7 @@ class NewsController extends Controller{
                 'category'=>'required|numeric|isTypeCategory'
             ]);
             //category ??
+
             $dataInsert = [
                 'title' => $request->title,
                 'category_id' => $request->category,
@@ -122,12 +122,13 @@ class NewsController extends Controller{
                 'short_desc' => $this->shortDescription($request->body),
                 'created_by'=> Auth::user()->id
             ];
+
             if( News::where('id',$id)
                     ->update($dataInsert) ){
                 $request->session()->flash( 'successMessage', 
                         trans("adminlte_lang::news.success_update") );
             }else{
-                Log::error("Cannot create post new");
+                Log::error("Loi ko tao duoc post new");
                 $request->session()->flash( 'errorMessage', 
                         trans("adminlte_lang::news.error_update") );
             }

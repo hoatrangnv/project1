@@ -13,7 +13,7 @@ return [
 	
 	
     'refferals_no'           	=> 'No',
-    'refferals_id'           	=> 'Id',
+    'refferals_id'           	=> 'ID',
     'refferals_username'           	=> 'Username',
     'refferals_fullname'           	=> 'Full name',
     'refferals_package'           	=> 'Member',
