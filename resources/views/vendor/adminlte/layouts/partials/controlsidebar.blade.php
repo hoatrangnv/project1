@@ -1,5 +1,5 @@
 <?php 
-    use App\Http\Controllers\News\DisplayNewsController as News;
+    use App\Http\Controllers\Backend\News\DisplayNewsController as News;
     $tempNews = new News();
     $news = $tempNews->getNewsDataDisplay();
     $title = $tempNews->category;
@@ -64,28 +64,3 @@
 <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
 <div class='control-sidebar-bg'></div>
-<script>
-    
-if(getCookie("open") != 0 && getCookie("open") != 1 ){
-    document.cookie = "open=1";
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-if(getCookie("open") == 1)
-    $(".control-sidebar").addClass("control-sidebar-open")
-</script>

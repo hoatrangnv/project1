@@ -6,28 +6,28 @@ Route::get('/term-condition.html', function () {
     return view('term');
 });
 Auth::routes();
-Route::get('users/search',"User\UserController@search");
+Route::get('users/search',"Backend\User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('users/root', 'User\UserController@root')->name('users.root');
-    Route::post('users/reset2fa', 'User\UserController@reset2fa')->name('users.reset2fa');
-    Route::get('users/photo_approve', 'User\UserController@photo_approve')->name('users.photo_approve');
-    Route::post('users/approve_ok/{id}', 'User\UserController@approve_ok')->name('approve.ok');
-    Route::post('users/approve_cancel/{id}', 'User\UserController@approve_cancel')->name('approve.cancel');
-    Route::resource('users', 'User\UserController');
-    Route::resource('roles', 'User\RoleController');
-    Route::resource('posts', 'User\PostController');
+    Route::get('users/root', 'Backend\User\UserController@root')->name('users.root');
+    Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
+    Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
+    Route::post('users/approve_ok/{id}', 'Backend\User\UserController@approve_ok')->name('approve.ok');
+    Route::post('users/approve_cancel/{id}', 'Backend\User\UserController@approve_cancel')->name('approve.cancel');
+    Route::resource('users', 'Backend\User\UserController');
+    Route::resource('roles', 'Backend\User\RoleController');
+    Route::resource('posts', 'Backend\User\PostController');
 
     Route::get('/report/member', 'Backend\ReportController@member')->name('report.member');
     Route::get('/report/member_pack', 'Backend\ReportController@member_pack')->name('report.member_pack');
 
 
-    Route::get('members/genealogy', 'User\MemberController@genealogy');
-    Route::get('members/binary', 'User\MemberController@binary');
-    Route::get('members/referrals', 'User\MemberController@refferals');
-    Route::get('members/referrals/{id}/detail', 'User\MemberController@refferalsDetail');
-    Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
-    Route::resource('members', 'User\MemberController');
+    Route::get('members/genealogy', 'Backend\User\MemberController@genealogy');
+    Route::get('members/binary', 'Backend\User\MemberController@binary');
+    Route::get('members/referrals', 'Backend\User\MemberController@refferals');
+    Route::get('members/referrals/{id}/detail', 'Backend\User\MemberController@refferalsDetail');
+    Route::post('members/pushIntoTree', 'Backend\User\MemberController@pushIntoTree');
+    Route::resource('members', 'Backend\User\MemberController');
     Route::get('authenticator', 'Auth\Auth2FAController@index');
     Route::post('authenticator', 'Auth\Auth2FAController@index');
     
@@ -100,13 +100,13 @@ Route::group( ['middleware' => ['auth']], function() {
 
     
     //News
-    Route::get('news/manage','News\NewsController@newManagent')->name('news.manage');
-    Route::get('news/add','News\NewsController@newAdd');
-    Route::post('news/add','News\NewsController@newAdd');
-    Route::get('news/edit/{id}','News\NewsController@newEdit');
-    Route::put('news/edit/{id}','News\NewsController@newEdit');
-    Route::get('news/delete/{id}','News\NewsController@newDelete');
-    Route::get('news/detail/{id}','News\DisplayNewsController@displayDetailNews');
+    Route::get('news/manage','Backend\News\NewsController@newManagent')->name('news.manage');
+    Route::get('news/add','Backend\News\NewsController@newAdd');
+    Route::post('news/add','Backend\News\NewsController@newAdd');
+    Route::get('news/edit/{id}','Backend\News\NewsController@newEdit');
+    Route::put('news/edit/{id}','Backend\News\NewsController@newEdit');
+    Route::get('news/delete/{id}','Backend\News\NewsController@newDelete');
+    Route::get('news/detail/{id}','Backend\News\DisplayNewsController@displayDetailNews');
     //get ty gia
     Route::get('exchange',function(App\ExchangeRate $rate){
         return $rate->getExchRate();

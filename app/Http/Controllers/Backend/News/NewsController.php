@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace App\Http\Controllers\News;
+namespace App\Http\Controllers\Backend\News;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,7 +39,8 @@ class NewsController extends Controller{
      */
     public function newManagent(Request $request) {
         $news=News::paginate(5);
-        return view('adminlte::news.manage',compact('news'))->with('i', ($request->input('page', 1) - 1) * 5);
+        return view('adminlte::backend.news.manage',compact('news'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
     /** 
@@ -49,21 +50,18 @@ class NewsController extends Controller{
      */
     public function newAdd(Request $request) {
         if ($request->isMethod("post")) {
-            
             //action add a new
             $this->validate($request, [
                 'title'=>'required',
                 'category'=>'required|numeric|isTypeCategory'
             ]);
             //category ??
-            
             $new = new News;
             $new->title = $request->title;
             $new->category_id = $request->category;
             $new->desc = $request->body;
             $new->short_desc = $this->shortDescription($request->body);
             $new->created_by = Auth::user()->id;
-            
             if($new->save()){
                 $request->session()->flash( 'successMessage', 
                         trans("adminlte_lang::news.success") );
@@ -73,7 +71,7 @@ class NewsController extends Controller{
                         trans("adminlte_lang::news.error") );
             }
         }
-        return view('adminlte::news.add');
+        return view('adminlte::backend.news.add');
     }
     
     /** 
@@ -83,9 +81,7 @@ class NewsController extends Controller{
      */
     private function shortDescription($fullDescription) {
         $shortDescription = "";
-
         $fullDescription = trim(strip_tags($fullDescription));
-
         if ($fullDescription) {
             $initialCount = 125;
             if (strlen($fullDescription) > $initialCount) {
@@ -96,7 +92,6 @@ class NewsController extends Controller{
                 return $fullDescription;
             }
         }
-
         return $shortDescription;
     }
     
@@ -114,7 +109,6 @@ class NewsController extends Controller{
                 'category'=>'required|numeric|isTypeCategory'
             ]);
             //category ??
-
             $dataInsert = [
                 'title' => $request->title,
                 'category_id' => $request->category,
@@ -122,7 +116,6 @@ class NewsController extends Controller{
                 'short_desc' => $this->shortDescription($request->body),
                 'created_by'=> Auth::user()->id
             ];
-
             if( News::where('id',$id)
                     ->update($dataInsert) ){
                 $request->session()->flash( 'successMessage', 
@@ -138,7 +131,7 @@ class NewsController extends Controller{
         $dataNew = News::withTrashed()
                 ->where('id',$id)->first();
         
-        return view('adminlte::news.edit',["news"=>$dataNew]);
+        return view('adminlte::backend.news.edit',["news"=>$dataNew]);
     }
     
     /** 

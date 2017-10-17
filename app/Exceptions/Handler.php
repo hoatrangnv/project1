@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if(config('app.debug')=== true) {
+        if(config('app.debug')=== false) {
 
             if ($exception instanceof AuthorizationException) {
                 return $this->unauthorized($request, $exception);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Backend\User;
 
 use App\User;
 use App\UserData;
@@ -21,18 +21,18 @@ class UserController extends Controller
     {
         $result = User::latest()->paginate();
 
-        return view('adminlte::user.index', compact('result'));
+        return view('adminlte::backend.user.index', compact('result'));
     }
     public function root()
     {
         $result = User::where('refererId', 0)->paginate();
-        return view('adminlte::user.root', compact('result'));
+        return view('adminlte::backend.user.root', compact('result'));
     }
 
     public function photo_approve()
     {
         $result = User::where('approve', 1)->paginate();
-        return view('adminlte::user.approve', compact('result'));
+        return view('adminlte::backend.user.approve', compact('result'));
     }
     public function approve_ok($id)
     {
@@ -62,8 +62,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'id');
-
-        return view('adminlte::user.new', compact('roles'));
+        return view('adminlte::backend.user.new', compact('roles'));
     }
 
     /**
@@ -128,7 +127,7 @@ class UserController extends Controller
         $roles = Role::pluck('name', 'id');
         $permissions = Permission::all('name', 'id');
 
-        return view('adminlte::user.edit', compact('user', 'roles', 'permissions'));
+        return view('adminlte::backend.user.edit', compact('user', 'roles', 'permissions'));
     }
 
     /**

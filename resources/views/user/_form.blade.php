@@ -25,7 +25,6 @@
     {!! Form::select('roles[]', $roles, isset($user) ? $user->roles->pluck('id')->toArray() : null,  ['class' => 'form-control', 'multiple']) !!}
     @if ($errors->has('roles')) <p class="help-block">{{ $errors->first('roles') }}</p> @endif
 </div>
-
 <!-- Permissions -->
 @if(isset($user))
     @include('shared._permissions', ['closed' => 'true', 'model' => $user ])
