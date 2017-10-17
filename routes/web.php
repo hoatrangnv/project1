@@ -7,8 +7,12 @@ Route::get('/term-condition.html', function () {
 });
 Auth::routes();
 Route::get('users/search',"Backend\User\UserController@search");
-Route::group( ['middleware' => ['auth']], function() {
+Route::group(/**
+ *
+ */
+    ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
     Route::get('users/root', 'Backend\User\UserController@root')->name('users.root');
     Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
     Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
@@ -85,10 +89,10 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
     Route::resource('mybonus', 'MyBonusController');
 
-    Route::get('packages/invest', 'PackageController@invest');
-    Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
-    Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'PackageController@withDraw']);
-    Route::resource('packages', 'PackageController');
+    Route::get('packages/invest', 'Backend\PackageController@invest');
+    Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'Backend\PackageController@invest']);
+    Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'Backend\PackageController@withDraw']);
+    Route::resource('packages', 'Backend\PackageController');
 
     //Profile router
     Route::any('profile/upload','User\ProfileController@upload');

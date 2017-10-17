@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\User;
 
 class LoginController extends Controller
 {
@@ -57,6 +58,9 @@ class LoginController extends Controller
 
     protected function attemptLogin(Request $request)
     {
+        //check if Admin then redirect to anotherSite
+        $this->redirectWithAdmin($request);
+
         if ($this->username() === 'email') return $this->attemptLoginAtAuthenticatesUsers($request);
         if ( ! $this->attemptLoginAtAuthenticatesUsers($request)) {
             return $this->attempLoginUsingUsernameAsAnEmail($request);
@@ -86,6 +90,12 @@ class LoginController extends Controller
             if ($user->is2fa) {
                 return redirect('/authenticator');
             }
+        }
+    }
+
+    public function redirectWithAdmin($request){
+        if (User::where('email',$request->email)->pluck("id")[0] == config("app.admin_id")) {
+            $this->redirectTo = '/admin/home';
         }
     }
 }

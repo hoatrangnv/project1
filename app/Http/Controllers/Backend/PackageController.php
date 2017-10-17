@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Backend;
 
 use App\UserCoin;
 use App\UserData;
 use App\UserPackage;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Controller;
 use App\User;
 use App\Package;
 use Auth;
@@ -28,11 +28,11 @@ class PackageController extends Controller
     public function index()
     {
         $packages = Package::all();
-        return view('adminlte::package.index')->with('packages', $packages);
+        return view('adminlte::backend.package.index')->with('packages', $packages);
     }
     public function create()
     {
-        return view('adminlte::package.create');
+        return view('adminlte::backend.package.create');
     }
     public function store(Request $request)
     {
@@ -166,7 +166,7 @@ class PackageController extends Controller
     public function edit($id)
     {
         $package = Package::find($id);
-        return view('adminlte::package.edit', compact('package'));
+        return view('adminlte::backend.package.edit', compact('package'));
     }
 
     public function update(Request $request, $id)

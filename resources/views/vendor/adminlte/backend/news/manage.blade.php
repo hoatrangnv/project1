@@ -1,5 +1,5 @@
 <?php use App\News; ?>
-@extends('adminlte::layouts.member')
+@extends('adminlte::backend.layouts.member')
 
 @section('contentheader_title')
     {{ trans('adminlte_lang::news.manage') }}

@@ -144,7 +144,7 @@ return [
     'news_blockchain' => 3,
     'news_clp' => 3,
     'news_p2p' => 3,
-    'admin_id' => 51,
+    'admin_id' => 1,
     'count_down_time_login' => 10,
     'amount_add_wallet'=> 10,
     
