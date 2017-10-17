@@ -71,8 +71,14 @@
                                     @else
                                         <a href="#" class="btn bg-olive" disabled="true" data-toggle="modal">{{ trans("adminlte_lang::wallet.deposit") }}</a>
                                     @endif
-                                    <button class="btn bg-olive" data-toggle="modal"
+                                    @if($active)
+                                        <button class="btn bg-olive" data-toggle="modal"
                                             data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>
+                                    @else
+                                        <button class="btn bg-olive" data-toggle="modal"
+                                            disabled="true" >{{trans("adminlte_lang::wallet.transfer")}}</button>
+                                    @endif
+                                    
                                     </th>
                                 </tr>
                             </tbody>
