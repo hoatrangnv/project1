@@ -232,7 +232,7 @@ class BtcWalletController extends Controller
                 {
 
                     if($request->clpAmount != 25000 || $amountCLP < 24950) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
                     }
 
                     $amountCLP = 10000;
@@ -244,7 +244,7 @@ class BtcWalletController extends Controller
                 {
                     
                     if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
                     }
 
                     $amountCLP = 10000;
@@ -255,7 +255,7 @@ class BtcWalletController extends Controller
                 if($preSaleStart <= $currentDate && $currentDate <= $preSaleEnd)
                 {
                     if($request->clpAmount != 12500 || $amountCLP < 12475) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
                     }
 
                     $amountCLP = 10000;
