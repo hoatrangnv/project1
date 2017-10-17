@@ -140,7 +140,7 @@ class ClpWalletController extends Controller {
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->clpAmount,
-                    'note'   => 'Rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
 
@@ -150,7 +150,7 @@ class ClpWalletController extends Controller {
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountBTC,
-                    'note'   => 'Rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                 ];
 
                 Wallet::create($fieldBTC);

@@ -208,6 +208,7 @@ class BtcWalletController extends Controller
 
             //Amount CLP
             $clpRate = ExchangeRate::getCLPBTCRate();
+
             $amountCLP = $request->btcAmount / $clpRate;
             $holdingAmount = 0;
 
@@ -280,7 +281,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->btcAmount,
-                    'note'   => 'Rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                 ];
                 Wallet::create($fieldBTC);
 
@@ -290,7 +291,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountCLP,
-                    'note'   => 'Rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
 
@@ -303,7 +304,7 @@ class BtcWalletController extends Controller
                         'inOut' => Wallet::IN,
                         'userId' => Auth::user()->id,
                         'amount' => $holdingAmount,
-                        'note'   => 'Rate ' . $clpRate . ' BTC'
+                        'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                     ];
                     Wallet::create($fieldCLPHolding);
                 }

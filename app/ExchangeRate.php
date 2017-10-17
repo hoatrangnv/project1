@@ -129,7 +129,5 @@ class ExchangeRate extends Model
                 ->get();
         
         return $data[0]->exchrate;
-        
-        return $data;
     }
 }
