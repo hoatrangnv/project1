@@ -300,6 +300,7 @@ class RegisterController extends Controller
                 $fields['walletAddress'] = $accountWallet['walletAddress'];
 
                 $this->assignCLPAddress($user->id);
+                User::updateUserGenealogy($user->id);
             }
             //Luu thong tin ca nhan vao bang user_coin
             //$fields['backupKey'] = $backupKey;
