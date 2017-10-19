@@ -24,11 +24,8 @@ class CLPWalletAPI
         $this->client = new Client();
     }
 
-    public function generateWallet() 
+    public function generateWallet()
     {
-        $result['responseResult'] = array('success' => 1, 'address' => '0xdfsdfsdfdsfsdf');
-        return $result['responseResult'];
-        
         $path = $this->apiUrl . '/generate-wallet';
         $response = $this->client->request('GET', $path);
 
@@ -38,12 +35,10 @@ class CLPWalletAPI
         $contents = $response->getBody()->getContents();
         $result = json_decode($contents, true);
 
-
-
         return $result['responseResult'];
     }
 
-    public function addInvestor($address, $amount) 
+    public function addInvestor($address, $amount)
     {
         $path = $this->apiUrl . '/add-investor/' . $address . '/' . $amount;
         $response = $this->client->request('GET', $path);

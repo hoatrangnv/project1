@@ -308,7 +308,8 @@
                                         <input type="text" value="{{ $walletAddress }}" class="wallet-address form-control" id="wallet-address" readonly="true">
                                         <span class="input-group-btn">
                                             @if(empty($walletAddress))
-                                                <button class="btn btn-default get-clpwallet" title="Get clp wallet">Generate</button>
+                                                <button class="btn btn-default get-clpwallet" title="Get clp wallet"
+                                                        data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing">Generate</button>
                                             @endif
                                          <button class="btn btn-default btnwallet-address" data-clipboard-target="#wallet-address" title="copy">
                                                     <i class="fa fa-clone"></i>
@@ -814,9 +815,21 @@
 
         //get address wallet
         $(".get-clpwallet").click(function(){
+            $(".get-clpwallet").attr("disabled", "disabled");
+            var $this = $(this);
+            $this.button('loading');
             $.get("{{URL::to('wallets/clp/getaddressclpwallet')}}", function(data, status){
-                $("#wallet-address").val(data.data);
-            })
+                if (data.err){
+                    alert("{{trans('adminlte_lang::wallet.not_get_address_clp_wallet')}}");
+                    $this.button('reset');
+                    $(".get-clpwallet").removeAttr("disabled");
+                }else{
+                    $("#wallet-address").val(data.data);
+                    $(".get-clpwallet").hide();
+                }
+            }).fail(function () {
+                console.log("Error server responce!")
+            });
         });
     </script>
 @endsection
