@@ -93,7 +93,6 @@ class RegisterController extends Controller
             'email'    => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:8|confirmed',
             'name_country' => 'required',
-            //'password' => 'required|min:8|confirmed|regex:/^.*(?=.{3,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%@]).*$/',
             'phone'    => 'required',
             'terms'    => 'required',
             'refererId'    => 'required',
@@ -222,27 +221,6 @@ class RegisterController extends Controller
         }
     }
 
-    /*
-    * @author GiangDT
-    * 
-    * Generate new address
-    *
-    */
-    private function assignCLPAddress( $userId ) 
-    {
-        $clpAddress = CLPWallet::whereNull('userId')
-                            ->orderby('id', 'asc')
-                            ->get()
-                            ->first();
-
-        if(isset($clpAddress->address)) {
-            $clpAddress->userId = $userId;
-            $clpAddress->save();
-        } else {
-            CLPWallet::create(['userId' => $userId]);
-        }
-    }
-    
     /**
      * Create a new user instance after a valid registration.
      *
@@ -299,7 +277,6 @@ class RegisterController extends Controller
                 $fields['accountCoinBase'] = $accountWallet['accountId'];
                 $fields['walletAddress'] = $accountWallet['walletAddress'];
 
-                $this->assignCLPAddress($user->id);
                 User::updateUserGenealogy($user->id);
             }
             //Luu thong tin ca nhan vao bang user_coin

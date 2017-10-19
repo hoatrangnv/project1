@@ -104,6 +104,6 @@ return [
     'user_required'             =>'User is required',
     'fee'                       => 'Fee',
     'wallet_release_date'       => 'Realease Date',
-    'not_get_address_clp_wallet' => 'Not get address clp wallet!',
+    'not_get_address_clp_wallet' => 'Cannot get clp wallet address!',
 
 ];

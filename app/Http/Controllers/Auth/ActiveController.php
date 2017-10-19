@@ -73,9 +73,6 @@ class ActiveController extends Controller
                             $userCoin->walletAddress = $accountWallet['walletAddress'];
                             $userCoin->save();
 
-                            //Assign CLP Wallet Address
-                            $this->assignCLPAddress($user->id);
-
                             User::updateUserGenealogy($user->id);
                             return redirect("notification/useractive");
                         }else{

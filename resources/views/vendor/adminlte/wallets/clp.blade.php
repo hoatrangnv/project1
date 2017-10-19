@@ -64,11 +64,13 @@
                                     @if($active)
                                         <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                                     @else
-                                        <a href="#" class="btn bg-olive" disabled="true" data-toggle="modal" >{{ trans("adminlte_lang::wallet.withdraw") }}</a>
+                                        <a href="#" class="btn bg-olive" disabled="true">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                                     @endif
-
+                                    @if($active)
                                         <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
-
+                                    @else
+                                        <a href="#" class="btn bg-olive" disabled="true">{{ trans("adminlte_lang::wallet.deposit") }}</a>
+                                    @endif
                                     @if($active)
                                         <button class="btn bg-olive" data-toggle="modal"
                                             data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>
@@ -828,7 +830,7 @@
                     $(".get-clpwallet").hide();
                 }
             }).fail(function () {
-                console.log("Error server responce!")
+                console.log("Error response!")
             });
         });
     </script>
