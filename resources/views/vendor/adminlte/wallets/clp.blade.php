@@ -66,11 +66,9 @@
                                     @else
                                         <a href="#" class="btn bg-olive" disabled="true" data-toggle="modal" >{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                                     @endif
-                                    @if($active)
+
                                         <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
-                                    @else
-                                        <a href="#" class="btn bg-olive" disabled="true" data-toggle="modal">{{ trans("adminlte_lang::wallet.deposit") }}</a>
-                                    @endif
+
                                     @if($active)
                                         <button class="btn bg-olive" data-toggle="modal"
                                             data-target="#tranfer">{{trans("adminlte_lang::wallet.transfer")}}</button>
@@ -309,6 +307,9 @@
                                         <div class="input-group input-group-md col-xs-12 col-lg-10" style="margin: 0 auto;">
                                         <input type="text" value="{{ $walletAddress }}" class="wallet-address form-control" id="wallet-address" readonly="true">
                                         <span class="input-group-btn">
+                                            @if(empty($walletAddress))
+                                                <button class="btn btn-default get-clpwallet" title="Get clp wallet">Generate</button>
+                                            @endif
                                          <button class="btn btn-default btnwallet-address" data-clipboard-target="#wallet-address" title="copy">
                                                     <i class="fa fa-clone"></i>
                                                 </button>
@@ -811,5 +812,11 @@
             $(".amount-clp-tranfer").val($(".clp-amount").html());
         });
 
+        //get address wallet
+        $(".get-clpwallet").click(function(){
+            $.get("{{URL::to('wallets/clp/getaddressclpwallet')}}", function(data, status){
+                $("#wallet-address").html(data);
+            })
+        });
     </script>
 @endsection

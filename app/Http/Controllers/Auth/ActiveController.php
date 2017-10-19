@@ -199,27 +199,6 @@ class ActiveController extends Controller
         }
     }
 
-    /*
-    * @author GiangDT
-    * 
-    * Generate new address
-    *
-    */
-    private function assignCLPAddress( $userId ) 
-    {
-        $clpAddress = CLPWallet::whereNull('userId')
-                            ->orderby('id', 'asc')
-                            ->get()
-                            ->first();
-
-        if(isset($clpAddress->address)) {
-            $clpAddress->userId = $userId;
-            $clpAddress->save();
-        } else {
-            CLPWallet::create(['userId' => $userId]);
-        }
-    }
-
     public function reactiveAccount(Request $request)
     {
         if ($request->isMethod('post')) {

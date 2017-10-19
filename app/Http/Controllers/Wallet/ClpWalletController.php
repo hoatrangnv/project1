@@ -297,4 +297,40 @@ class ClpWalletController extends Controller {
         }
         return response()->json(array('err' => true, 'msg' => null));
     }
+
+    /**
+     * @author Huynq
+     * @param Request $request
+     * @return null
+     */
+    public function getClpWallet(Request $request)
+    {
+
+        if($request->ajax()){
+          
+            $userId = Auth::user()->id;
+            if ( !is_null(CLPWallet::where('userId',$userId)->pluck('address')) ){
+                return false;
+            }
+            $clpAddress = new CLPWalletAPI();
+            $result = $clpAddress->generateWallet();
+            if ($result['success']) {
+                CLPWallet::create(['userId' => $userId,'address' => $result['address']]);
+                return $result['address'];
+            } else {
+                Log::error($result['err']);
+            }
+        }
+    }
+
+    /*
+    * @author GiangDT
+    *
+    * Generate new address
+    *
+    */
+    private function assignCLPAddress()
+    {
+
+    }
 }
