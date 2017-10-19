@@ -815,7 +815,7 @@
         //get address wallet
         $(".get-clpwallet").click(function(){
             $.get("{{URL::to('wallets/clp/getaddressclpwallet')}}", function(data, status){
-                $("#wallet-address").html(data);
+                $("#wallet-address").val(data.data);
             })
         });
     </script>

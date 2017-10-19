@@ -305,32 +305,21 @@ class ClpWalletController extends Controller {
      */
     public function getClpWallet(Request $request)
     {
-
-        if($request->ajax()){
-          
+        if($request->ajax())
+        {
+            set_time_limit(0);
             $userId = Auth::user()->id;
-            if ( !is_null(CLPWallet::where('userId',$userId)->pluck('address')) ){
-                return false;
+            if ( CLPWallet::where('userId', $userId)->count() > 0){
+                return response()->json(array('err' => true, 'msg' => null));
             }
             $clpAddress = new CLPWalletAPI();
             $result = $clpAddress->generateWallet();
             if ($result['success']) {
                 CLPWallet::create(['userId' => $userId,'address' => $result['address']]);
-                return $result['address'];
+                return response()->json(array('data'=>$result['address'],'err' => false, 'msg' => null));
             } else {
                 Log::error($result['err']);
             }
         }
-    }
-
-    /*
-    * @author GiangDT
-    *
-    * Generate new address
-    *
-    */
-    private function assignCLPAddress()
-    {
-
     }
 }
