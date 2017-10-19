@@ -113,18 +113,6 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
 
-        /** 
-         * get Clp wallet every 5minutes
-         */
-        $stringCronTab = "* * * * * *";
-        try {
-            $schedule->call(function (){
-                $newGetClp = new GetClpWallet();
-                $newGetClp->getClpWallet();
-            })->everyFiveMinutes();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
     }
 
     /**
