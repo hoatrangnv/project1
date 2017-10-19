@@ -2,9 +2,15 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/term-condition.html', function () {
-    return view('term');
+    return view('adminlte::layouts.term_register');
 });
+
+Route::get('/package-term-condition.html', function () {
+    return view('adminlte::layouts.term_buy_pack');
+});
+
 Auth::routes();
 Route::get('authenticator', 'Auth\LoginController@auth2fa');
 Route::post('authenticator', 'Auth\LoginController@auth2fa');

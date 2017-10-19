@@ -215,10 +215,8 @@
                     <div class="form-group">
                         <label>
                             <div class="checkbox_register icheck">
-                                <label data-toggle="modal" data-target="#termsModal" class="" style="position: relative;">
-                                    <input type="checkbox" name="terms" id="termsPackage">
-                                    <a href="/term-condition.html" target="_blank">Term and condition</a>
-                                </label>
+                                <input type="checkbox" name="terms" id="termsPackage">
+                                    <a href="/package-term-condition.html" target="_blank">Term and condition</a>
                             </div>
                         </label>
                         <span class="help-block"></span>
