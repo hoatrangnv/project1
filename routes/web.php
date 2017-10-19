@@ -61,6 +61,7 @@ Route::group( ['middleware' => ['auth']], function() {
     //CLP WALLET
     Route::get('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
+    Route::get('wallets/clp/getaddressclpwallet', 'Wallet\ClpWalletController@getClpWallet');
     Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
     Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
     
@@ -130,8 +131,8 @@ Route::post('getnotification','GetNotificationController@getNotification');
 /***------- END TEST -------***/
 Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef")->name('user.ref');
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
-Route::get('reactive',"Auth\ActiveController@reactiveAccount");
-Route::post('reactive',"Auth\ActiveController@reactiveAccount");
+//Route::get('reactive',"Auth\ActiveController@reactiveAccount");
+//Route::post('reactive',"Auth\ActiveController@reactiveAccount");
 Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");

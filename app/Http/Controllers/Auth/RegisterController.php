@@ -86,6 +86,21 @@ class RegisterController extends Controller
         Validator::extend('without_spaces', function($attr, $value){
             return preg_match('/^\S*$/u', $value);
         });
+
+        $customeMessage = [
+                'firstname.required' => 'First Name is required',
+                'lastname.required' => 'Last Name is required',
+                'name.required' => 'User Name is required',
+                'name.unique' => 'User Name has already been taken',
+                'email.required' => 'Email is required',
+                'email.unique' => 'Email has already been taken',
+                'password.required' => 'Password is required',
+                'phone.required' => 'Phone is required',
+                'terms.required' => 'Please check term and conditions',
+                'name.without_spaces' => 'User Name cannot have spaces',
+                'g-recaptcha-response.required' => 'Captcha is required'
+                ];
+
         return Validator::make($data, [
             'firstname'     => 'required|max:255',
             'lastname'     => 'required|max:255',
@@ -93,13 +108,12 @@ class RegisterController extends Controller
             'email'    => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:8|confirmed',
             'name_country' => 'required',
-            //'password' => 'required|min:8|confirmed|regex:/^.*(?=.{3,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%@]).*$/',
             'phone'    => 'required',
             'terms'    => 'required',
             'refererId'    => 'required',
             'country'    => 'required|not_in:0',
             'g-recaptcha-response'=> config('app.enable_captcha') ? 'required|captcha' : '',
-        ]);
+        ], $customeMessage);
     }
     
     public function register(Request $request)
@@ -222,27 +236,6 @@ class RegisterController extends Controller
         }
     }
 
-    /*
-    * @author GiangDT
-    * 
-    * Generate new address
-    *
-    */
-    private function assignCLPAddress( $userId ) 
-    {
-        $clpAddress = CLPWallet::whereNull('userId')
-                            ->orderby('id', 'asc')
-                            ->get()
-                            ->first();
-
-        if(isset($clpAddress->address)) {
-            $clpAddress->userId = $userId;
-            $clpAddress->save();
-        } else {
-            CLPWallet::create(['userId' => $userId]);
-        }
-    }
-    
     /**
      * Create a new user instance after a valid registration.
      *
@@ -299,7 +292,6 @@ class RegisterController extends Controller
                 $fields['accountCoinBase'] = $accountWallet['accountId'];
                 $fields['walletAddress'] = $accountWallet['walletAddress'];
 
-                $this->assignCLPAddress($user->id);
                 User::updateUserGenealogy($user->id);
             }
             //Luu thong tin ca nhan vao bang user_coin

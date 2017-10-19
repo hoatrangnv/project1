@@ -73,9 +73,6 @@ class ActiveController extends Controller
                             $userCoin->walletAddress = $accountWallet['walletAddress'];
                             $userCoin->save();
 
-                            //Assign CLP Wallet Address
-                            $this->assignCLPAddress($user->id);
-
                             User::updateUserGenealogy($user->id);
                             return redirect("notification/useractive");
                         }else{
@@ -199,27 +196,6 @@ class ActiveController extends Controller
         }
     }
 
-    /*
-    * @author GiangDT
-    * 
-    * Generate new address
-    *
-    */
-    private function assignCLPAddress( $userId ) 
-    {
-        $clpAddress = CLPWallet::whereNull('userId')
-                            ->orderby('id', 'asc')
-                            ->get()
-                            ->first();
-
-        if(isset($clpAddress->address)) {
-            $clpAddress->userId = $userId;
-            $clpAddress->save();
-        } else {
-            CLPWallet::create(['userId' => $userId]);
-        }
-    }
-
     public function reactiveAccount(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -229,7 +205,7 @@ class ActiveController extends Controller
             $email = $request->email;
             $count = User::where('email', '=', $email)->count();
             if ($count == 0) {
-                $request->session()->flash('error', 'Email ko ton tai!');
+                $request->session()->flash('error', 'Email not exits!');
             } else {
                 $user = User::where('email', '=', $email)->first();
                 $user->updated_at = date('Y-m-d H:i:s');

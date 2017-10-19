@@ -11,7 +11,7 @@ use GuzzleHttp\Client;
 class CLPWalletAPI
 {
 
-    const DEFAULT_API_URL = 'http://199.193.6.228:3080/api';
+    const DEFAULT_API_URL = 'http://199.193.6.228:3082/api';
 
     private $apiUrl;
 
@@ -24,7 +24,7 @@ class CLPWalletAPI
         $this->client = new Client();
     }
 
-    public function generateWallet() 
+    public function generateWallet()
     {
         $path = $this->apiUrl . '/generate-wallet';
         $response = $this->client->request('GET', $path);
@@ -38,7 +38,7 @@ class CLPWalletAPI
         return $result['responseResult'];
     }
 
-    public function addInvestor($address, $amount) 
+    public function addInvestor($address, $amount)
     {
         $path = $this->apiUrl . '/add-investor/' . $address . '/' . $amount;
         $response = $this->client->request('GET', $path);

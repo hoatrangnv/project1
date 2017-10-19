@@ -64,12 +64,12 @@
                                     @if($active)
                                         <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                                     @else
-                                        <a href="#" class="btn bg-olive" disabled="true" data-toggle="modal" >{{ trans("adminlte_lang::wallet.withdraw") }}</a>
+                                        <a href="#" class="btn bg-olive" disabled="true">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                                     @endif
                                     @if($active)
                                         <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
                                     @else
-                                        <a href="#" class="btn bg-olive" disabled="true" data-toggle="modal">{{ trans("adminlte_lang::wallet.deposit") }}</a>
+                                        <a href="#" class="btn bg-olive" disabled="true">{{ trans("adminlte_lang::wallet.deposit") }}</a>
                                     @endif
                                     @if($active)
                                         <button class="btn bg-olive" data-toggle="modal"
@@ -307,6 +307,10 @@
                                         <div class="input-group input-group-md col-xs-12 col-lg-10" style="margin: 0 auto;">
                                         <input type="text" value="{{ $walletAddress }}" class="wallet-address form-control" id="wallet-address" readonly="true">
                                         <span class="input-group-btn">
+                                            @if(empty($walletAddress))
+                                                <button class="btn btn-default get-clpwallet" title="Get clp wallet"
+                                                        data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing">Generate</button>
+                                            @endif
                                          <button class="btn btn-default btnwallet-address" data-clipboard-target="#wallet-address" title="copy">
                                                     <i class="fa fa-clone"></i>
                                                 </button>
@@ -809,5 +813,23 @@
             $(".amount-clp-tranfer").val($(".clp-amount").html());
         });
 
+        //get address wallet
+        $(".get-clpwallet").click(function(){
+            $(".get-clpwallet").attr("disabled", "disabled");
+            var $this = $(this);
+            $this.button('loading');
+            $.get("{{URL::to('wallets/clp/getaddressclpwallet')}}", function(data, status){
+                if (data.err){
+                    alert("{{trans('adminlte_lang::wallet.not_get_address_clp_wallet')}}");
+                    $this.button('reset');
+                    $(".get-clpwallet").removeAttr("disabled");
+                }else{
+                    $("#wallet-address").val(data.data);
+                    $(".get-clpwallet").hide();
+                }
+            }).fail(function () {
+                console.log("Error response!")
+            });
+        });
     </script>
 @endsection
