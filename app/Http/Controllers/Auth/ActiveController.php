@@ -205,7 +205,7 @@ class ActiveController extends Controller
             $email = $request->email;
             $count = User::where('email', '=', $email)->count();
             if ($count == 0) {
-                $request->session()->flash('error', 'Email ko ton tai!');
+                $request->session()->flash('error', 'Email not exits!');
             } else {
                 $user = User::where('email', '=', $email)->first();
                 $user->updated_at = date('Y-m-d H:i:s');

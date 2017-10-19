@@ -125,8 +125,8 @@ Route::post('getnotification','GetNotificationController@getNotification');
 /***------- END TEST -------***/
 Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef")->name('user.ref');
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
-Route::get('reactive',"Auth\ActiveController@reactiveAccount");
-Route::post('reactive',"Auth\ActiveController@reactiveAccount");
+//Route::get('reactive',"Auth\ActiveController@reactiveAccount");
+//Route::post('reactive',"Auth\ActiveController@reactiveAccount");
 Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");

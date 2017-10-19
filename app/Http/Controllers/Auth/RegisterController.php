@@ -86,6 +86,21 @@ class RegisterController extends Controller
         Validator::extend('without_spaces', function($attr, $value){
             return preg_match('/^\S*$/u', $value);
         });
+
+        $customeMessage = [
+                'firstname.required' => 'First Name is required',
+                'lastname.required' => 'Last Name is required',
+                'name.required' => 'User Name is required',
+                'name.unique' => 'User Name has already been taken',
+                'email.required' => 'Email is required',
+                'email.unique' => 'Email has already been taken',
+                'password.required' => 'Password is required',
+                'phone.required' => 'Phone is required',
+                'terms.required' => 'Please check term and conditions',
+                'name.without_spaces' => 'User Name cannot have spaces',
+                'g-recaptcha-response.required' => 'Captcha is required'
+                ];
+
         return Validator::make($data, [
             'firstname'     => 'required|max:255',
             'lastname'     => 'required|max:255',
@@ -98,7 +113,7 @@ class RegisterController extends Controller
             'refererId'    => 'required',
             'country'    => 'required|not_in:0',
             'g-recaptcha-response'=> config('app.enable_captcha') ? 'required|captcha' : '',
-        ]);
+        ], $customeMessage);
     }
     
     public function register(Request $request)
