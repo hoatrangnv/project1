@@ -253,6 +253,21 @@ CREATE TABLE `notification` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for notification
+-- ----------------------------
+DROP TABLE IF EXISTS `clp_notification`;
+CREATE TABLE `clp_notification` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `data` text NOT NULL,
+  `wallet_id` int(10) DEFAULT NULL,
+  `completed_status` tinyint(1) DEFAULT NULL,
+  `pending_status` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
 -- Table structure for packages
 -- ----------------------------
 DROP TABLE IF EXISTS `packages`;
