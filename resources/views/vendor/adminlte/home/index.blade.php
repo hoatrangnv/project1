@@ -292,12 +292,6 @@
     <strong>Holy guacamole!</strong> You should check in on some of those fields below.
 </div>
 <script>
-    var formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-    });
-
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
