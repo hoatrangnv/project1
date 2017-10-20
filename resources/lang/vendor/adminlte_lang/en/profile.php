@@ -29,7 +29,7 @@ return [
     'postal_code'				=> 'Postal Code',
     'country'					=> 'Country',
     'phone'						=> 'Phone',
-    'birthday'					=> 'Date of Bird',
+    'birthday'					=> 'Date of Birth',
     'passport'					=> 'Passport / ID Card',
     'created_at'				=> 'Registration Date',
     'btn_save'					=> 'Save',
