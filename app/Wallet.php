@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Wallet extends Model
 {
     protected $fillable = [
-        'walletType', 'type', 'note', 'inOut', 'userId', 'amount'
+        'walletType', 'type', 'note', 'inOut', 'userId', 'amount', 'updated_at'
     ];
 
     // Wallet Type
