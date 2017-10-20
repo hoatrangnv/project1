@@ -242,6 +242,7 @@ CREATE TABLE `notification` (
   `data` text NOT NULL,
   `wallet_id` int(10) DEFAULT NULL,
   `completed_status` tinyint(1) DEFAULT NULL,
+  `transaction_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `pending_status` tinyint(1) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
