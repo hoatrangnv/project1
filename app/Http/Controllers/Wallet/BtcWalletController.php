@@ -243,9 +243,18 @@ class BtcWalletController extends Controller
                 //Private sale 2
                 if($secondSaleStart <= $currentDate && $currentDate <= $secondSaleEnd)
                 {
-                    
-                    if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
+                    //Get total sales
+                    $total = Wallet::where('walletType', Wallet::REINVEST_WALLET)
+                                    ->where('type', Wallet::BTC_CLP_TYPE)
+                                    ->where('amount', 6666.66)
+                                    ->count();
+
+                    if($total == 150) {
+                        $clpAmountErr = 'Sorry, the quota in this private sale reached.';
+                    } else if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
                         $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
+                    } else if($userCoin->reinvestAmount > 0) {
+                        $clpAmountErr = 'You cannot buy more CLP.';
                     }
 
                     $amountCLP = 10000;
@@ -257,6 +266,8 @@ class BtcWalletController extends Controller
                 {
                     if($request->clpAmount != 12500 || $amountCLP < 12475) {
                         $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
+                    } else if($userCoin->reinvestAmount > 0) {
+                        $clpAmountErr = 'You cannot buy more CLP.';
                     }
 
                     $amountCLP = 10000;
