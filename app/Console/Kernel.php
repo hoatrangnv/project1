@@ -68,14 +68,14 @@ class Kernel extends ConsoleKernel
             
         }
 
-        // Auto add to binary at 23:30 every sunday
-        // try {
-        //     $schedule->call(function () {
-        //         AutoAddBinary::addBinary();
-        //     })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
-        // } catch (\Exception $ex) {
-        //     Log::info($ex);
-        // }
+        //Auto add to binary at 23:30 every sunday
+        try {
+            $schedule->call(function () {
+                AutoAddBinary::addBinary();
+            })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
 		
         // Profit run everyday
 		try {
@@ -90,7 +90,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
-            })->weekly()->sundays()->at('00:30'); //->weekly()->mondays()->at('00:30');
+            })->weekly()->mondays()->at('00:30'); //->weekly()->mondays()->at('00:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
