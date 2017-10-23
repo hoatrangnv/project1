@@ -21,6 +21,8 @@ use App\CLPWallet;
 use App\CLPWalletAPI;
 use App\Helper\Helper;
 use App\Cronjob\GetClpWallet;
+use App\Cronjob\UpdateCLPCoin;
+
 /**
  * Description of TestController
  *
@@ -91,8 +93,7 @@ class TestController {
     }
 
     function test() {
-       $newGetClp = new GetClpWallet();
-       GetClpWallet::getClpWallet();
+        UpdateCLPCoin::UpdateClpCoinAmount();
     }
 
 }
