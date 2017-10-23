@@ -116,6 +116,8 @@ Route::group( ['middleware' => ['auth']], function() {
 });
 Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');
+//Route::get('clpnotification','GetNotificationController@clpNotification');
+Route::post('clpnotification','GetNotificationController@clpNotification');
 
 /***------- TEST -------***/
 //Route::get('ethereumtest', 'EthereumTestController@index');
