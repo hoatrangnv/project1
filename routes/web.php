@@ -125,7 +125,7 @@ Route::post('getnotification','GetNotificationController@getNotification');
 //Route::get('test-binary', 'TestController@testBinary');
 //Route::get('test-interest',"TestController@testInterest");
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
-//Route::get('test',"TestController@test");
+Route::get('test',"TestController@test");
 
 
 /***------- END TEST -------***/
