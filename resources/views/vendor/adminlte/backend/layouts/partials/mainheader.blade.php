@@ -17,14 +17,14 @@
         </a>
         &nbsp;
         &nbsp;
-        <span class="" style="font-size: 18px;line-height: 50px;text-align: center;color: white">
-            <b>
-                <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
-                <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;
-                <span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
-            </b>
-        </span>
-       
+        {{--<span class="" style="font-size: 18px;line-height: 50px;text-align: center;color: white">--}}
+            {{--<b>--}}
+                {{--<span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;--}}
+                {{--<span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;--}}
+                {{--<span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>--}}
+            {{--</b>--}}
+        {{--</span>--}}
+
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">

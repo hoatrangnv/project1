@@ -62,10 +62,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'id');
-<<<<<<< HEAD:app/Http/Controllers/Backend/User/UserController.php
-=======
 
->>>>>>> 28b49a4c236816ef9ed91d2075add5ac5653a2c0:app/Http/Controllers/User/UserController.php
         return view('adminlte::backend.user.new', compact('roles'));
     }
 

@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-
+use Spatie\Permission\Models\Role;
 use Google2FA;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 use App\User;
@@ -106,7 +107,7 @@ class LoginController extends Controller{
 
 
     public function redirectWithAdmin($request){
-        if(User::where('email', $request->email)->pluck("id")[0] == config("app.admin_id")){
+        if (count(User::userHasRole(User::where('email', $request->email)->pluck("id")[0])) > 0 ){
             $this->redirectTo = '/admin/home';
         }
     }

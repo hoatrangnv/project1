@@ -9,21 +9,21 @@ use App\Notifications\ResetPasswords;
 use Auth;
 use DB;
 
-class User extends Authenticatable
+class user extends authenticatable
 {
-    use Notifiable, HasRoles;
+    use notifiable, hasroles;
 
     /**
-     * The attributes that are mass assignable.
+     * the attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'status', 'active', 'refererId', 'firstname', 'lastname', 'phone', 'is2fa', 'google2fa_secret', 'password', 'address', 'address2', 'city', 'state', 'postal_code', 'name_country','country', 'birthday', 'passport', 'uid','approve','photo_verification','password'
+        'name', 'email', 'status', 'active', 'refererid', 'firstname', 'lastname', 'phone', 'is2fa', 'google2fa_secret', 'password', 'address', 'address2', 'city', 'state', 'postal_code', 'name_country','country', 'birthday', 'passport', 'uid','approve','photo_verification','password'
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * the attributes that should be hidden for arrays.
      *
      * @var array
      */
@@ -33,307 +33,307 @@ class User extends Authenticatable
 
     public function posts()
     {
-        return $this->hasMany(Post::class);
+        return $this->hasmany(post::class);
     }
-    public function userData() {
-        return $this->hasOne(UserData::class, 'userId', 'id');
+    public function userdata() {
+        return $this->hasone(userdata::class, 'userid', 'id');
     }
-    public function userCoin() {
-        return $this->hasOne(UserCoin::class, 'userId', 'id');
+    public function usercoin() {
+        return $this->hasone(usercoin::class, 'userid', 'id');
     }
-    public function userTreePermission() {
-        return $this->hasOne(UserTreePermission::class, 'userId', 'id');
+    public function usertreepermission() {
+        return $this->hasone(usertreepermission::class, 'userid', 'id');
     }
-    public function fastStart() {
-        //return $this->belongsTo(BonusFastStart::class);
-        return $this->hasOne(BonusFastStart::class, 'userId', 'id');
+    public function faststart() {
+        //return $this->belongsto(bonusfaststart::class);
+        return $this->hasone(bonusfaststart::class, 'userid', 'id');
     }
-    public function userLoyaty() {
-        return $this->hasOne(LoyaltyUser::class, 'userId', 'id');
+    public function userloyaty() {
+        return $this->hasone(loyaltyuser::class, 'userid', 'id');
     }
-    public function userLoyatys() {
-        return $this->hasMany(LoyaltyUser::class, 'refererId', 'id');
+    public function userloyatys() {
+        return $this->hasmany(loyaltyuser::class, 'refererid', 'id');
     }
 
-    public static function getUid(){
+    public static function getuid(){
         $uid = mt_rand(1001, 999999);
-        if(User::where('uid', $uid)->count()){
-            $uid = self::getUid();
+        if(user::where('uid', $uid)->count()){
+            $uid = self::getuid();
         }
         return $uid;
     }
     /**
-    * Calculate fast start bonus
+    * calculate fast start bonus
     */
-    public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0, $level = 1)
+    public static function investbonus($userid = 0, $refererid = 0, $packageid = 0, $usdcoinamount = 0, $level = 1)
     {
-        if($refererId > 0){
-            $packageBonus = 0;
-            $userData = UserData::find($refererId);
-            if($userData && $level <= 3 && $userData->packageId > 0&& self::checkMonthsBonus($refererId)){
-                if($level == 1){//F1
-                    $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f1_pay');
-                    $userData->totalBonus = $userData->totalBonus + $packageBonus;
-                    $userData->save();
-                }elseif($level == 2){//F2
-                    if(isset($userData->package->pack_id) &&  $userData->package->pack_id >= 3){
-                        $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f2_pay');
-                        $userData->totalBonus = $userData->totalBonus + $packageBonus;
-                        $userData->save();
+        if($refererid > 0){
+            $packagebonus = 0;
+            $userdata = userdata::find($refererid);
+            if($userdata && $level <= 3 && $userdata->packageid > 0&& self::checkmonthsbonus($refererid)){
+                if($level == 1){//f1
+                    $packagebonus = $usdcoinamount * config('cryptolanding.bonus_f1_pay');
+                    $userdata->totalbonus = $userdata->totalbonus + $packagebonus;
+                    $userdata->save();
+                }elseif($level == 2){//f2
+                    if(isset($userdata->package->pack_id) &&  $userdata->package->pack_id >= 3){
+                        $packagebonus = $usdcoinamount * config('cryptolanding.bonus_f2_pay');
+                        $userdata->totalbonus = $userdata->totalbonus + $packagebonus;
+                        $userdata->save();
                     }
-                }elseif($level == 3){//F3
-                    if(isset($userData->package->pack_id) &&  $userData->package->pack_id >= 5){
-                        $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f3_pay');
-                        $userData->totalBonus = $userData->totalBonus + $packageBonus;
-                        $userData->save();
+                }elseif($level == 3){//f3
+                    if(isset($userdata->package->pack_id) &&  $userdata->package->pack_id >= 5){
+                        $packagebonus = $usdcoinamount * config('cryptolanding.bonus_f3_pay');
+                        $userdata->totalbonus = $userdata->totalbonus + $packagebonus;
+                        $userdata->save();
                     }
                 }
-                $userCoin = $userData->userCoin;
-                if($userCoin && $packageBonus > 0){
-                    //Get info of user
-                    $user = Auth::user();
+                $usercoin = $userdata->usercoin;
+                if($usercoin && $packagebonus > 0){
+                    //get info of user
+                    $user = auth::user();
 
-                    $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
-                    $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate());
-                    $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
-                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-                    $userCoin->save();
-                    $fieldUsd = [
-                        'walletType' => Wallet::USD_WALLET,//usd
-                        'type' => Wallet::FAST_START_TYPE,//bonus f1
-                        'inOut' => Wallet::IN,
-                        'userId' => $userData->userId,
-                        'amount' => $usdAmount,
+                    $usdamount = ($packagebonus * config('cryptolanding.usd_bonus_pay'));
+                    $reinvestamount = ($packagebonus * config('cryptolanding.reinvest_bonus_pay') / exchangerate::getclpusdrate());
+                    $usercoin->usdamount = ($usercoin->usdamount + $usdamount);
+                    $usercoin->reinvestamount = ($usercoin->reinvestamount + $reinvestamount);
+                    $usercoin->save();
+                    $fieldusd = [
+                        'wallettype' => wallet::usd_wallet,//usd
+                        'type' => wallet::fast_start_type,//bonus f1
+                        'inout' => wallet::in,
+                        'userid' => $userdata->userid,
+                        'amount' => $usdamount,
                         'note'   => $user->name . ' bought package'
                     ];
-                    Wallet::create($fieldUsd);
-                    $fieldInvest = [
-                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
-                        'type' => Wallet::FAST_START_TYPE,//bonus f1
-                        'inOut' => Wallet::IN,
-                        'userId' => $userData->userId,
-                        'amount' => $reinvestAmount,
+                    wallet::create($fieldusd);
+                    $fieldinvest = [
+                        'wallettype' => wallet::reinvest_wallet,//reinvest
+                        'type' => wallet::fast_start_type,//bonus f1
+                        'inout' => wallet::in,
+                        'userid' => $userdata->userid,
+                        'amount' => $reinvestamount,
                         'note'   => $user->name . ' bought package'
                     ];
-                    Wallet::create($fieldInvest);
+                    wallet::create($fieldinvest);
                 }
-                if($packageBonus > 0)
-                    self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
+                if($packagebonus > 0)
+                    self::investbonusfaststart($refererid, $userid, $packageid, $packagebonus, $level);
             }
-            if($userData)
-                self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
-            self::bonusBinaryThisWeek($refererId);
+            if($userdata)
+                self::investbonus($userid, $userdata->refererid, $packageid, $usdcoinamount, ($level + 1));
+            self::bonusbinarythisweek($refererid);
         }
     }
 
     /**
-    *   Insert log for Fast Start Bonus
+    *   insert log for fast start bonus
     */
-    public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0, $level = 1)
+    public static function investbonusfaststart($userid = 0, $partnerid = 0, $packageid = 0, $amount = 0, $level = 1)
     {
-        if($userId > 0) {
+        if($userid > 0) {
             $fields = [
-                'userId'     => $userId,
-                'partnerId'     => $partnerId,
+                'userid'     => $userid,
+                'partnerid'     => $partnerid,
                 'generation'     => $level,
-                'packageId'     => $packageId,
+                'packageid'     => $packageid,
                 'amount'     => $amount,
             ];
 
-            BonusFastStart::create($fields);
+            bonusfaststart::create($fields);
         }
     }
 
     /**
-    * Loop to root to re-assign lastLeft, lastRight user in tree and caculate binary sales for each node. 
+    * loop to root to re-assign lastleft, lastright user in tree and caculate binary sales for each node.
     */
-    public static function bonusBinary($userId = 0, $partnerId = 0, $packageId = 0, $binaryUserId = 0, $legpos, $isUpgrade = false, $continue=true)
+    public static function bonusbinary($userid = 0, $partnerid = 0, $packageid = 0, $binaryuserid = 0, $legpos, $isupgrade = false, $continue=true)
     {
-        $userRoot = UserData::find($userId);
-        $user = UserData::find($binaryUserId);
-        $usdCoinAmount = 0;
+        $userroot = userdata::find($userid);
+        $user = userdata::find($binaryuserid);
+        $usdcoinamount = 0;
 
         if($user)
         {
-            if($isUpgrade == true) 
+            if($isupgrade == true)
             {
-                // If $userRoot already in binary tree
-				$userPackage = UserPackage::where('userId', $userId)
-                                ->where('packageId', $packageId)
-                                ->orderBy('packageId', 'desc')
+                // if $userroot already in binary tree
+				$userpackage = userpackage::where('userid', $userid)
+                                ->where('packageid', $packageid)
+                                ->orderby('packageid', 'desc')
                                 ->first();
 
-                $usdCoinAmount = isset($userPackage->amount_increase) ? $userPackage->amount_increase : 0;
+                $usdcoinamount = isset($userpackage->amount_increase) ? $userpackage->amount_increase : 0;
 
                 if ($legpos == 1){
-                    //Total sale on left
-                    $user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
+                    //total sale on left
+                    $user->totalbonusleft = $user->totalbonusleft + $usdcoinamount;
                 }else{
-                    //Total sale on right
-                    $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
+                    //total sale on right
+                    $user->totalbonusright = $user->totalbonusright + $usdcoinamount;
                 }
-            } 
-            elseif($userRoot->totalMembers == 0) 
+            }
+            elseif($userroot->totalmembers == 0)
             {
-                // If $userRoot don't have own tree
-                $userPackage = Package::where('pack_id', $packageId)->first();
-                $usdCoinAmount = isset($userPackage->price) ? $userPackage->price : 0;
+                // if $userroot don't have own tree
+                $userpackage = package::where('pack_id', $packageid)->first();
+                $usdcoinamount = isset($userpackage->price) ? $userpackage->price : 0;
 
                 if ($legpos == 1){
-                    //Total sale on left
-                    $user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
-                    //$user->lastUserIdLeft = $userRoot ? $userRoot->lastUserIdLeft : $userId;
-                    //$userRoot always have lastUserIdLeft, lastUserIdRight > 0 ( = userid or #userid )
+                    //total sale on left
+                    $user->totalbonusleft = $user->totalbonusleft + $usdcoinamount;
+                    //$user->lastuseridleft = $userroot ? $userroot->lastuseridleft : $userid;
+                    //$userroot always have lastuseridleft, lastuseridright > 0 ( = userid or #userid )
 					if($continue)
-						$user->lastUserIdLeft = $userRoot->lastUserIdLeft;
-                    $user->leftMembers = $user->leftMembers + 1;
+						$user->lastuseridleft = $userroot->lastuseridleft;
+                    $user->leftmembers = $user->leftmembers + 1;
 
                 }else{
-                    //Total sale on right
-                    $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
-                    //$user->lastUserIdRight = $userRoot ? $userRoot->lastUserIdRight : $userId;
-                    if($continue) 
-						$user->lastUserIdRight = $userRoot->lastUserIdRight;
-                    $user->rightMembers = $user->rightMembers + 1;
+                    //total sale on right
+                    $user->totalbonusright = $user->totalbonusright + $usdcoinamount;
+                    //$user->lastuseridright = $userroot ? $userroot->lastuseridright : $userid;
+                    if($continue)
+						$user->lastuseridright = $userroot->lastuseridright;
+                    $user->rightmembers = $user->rightmembers + 1;
                 }
 
-                $user->totalMembers = $user->totalMembers + 1;
-                
-            } 
-            else 
-            {
-                // If $userRoot  HAVE own tree
-                $userPackage = Package::where('pack_id', $packageId)->first();
-                $packageAmount = isset($userPackage->price) ? $userPackage->price : 0;
+                $user->totalmembers = $user->totalmembers + 1;
 
-                $usdCoinAmount = $userRoot->totalBonusLeft + $userRoot->totalBonusRight + $packageAmount;
+            }
+            else
+            {
+                // if $userroot  have own tree
+                $userpackage = package::where('pack_id', $packageid)->first();
+                $packageamount = isset($userpackage->price) ? $userpackage->price : 0;
+
+                $usdcoinamount = $userroot->totalbonusleft + $userroot->totalbonusright + $packageamount;
 
                 if ($legpos == 1){
-                    //Total sale on left
-                    $user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
-                    //$user->lastUserIdLeft = $userRoot ? $userRoot->lastUserIdLeft : $userId;
-                    //$userRoot always have lastUserIdLeft, lastUserIdRight > 0 ( = userid or #userid )
-                    $user->lastUserIdLeft = $userRoot->lastUserIdLeft;
-                    $user->leftMembers = $user->leftMembers + $userRoot->totalMembers + 1;
+                    //total sale on left
+                    $user->totalbonusleft = $user->totalbonusleft + $usdcoinamount;
+                    //$user->lastuseridleft = $userroot ? $userroot->lastuseridleft : $userid;
+                    //$userroot always have lastuseridleft, lastuseridright > 0 ( = userid or #userid )
+                    $user->lastuseridleft = $userroot->lastuseridleft;
+                    $user->leftmembers = $user->leftmembers + $userroot->totalmembers + 1;
                 }else{
-                    //Total sale on right
-                    $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
-                    //$user->lastUserIdRight = $userRoot ? $userRoot->lastUserIdRight : $userId;
-                    $user->lastUserIdRight = $userRoot->lastUserIdRight;
-                    $user->rightMembers = $user->rightMembers + $userRoot->totalMembers + 1;
+                    //total sale on right
+                    $user->totalbonusright = $user->totalbonusright + $usdcoinamount;
+                    //$user->lastuseridright = $userroot ? $userroot->lastuseridright : $userid;
+                    $user->lastuseridright = $userroot->lastuseridright;
+                    $user->rightmembers = $user->rightmembers + $userroot->totalmembers + 1;
                 }
 
-                $user->totalMembers = $user->totalMembers +  $userRoot->totalMembers + 1;
+                $user->totalmembers = $user->totalmembers +  $userroot->totalmembers + 1;
             }
 
             $user->save();
 
-            
 
-            //Caculate binary bonus for up level of $userRoot in binary tree
-			// $binaryUserId = $user->userId
-            self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
 
-			$nextLegpos = isset($user->leftRight) ? $user->leftRight : -1;
-			
-			if($nextLegpos == $userRoot->leftRight && $continue == true) $continue = true;
+            //caculate binary bonus for up level of $userroot in binary tree
+			// $binaryuserid = $user->userid
+            self::bonusbinaryweek($binaryuserid, $usdcoinamount, $legpos);
+
+			$nextlegpos = isset($user->leftright) ? $user->leftright : -1;
+
+			if($nextlegpos == $userroot->leftright && $continue == true) $continue = true;
 			else $continue = false;
-			
+
 			//convert left, right to 1,2
-			$nextLegpos = ($nextLegpos == 'left') ? 1 : 2;
-			
-			//Caculate loyalty bonus for up level of $userRoot in binary tree
-			// $user->userId = $binaryUserId
-            if($user->packageId > 0) self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
-            
-            if($user->binaryUserId > 0 && $user->packageId > 0) {    
-                User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $nextLegpos, $isUpgrade, $continue);
+			$nextlegpos = ($nextlegpos == 'left') ? 1 : 2;
+
+			//caculate loyalty bonus for up level of $userroot in binary tree
+			// $user->userid = $binaryuserid
+            if($user->packageid > 0) self::bonusloyaltyuser($user->userid, $user->refererid, $nextlegpos);
+
+            if($user->binaryuserid > 0 && $user->packageid > 0) {
+                user::bonusbinary($userid, $partnerid, $packageid, $user->binaryuserid, $nextlegpos, $isupgrade, $continue);
             }
         }
     }
 
-    public static function bonusBinaryWeek($binaryUserId = 0, $usdCoinAmount = 0, $legpos)
+    public static function bonusbinaryweek($binaryuserid = 0, $usdcoinamount = 0, $legpos)
     {
-        if(self::checkMonthsBonus($binaryUserId)){
-            $weeked = date('W');
-            $year = date('Y');
-            $weekYear = $year . $weeked;
+        if(self::checkmonthsbonus($binaryuserid)){
+            $weeked = date('w');
+            $year = date('y');
+            $weekyear = $year . $weeked;
 
             if($weeked < 10)
-                $weekYear = $year . '0' . $weeked;
+                $weekyear = $year . '0' . $weeked;
 
-            $week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
-            if($week && $week->id > 0){ //If already have record just update amount increase
+            $week = bonusbinary::where('userid', '=', $binaryuserid)->where('weekyear', '=', $weekyear)->first();
+            if($week && $week->id > 0){ //if already have record just update amount increase
                 if($legpos == 1){
-                    $week->leftNew = $week->leftNew + $usdCoinAmount;
+                    $week->leftnew = $week->leftnew + $usdcoinamount;
                 }else{
-                    $week->rightNew = $week->rightNew + $usdCoinAmount;
+                    $week->rightnew = $week->rightnew + $usdcoinamount;
                 }
                 $week->save();
             }else{
                 $fields = [
-                    'userId' => $binaryUserId,
+                    'userid' => $binaryuserid,
                     'weeked' => $weeked,
                     'year' => $year,
-                    'weekYear' => $weekYear,
+                    'weekyear' => $weekyear,
                 ];
 
-                $fields['leftOpen'] = 0;
-                $fields['rightOpen'] = 0;
+                $fields['leftopen'] = 0;
+                $fields['rightopen'] = 0;
 
                 if($legpos == 1){
-                    $fields['leftNew'] = $usdCoinAmount;
-                    $fields['rightNew'] = 0;
+                    $fields['leftnew'] = $usdcoinamount;
+                    $fields['rightnew'] = 0;
                 }else{
-                    $fields['rightNew'] = $usdCoinAmount;
-                    $fields['leftNew'] = 0;
+                    $fields['rightnew'] = $usdcoinamount;
+                    $fields['leftnew'] = 0;
                 }
 
-                BonusBinary::create($fields);
+                bonusbinary::create($fields);
             }
 
-            //Caculate temporary binary bonus this week right after have a new user in tree
-            self::bonusBinaryThisWeek($binaryUserId);
+            //caculate temporary binary bonus this week right after have a new user in tree
+            self::bonusbinarythisweek($binaryuserid);
         }
     }
 
     /**
-    *   Caculate temporary binary bonus this week right after have a new user in tree
+    *   caculate temporary binary bonus this week right after have a new user in tree
     */
-    public static function bonusBinaryThisWeek($userId){
-        $weeked = date('W');
-        $year = date('Y');
-        $weekYear = $year.$weeked;
+    public static function bonusbinarythisweek($userid){
+        $weeked = date('w');
+        $year = date('y');
+        $weekyear = $year.$weeked;
 
-        if($weeked < 10) $weekYear = $year.'0'.$weeked;
+        if($weeked < 10) $weekyear = $year.'0'.$weeked;
 
-        $binary = BonusBinary::where('weekYear', '=', $weekYear)->where('userId', '=', $userId)->first();
-        //foreach ($lstBinary as $binary) {
+        $binary = bonusbinary::where('weekyear', '=', $weekyear)->where('userid', '=', $userid)->first();
+        //foreach ($lstbinary as $binary) {
         if($binary){
-            $leftOver = $binary->leftOpen + $binary->leftNew;
-            $rightOver = $binary->rightOpen + $binary->rightNew;
+            $leftover = $binary->leftopen + $binary->leftnew;
+            $rightover = $binary->rightopen + $binary->rightnew;
 
-            if ($leftOver >= $rightOver) {
-                $settled = $rightOver;
+            if ($leftover >= $rightover) {
+                $settled = $rightover;
             } else {
-                $settled = $leftOver;
+                $settled = $leftover;
             }
 
             $bonus = 0;
-            $userPackage = $binary->userData->package;
+            $userpackage = $binary->userdata->package;
 
-            if (self::checkBinaryCount($binary->userId, 1)) {
-                if ($userPackage->pack_id == 1) {
+            if (self::checkbinarycount($binary->userid, 1)) {
+                if ($userpackage->pack_id == 1) {
                     $bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
-                } elseif ($userPackage->pack_id == 2) {
+                } elseif ($userpackage->pack_id == 2) {
                     $bonus = $settled * config('cryptolanding.binary_bonus_2_pay');
-                } elseif ($userPackage->pack_id == 3) {
+                } elseif ($userpackage->pack_id == 3) {
                     $bonus = $settled * config('cryptolanding.binary_bonus_3_pay');
-                } elseif ($userPackage->pack_id == 4) {
+                } elseif ($userpackage->pack_id == 4) {
                     $bonus = $settled * config('cryptolanding.binary_bonus_4_pay');
-                } elseif ($userPackage->pack_id == 5) {
+                } elseif ($userpackage->pack_id == 5) {
                     $bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
-                } elseif ($userPackage->pack_id == 6) {
+                } elseif ($userpackage->pack_id == 6) {
                     $bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
                 }
             }
@@ -348,248 +348,248 @@ class User extends Authenticatable
     }
 
     /**
-    *   Check condition this this user to know he can get binary bonus and how much bonus or not get anything
+    *   check condition this this user to know he can get binary bonus and how much bonus or not get anything
     */
-    public static function checkBinaryCount($userId, $packageId){
-        $countLeft = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight',  'left')->count();
-        $countRight = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight',  'right')->count();
-        if($countLeft >= 3 && $countRight >= 3){
+    public static function checkbinarycount($userid, $packageid){
+        $countleft = userdata::where('refererid', '=', $userid)->where('packageid', '>', $packageid)->where('leftright',  'left')->count();
+        $countright = userdata::where('refererid', '=', $userid)->where('packageid', '>', $packageid)->where('leftright',  'right')->count();
+        if($countleft >= 3 && $countright >= 3){
             return true;
         }
         return false;
     }
 
     /**
-    *   Calculate loyalty bonus
+    *   calculate loyalty bonus
     */
-    public static function bonusLoyaltyUser($userId, $refererId, $legpos){
-        $leftRight = $legpos == 1 ? 'left' : 'right';
-        $users = UserData::where('refererId', '=', $userId)
-			->where('isBinary', '=', 1)
-            ->groupBy(['packageId', 'leftRight'])
-            ->selectRaw('packageId, leftRight, count(*) as num')
+    public static function bonusloyaltyuser($userid, $refererid, $legpos){
+        $leftright = $legpos == 1 ? 'left' : 'right';
+        $users = userdata::where('refererid', '=', $userid)
+			->where('isbinary', '=', 1)
+            ->groupby(['packageid', 'leftright'])
+            ->selectraw('packageid, leftright, count(*) as num')
             ->get();
 
-        $totalf1Left = $totalf1Right = 0;
-        $isSilver = 0;
-        $isGold = 0;
-        $isPear = 0;
-        $isEmerald = 0;
-        $isDiamond = 0;
+        $totalf1left = $totalf1right = 0;
+        $issilver = 0;
+        $isgold = 0;
+        $ispear = 0;
+        $isemerald = 0;
+        $isdiamond = 0;
 
         foreach ($users as $user) {
-            if($user->packageId > 0){
-                $package = Package::find($user->packageId);
+            if($user->packageid > 0){
+                $package = package::find($user->packageid);
                 if($package){
-                    if($user->leftRight == 'left'){
-                        $totalf1Left += $package->price * $user->num;
+                    if($user->leftright == 'left'){
+                        $totalf1left += $package->price * $user->num;
                     }else{
-                        $totalf1Right += $package->price * $user->num;
+                        $totalf1right += $package->price * $user->num;
                     }
                 }
             }
         }
 
-        //Get UserData
-        $userInfo = UserData::where('userId', '=', $userId)->get()->first();
-        $loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
+        //get userdata
+        $userinfo = userdata::where('userid', '=', $userid)->get()->first();
+        $loyaltyuser = loyaltyuser::where('userid', '=', $userid)->first();
 
-        if($totalf1Left >= config('cryptolanding.loyalty_upgrate_silver') 
-            && $totalf1Right >= config('cryptolanding.loyalty_upgrate_silver')
-            && $userInfo->packageId > 2) {
-            $isSilver = 1;
-            
+        if($totalf1left >= config('cryptolanding.loyalty_upgrate_silver')
+            && $totalf1right >= config('cryptolanding.loyalty_upgrate_silver')
+            && $userinfo->packageid > 2) {
+            $issilver = 1;
+
         }
 
-        $loyaltyBonus = config('cryptolanding.loyalty_bonus');
-        if( isset($loyaltyUser->isGold) && $loyaltyUser->isGold == 0 ) 
-            $isGold = self::getBonusLoyaltyUser($userId, 'gold',$userInfo->packageId);
-        if(isset($loyaltyUser->isPear) && $loyaltyUser->isPear == 0 ) 
-            $isPear = self::getBonusLoyaltyUser($userId, 'pear', $userInfo->packageId);
-        if(isset($loyaltyUser->isEmerald) && $loyaltyUser->isEmerald == 0 ) 
-            $isEmerald = self::getBonusLoyaltyUser($userId, 'emerald', $userInfo->packageId);
-        if(isset($loyaltyUser->isDiamond) && $loyaltyUser->isDiamond == 0 ) 
-            $isDiamond = self::getBonusLoyaltyUser($userId, 'diamond', $userInfo->packageId);
+        $loyaltybonus = config('cryptolanding.loyalty_bonus');
+        if( isset($loyaltyuser->isgold) && $loyaltyuser->isgold == 0 )
+            $isgold = self::getbonusloyaltyuser($userid, 'gold',$userinfo->packageid);
+        if(isset($loyaltyuser->ispear) && $loyaltyuser->ispear == 0 )
+            $ispear = self::getbonusloyaltyuser($userid, 'pear', $userinfo->packageid);
+        if(isset($loyaltyuser->isemerald) && $loyaltyuser->isemerald == 0 )
+            $isemerald = self::getbonusloyaltyuser($userid, 'emerald', $userinfo->packageid);
+        if(isset($loyaltyuser->isdiamond) && $loyaltyuser->isdiamond == 0 )
+            $isdiamond = self::getbonusloyaltyuser($userid, 'diamond', $userinfo->packageid);
 
-        $loyaltyId = 0;
-        if($isSilver) $loyaltyId = 1;
-        if($isGold) $loyaltyId = 2;
-        if($isPear) $loyaltyId = 3;
-        if($isEmerald) $loyaltyId = 4;
-        if($isDiamond) $loyaltyId = 5;
+        $loyaltyid = 0;
+        if($issilver) $loyaltyid = 1;
+        if($isgold) $loyaltyid = 2;
+        if($ispear) $loyaltyid = 3;
+        if($isemerald) $loyaltyid = 4;
+        if($isdiamond) $loyaltyid = 5;
 
-        if($loyaltyId > 0) {
-            $userInfo->loyaltyId = $loyaltyId;
-            $userInfo->save();
+        if($loyaltyid > 0) {
+            $userinfo->loyaltyid = $loyaltyid;
+            $userinfo->save();
         }
-        
+
 
         $fields = [
-            'userId'     => $userId,
-            'leftRight'     => $leftRight,
-            'isSilver'     => $isSilver,
-            'isGold'     => $isGold,
-            'isPear'     => $isPear,
-            'isEmerald'     => $isEmerald,
-            'isDiamond'     => $isDiamond,
-            'refererId'     => $refererId,
+            'userid'     => $userid,
+            'leftright'     => $leftright,
+            'issilver'     => $issilver,
+            'isgold'     => $isgold,
+            'ispear'     => $ispear,
+            'isemerald'     => $isemerald,
+            'isdiamond'     => $isdiamond,
+            'refererid'     => $refererid,
         ];
 
-        if($loyaltyUser)
+        if($loyaltyuser)
         {
 
-            $userData = $loyaltyUser->user->userData;
-            $loyaltyUser->f1Left = $totalf1Left;
-            $loyaltyUser->f1Right = $totalf1Right;
+            $userdata = $loyaltyuser->user->userdata;
+            $loyaltyuser->f1left = $totalf1left;
+            $loyaltyuser->f1right = $totalf1right;
 
-            if($loyaltyUser->isSilver==0) {
-                $loyaltyUser->isSilver = $isSilver;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['silver']) && $loyaltyUser->isSilver == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['silver'], trans('adminlte_lang::mybonus.silver'));
+            if($loyaltyuser->issilver==0) {
+                $loyaltyuser->issilver = $issilver;
+                if(isset($loyaltybonus) && isset($loyaltybonus['silver']) && $loyaltyuser->issilver == 1)
+                    self::bonusloyaltycal($userid, $loyaltybonus['silver'], trans('adminlte_lang::mybonus.silver'));
             }
 
-            if($loyaltyUser->isGold == 0){
-                $loyaltyUser->isGold = $isGold;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['gold']) && $loyaltyUser->isGold == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['gold'],  trans('adminlte_lang::mybonus.gold'));
+            if($loyaltyuser->isgold == 0){
+                $loyaltyuser->isgold = $isgold;
+                if(isset($loyaltybonus) && isset($loyaltybonus['gold']) && $loyaltyuser->isgold == 1)
+                    self::bonusloyaltycal($userid, $loyaltybonus['gold'],  trans('adminlte_lang::mybonus.gold'));
             }
 
-            if($loyaltyUser->isPear == 0){
-                $loyaltyUser->isPear = $isPear;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['pear']) && $loyaltyUser->isPear == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['pear'],  trans('adminlte_lang::mybonus.pear'));
+            if($loyaltyuser->ispear == 0){
+                $loyaltyuser->ispear = $ispear;
+                if(isset($loyaltybonus) && isset($loyaltybonus['pear']) && $loyaltyuser->ispear == 1)
+                    self::bonusloyaltycal($userid, $loyaltybonus['pear'],  trans('adminlte_lang::mybonus.pear'));
             }
 
-            if($loyaltyUser->isEmerald == 0){
-                $loyaltyUser->isEmerald = $isEmerald;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['emerald']) && $loyaltyUser->isEmerald == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['emerald'],  trans('adminlte_lang::mybonus.emerald'));
+            if($loyaltyuser->isemerald == 0){
+                $loyaltyuser->isemerald = $isemerald;
+                if(isset($loyaltybonus) && isset($loyaltybonus['emerald']) && $loyaltyuser->isemerald == 1)
+                    self::bonusloyaltycal($userid, $loyaltybonus['emerald'],  trans('adminlte_lang::mybonus.emerald'));
             }
 
-            if($loyaltyUser->isDiamond == 0){
-                $loyaltyUser->isDiamond = $isDiamond;
-                if(isset($loyaltyBonus) && isset($loyaltyBonus['diamond']) && $loyaltyUser->isDiamond == 1)
-                    self::bonusLoyaltyCal($userId, $loyaltyBonus['diamond'],  trans('adminlte_lang::mybonus.diamond'));
+            if($loyaltyuser->isdiamond == 0){
+                $loyaltyuser->isdiamond = $isdiamond;
+                if(isset($loyaltybonus) && isset($loyaltybonus['diamond']) && $loyaltyuser->isdiamond == 1)
+                    self::bonusloyaltycal($userid, $loyaltybonus['diamond'],  trans('adminlte_lang::mybonus.diamond'));
             }
 
-            $loyaltyUser->save();
+            $loyaltyuser->save();
         }
         else
         {
-            $fields['f1Left'] = $totalf1Left;
-            $fields['f1Right'] = $totalf1Right;
+            $fields['f1left'] = $totalf1left;
+            $fields['f1right'] = $totalf1right;
 
-            LoyaltyUser::create($fields);
+            loyaltyuser::create($fields);
         }
     }
 
     /**
-    * Return amount loyalty bonus to usd wallet, reinvest wallet
+    * return amount loyalty bonus to usd wallet, reinvest wallet
     */
-    public static function bonusLoyaltyCal($userId, $amount, $type){
-        if(self::checkMonthsBonus($userId)){
-            $usdAmount = $amount * config('cryptolanding.usd_bonus_pay');
-            $reinvestAmount = $amount * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+    public static function bonusloyaltycal($userid, $amount, $type){
+        if(self::checkmonthsbonus($userid)){
+            $usdamount = $amount * config('cryptolanding.usd_bonus_pay');
+            $reinvestamount = $amount * config('cryptolanding.reinvest_bonus_pay') / exchangerate::getclpusdrate();
 
-            $userCoin = UserCoin::where('userId', $userId)->get()->first();
-            $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
-            $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-            $userCoin->save();
+            $usercoin = usercoin::where('userid', $userid)->get()->first();
+            $usercoin->usdamount = ($usercoin->usdamount + $usdamount);
+            $usercoin->reinvestamount = ($usercoin->reinvestamount + $reinvestamount);
+            $usercoin->save();
 
-            $fieldUsd = [
-                'walletType' => Wallet::USD_WALLET,
+            $fieldusd = [
+                'wallettype' => wallet::usd_wallet,
                 //usd
-                'type' => Wallet::LTOYALTY_TYPE,
+                'type' => wallet::ltoyalty_type,
                 //bonus f1
-                'inOut' => Wallet::IN,
-                'userId' => $userId,
-                'amount' => $usdAmount,
+                'inout' => wallet::in,
+                'userid' => $userid,
+                'amount' => $usdamount,
                 'note' => $type,
             ];
 
-            Wallet::create($fieldUsd);
+            wallet::create($fieldusd);
 
-            $fieldInvest = [
-                'walletType' => Wallet::REINVEST_WALLET,
+            $fieldinvest = [
+                'wallettype' => wallet::reinvest_wallet,
                 //reinvest
-                'type' => Wallet::LTOYALTY_TYPE,
+                'type' => wallet::ltoyalty_type,
                 //bonus f1
-                'inOut' => Wallet::IN,
-                'userId' => $userId,
-                'amount' => $reinvestAmount,
+                'inout' => wallet::in,
+                'userid' => $userid,
+                'amount' => $reinvestamount,
                 'note' => $type,
             ];
 
-            Wallet::create($fieldInvest);
+            wallet::create($fieldinvest);
         }
     }
 
     /**
-    *  Check and Get loyalty type
+    *  check and get loyalty type
     */
-    public static function getBonusLoyaltyUser($userId, $type, $packageId)
+    public static function getbonusloyaltyuser($userid, $type, $packageid)
     {
-        if($type == 'gold') 
+        if($type == 'gold')
         {
-            $countLeft = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isSilver', 1)
-                            ->where('leftRight', '=', 'left')
+            $countleft = loyaltyuser::where('refererid', '=', $userid)
+                            ->where('issilver', 1)
+                            ->where('leftright', '=', 'left')
                             ->count();
 
-            $countRight = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isSilver', 1)
-                            ->where('leftRight', '=', 'right')
+            $countright = loyaltyuser::where('refererid', '=', $userid)
+                            ->where('issilver', 1)
+                            ->where('leftright', '=', 'right')
                             ->count();
 
-            if($countLeft >= 1 && $countRight >= 1 && $packageId > 4){
+            if($countleft >= 1 && $countright >= 1 && $packageid > 4){
                 return 1;
             }
         }
         elseif($type == 'pear')
         {
-            $countLeft = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isGold', 1)
-                            ->where('leftRight', '=', 'left')
+            $countleft = loyaltyuser::where('refererid', '=', $userid)
+                            ->where('isgold', 1)
+                            ->where('leftright', '=', 'left')
                             ->count();
 
-            $countRight = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isGold', 1)
-                            ->where('leftRight', '=', 'right')
+            $countright = loyaltyuser::where('refererid', '=', $userid)
+                            ->where('isgold', 1)
+                            ->where('leftright', '=', 'right')
                             ->count();
 
-            if($countLeft >= 1 && $countRight >= 1 && $packageId > 5){
+            if($countleft >= 1 && $countright >= 1 && $packageid > 5){
                 return 1;
             }
         }
         elseif($type == 'emerald')
         {
-            $countLeft = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isPear', 1)
-                            ->where('leftRight', '=', 'left')
+            $countleft = loyaltyuser::where('refererid', '=', $userid)
+                            ->where('ispear', 1)
+                            ->where('leftright', '=', 'left')
                             ->count();
 
-            $countRight = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isPear', 1)
-                            ->where('leftRight', '=', 'right')
+            $countright = loyaltyuser::where('refererid', '=', $userid)
+                            ->where('ispear', 1)
+                            ->where('leftright', '=', 'right')
                             ->count();
 
-            if($countLeft >= 2 && $countRight >= 2 && $packageId > 5){
+            if($countleft >= 2 && $countright >= 2 && $packageid > 5){
                 return 1;
             }
         }
         elseif($type == 'diamond')
         {
-            $countLeft = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isEmerald', 1)
-                            ->where('leftRight', '=', 'left')
+            $countleft = loyaltyuser::where('refererid', '=', $userid)
+                            ->where('isemerald', 1)
+                            ->where('leftright', '=', 'left')
                             ->count();
 
-            $countRight = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isEmerald', 1)
-                            ->where('leftRight', '=', 'right')
+            $countright = loyaltyuser::where('refererid', '=', $userid)
+                            ->where('isemerald', 1)
+                            ->where('leftright', '=', 'right')
                             ->count();
 
-            if($countLeft >= 3 && $countRight >= 3 && $packageId > 5){
+            if($countleft >= 3 && $countright >= 3 && $packageid > 5){
                 return 1;
             }
         }
@@ -598,59 +598,64 @@ class User extends Authenticatable
     }
 
 
-    private function checkMonthsBonus($userId){
-        $lastPackage = UserPackage::where('userId', $userId)->orderByDesc('packageId')->first();
-        $isBonus = false;
-        if($lastPackage){
-            if($lastPackage->withdraw == 1){
-                $release_date = strtotime(date("Y-m-d", strtotime($lastPackage->release_date)));
-                $release_date_12 = strtotime(date("Y-m-d", strtotime($lastPackage->release_date) . " + 6 months"));
-                $withdraw_date = strtotime(date("Y-m-d", strtotime($lastPackage->updated_at)));
+    private function checkmonthsbonus($userid){
+        $lastpackage = userpackage::where('userid', $userid)->orderbydesc('packageid')->first();
+        $isbonus = false;
+        if($lastpackage){
+            if($lastpackage->withdraw == 1){
+                $release_date = strtotime(date("y-m-d", strtotime($lastpackage->release_date)));
+                $release_date_12 = strtotime(date("y-m-d", strtotime($lastpackage->release_date) . " + 6 months"));
+                $withdraw_date = strtotime(date("y-m-d", strtotime($lastpackage->updated_at)));
                 if($release_date != $withdraw_date){
                     if($withdraw_date >= $release_date_12){
-                        $isBonus = true;
+                        $isbonus = true;
                     }
                 }
             }else{
-                $isBonus = true;
+                $isbonus = true;
             }
         }
-        return $isBonus;
+        return $isbonus;
     }
 
-    public function sendPasswordResetNotification($token)
+    public function sendpasswordresetnotification($token)
     {
-        $this->notify(new ResetPasswords($token));
+        $this->notify(new resetpasswords($token));
     }
 
-    public static function updateUserGenealogy($refererId, $userId = 0){
-        if($userId == 0)$userId = $refererId;
-        $user = UserTreePermission::find($refererId);
+    public static function updateusergenealogy($refererid, $userid = 0){
+        if($userid == 0)$userid = $refererid;
+        $user = usertreepermission::find($refererid);
         if($user){
-            $user->genealogy = $user->genealogy .','.$userId;
+            $user->genealogy = $user->genealogy .','.$userid;
             $user->genealogy_total = $user->genealogy_total + 1;
             $user->save();
         }else{
-            UserTreePermission::create(['userId'=>$refererId, 'genealogy' => $userId, 'genealogy_total' => 0]);
-            $user = UserTreePermission::find($userId);
+            usertreepermission::create(['userid'=>$refererid, 'genealogy' => $userid, 'genealogy_total' => 0]);
+            $user = usertreepermission::find($userid);
         }
-        if($user->userData->refererId > 0)
-            self::updateUserGenealogy($user->userData->refererId, $userId);
+        if($user->userdata->refererid > 0)
+            self::updateusergenealogy($user->userdata->refererid, $userid);
     }
 
-    public static function updateUserBinary($binaryUserId, $userId = 0){
-        if($userId == 0)$userId = $binaryUserId;
-        $user = UserTreePermission::find($binaryUserId);
+    public static function updateuserbinary($binaryuserid, $userid = 0){
+        if($userid == 0)$userid = $binaryuserid;
+        $user = usertreepermission::find($binaryuserid);
         if($user){
-            $user->binary = $user->binary .','.$userId;
+            $user->binary = $user->binary .','.$userid;
             $user->binary_total = $user->binary_total + 1;
             $user->save();
         }else{
-            UserTreePermission::create(['userId'=>$binaryUserId, 'binary' => $userId, 'binary_total' => 1]);
-            $user = UserTreePermission::find($userId);
+            usertreepermission::create(['userid'=>$binaryuserid, 'binary' => $userid, 'binary_total' => 1]);
+            $user = usertreepermission::find($userid);
         }
-        if($user->userData && $user->userData->binaryUserId > 0)
-            self::updateUserBinary($user->userData->binaryUserId, $userId);
+        if($user->userdata && $user->userdata->binaryuserid > 0)
+            self::updateuserbinary($user->userdata->binaryuserid, $userid);
+    }
+
+    public static function userHasRole( $user_id )
+    {
+       return DB::table('user_has_roles')->where('user_id', '=', $user_id)->get();
     }
 
 }
