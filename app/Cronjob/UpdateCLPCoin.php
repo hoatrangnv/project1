@@ -48,7 +48,7 @@ class UpdateCLPCoin {
                                     'type' => Wallet::DEPOSIT_CLP_TYPE,
                                     'inOut' => Wallet::IN,
                                     'userId' => $userCoin->userId,
-                                    'amount' => $temp->amount,
+                                    'amount' => ($temp->amount / pow(10, 9)),
                                     'note' => 'Completed'
                                 ];
 
@@ -56,7 +56,7 @@ class UpdateCLPCoin {
 
                                 CLPNotification::where("id", $notify->id)->update(['completed_status' => 1, 'pending_status' => 1, 'wallet_id' => $insertData->id]);
 
-                                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $temp->amount;
+                                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + ($temp->amount / pow(10, 9));
                                 $userCoin->save();
                             }
                         }
