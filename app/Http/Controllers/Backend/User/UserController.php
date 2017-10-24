@@ -17,11 +17,22 @@ class UserController extends Controller
 {
     use Authorizable;
 
-    public function index()
+    public function index(Request $request)
     {
-        $result = User::latest()->paginate();
-
-        return view('adminlte::backend.user.index', compact('result'));
+        if($request->q){
+            $q = $request->q;
+            $result = User::latest()->where('name', 'LIKE', '%' . $q . '%')
+                ->orWhere('email', 'LIKE', '%' . $q . '%')
+                ->paginate()->setPath ( '' );
+            $pagination = $result->appends ( array (
+                'q' => $q
+            ));
+            return view('adminlte::backend.user.index', compact('result'))->withQuery ( $q );
+        } else {
+            $result = User::latest()
+                ->paginate();
+            return view('adminlte::backend.user.index', compact('result'));
+        }
     }
     public function root()
     {

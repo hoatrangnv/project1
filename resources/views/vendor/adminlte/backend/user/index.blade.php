@@ -16,6 +16,17 @@
                     @can('add_users')
                         <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create</a>
                     @endcan
+                    {!! Form::open(['method'=>'GET','url'=>'users','class'=>'','role'=>'search'])  !!}
+
+                    <div class="input-group custom-search-form">
+                        <input type="text" class="form-control" name="q" placeholder="Search...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default-sm" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                    {!! Form::close() !!}
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <div class="result-set">

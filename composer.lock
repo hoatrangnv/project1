@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b2f88b3a5961436566f912e3bb55ff4",
+    "content-hash": "350f9210a0eab8a5526bed0f6ff306b3",
     "packages": [
         {
             "name": "acacha/admin-lte-template-laravel",
@@ -2138,28 +2138,28 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "2.6.0",
+            "version": "2.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "bf7bdc0ba53ab334c7c9ae20ac08b51df9afe3bd"
+                "reference": "dff9df3237e82200d9e50abf7d2370bf1e6f1673"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/bf7bdc0ba53ab334c7c9ae20ac08b51df9afe3bd",
-                "reference": "bf7bdc0ba53ab334c7c9ae20ac08b51df9afe3bd",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/dff9df3237e82200d9e50abf7d2370bf1e6f1673",
+                "reference": "dff9df3237e82200d9e50abf7d2370bf1e6f1673",
                 "shasum": ""
             },
             "require": {
-                "illuminate/auth": "~5.4.0|~5.5.0",
-                "illuminate/container": "~5.4.0|~5.5.0",
-                "illuminate/contracts": "~5.4.0|~5.5.0",
+                "illuminate/auth": "~5.3.0|~5.4.0|~5.5.0",
+                "illuminate/container": "~5.3.0|~5.4.0|~5.5.0",
+                "illuminate/contracts": "~5.3.0|~5.4.0|~5.5.0",
                 "illuminate/database": "~5.4.0|~5.5.0",
                 "php": ">=7.0"
             },
             "require-dev": {
                 "monolog/monolog": "^1.22",
-                "orchestra/testbench": "~3.4.2|~3.5.0",
+                "orchestra/testbench": "~3.3.0|~3.4.2|~3.5.0",
                 "phpunit/phpunit": "^5.7|6.2"
             },
             "type": "library",
@@ -2199,7 +2199,7 @@
                 "security",
                 "spatie"
             ],
-            "time": "2017-09-10T15:14:15+00:00"
+            "time": "2017-10-22T04:22:18+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
