@@ -17,7 +17,8 @@ class MemberController extends Controller
 {
     public function __construct()
     {
-        parent::__construct();
+        $this->middleware(['auth']);
+        //parent::__construct();
     }
     public function index(){
        return view('adminlte::members.genealogy');
