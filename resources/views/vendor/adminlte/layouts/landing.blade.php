@@ -14,7 +14,6 @@
     <meta content="Crypto Lending is a decentralized peer-to-peer lending platform that applies Blockchain technology and CLP coin as material.."
         property="og:description" />
 
-    <meta content="http://clp.wan2save.vn/front/images/img_web/Logo1.png" property="og:image" />
     <meta content="The next generation of on-chain Exchange & Payment Service" name="twitter:card" />
     <meta content="CLP is an open source coin that is written on Blockchain of Ethereum platform and based on ERC20 Standard."
         name="twitter:description" />
