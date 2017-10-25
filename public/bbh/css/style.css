@@ -87,3 +87,16 @@
 .fa-5x-clp{
     font-size: 16em;
 }
+.clp_Iframe_Main
+{
+	margin-bottom: 10px; 
+	padding: 0;
+}
+.clp_Bottom
+{
+	margin-bottom: 5px;
+}
+.clp_heigth_full
+{
+	height: 100%;
+}
