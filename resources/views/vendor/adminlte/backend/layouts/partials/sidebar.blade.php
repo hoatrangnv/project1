@@ -16,6 +16,8 @@
                         <i class="glyphicon glyphicon-user"></i> Users
                     </a>
                 </li>
+            @endcan
+            @can('view_reports')
                 <li class="{{ Request::is('report*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="glyphicon glyphicon-user"></i> Report

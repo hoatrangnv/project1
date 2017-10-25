@@ -13,6 +13,7 @@ use App\News;
 use Log;
 use Auth;
 use Session;
+use App\Authorizable;
 
 /**
  * Description of NewsController
@@ -20,13 +21,15 @@ use Session;
  * @author huydk
  */
 class NewsController extends Controller{
-    
+
+    use Authorizable;
+
     public function __construct(Request $request){
         $this->middleware('auth');
     }
     
-    public function check($request){
-        if(News::find($request->id)->created_by != 
+    public function check($id){
+        if(News::find($id)->created_by !=
                Auth::user()->id){
             if(!$this->isAdmin()){
                 header('Location: '."/home");
@@ -37,15 +40,11 @@ class NewsController extends Controller{
      * @author huynq
      * @return type
      */
-    public function newManagent(Request $request) {
-<<<<<<< HEAD:app/Http/Controllers/Backend/News/NewsController.php
-        $news=News::paginate(5);
-        return view('adminlte::backend.news.manage',compact('news'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
-=======
+    public function index (Request $request) {
+
         $news=News::orderBy('id', 'desc')->paginate(5);
         return view('adminlte::backend.news.manage',compact('news'))->with('i', ($request->input('page', 1) - 1) * 5);
->>>>>>> 28b49a4c236816ef9ed91d2075add5ac5653a2c0:app/Http/Controllers/News/NewsController.php
+
     }
     
     /** 
@@ -53,7 +52,7 @@ class NewsController extends Controller{
      * @param Request $request
      * @return type
      */
-    public function newAdd(Request $request) {
+    public function create(Request $request) {
         if ($request->isMethod("post")) {
             //action add a new
             $this->validate($request, [
@@ -106,9 +105,9 @@ class NewsController extends Controller{
      * @param type $id
      * @return type
      */
-    public function newEdit(Request $request ,$id) {
-        $this->check($request);
-        if ( $request->isMethod("put") ) {
+    public function edit(Request $request ,$id) {
+        $this->check($request,$id);
+        if ( $request->isMethod("get") ) {
             
             $this->validate($request, [
                 'title'=>'required',
@@ -146,7 +145,7 @@ class NewsController extends Controller{
      * @param type $id
      * @return type
      */
-    public function newDelete(Request $request ,$id) {
+    public function destroy(Request $request ,$id) {
         $this->check($request);
         if( $request->isMethod("get") ){
             //delete

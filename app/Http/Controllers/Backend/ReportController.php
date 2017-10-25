@@ -9,7 +9,10 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Package;
 
+
 class ReportController extends Controller{
+
+    use Authorizable;
 
     public function index(){
 

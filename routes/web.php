@@ -22,9 +22,10 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('roles', 'Backend\User\RoleController');
     Route::resource('posts', 'Backend\User\PostController');
 
-    Route::get('/report/member', 'Backend\ReportController@member')->name('report.member');
-    Route::get('/report/member_pack', 'Backend\ReportController@member_pack')->name('report.member_pack');
-
+    Route::group(['middleware' => ['permission:view_reports']], function () {
+        Route::get('/report/member', 'Backend\ReportController@member')->name('report.member');
+        Route::get('/report/member_pack', 'Backend\ReportController@member_pack')->name('report.member_pack');
+    });
 
     Route::get('members/genealogy', 'Backend\User\MemberController@genealogy');
     Route::get('members/binary', 'Backend\User\MemberController@binary');
@@ -98,14 +99,12 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('profile', 'User\ProfileController');
 
     
+
+
+
     //News
-    Route::get('news/manage','Backend\News\NewsController@newManagent')->name('news.manage');
-    Route::get('news/add','Backend\News\NewsController@newAdd');
-    Route::post('news/add','Backend\News\NewsController@newAdd');
-    Route::get('news/edit/{id}','Backend\News\NewsController@newEdit');
-    Route::put('news/edit/{id}','Backend\News\NewsController@newEdit');
-    Route::get('news/delete/{id}','Backend\News\NewsController@newDelete');
     Route::get('news/detail/{id}','Backend\News\DisplayNewsController@displayDetailNews');
+    Route::resource('news','Backend\News\NewsController');
     //get ty gia
     Route::get('exchange',function(App\ExchangeRate $rate){
         return $rate->getExchRate();

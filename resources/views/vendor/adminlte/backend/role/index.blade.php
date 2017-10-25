@@ -53,7 +53,7 @@
                         @if($role->name === 'Admin')
                             @include('adminlte::shared._permissions', [
                                           'title' => $role->name .' Permissions',
-                                          'options' => ['disabled'] ])
+                                           ])
                         @else
                             @include('adminlte::shared._permissions', [
                                           'title' => $role->name .' Permissions',

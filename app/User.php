@@ -13,6 +13,8 @@ class user extends authenticatable
 {
     use notifiable, hasroles;
 
+    protected $guard_name = 'web';
+
     /**
      * the attributes that are mass assignable.
      *
