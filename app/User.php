@@ -657,7 +657,7 @@ class user extends authenticatable
 
     public static function userHasRole( $user_id )
     {
-       return DB::table('user_has_roles')->where('user_id', '=', $user_id)->get();
+       return DB::table('model_has_roles')->where('model_id', '=', $user_id)->get();
     }
 
 }
