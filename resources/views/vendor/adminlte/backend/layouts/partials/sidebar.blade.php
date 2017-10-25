@@ -9,7 +9,7 @@
              <li class="header" ></li> 
             <!-- Optionally, you can add icons to the links -->
 
-            <li {{ Request::is('home') ? 'class=active' : '' }}><a href="{{ url('home') }}"><i class='fa fa-home'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
+            <li {{ Request::is('admin/home') ? 'class=active' : '' }}><a href="{{ url('admin/home') }}"><i class='fa fa-home'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
             @can('view_users')
                 <li class="{{ Request::is('users*') ? 'active' : '' }}">
                     <a href="{{ route('users.index') }}">
@@ -60,8 +60,8 @@
             <li class="treeview{{ Request::is('news*') ? ' active' : null }}">
                 <a href="#"><i class='fa fa-newspaper-o'></i> <span>{{ trans('adminlte_lang::default.news') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li class="{{ Request::segment(2) === 'manage' ? 'active' : null }}"><a href="{{ url('news/manage') }}">{{ trans('adminlte_lang::default.manage') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'add' ? 'active' : null }}"><a href="{{ url('news/add') }}">{{ trans('adminlte_lang::default.add') }}</a></li>
+                    <li class="{{ Request::segment(1) === 'news' ? 'active' : null }}"><a href="{{ url('news') }}">{{ trans('adminlte_lang::default.manage') }}</a></li>
+                    <li class="{{ Request::segment(2) === 'create' ? 'active' : null }}"><a href="{{ url('news/create') }}">{{ trans('adminlte_lang::default.add') }}</a></li>
                 </ul>
             </li>
             @endcan
