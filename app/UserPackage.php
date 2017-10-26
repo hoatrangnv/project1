@@ -38,4 +38,14 @@ class UserPackage extends Model
     public function package(){
         return $this->hasOne(Package::class, 'id', 'packageId');
     }
+
+    public static function getDataReport($firstDay, $endDay){
+        return self::selectRaw('user_packages.created_at as date, SUM(packages.price) as totalPrice')
+            ->join('packages', 'packages.id', 'user_packages.packageId')
+            ->whereDate('user_packages.created_at','>=', $firstDay)
+            ->whereDate('user_packages.created_at','<=', $endDay)
+            ->groupBy('user_packages.created_at')
+            ->get()
+            ->toArray();
+    }
 }

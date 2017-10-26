@@ -3,16 +3,31 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Authorizable;
+use App\Helper\Helper;
 use App\UserPackage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Package;
+use DB;
+
 
 
 class ReportController extends Controller{
 
     use Authorizable;
+
+    const DAY_NOW = 1;
+    const WEEK_NOW = 2;
+    const MONTH_NOW = 3;
+
+    public function __construct(Helper $helper,User $user,UserPackage $userPackage)
+    {
+        $this->middleware('auth');
+        $this->helper = $helper;
+        $this->user = $user;
+        $this->userPackage = $userPackage;
+    }
 
     public function index(){
 
@@ -24,33 +39,38 @@ class ReportController extends Controller{
         return view('adminlte::backend.report.member_pack', compact('packages'));
     }
 
-    public function member(Request $request){
-        $type = $request->type ? $request->type : 1;
-        if($type == 1){
-            $from_date = $request->from_date ? $request->from_date : date("Y-m-d");
-            $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
-        }elseif($type == 2){
-            $from_date = $request->from_date ? $request->from_date : date("Y-m-d", strtotime(date('Y-m-d') . " - 7 days"));
-            $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
-        }elseif($type == 3){
-            $from_date = $request->from_date ? $request->from_date : date("Y-m-d", strtotime(date('Y-m-d') . " - 30 days"));
-            $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
-        }else{
-            $from_date = $request->from_date ? $request->from_date : date("Y-m-d");
-            $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
+    /**
+     * @deprecated get data for report app ( Ngày , Tháng , Năm Hiện Tại)
+     * @see
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getDataReport(Request $request){
+        switch ($type = $request->type) {
+            case self::DAY_NOW :
+                //$from_data <=> $now_date
+                $from_date = $this->helper->get_date_now();
+                $to_date = $this->helper->get_date_now();
+                $data =  $this->userPackage->getDataReport($from_date , $to_date);
+                break;
+            case self::WEEK_NOW :
+                $from_date = $this->helper->get_frist_day_of_week();
+                $to_date = $this->helper->get_end_day_of_week();
+                $data = $this->userPackage->getDataReport($from_date,$to_date);
+                break;
+            case self::MONTH_NOW :
+                $from_date = $this->helper->get_frist_day_of_month();
+                $to_date = $this->helper->get_last_day_of_month();
+                $data = $this->userPackage->getDataReport($from_date,$to_date);
+                break;
+            default :
+                $from_date = $request->from_date ? $request->from_date : $this->helper->get_date_now() ;
+                $to_date = $request->to_date ? $request->to_date : $this->helper->get_date_now() ;
+                $data = $this->userPackage->getDataReport($from_date , $to_date);
+                break;
         }
-
-        $data = UserPackage::selectRaw('user_packages.created_at as date, SUM(packages.price) as totalPrice')
-            ->join('packages', 'packages.id', 'user_packages.packageId')
-            ->whereBetween('user_packages.created_at', array(
-                                $from_date,
-                                $to_date
-                            ))
-            ->groupBy('user_packages.created_at')
-            ->get()
-            ->toArray();
-        $chart['data'] = json_encode($data);//058DC7
-        $totalMem = User::count();
+        $data = $this->helper->json_encode_prettify($data);
+        $totalMem = $this->user->count();
         return view('adminlte::backend.report.member', compact('totalMem', 'data', 'from_date', 'to_date', 'type', 'chart'));
     }
 
