@@ -660,5 +660,12 @@ class user extends authenticatable
        return DB::table('model_has_roles')->where('model_id', '=', $user_id)->get();
     }
 
+
+    public static function getNewUser( $from_date, $to_date ){
+        return self::where('active' , 1)
+            ->whereDate('created_at','>=', $from_date)
+            ->whereDate('created_at','<=', $to_date)
+            ->count();
+    }
 }
 

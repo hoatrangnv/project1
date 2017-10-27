@@ -17,7 +17,7 @@
 							<th>Total Member</th>
 						</tr>
 						<tbody>
-							 @foreach ($packages as $package)
+							@foreach ($packages as $package)
 							<tr>
 								<td>{{ $package->name }}</td>
 								<td>{{ $package->users->count() }}</td>

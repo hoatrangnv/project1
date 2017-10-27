@@ -24,6 +24,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::group(['middleware' => ['permission:view_reports']], function () {
         Route::get('/report/member', 'Backend\ReportController@getDataReport')->name('report.member');
+
         Route::get('/report/member_pack', 'Backend\ReportController@member_pack')->name('report.member_pack');
     });
 

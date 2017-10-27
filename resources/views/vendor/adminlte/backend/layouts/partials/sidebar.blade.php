@@ -27,7 +27,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ Request::segment(2) === 'member_pack' ? 'active' : null }}"><a href="{{ url('report/member_pack') }}">{{ trans('adminlte_lang::default.member_pack') }}</a></li>
-                        <li class="{{ Request::segment(2) === 'member' ? 'active' : null }}"><a href="{{ url('report/member') }}">{{ trans('adminlte_lang::default.member') }}</a></li>
+                        <li class="{{ Request::segment(2) === 'member' ? 'active' : null }}"><a href="{{ url('report/member?type=1') }}">{{ trans('adminlte_lang::default.member') }}</a></li>
                         <li class="{{ Request::is('users/root') ? 'active' : '' }}">
                             <a href="{{ route('users.root') }}">
                                 List Root

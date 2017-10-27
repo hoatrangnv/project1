@@ -52,26 +52,51 @@ class ReportController extends Controller{
                 $from_date = $this->helper->get_date_now();
                 $to_date = $this->helper->get_date_now();
                 $data =  $this->userPackage->getDataReport($from_date , $to_date);
+                $newUser = $this->user->getNewUser($from_date,$to_date);
+                $dataPackage = $this->getDataPackage($from_date,$to_date);
                 break;
             case self::WEEK_NOW :
                 $from_date = $this->helper->get_frist_day_of_week();
                 $to_date = $this->helper->get_end_day_of_week();
                 $data = $this->userPackage->getDataReport($from_date,$to_date);
+                $newUser = $this->user->getNewUser($from_date,$to_date);
+                $dataPackage = $this->getDataPackage($from_date,$to_date);
                 break;
             case self::MONTH_NOW :
                 $from_date = $this->helper->get_frist_day_of_month();
                 $to_date = $this->helper->get_last_day_of_month();
                 $data = $this->userPackage->getDataReport($from_date,$to_date);
+                $newUser = $this->user->getNewUser($from_date,$to_date);
+                $dataPackage = $this->getDataPackage($from_date,$to_date);
                 break;
             default :
                 $from_date = $request->from_date ? $request->from_date : $this->helper->get_date_now() ;
                 $to_date = $request->to_date ? $request->to_date : $this->helper->get_date_now() ;
                 $data = $this->userPackage->getDataReport($from_date , $to_date);
+                $newUser = $this->user->getNewUser($from_date,$to_date);
+                $dataPackage = $this->getDataPackage($from_date,$to_date);
                 break;
         }
+
         $data = $this->helper->json_encode_prettify($data);
+        $dataPackage = $this->helper->json_encode_prettify($dataPackage);
         $totalMem = $this->user->count();
-        return view('adminlte::backend.report.member', compact('totalMem', 'data', 'from_date', 'to_date', 'type', 'chart'));
+        return view('adminlte::backend.report.member',
+            compact('totalMem', 'data', 'from_date', 'to_date', 'type', 'chart','newUser','dataPackage'));
+    }
+
+    /**
+     * @param $from_date
+     * @param $to_date
+     * @return array
+     */
+    function getDataPackage($from_date,$to_date){
+        $packages = Package::all();
+        $data = [];
+        foreach ($packages as $package){
+            $data[] = [$package->name , $package->users->where('packageDate','>=',$from_date)->where('packageDate','<=',$to_date)->count()];
+        }
+        return $data;
     }
 
     function createDateRangeArray($strDateFrom, $strDateTo){
