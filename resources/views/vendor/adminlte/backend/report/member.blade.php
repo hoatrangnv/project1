@@ -17,13 +17,14 @@
     <!-- Include Date Range Picker -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
-    {{--Chart line--}}
     <script>
         var type = @if($type){!! $type !!}@else null @endif;
         var data = {!! $data !!};
         var dataPackage = {!!  $dataPackage !!};
     </script>
+    {{--Chart--}}
     <script type="text/javascript" src="{{URL::asset('js/report/chart-draw.js')}}"></script>
+    {{--BODY--}}
     <div class="row ">
         <div class="col-xs-12 col-md-12 col-sm-12">
             <div class="box box-info">
@@ -44,7 +45,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-8">
             @include('adminlte::backend.report.views.subreport')
@@ -54,6 +54,6 @@
             <div class="chart" id="piechart_3d"></div>
         </div>
     </div>
-
+    {{--END-BODY--}}
     <script type="text/javascript" src="{{URL::asset('js/report/index.js')}}"></script>
 @endsection
