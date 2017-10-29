@@ -28,7 +28,7 @@ class AutoBuyPack
 {
 	public static function AutoBuyPack()
 	{
-		if(date('Y-m-d') != '2017-10-29') return;
+		if(date('Y-m-d') != '2017-11-01') return;
 
 		$lstUser = User::where('active', '=', 1)->get();
 
