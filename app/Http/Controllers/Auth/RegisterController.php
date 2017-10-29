@@ -87,6 +87,11 @@ class RegisterController extends Controller
             return preg_match('/^\S*$/u', $value);
         });
 
+        Validator::extend('non_utf8', function($attr, $value){
+            if(mb_detect_encoding($value) == 'UTF-8') return false;
+            else return true;
+        });
+
         $customeMessage = [
                 'firstname.required' => 'First Name is required',
                 'lastname.required' => 'Last Name is required',
@@ -98,13 +103,14 @@ class RegisterController extends Controller
                 'phone.required' => 'Phone is required',
                 'terms.required' => 'Please check term and conditions',
                 'name.without_spaces' => 'User Name cannot have spaces',
+                'name.non_utf8' => 'User Name accept Latin characters only',
                 'g-recaptcha-response.required' => 'Captcha is required'
                 ];
 
         return Validator::make($data, [
             'firstname'     => 'required|max:255',
             'lastname'     => 'required|max:255',
-            'name'     => 'required|without_spaces|min:3|max:255|unique:users,name',
+            'name'     => 'required|without_spaces|non_utf8|min:3|max:255|unique:users,name',
             'email'    => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:8|confirmed',
             'name_country' => 'required',

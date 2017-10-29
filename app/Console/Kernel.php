@@ -11,6 +11,7 @@ use App\Cronjob\UpdateExchangeRate;
 use App\Cronjob\GetClpWallet;
 use App\Cronjob\Bonus;
 use App\Cronjob\AutoAddBinary;
+use App\Cronjob\AutoBuyPack;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
 use App\Cronjob\UpdateCLPCoin;
@@ -119,6 +120,12 @@ class Kernel extends ConsoleKernel
             $schedule->call(function (){
                 UpdateCLPCoin::UpdateClpCoinAmount();
             })->everyMinute();
+
+        // Cron job auto buy pack 01/11/2017
+        try {
+            $schedule->call(function () {
+                AutoBuyPack::AutoBuyPack();
+            })->daily();
         } catch (\Exception $ex) {
             Log::info($ex);
         }

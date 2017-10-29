@@ -96,6 +96,7 @@ class TestController {
     }
 
     function test() {
+        set_time_limit(0);
         $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
         $client = Client::create($configuration);
 

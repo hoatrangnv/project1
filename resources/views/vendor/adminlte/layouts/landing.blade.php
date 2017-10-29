@@ -14,7 +14,6 @@
     <meta content="Crypto Lending is a decentralized peer-to-peer lending platform that applies Blockchain technology and CLP coin as material.."
         property="og:description" />
 
-    <meta content="http://clp.wan2save.vn/front/images/img_web/Logo1.png" property="og:image" />
     <meta content="The next generation of on-chain Exchange & Payment Service" name="twitter:card" />
     <meta content="CLP is an open source coin that is written on Blockchain of Ethereum platform and based on ERC20 Standard."
         name="twitter:description" />
@@ -95,7 +94,7 @@
                             <a class="nav-link" href="https://twitter.com/CLPcoins?lang=de"><i class="fa fa-twitter"></i></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/login"><i class="fa fa-user"></i></a>
+                            <a class="nav-link" href="/login"><b>Login</b></a>
                         </li>
                     </ul>
 
@@ -267,7 +266,51 @@
     <main>
 
         <div class="container">
+            <section id="demo" class="section mt-4 mb-4">
 
+                <!--Section heading-->
+                <div class="text-center">
+                    <h1 class="mb-3 font-big font-bold wow fadeIn" data-wow-delay="0.2s">See Videos</h1>
+
+                    <!--Section description-->
+                    <!-- <p class="section-description wow fadeIn" data-wow-delay="0.2s">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                        est laborum.</p> -->
+
+                    <!--First row-->
+                    <div class="row">
+
+                        <!--First column-->
+                        <div class="col-md-8 wow fadeIn clp_Iframe_Main" data-wow-delay="0.4s">
+                            <div id="divIframe_Main" class="embed-responsive embed-responsive-16by9 clp_heigth_full">
+                                <iframe id="IDIframe_Main" src="https://www.youtube.com/embed/U7I-8Qknyas?ecver=1" frameborder="0"  allowfullscreen></iframe>
+                            </div>
+                        </div>
+                         <div class="col-md-4 wow fadeIn" data-wow-delay="0.4s">
+                            <div class="col-md-12 center-on-small-only wow fadeIn clp_Bottom">
+                                <img src="bbh/img/clp/ClpIntro.png" title="Clp Intro" data-video="https://www.youtube.com/embed/U7I-8Qknyas?ecver=1" onclick="ClickVideo(this)"/>
+                            </div>
+                            <div s class="col-md-12 center-on-small-only wow fadeIn clp_Bottom">
+                                <img src="bbh/img/clp/CryptoLendingProject.png" title="Crypto Lending Project" data-video="https://www.youtube.com/embed/b_epUTCVPKM?ecver=1" onclick="ClickVideo(this)"/>
+                            </div>
+                            <div class="col-md-12 center-on-small-only wow fadeIn"> 
+                                <img src="bbh/img/clp/clp_project.jpg" title="Clp Coin" data-video="https://www.youtube.com/embed/0jTiVD8dFRc?ecver=1" onclick="ClickVideo(this)"/>
+                            </div>
+                        </div>
+                        <script>
+                                    function ClickVideo(e)
+                                    {
+                                        var video = '<iframe allowfullscreen frameborder="0" src="'+ $(e).attr('data-video') +'"></iframe>';
+                                        $("#divIframe_Main").html(video);
+                                    }
+                        </script>
+                        <!--First column-->
+
+                    </div>
+                    <!--First row-->
+
+            </section>
+             <hr class="between-sections">
 
             <!--Section: Features v.1-->
             <section id="features" class="section feature-box mt-4 mb-4">
@@ -691,7 +734,7 @@
                             </div>
                             <!--Content-->
                             <h4>Jorgen A. Hedegreen</h4>
-                            <h5>Director BANCORE ASIA PTE Ltd</h5>
+                            <h5>Executive FIN-tech and strategical advisor</h5>
                             <p><i class="fa fa-quote-left"></i> I'm passionate about establishing and executing larger international
                                 partnerships at the top management level. </p>
                             <br/>
@@ -725,9 +768,7 @@
                             <!--Content-->
                             <h4>Jacob Blaesbjerg</h4>
                             <h5>Executive marketing advisor</h5>
-                            <p><i class="fa fa-quote-left"></i> In my work with sales and marketing for some of the biggest
-                                corporations in Europe, have I obtained a big experience in B2B and B2C online sales and
-                                project management.
+                            <p><i class="fa fa-quote-left"></i> In my work with sales and marketing for some of the biggest corporations in Europe, I have obtained a big experience in B2B and B2C online sales and project management.
                             </p>
 
                             <div class="collapse" id="collapseJacob">
@@ -1201,7 +1242,7 @@
 
                     <!--Address-->
                     <p>Hamad Bin Abdulla Rd - Fujairah - UAE</p>
-
+                    <p>Email: <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to=support@cryptolending.org&tf=1">support@cryptolending.org</a></p>
                     <!--Title-->
                     <!-- <h5 class="title">Contact</h5> -->
 

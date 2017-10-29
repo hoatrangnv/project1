@@ -35,7 +35,7 @@ class UpdateStatusBTCWithdraw
         $account = $client->getAccount(config('app.coinbase_account'));
 
         //List withdraw not completed
-        $listWithdrawNotUpdated = Withdraw::where("status", 0)->whereNotNull('amountCLP')->get();
+        $listWithdrawNotUpdated = Withdraw::where("status", 0)->whereNotNull('amountBTC')->get();
 
         foreach($listWithdrawNotUpdated as $withdraw) {
             
