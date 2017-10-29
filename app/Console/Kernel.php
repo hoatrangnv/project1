@@ -11,6 +11,7 @@ use App\Cronjob\UpdateExchangeRate;
 use App\Cronjob\GetClpWallet;
 use App\Cronjob\Bonus;
 use App\Cronjob\AutoAddBinary;
+use App\Cronjob\AutoBuyPack;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
 use Log;
@@ -113,6 +114,14 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
 
+        // Cron job update status withdraw CLP
+        try {
+            $schedule->call(function () {
+                AutoBuyPack::AutoBuyPack();
+            })->daily();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
     }
 
     /**
