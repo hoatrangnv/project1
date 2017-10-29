@@ -120,7 +120,9 @@ class Kernel extends ConsoleKernel
             $schedule->call(function (){
                 UpdateCLPCoin::UpdateClpCoinAmount();
             })->everyMinute();
-
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
         // Cron job auto buy pack 01/11/2017
         try {
             $schedule->call(function () {
