@@ -26,5 +26,12 @@ class CLPWallet extends Model
             self::whereNotNull('userId')->whereNull('address')->get() ;
         return $data;
     }
-    
+
+    public function userCoin(){
+        return $this->hasOne(UserCoin::class, 'userId', 'userId');
+    }
+
+    public function user() {
+        return $this->hasOne(User::class, 'id', 'userId');
+    }
 }

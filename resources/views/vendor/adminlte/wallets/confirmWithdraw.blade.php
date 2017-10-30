@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.auth')
 
 @section('htmlheader_title')
-    Withdraw Confirm
+    Withdrawal Confirmation
 @endsection
 
 @section('content')
@@ -19,7 +19,27 @@
                 </div>
             @endif
             <div class="login-box-body">
-                <p class="login-box-msg">Withdraw {{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CLP') }} Coin Confirm</p>
+                 @if ( session()->has("successMessage") )
+                    <div class="callout callout-success">
+                        <p>{!! session("successMessage") !!}</p>
+                    </div>
+                    {{ session()->forget('successMessage') }}
+                    <div class="form-horizontal" role="form">
+                        {{ csrf_field() }}
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                            {{ Form::number('withdrawAmount', $withdrawConfirm->withdrawAmount, array('class' => 'form-control input-sm', 'disabled' => "disabled")) }}
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
+                            {{ Form::text('walletAddress', $withdrawConfirm->walletAddress, array('class' => 'form-control input-sm', 'disabled' => "disabled")) }}
+                        </div>
+                        
+                    </div>
+                @else
+                    <p class="login-box-msg">Withdrawal {{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CLP') }} Confirmation</p>
+                @endif
                 @if(!$isConfirm)
                     <form class="form-horizontal" role="form" method="POST" id="withdraw_confirm">
                         {{ csrf_field() }}

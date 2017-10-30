@@ -14,6 +14,7 @@ use App\Cronjob\AutoAddBinary;
 use App\Cronjob\AutoBuyPack;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
+use App\Cronjob\UpdateCLPCoin;
 use Log;
 
 class Kernel extends ConsoleKernel
@@ -114,7 +115,15 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
 
-        // Cron job update status withdraw CLP
+        // Cron job update get CLP
+        try {
+            $schedule->call(function (){
+                UpdateCLPCoin::UpdateClpCoinAmount();
+            })->everyMinute();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+        // Cron job auto buy pack 01/11/2017
         try {
             $schedule->call(function () {
                 AutoBuyPack::AutoBuyPack();
