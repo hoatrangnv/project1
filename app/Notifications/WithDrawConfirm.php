@@ -21,7 +21,7 @@ class WithDrawConfirm extends Notification
     {
         return (new MailMessage)
             ->from('no-reply@clpcoin.co', 'CLP')
-            ->subject('Withdraw '.($this->coinData['type'] == 'btc' ? 'BTC' : 'CLP').' Coin confirm')
+            ->subject('Withdrawal '.($this->coinData['type'] == 'btc' ? 'BTC' : 'CLP').' confirmation')
             ->greeting('Dear '.$this->user->name. ',')
             ->line('A request to withdraw '.$this->coinData['amount'].' '.($this->coinData['type'] == 'btc' ? 'BTC' : 'CLP').' from your CLP account to address '.$this->coinData['address'].' was just made.')
             ->action('Confirm link', $this->linkConfirm)
