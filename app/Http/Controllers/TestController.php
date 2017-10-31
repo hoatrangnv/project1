@@ -25,6 +25,8 @@ use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Account;
 use Coinbase\Wallet\Resource\Address;
+use App\Cronjob\Bonus;
+use App\Cronjob\AutoBuyPack;
 
 /**
  * Description of TestController
@@ -97,6 +99,9 @@ class TestController {
 
     function test() {
         set_time_limit(0);
+
+        AutoBuyPack::AutoBuyPack();
+        exit("XXXXX");
         $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
         $client = Client::create($configuration);
 

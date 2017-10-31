@@ -60,8 +60,8 @@ class AutoBuyPack
 					CronProfitLogs::create(['userId' => $user->id]);
 				if(CronBinaryLogs::where('userId', $user->id)->count() < 1) 
 					CronBinaryLogs::create(['userId' => $user->id]);
-				if(CronMatchingLogs::where('userId', $currentuserid)->count() < 1) 
-					CronMatchingLogs::create(['userId' => $currentuserid]);
+				if(CronMatchingLogs::where('userId', $user->id)->count() < 1) 
+					CronMatchingLogs::create(['userId' => $user->id]);
 			}
 
 			if($packageOldId > 0){
