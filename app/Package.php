@@ -18,4 +18,5 @@ class Package extends Model
     public function users() {
         return $this->hasMany(UserData::class,  'packageId','id');
     }
+
 }

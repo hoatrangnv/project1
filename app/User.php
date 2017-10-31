@@ -661,11 +661,21 @@ class user extends authenticatable
     }
 
 
-    public static function getNewUser( $from_date, $to_date ){
+    public static function getNewUser( $date ){
         return self::where('active' , 1)
-            ->whereDate('created_at','>=', $from_date)
-            ->whereDate('created_at','<=', $to_date)
+            ->whereDate('created_at','>=', $date['from_date'])
+            ->whereDate('created_at','<=', $date['to_date'])
             ->count();
+    }
+
+    public static function getNewUserData( $date ){
+        return self::selectRaw('date(created_at) as date,COUNT(users.id) as totalPerson')
+            ->where('active' , 1)
+            ->whereDate('created_at','>=', $date['from_date'])
+            ->whereDate('created_at','<=', $date['to_date'])
+            ->groupBy('date')
+            ->get()
+            ->toArray();
     }
 }
 

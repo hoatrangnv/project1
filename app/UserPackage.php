@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
+use App\Http\Controllers\Backend\RepoReportController as Report;
 class UserPackage extends Model
 {
     protected $primaryKey = "id";
@@ -39,13 +40,29 @@ class UserPackage extends Model
         return $this->hasOne(Package::class, 'id', 'packageId');
     }
 
-    public static function getDataReport($firstDay, $endDay){
-        return self::selectRaw('user_packages.created_at as date, SUM(packages.price) as totalPrice')
-            ->join('packages', 'packages.id', 'user_packages.packageId')
-            ->whereDate('user_packages.created_at','>=', $firstDay)
-            ->whereDate('user_packages.created_at','<=', $endDay)
-            ->groupBy('user_packages.created_at')
-            ->get()
-            ->toArray();
+    public static function getDataReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('DATE(user_packages.created_at) as date, SUM(user_packages.amount_increase) as totalPrice')
+                    ->whereDate('user_packages.created_at','>=', $date['from_date'])
+                    ->whereDate('user_packages.created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->get()
+                    ->toArray() ;
+            case Report::WEEK_NOW :
+                dd(self::selectRaw('DATE(user_packages.created_at) as date, WEEKOFYEAR(user_packages.created_at) as weekYear, SUM(user_packages.amount_increase) as totalPrice')
+                    ->whereDate('user_packages.created_at','>=', $date['from_date'])
+                    ->whereDate('user_packages.created_at','<=', $date['to_date'])
+                    ->groupBy('weekYear')
+                    ->get()
+                    ->toArray()) ;
+        }
+
+    }
+
+    public static function countTotalValue($date){
+        return self::whereDate('user_packages.created_at','>=', $date['from_date'])
+            ->whereDate('user_packages.created_at','<=', $date['to_date'])
+            ->sum('user_packages.amount_increase');
     }
 }

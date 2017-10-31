@@ -1,26 +1,31 @@
+/*Line chart*/
 var format;
 var title;
-if (type == 1) {
-    format = "HH:mm"
-    title = 'In Day'
-} else if (type == 2) {
-    format = "d"
-    title = 'In Week'
-} else if (type == 3) {
-    format = "d/M"
-    title = 'In Month'
-} else {
-    format = "d/M"
-    title = 'FromDay ' + '{!! $from_date !!}' + ' ToDay ' + '{!! $to_date !!}'
-}
-
 var arrayData = [];
 var totalValue = 0;
 
-data.forEach(function(element) {
-    totalValue += +element.totalPrice;
-    arrayData.push([ new Date( moment(element.date).unix() * 1000), +element.totalPrice ])
-});
+if (data.opt == 1) {
+    format = "d/M/yy"
+    title = data.title;
+    data.data_analytic.forEach(function(element) {
+        totalValue += +element.totalPrice;
+        arrayData.push([ new Date( moment(element.date).unix() * 1000), +element.totalPrice ])
+    });
+} else if (data.opt == 2) {
+    format = "d/M/yy"
+    title = data.title;
+    data.data_analytic.forEach(function(element) {
+        totalValue += +element.totalPrice;
+        arrayData.push([ new Date( moment(element.date).unix() * 1000), +element.totalPrice] )
+    });
+    console.log(arrayData);
+} else if (data.opt == 3) {
+    format = "d/M"
+    title = data.title;
+} else {
+    format = "d/M"
+    title = 'FromDay ' + data.date_custom.from_date + ' ToDay ' + data.date_custom.to_date
+}
 
 google.charts.load("visualization", "1", {packages:["corechart"]});
 google.charts.setOnLoadCallback(drawChart);
@@ -28,7 +33,7 @@ google.charts.setOnLoadCallback(drawChart);
 function drawChart() {
     var obj = arrayData;
     var data = new google.visualization.DataTable();
-    data.addColumn({type: 'datetime', label: 'Date'});
+    data.addColumn({type: 'date', label: 'Date'});
     data.addColumn({type: 'number', label: 'Buy'});
     data.addRows(obj)
     var options = {
@@ -53,18 +58,27 @@ function drawChart() {
         document.getElementById('chart_div'));
     chart.draw(data, options);
 }
+/*Pie Chart*/
+var dataPackage = [];
+var total = 0;
+data.total.totalPackageForPieChart.map(function (item,index) {
+    dataPackage[index] = [item.name,+item.totalPerson];
+    total += +item.totalPerson;
+});
+dataPackage.unshift(['Package','Package']);
 
-dataPackage.unshift( ['Task', 'Hours per Day']);
 google.charts.load("current", {packages:["corechart"]});
 google.charts.setOnLoadCallback(pieChart);
+
 function pieChart() {
     var data = google.visualization.arrayToDataTable(dataPackage);
 
     var options = {
-        title: 'My Daily Activities',
+        title: 'Total Person : ' + total,
         is3D: true,
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
     chart.draw(data, options);
+
 }

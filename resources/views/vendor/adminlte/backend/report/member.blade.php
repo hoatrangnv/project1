@@ -17,10 +17,11 @@
     <!-- Include Date Range Picker -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    @php $temp = json_decode($data); @endphp
+
     <script>
-        var type = @if($type){!! $type !!}@else null @endif;
         var data = {!! $data !!};
-        var dataPackage = {!!  $dataPackage !!};
+        console.log(data);
     </script>
     {{--Chart--}}
     <script type="text/javascript" src="{{URL::asset('js/report/chart-draw.js')}}"></script>
@@ -29,13 +30,13 @@
         <div class="col-xs-12 col-md-12 col-sm-12">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Total Member: {{ $totalMem }}</h3>
+                    <h3 class="box-title"></h3>
                     <div class="box-tools pull-right">
                         <input type="button" name="daterange">
                         <div class="btn-group btn-group-sm select-time" role="group" aria-label="Basic example">
-                            <a href="{{ Request::url() }}?type=1" class="btn btn-default" {{ ($type==1 ? 'disabled' : '') }}>Day</a>
-                            <a href="{{ Request::url() }}?type=2" class="btn btn-default" {{ ($type==2 ? 'disabled' : '') }}>Week</a>
-                            <a href="{{ Request::url() }}?type=3" class="btn btn-default" {{ ($type==3 ? 'disabled' : '') }}>Months</a>
+                            <a href="{{ Request::url() }}?type={{$temp->type}}&opt=1" class="btn btn-default" {{ ($temp->opt==1 ? 'disabled' : '') }}>Day</a>
+                            <a href="{{ Request::url() }}?type={{$temp->type}}&opt=2" class="btn btn-default" {{ ($temp->opt==2 ? 'disabled' : '') }}>Week</a>
+                            <a href="{{ Request::url() }}?type={{$temp->type}}&opt=3" class="btn btn-default" {{ ($temp->opt==3 ? 'disabled' : '') }}>Months</a>
                         </div>
                     </div>
                 </div>
@@ -55,5 +56,12 @@
         </div>
     </div>
     {{--END-BODY--}}
-    <script type="text/javascript" src="{{URL::asset('js/report/index.js')}}"></script>
+    {{--<script type="text/javascript" src="{{URL::asset('js/report/index.js')}}"></script>--}}
+    <script>
+        $('input[name="daterange"]').daterangepicker();
+        $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+            window.location.replace("{{ Request::url() }}?type={{$temp->type}}&opt=4&from_date="+picker.startDate.format('YYYY-MM-DD')+'&to_date='+picker.endDate.format('YYYY-MM-DD'));
+        });
+        $('.total-package').html(totalValue);
+    </script>
 @endsection
