@@ -37,7 +37,9 @@ class AutoBuyPack
 		{
 			$userCoin = $user->userCoin;
 			if($userCoin->clpCoinAmount == 0) continue;
-			$requestPackageId = $userCoin->clpCoinAmount == 10000 ? 6 : 5;
+			if($userCoin->clpCoinAmount == 5000) $requestPackageId = 5;
+			if($userCoin->clpCoinAmount == 10000) $requestPackageId = 6;
+			if($userCoin->clpCoinAmount < 5000) continue;
 
 			$amount_increase = $packageOldId = 0;
 			$userData = $user->userData;
