@@ -115,6 +115,19 @@ CREATE TABLE `cron_binary_logs` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for cron_matching_day_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `cron_matching_day_logs`;
+CREATE TABLE `cron_matching_day_logs` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `userId` int(10) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 -- Table structure for cron_profit_day_logs
 -- ----------------------------
 DROP TABLE IF EXISTS `cron_profit_day_logs`;

@@ -9,13 +9,16 @@ namespace App\Cronjob;
 
 use App\UserPackage;
 use App\User;
+use App\UserData;
 use App\Wallet;
 use App\Package;
 use App\BonusBinary;
 use App\ExchangeRate;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
+use App\CronMatchingLogs;
 use DB;
+use Log;
 
 /**
  * Description of UpdateStatusBTCTransaction
@@ -226,5 +229,146 @@ class Bonus
 
 		//Update status from 1 => 0 after run all user
 		DB::table('cron_binary_logs')->update(['status' => 0]);
+	}
+
+	/**
+	* This cronjob function will run every day caculate and return bonus to user's wallet 
+	*/
+	public static function bonusMatchingDayCron()
+	{
+		set_time_limit(0);
+		try{
+			$lstUser = UserData::where('status', '=', 1)->get();
+
+			foreach($lstUser as $user)
+			{
+				//Get cron status
+				$cronStatus = CronMatchingLogs::where('userId', $user->userId)->first();
+				if(isset($cronStatus) && $cronStatus->status == 1) continue;
+
+				if (User::checkBinaryCount($user->userId, 1))
+				{
+					//dd($user);
+					if ($user->packageId == 1) {
+						$maxLevel = 1;
+					} elseif ($user->packageId == 2) {
+						$maxLevel = 2;
+					} elseif ($user->packageId == 3) {
+						$maxLevel = 3;
+					} elseif ($user->packageId == 4) {
+						$maxLevel = 4;
+					} elseif ($user->packageId == 5) {
+						$maxLevel = 5;
+					} elseif ($user->packageId == 6) {
+						$maxLevel = 7;
+					}
+					
+					$totalBonus = 0;
+					self::calTotalBonus($totalBonus, $user->userId, $maxLevel, 1);
+					//dd($totalBonus);
+
+					if($totalBonus > 0)
+					{
+						$usdAmount = $totalBonus * config('cryptolanding.usd_bonus_pay');
+						$reinvestAmount = $totalBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+
+						$userCoin = $user->userCoin;
+						$userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+						$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+						$userCoin->save();
+
+						$fieldUsd = [
+							'walletType' => Wallet::USD_WALLET,//usd
+							'type' => Wallet::MATCHING_TYPE,//bonus day
+							'inOut' => Wallet::IN,
+							'userId' => $user->userId,
+							'amount' => $usdAmount
+						];
+
+						Wallet::create($fieldUsd);
+
+						$fieldInvest = [
+							'walletType' => Wallet::REINVEST_WALLET,//reinvest
+							'type' => Wallet::MATCHING_TYPE,//bonus day
+							'inOut' => Wallet::IN,
+							'userId' => $user->userId,
+							'amount' => $reinvestAmount,
+						];
+
+						Wallet::create($fieldInvest);
+					}
+					//Update cron status from 0 => 1
+					$cronStatus->status = 1;
+					$cronStatus->save();
+				}
+			}
+
+			//Update status from 1 => 0 after run all user
+			DB::table('cron_matching_day_logs')->update(['status' => 0]);
+
+		} catch(\Exception $e) {
+			\Log::error('Running bonusMatchingDayCron has error: ' . date('Y-m-d') .$e->getTraceAsString());
+			//throw new \Exception("Running bonusDayCron has error");
+		}
+	}
+
+	public static function calTotalBonus($totalBonus, $referralId, $maxLevel, $deepLevel = 1)
+	{
+		//Cal total member F1
+		$f1Users = UserData::where('refererId', $referralId)->where('packageId', '>', 0)->get();
+		//Total binany bonus F1
+		$bonus = 0;
+		foreach($f1Users as $user) {
+			$package = Package::where('pack_id', '=', $user->packageId)->first();
+			$bonusPack = isset($package->bonus) ? $package->bonus : 0;
+
+			//dd($bonusPack);
+			//Log::info($package);
+			$bonus += ($package->price * $bonusPack);
+		}
+
+		if($deepLevel == 1)
+		{
+			$totalBonus += ($bonus * 0.1);
+		}
+
+		if($deepLevel == 2)
+		{
+			$totalBonus += ($bonus * 0.07);
+		}
+
+		if($deepLevel == 3)
+		{
+			$totalBonus += ($bonus * 0.07);
+		}
+
+		if($deepLevel == 4)
+		{
+			$totalBonus += ($bonus * 0.07);
+		}
+
+		if($deepLevel == 5)
+		{
+			$totalBonus += ($bonus * 0.07);
+		}
+
+		if($deepLevel == 6)
+		{
+			$totalBonus += ($bonus * 0.06);
+		}
+
+		if($deepLevel == 7)
+		{
+			$totalBonus += ($bonus * 0.06);
+		}
+
+		if($maxLevel == $deepLevel) return;
+
+		$deepLevel++;
+
+		foreach($f1Users as $user)
+		{
+				self::calTotalBonus($totalBonus, $user->userId, $maxLevel, $deepLevel);
+		}
 	}
 }
