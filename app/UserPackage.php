@@ -48,14 +48,31 @@ class UserPackage extends Model
                     ->whereDate('user_packages.created_at','<=', $date['to_date'])
                     ->groupBy('date')
                     ->get()
-                    ->toArray() ;
+                    ->toArray();
             case Report::WEEK_NOW :
-                dd(self::selectRaw('DATE(user_packages.created_at) as date, WEEKOFYEAR(user_packages.created_at) as weekYear, SUM(user_packages.amount_increase) as totalPrice')
-                    ->whereDate('user_packages.created_at','>=', $date['from_date'])
-                    ->whereDate('user_packages.created_at','<=', $date['to_date'])
-                    ->groupBy('weekYear')
-                    ->get()
-                    ->toArray()) ;
+                $from_date = $date['from_date'];
+                $to_date = $date['to_date'];
+                return  DB::select("SELECT
+                        DATE(tbl.created_at) AS date,
+                        WEEKOFYEAR(tbl.created_at) AS week_year,
+                        SUM(tbl.amount_increase) AS totalPrice,
+                        DATE_ADD(
+                                DATE(tbl.created_at),
+                                INTERVAL - WEEKDAY(DATE(tbl.created_at)) DAY
+                        ) AS first_day_week,
+                        DATE_ADD(
+                                DATE(tbl.created_at),
+                                INTERVAL - -WEEKDAY(DATE(tbl.created_at)) DAY
+                        ) AS last_day_week
+
+                FROM
+                        user_packages AS tbl
+                WHERE
+                        DATE(tbl.created_at) >= '$from_date'
+                AND DATE(tbl.created_at) < '$to_date'
+                GROUP BY
+                        week_year
+                ORDER BY date");
         }
 
     }
