@@ -261,7 +261,7 @@ class ClpWalletController extends Controller {
                         'inOut' => Wallet::IN,
                         'userId' => $userRiCoin->userId,
                         'amount' => $request->clpAmount,
-                        'note' => 'From ' . $request->clpUsername
+                        'note' => 'From ' . Auth::user()->name
                     ];
 
                     Wallet::create($field);
