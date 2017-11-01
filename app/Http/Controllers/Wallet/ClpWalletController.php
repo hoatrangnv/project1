@@ -315,15 +315,21 @@ class ClpWalletController extends Controller {
             } elseif ( CLPWallet::where('userId', $userId)->count() > 0 ){
                 return response()->json(array('err' => true, 'msg' => null));
             }
-            $clpAddress = new CLPWalletAPI();
-            $result = $clpAddress->generateWallet();
+            
+            try {
+                $clpAddress = new CLPWalletAPI();
+                $result = $clpAddress->generateWallet();
 
-            if ($result['success']) {
-                CLPWallet::where('userId',$userId )->update(['address' => $result['address']]);
-                return response()->json(array('data'=>$result['address'],'err' => false, 'msg' => null));
-            } else {
+                if ($result['success']) {
+                    CLPWallet::where('userId',$userId )->update(['address' => $result['address']]);
+                    return response()->json(array('data'=>$result['address'],'err' => false, 'msg' => null));
+                } else {
+                    CLPWallet::where('userId', $userId)->forcedelete();
+                    return response()->json(array('err' => true, 'msg' => null));
+                }
+            } catch ( \Exception $e) {
                 CLPWallet::where('userId', $userId)->forcedelete();
-                return response()->json(array('err' => true, 'msg' => null));
+                throw $e;
             }
         }
     }
