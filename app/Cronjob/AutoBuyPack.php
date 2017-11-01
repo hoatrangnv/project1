@@ -196,4 +196,75 @@ class AutoBuyPack
 				self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
 		}
 	}
+
+	public static function calTotalBonus($masterId, $referralId, $maxLevel, $deepLevel = 1)
+    {
+        //Get info masterId
+        $masterUser = User::find($masterId);
+        $userCoin = $masterUser->userCoin;
+        //Cal total member F1
+        $f1Users = UserData::where('refererId', $referralId)->where('packageId', '>', 0)->get();
+        //Total binany bonus F1
+        foreach($f1Users as $user) {
+            $package = Package::where('pack_id', '=', $user->packageId)->first();
+
+            $packageBonus = 0;
+            if($deepLevel == 1)
+            {
+                $packageBonus += ($package->price * 0.1);
+            }
+
+            if($deepLevel == 2)
+            {
+                $packageBonus += ($package->price * 0.02);
+            }
+
+            if($deepLevel == 3)
+            {
+                $packageBonus += ($package->price * 0.01);
+            }
+
+            $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
+            $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate());
+
+            $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+            $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+            $userCoin->save();
+
+            $userInfo = User::find($user->userId);
+
+            $fieldUsd = [
+                'walletType' => Wallet::USD_WALLET,//usd
+                'type' => Wallet::FAST_START_TYPE,//bonus f1
+                'inOut' => Wallet::IN,
+                'userId' => $masterId,
+                'amount' => $usdAmount,
+                'note'   => $userInfo->name . ' bought package'
+            ];
+            Wallet::create($fieldUsd);
+            $fieldInvest = [
+                'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                'type' => Wallet::FAST_START_TYPE,//bonus f1
+                'inOut' => Wallet::IN,
+                'userId' => $masterId,
+                'amount' => $reinvestAmount,
+                'note'   => $userInfo->name . ' bought package'
+            ];
+            Wallet::create($fieldInvest);
+
+            if($packageBonus > 0)
+                    User::investBonusFastStart($masterId, $user->userId, $user->packageId, $packageBonus, $deepLevel);
+        }
+
+        
+
+        if($maxLevel == $deepLevel) return;
+
+        $deepLevel++;
+
+        foreach($f1Users as $user)
+        {
+                self::calTotalBonus($masterId, $user->userId, $maxLevel, $deepLevel);
+        }
+    }
 }

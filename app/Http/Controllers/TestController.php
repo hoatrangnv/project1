@@ -100,55 +100,12 @@ class TestController {
     function test() {
         set_time_limit(0);
 
-        AutoBuyPack::AutoBuyPack();
-        exit("XXXXX");
-        $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
-        $client = Client::create($configuration);
-
-        //Account detail
-        $account = $client->getAccount(config('app.coinbase_account'));
-
-        //Get all user in userCoin
-        $listUser = UserCoin::where('userId', '>', 2)->orderBy('userId', 'asc')->get();
-        foreach($listUser as $user)
-        {
-            try {
-                $address = $client->getAccountAddress($account, $user->accountCoinBase);
-                //$address = $client->getAccountAddress($account, 'cb0b3e16-3aca-5561-bfce-2e231925e484');
-                //$address = $client->getAccountAddress($account, 'b5cac226-7cc9-5ddf-8df5-6dac0b7ba3ae');
-                if($address instanceof Address ) continue;
-            } catch(\Exception $e) {
-                // Generate new address and get this adress
-                $name = $user->user->name;
-                if(empty($name)) continue;
-                
-                $address = new Address([
-                    'name' => $name
-                ]);
-
-                //Generate new address
-                $client->createAccountAddress($account, $address);
-
-                //Get all address
-                $listAddresses = $client->getAccountAddresses($account);
-
-                $address = '';
-                $id = '';
-                foreach($listAddresses as $add) {
-                    if($add->getName() == $name) {
-                        $address = $add->getAddress();
-                        $id = $add->getId();
-                        break;
-                    }
-                }
-
-                $user->walletAddress = $address;
-                $user->accountCoinBase = $id;
-                $user->save();
-            }
-        }
+        AutoBuyPack::calTotalBonus(38, 38, 2, 1);
 
         dd("successfully");
     }
+
+
+
 
 }
