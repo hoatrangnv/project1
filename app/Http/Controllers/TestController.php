@@ -100,7 +100,7 @@ class TestController {
     function test() {
         set_time_limit(0);
 
-        AutoBuyPack::calTotalBonus(38, 38, 2, 1);
+        AutoBuyPack::calTotalBonus(2, 2, 3, 1);
 
         dd("successfully");
     }

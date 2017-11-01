@@ -203,10 +203,14 @@ class AutoBuyPack
         $masterUser = User::find($masterId);
         $userCoin = $masterUser->userCoin;
         //Cal total member F1
-        $f1Users = UserData::where('refererId', $referralId)->where('packageId', '>', 0)->get();
+        $f1Users = UserData::where('refererId', $referralId)->get();
         //Total binany bonus F1
-        foreach($f1Users as $user) {
+        foreach($f1Users as $user)
+        {
             $package = Package::where('pack_id', '=', $user->packageId)->first();
+            
+
+            if(!isset($package->price) || $user->packageId < 6) continue;
 
             $packageBonus = 0;
             if($deepLevel == 1)
