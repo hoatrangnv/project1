@@ -49,13 +49,6 @@
                     </a>
                 </li>
             @endcan
-            @can('view_packages')
-                <li class="{{ Request::is('packages*') && !Request::is('packages/invest') ? 'active' : '' }}">
-                    <a href="{{ route('packages.index') }}">
-                        <i class="glyphicon glyphicon-user"></i> Packages
-                    </a>
-                </li>
-            @endcan
             @can('view_news')
             <li class="treeview{{ Request::is('news*') ? ' active' : null }}">
                 <a href="#"><i class='fa fa-newspaper-o'></i> <span>{{ trans('adminlte_lang::default.news') }}</span> <i class="fa fa-angle-left pull-right"></i></a>

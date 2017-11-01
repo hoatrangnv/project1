@@ -13,12 +13,15 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
+                    <div class="col-md-4">
                     @can('add_users')
                         <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create</a>
                     @endcan
+                    </div>
+                    <div class="col-md-8">
                     {!! Form::open(['method'=>'GET','url'=>'users','class'=>'','role'=>'search'])  !!}
 
-                    <div class="input-group custom-search-form">
+                    <div class="input-group custom-search-form pull-right" style="width: 60%">
                         <input type="text" class="form-control" name="q" placeholder="Search...">
                         <span class="input-group-btn">
                             <button class="btn btn-default-sm" type="submit">
@@ -27,6 +30,7 @@
                         </span>
                     </div>
                     {!! Form::close() !!}
+                    </div>
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <div class="result-set">
