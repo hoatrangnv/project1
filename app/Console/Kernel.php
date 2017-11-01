@@ -89,13 +89,13 @@ class Kernel extends ConsoleKernel
         }
 
         // Matching run everyday
-        // try {
-        //     $schedule->call(function () {
-        //         Bonus::bonusMatchingDayCron();
-        //     })->dailyAt('00:15');
-        // } catch (\Exception $ex) {
-        //     Log::info($ex);
-        // }
+        try {
+            $schedule->call(function () {
+                Bonus::bonusMatchingDayCron();
+            })->dailyAt('00:15');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
 
         // Binary bonus run on monday each week
         try {
