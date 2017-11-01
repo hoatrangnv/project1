@@ -47,32 +47,31 @@ class UserPackage extends Model
                     ->whereDate('user_packages.created_at','>=', $date['from_date'])
                     ->whereDate('user_packages.created_at','<=', $date['to_date'])
                     ->groupBy('date')
+                    ->orderBy('date')
                     ->get()
                     ->toArray();
             case Report::WEEK_NOW :
-                $from_date = $date['from_date'];
-                $to_date = $date['to_date'];
-                return  DB::select("SELECT
-                        DATE(tbl.created_at) AS date,
-                        WEEKOFYEAR(tbl.created_at) AS week_year,
-                        SUM(tbl.amount_increase) AS totalPrice,
-                        DATE_ADD(
-                                DATE(tbl.created_at),
-                                INTERVAL - WEEKDAY(DATE(tbl.created_at)) DAY
-                        ) AS first_day_week,
-                        DATE_ADD(
-                                DATE(tbl.created_at),
-                                INTERVAL - -WEEKDAY(DATE(tbl.created_at)) DAY
-                        ) AS last_day_week
-
-                FROM
-                        user_packages AS tbl
-                WHERE
-                        DATE(tbl.created_at) >= '$from_date'
-                AND DATE(tbl.created_at) < '$to_date'
-                GROUP BY
-                        week_year
-                ORDER BY date");
+                return self::selectRaw(
+        'DATE(user_packages.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(user_packages.created_at),YEAR(user_packages.created_at)) AS week_year,
+                SUM(user_packages.amount_increase) AS totalPrice')
+                    ->whereDate('user_packages.created_at','>=', $date['from_date'])
+                    ->whereDate('user_packages.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(user_packages.created_at) AS date, 
+                CONCAT(MONTH(user_packages.created_at),YEAR(user_packages.created_at)) AS week_year,
+                SUM(user_packages.amount_increase) AS totalPrice')
+                    ->whereDate('user_packages.created_at','>=', $date['from_date'])
+                    ->whereDate('user_packages.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
         }
 
     }

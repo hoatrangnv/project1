@@ -18,11 +18,11 @@ if (data.opt == 1) {
         var obj = arrayData;
         var data = new google.visualization.DataTable();
         data.addColumn({type: 'date', label: 'Start'});
-        data.addColumn({type: 'number', label: 'Buy'});
+        data.addColumn({type: 'number', label: 'Value'});
         data.addRows(obj)
         var options = {
             curveType: "function",
-            vAxis: {maxValue: 100},
+            animation:{ duration: 1000, easing: 'out', startup: true },
             title: title,
             hAxis: {
                 format: 'd-MMM-y'
@@ -48,12 +48,17 @@ if (data.opt == 1) {
 } else if (data.opt == 2) {
     format = "M/yy"
     title = data.title;
-    data.data_analytic.forEach(function(element) {
-        totalValue += +element.totalPrice;
-        arrayData.push([ new Date( moment(element.first_day_week).unix() * 1000), +element.totalPrice,'<span style="padding:10px;"><b>'+element.first_day_week+' '+element.last_day_week+'</b> Buy:'+element.totalPrice +'</span>'] );
-        labelData.push([ new Date( moment(element.first_day_week).unix() * 1000), new Date( moment(element.last_day_week).unix() * 1000),"1"]);
-    });
-    arrayData.unshift(['Date', 'Process',{type: 'string', role: 'tooltip', 'p': {'html': true}}]);
+    if(data.data_analytic.length == 0 ){
+        // noinspection JSAnnotator
+        arrayData = [0,0,''];
+        arrayData.unshift(['Date', 'Process',{type: 'string', role: 'tooltip', 'p': {'html': true}}]);
+    } else {
+        data.data_analytic.forEach(function(element) {
+            totalValue += +element.totalPrice;
+            arrayData.push([ new Date( moment(element.first_day).unix() * 1000), +element.totalPrice,'<span style="padding:10px;"><b>'+element.first_day+' '+element.last_day+'</b> Value:'+element.totalPrice +'</span>'] );
+        });
+        arrayData.unshift(['Date', 'Process',{type: 'string', role: 'tooltip', 'p': {'html': true}}]);
+    }
     google.charts.load('current', {'packages':['corechart']}); 
     google.charts.setOnLoadCallback(drawChart); 
     function drawChart() { 
@@ -62,7 +67,7 @@ if (data.opt == 1) {
                     title: title, 
                     curveType: 'function', 
                     animation:{ duration: 1000, easing: 'out', startup: true },
-                    tooltip: {isHtml: true}, 
+                    tooltip: {isHtml: true},
                     hAxis: {format:'MMM-y'}, 
     //		vAxis: {
     //			
@@ -75,8 +80,39 @@ if (data.opt == 1) {
             chart.draw(data, options); 
     }
 } else if (data.opt == 3) {
-    format = "d/M"
+    format = "M/yy"
     title = data.title;
+    if(data.data_analytic.length == 0 ){
+        // noinspection JSAnnotator
+        arrayData = [0,0,''];
+        arrayData.unshift(['Date', 'Process',{type: 'string', role: 'tooltip', 'p': {'html': true}}]);
+    } else {
+        data.data_analytic.forEach(function(element) {
+            totalValue += +element.totalPrice;
+            arrayData.push([ new Date( moment(element.first_day).unix() * 1000), +element.totalPrice,'<span style="padding:10px;"><b>'+element.first_day+' '+element.last_day+'</b> Value:'+element.totalPrice +'</span>'] );
+        });
+        arrayData.unshift(['Date', 'Process',{type: 'string', role: 'tooltip', 'p': {'html': true}}]);
+    }
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable(arrayData);
+        var options = {
+            title: title,
+            curveType: 'function',
+            animation:{ duration: 1000, easing: 'out', startup: true },
+            tooltip: {isHtml: true},
+            hAxis: {format:'MMM-y'},
+            //		vAxis: {
+            //
+            //			viewWindowMode:'maximized',
+            //		}
+            pointSize: 5,
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
 } else {
     format = "d/M"
     title = 'FromDay ' + data.date_custom.from_date + ' ToDay ' + data.date_custom.to_date

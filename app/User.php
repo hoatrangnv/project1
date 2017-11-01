@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
+use App\Http\Controllers\Backend\RepoReportController as Report;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPasswords;
@@ -668,14 +669,41 @@ class user extends authenticatable
             ->count();
     }
 
-    public static function getNewUserData( $date ){
-        return self::selectRaw('date(created_at) as date,COUNT(users.id) as totalPerson')
-            ->where('active' , 1)
-            ->whereDate('created_at','>=', $date['from_date'])
-            ->whereDate('created_at','<=', $date['to_date'])
-            ->groupBy('date')
-            ->get()
-            ->toArray();
+    public static function getDataReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('date(created_at) as date,COUNT(users.id) as totalPrice')
+                    ->where('active' , 1)
+                    ->whereDate('created_at','>=', $date['from_date'])
+                    ->whereDate('created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(users.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(users.created_at),YEAR(users.created_at)) AS week_month_year,
+                COUNT(users.id) AS totalPrice')
+                    ->whereDate('users.created_at','>=', $date['from_date'])
+                    ->whereDate('users.created_at','<=', $date['to_date'])
+                    ->groupBy('week_month_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(users.created_at) AS date, 
+                CONCAT(MONTH(users.created_at),YEAR(users.created_at)) AS week_month_year,
+                COUNT(users.id) AS totalPrice')
+                    ->whereDate('users.created_at','>=', $date['from_date'])
+                    ->whereDate('users.created_at','<=', $date['to_date'])
+                    ->groupBy('week_month_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
+
     }
 }
 

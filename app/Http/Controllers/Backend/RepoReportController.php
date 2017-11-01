@@ -57,6 +57,37 @@ class RepoReportController
         return $total;
     }
 
+    private function addFristLastWeekDay($data = array(),$date){
+        foreach ($data as $key => $value){
+            if($key == 0){
+                $data[$key]['first_day'] = $date['from_date'];
+                $data[$key]['last_day']  =  $this->helper->get_end_day_of_week($value['date']);
+            }elseif ($key == (count($data) -1) ){
+                $data[$key]['first_day'] = $this->helper->get_frist_day_of_week($value['date']);
+                $data[$key]['last_day'] = $date['to_date'];
+            }else{
+                $data[$key]['first_day'] = $this->helper->get_frist_day_of_week($value['date']);
+                $data[$key]['last_day'] = $this->helper->get_end_day_of_week($value['date']);
+            }
+        }
+        return $data;
+    }
+
+    private function addFristLastMonth($data = array(),$date){
+        foreach ($data as $key => $value){
+            if($key == 0){
+                $data[$key]['first_day'] = $date['from_date'];
+                $data[$key]['last_day']  =  $this->helper->get_end_day_of_month($value['date']);
+            }elseif ($key == (count($data) -1) ){
+                $data[$key]['first_day'] = $this->helper->get_frist_day_of_month($value['date']);
+                $data[$key]['last_day'] = $date['to_date'];
+            }else{
+                $data[$key]['first_day'] = $this->helper->get_frist_day_of_month($value['date']);
+                $data[$key]['last_day'] = $this->helper->get_end_day_of_month($value['date']);
+            }
+        }
+        return $data;
+    }
     /* Action get Data for report Controller
      * Type : new user, total package
      * Option : day , week , month
@@ -64,16 +95,33 @@ class RepoReportController
      * @return json data
      */
     public function action ($type, $opt, $dateCustom = array()){
+        //add 1 day for $to_date
         switch (TRUE){
             /*----NEW USER----*/
             case ($type == self::NEW_USER && $opt == self::DAY_NOW) :
                 //Get data for main chart
-                $data['data_analytic'] =  $this->user->getNewUserData($dateCustom);
+                $data['data_analytic'] =  $this->user->getDataReport($dateCustom , $opt);
                 //Get data for mini chart
-                $data['total'] = $this->get_all_total_each_type($dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom,$opt);
                 //Add data for another element
                 $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
                 //Json to return
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::NEW_USER && $opt == self::WEEK_NOW) :
+                $data['data_analytic'] =  $this->user->getDataReport($dateCustom , $opt);
+                // add first_day_week and last_day_week
+                $data['data_analytic'] = $this->addFristLastWeekDay($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom,$opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::NEW_USER && $opt == self::MONTH_NOW) :
+                $data['data_analytic'] =  $this->user->getDataReport($dateCustom , $opt);
+                // add first_day_week and last_day_week
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom,$opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
                 $data = $this->helper->json_encode_prettify($data);
                 break;
             /*----TOTAL_PACKAGE----*/
@@ -86,14 +134,18 @@ class RepoReportController
                 break;
             case  ($type == self::TOTAL_PACKAGE && $opt == self::WEEK_NOW) :
                 $data['data_analytic'] =  $this->userPackage->getDataReport($dateCustom, $opt);
+                // add first_day_week and last_day_week
+                $data['data_analytic'] = $this->addFristLastWeekDay($data['data_analytic'],$dateCustom);
                 $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
                 $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
                 $data['title'] = "Total Package";
                 $data = $this->helper->json_encode_prettify($data);
                 break;
             case  ($type == self::TOTAL_PACKAGE && $opt == self::MONTH_NOW) :
-                $data['data_analytic'] =  $this->userPackage->getDataReport($date);
-                $data['total'] = $this->get_all_total_each_type($date);
+                $data['data_analytic'] =  $this->userPackage->getDataReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
                 $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
                 $data['title'] = "Total Package";
                 $data = $this->helper->json_encode_prettify($data);

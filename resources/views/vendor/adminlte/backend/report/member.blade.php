@@ -18,7 +18,6 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
     @php $temp = json_decode($data); @endphp
-
     <script>
         var data = {!! $data !!};
         console.log(data);
@@ -34,9 +33,9 @@
                     <div class="box-tools pull-right">
                         <input type="button" name="daterange">
                         <div class="btn-group btn-group-sm select-time" role="group" aria-label="Basic example">
-                            <a href="{{ Request::url() }}?type={{$temp->type}}&opt=1" class="btn btn-default" {{ ($temp->opt==1 ? 'disabled' : '') }}>Day</a>
-                            <a href="{{ Request::url() }}?type={{$temp->type}}&opt=2" class="btn btn-default" {{ ($temp->opt==2 ? 'disabled' : '') }}>Week</a>
-                            <a href="{{ Request::url() }}?type={{$temp->type}}&opt=3" class="btn btn-default" {{ ($temp->opt==3 ? 'disabled' : '') }}>Months</a>
+                            <a href="{{ Request::url() }}?from_date={{$temp->date_custom->from_date}}&to_date={{$temp->date_custom->to_date}}&type={{$temp->type}}&opt=1" class="btn btn-default"{{ ($temp->opt==1 ? 'disabled' : '') }}>Day</a>
+                            <a href="{{ Request::url() }}?from_date={{$temp->date_custom->from_date}}&to_date={{$temp->date_custom->to_date}}&type={{$temp->type}}&opt=2" class="btn btn-default"{{ ($temp->opt==2 ? 'disabled' : '') }}>Week</a>
+                            <a href="{{ Request::url() }}?from_date={{$temp->date_custom->from_date}}&to_date={{$temp->date_custom->to_date}}&type={{$temp->type}}&opt=3" class="btn btn-default"{{ ($temp->opt==3 ? 'disabled' : '') }}>Months</a>
                         </div>
                     </div>
                 </div>
@@ -60,8 +59,16 @@
     <script>
         $('input[name="daterange"]').daterangepicker();
         $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
-            window.location.replace("{{ Request::url() }}?type={{$temp->type}}&opt=4&from_date="+picker.startDate.format('YYYY-MM-DD')+'&to_date='+picker.endDate.format('YYYY-MM-DD'));
+            window.location.replace("{{ Request::url() }}?type={{$temp->type}}&opt={{$temp->opt}}&from_date="+picker.startDate.format('YYYY-MM-DD')+'&to_date='+picker.endDate.format('YYYY-MM-DD'));
         });
         $('.total-package').html(totalValue);
+        var from_date = getFormatDate(data.date_custom.from_date);
+        var to_date = getFormatDate(data.date_custom.to_date);
+        $('input[name="daterange"]').data('daterangepicker').setStartDate(from_date);
+        $('input[name="daterange"]').data('daterangepicker').setEndDate(to_date);
+        function getFormatDate(date){
+            date = new Date(date);
+            return (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
+        }
     </script>
 @endsection
