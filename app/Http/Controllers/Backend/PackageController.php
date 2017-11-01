@@ -18,6 +18,7 @@ use App\ExchangeRate;
 use App\Wallet;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
+use App\CronMatchingLogs;
 
 class PackageController extends Controller
 {
@@ -110,6 +111,8 @@ class PackageController extends Controller
                     CronProfitLogs::create(['userId' => $currentuserid]);
                 if(CronBinaryLogs::where('userId', $currentuserid)->count() < 1) 
                     CronBinaryLogs::create(['userId' => $currentuserid]);
+                if(CronMatchingLogs::where('userId', $currentuserid)->count() < 1) 
+                    CronMatchingLogs::create(['userId' => $currentuserid]);
             }
 
             if($packageOldId > 0){

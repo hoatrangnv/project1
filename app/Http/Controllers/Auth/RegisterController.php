@@ -18,6 +18,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Notifications\UserRegistered;
 use App\UserData;
 use App\UserCoin;
+use App\CLPWallet;
 use URL;
 use Session;
 
@@ -85,25 +86,45 @@ class RegisterController extends Controller
         Validator::extend('without_spaces', function($attr, $value){
             return preg_match('/^\S*$/u', $value);
         });
+
+        Validator::extend('non_utf8', function($attr, $value){
+            if(mb_detect_encoding($value) == 'UTF-8') return false;
+            else return true;
+        });
+
+        $customeMessage = [
+                'firstname.required' => 'First Name is required',
+                'lastname.required' => 'Last Name is required',
+                'name.required' => 'User Name is required',
+                'name.unique' => 'User Name has already been taken',
+                'email.required' => 'Email is required',
+                'email.unique' => 'Email has already been taken',
+                'password.required' => 'Password is required',
+                'phone.required' => 'Phone is required',
+                'terms.required' => 'Please check term and conditions',
+                'name.without_spaces' => 'User Name cannot have spaces',
+                'name.non_utf8' => 'User Name accept Latin characters only',
+                'g-recaptcha-response.required' => 'Captcha is required'
+                ];
+
         return Validator::make($data, [
             'firstname'     => 'required|max:255',
             'lastname'     => 'required|max:255',
-            'name'     => 'required|without_spaces|min:3|max:255|unique:users,name',
+            'name'     => 'required|without_spaces|non_utf8|min:3|max:255|unique:users,name',
             'email'    => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:8|confirmed',
             'name_country' => 'required',
-            //'password' => 'required|min:8|confirmed|regex:/^.*(?=.{3,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%@]).*$/',
             'phone'    => 'required',
             'terms'    => 'required',
             'refererId'    => 'required',
             'country'    => 'required|not_in:0',
             'g-recaptcha-response'=> config('app.enable_captcha') ? 'required|captcha' : '',
-        ]);
+        ], $customeMessage);
     }
     
     public function register(Request $request)
     {
-        //$this->validator($request->all())->validate();
+        $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
 
@@ -159,7 +180,68 @@ class RegisterController extends Controller
                 echo "Net select wallet yet";
         }
     }
-    
+
+    /*
+    * @author GiangDT
+    * 
+    * Generate new address
+    *
+    */
+    private function GenerateAddress( $type, $name = null ) {
+        $data = [];
+        switch ($type) {
+            case "bitgo":
+                $bitgo = new BitGoSDK();
+                $bitgo->authenticateWithAccessToken(config('app.bitgo_token'));
+                $wallet = $bitgo->wallets();
+                //set mat khau mac dinh
+                $createWallet = $wallet->createWallet($data['email'],config('app.bitgo_password'),"keyternal");
+                $addressWallet = $idWallet = $createWallet['wallet']->getID();
+                //backup key ...
+                $backupKey = json_encode($createWallet);
+                //add hook ...
+                $wallet = $bitgo->wallets()->getWallet($idWallet);
+                $createWebhook = $wallet->createWebhook("transaction",config('app.bitgo_hook'));
+                return $data = [ 'idWallet' => $idWallet ];
+            case self::COINBASE:
+                // tạo acc ví cho tk
+                $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
+                $client = Client::create($configuration);
+
+                //Account detail
+                $account = $client->getAccount(config('app.coinbase_account'));
+
+                // Generate new address and get this adress
+                $address = new Address([
+                    'name' => $name
+                ]);
+
+                //Generate new address
+                $client->createAccountAddress($account, $address);
+
+                //Get all address
+                $listAddresses = $client->getAccountAddresses($account);
+
+                $address = '';
+                $id = '';
+                foreach($listAddresses as $add) {
+                    if($add->getName() == $name) {
+                        $address = $add->getAddress();
+                        $id = $add->getId();
+                        break;
+                    }
+                }
+
+                $data = [ "accountId" => $id,
+                    "walletAddress" => $address ];
+
+                return $data;
+            default:
+                throw new \Exception("Not select type of api yet");
+                
+        }
+    }
+
     /**
      * Create a new user instance after a valid registration.
      *
@@ -177,7 +259,9 @@ class RegisterController extends Controller
             $secondSaleEnd = date('Y-m-d', strtotime(config('app.second_private_end')));
 
             $active = 0;
-            if($currentDate <= $secondSaleEnd) $active = 1;
+            if($currentDate <= $secondSaleEnd) {
+                $active = 1;
+            }
             //luu vao thong tin ca nhan vao bang User
             $fields = [
                 'firstname'     => $data['firstname'],
@@ -202,11 +286,20 @@ class RegisterController extends Controller
 
             $user = User::create($fields);
 
+            
+
             //SAVE to User_datas
             $fields['userId'] = $user->id;
             //$fields['walletAddress'] = $accountWallet['walletAddress'];
             $userData = UserData::create($fields);
 
+            if($currentDate <= $secondSaleEnd) {
+                $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
+                $fields['accountCoinBase'] = $accountWallet['accountId'];
+                $fields['walletAddress'] = $accountWallet['walletAddress'];
+
+                User::updateUserGenealogy($user->id);
+            }
             //Luu thong tin ca nhan vao bang user_coin
             //$fields['backupKey'] = $backupKey;
             $userCoin = UserCoin::create($fields);
@@ -215,7 +308,7 @@ class RegisterController extends Controller
             //ma hoa send link active qua mail
             //in private sale don't send active email
 
-            if($currentDate <= $secondSaleEnd) {
+            if($currentDate > $secondSaleEnd) {
                 if($user) {
                     $encrypt    = [hash("sha256", md5(md5($data['email']))),$data['email']];
                     $linkActive =  URL::to('/active')."/".base64_encode(json_encode($encrypt));

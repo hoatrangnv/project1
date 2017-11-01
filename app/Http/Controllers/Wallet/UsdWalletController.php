@@ -82,6 +82,7 @@ class UsdWalletController extends Controller
             if($key == 4) $wallet_type[$key] = trans($val);
             if($key == 5) $wallet_type[$key] = trans('adminlte_lang::wallet.usd_clp_type_on_usd');
             if($key == 16) $wallet_type[$key] = trans($val);
+            if($key == 17) $wallet_type[$key] = trans($val);
         }
 
         return view('adminlte::wallets.usd', compact('wallets','wallet_type', 'requestQuery'));
@@ -137,6 +138,7 @@ class UsdWalletController extends Controller
             if($key == 3) $wallet_type[$key] = trans($val);
             if($key == 4) $wallet_type[$key] = trans($val);
             if($key == 6) $wallet_type[$key] = trans('adminlte_lang::wallet.holding_clp_type');
+            if($key == 17) $wallet_type[$key] = trans($val);
         }
         return view('adminlte::wallets.reinvest', compact('wallets','wallet_type', 'requestQuery'));
     }

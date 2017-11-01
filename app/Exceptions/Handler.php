@@ -74,11 +74,11 @@ class Handler extends ExceptionHandler
                         return \Response::view('adminlte::errors.503', array('message' => $message, 'retryAfter' => $retryAfter), 503);
                         break;
                     default:
-                        \Response::view('adminlte::errors.default', array(), 503);
+                        return \Response::view('adminlte::errors.default', array(), 503);
                         break;
                 }
             } else {
-                return \Response::view('adminlte::errors.default');
+                return parent::render($request, $exception);
             }
         }
         

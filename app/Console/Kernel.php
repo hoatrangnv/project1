@@ -11,8 +11,10 @@ use App\Cronjob\UpdateExchangeRate;
 use App\Cronjob\GetClpWallet;
 use App\Cronjob\Bonus;
 use App\Cronjob\AutoAddBinary;
+use App\Cronjob\AutoBuyPack;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
+use App\Cronjob\UpdateCLPCoin;
 use Log;
 
 class Kernel extends ConsoleKernel
@@ -68,11 +70,11 @@ class Kernel extends ConsoleKernel
             
         }
 
-        // Auto add to binary at 23:30 every sunday
+        //Auto add to binary at 23:30 every sunday
         try {
             $schedule->call(function () {
                 AutoAddBinary::addBinary();
-            })->weekly()->saturdays()->at('23:00'); //->weekly()->sundays()->at('23:30');
+            })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -86,11 +88,20 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
 
+        // Matching run everyday
+        // try {
+        //     $schedule->call(function () {
+        //         Bonus::bonusMatchingDayCron();
+        //     })->dailyAt('00:15');
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
+
         // Binary bonus run on monday each week
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
-            })->weekly()->sundays()->at('00:30'); //->weekly()->mondays()->at('00:30');
+            })->weekly()->mondays()->at('00:30'); //->weekly()->mondays()->at('00:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -113,15 +124,11 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
 
-        /** 
-         * get Clp wallet every 5minutes
-         */
-        $stringCronTab = "* * * * * *";
+        // Cron job update get CLP
         try {
             $schedule->call(function (){
-                $newGetClp = new GetClpWallet();
-                $newGetClp->getClpWallet();
-            })->everyFiveMinutes();
+                UpdateCLPCoin::UpdateClpCoinAmount();
+            })->everyMinute();
         } catch (\Exception $ex) {
             Log::info($ex);
         }

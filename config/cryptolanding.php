@@ -41,6 +41,7 @@ return [
         14 => 'adminlte_lang::wallet.deposit_clp_type',
         15 => 'adminlte_lang::wallet.buy_pack',
         16 => 'adminlte_lang::wallet.tl_withdraw_pack',
+        17 => 'adminlte_lang::wallet.tl_matching_amount',
     ),
 
     'loyalty_bonus' => array('silver' => 5000, 'gold' => 10000, 'pear' => 20000, 'emerald' => 50000, 'diamond' => 100000),

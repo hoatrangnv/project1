@@ -2,9 +2,15 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/term-condition.html', function () {
-    return view('term');
+    return view('adminlte::layouts.term_register');
 });
+
+Route::get('/package-term-condition.html', function () {
+    return view('adminlte::layouts.term_buy_pack');
+});
+
 Auth::routes();
 
 Route::get('authenticator', 'Auth\LoginController@auth2fa');
@@ -63,6 +69,7 @@ Route::group( ['middleware' => ['auth']], function() {
     //CLP WALLET
     Route::get('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
+    Route::get('wallets/clp/getaddressclpwallet', 'Wallet\ClpWalletController@getClpWallet');
     Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
     Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
     
@@ -115,11 +122,13 @@ Route::group( ['middleware' => ['auth']], function() {
 });
 Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');
+//Route::get('clpnotification','GetNotificationController@clpNotification');
+Route::post('clpnotification','GetNotificationController@clpNotification');
 
 /***------- TEST -------***/
 //Route::get('ethereumtest', 'EthereumTestController@index');
-Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+//Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
 //Route::get('test-binary', 'TestController@testBinary');
 //Route::get('test-interest',"TestController@testInterest");
@@ -130,8 +139,8 @@ Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoAct
 /***------- END TEST -------***/
 Route::get('ref/{nameref}',"Auth\RegisterController@registerWithRef")->name('user.ref');
 Route::get('active/{infoActive}',"Auth\ActiveController@activeAccount");
-Route::get('reactive',"Auth\ActiveController@reactiveAccount");
-Route::post('reactive',"Auth\ActiveController@reactiveAccount");
+//Route::get('reactive',"Auth\ActiveController@reactiveAccount");
+//Route::post('reactive',"Auth\ActiveController@reactiveAccount");
 Route::get('notification/useractive',"NotificationController@userActive");
 Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");

@@ -33,7 +33,7 @@ class ProfileController extends Controller
     public function __construct()
     {
         $this->middleware(['auth']);
-        parent::__construct();
+        //parent::__construct();
     }
 
     /**
@@ -183,13 +183,7 @@ class ProfileController extends Controller
 
     }
 
-    /*
-    *Author huynq
-    *Danh hieu F1
-    */
-    private function tichLuy($value=''){
 
-    }
     private function getGoogleUrl($key){
         return Google2FA::getQRCodeGoogleUrl(
             $this->name,

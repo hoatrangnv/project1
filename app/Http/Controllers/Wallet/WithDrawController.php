@@ -128,6 +128,8 @@ class WithDrawController extends Controller
                                     }elseif($withdrawConfirm->type == 'clp'){
                                         $isConfirm = self::sendCoinCLP($request, $id);
                                     }
+
+                                    $request->session()->flash('successMessage', 'You have withdrawn successfully!');
                                 }
                             }else{
                                 $request->session()->flash('error', 'Something wrongs. We cannot confirm withdrawal!');

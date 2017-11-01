@@ -75,6 +75,14 @@ class ClpWalletController extends Controller {
         $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();
         $walletAddress = isset($clpWallet->address) ? $clpWallet->address : '';
 
+        $currentDate = date('Y-m-d');
+        $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
+
+        $active = 0;
+        if($currentDate > $preSaleEnd) {
+            $active = 1;
+        }
+
         return view('adminlte::wallets.clp', ['packages' => $packages, 
             'user' => $user, 
             'lstPackSelect' => $lstPackSelect, 
@@ -82,6 +90,7 @@ class ClpWalletController extends Controller {
             'wallet_type'=> $wallet_type,
             'walletAddress' =>  $walletAddress,
             'requestQuery'=> $requestQuery,
+            'active' => $active
         ]);
         
     }
@@ -131,7 +140,7 @@ class ClpWalletController extends Controller {
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->clpAmount,
-                    'note'   => 'Rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
 
@@ -141,7 +150,7 @@ class ClpWalletController extends Controller {
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountBTC,
-                    'note'   => 'Rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                 ];
 
                 Wallet::create($fieldBTC);
@@ -252,7 +261,7 @@ class ClpWalletController extends Controller {
                         'inOut' => Wallet::IN,
                         'userId' => $userRiCoin->userId,
                         'amount' => $request->clpAmount,
-                        'note' => 'From ' . $request->clpUsername
+                        'note' => 'From ' . Auth::user()->name
                     ];
 
                     Wallet::create($field);
@@ -287,5 +296,41 @@ class ClpWalletController extends Controller {
             }
         }
         return response()->json(array('err' => true, 'msg' => null));
+    }
+
+    /**
+     * @author Huynq
+     * @param Request $request
+     * @return null
+     */
+    public function getClpWallet(Request $request)
+    {
+        if($request->ajax())
+        {
+            set_time_limit(0);
+            $userId = Auth::user()->id;
+
+            if( CLPWallet::where('userId', $userId)->count() == 0 ){
+                CLPWallet::create(['userId' => $userId]);
+            } elseif ( CLPWallet::where('userId', $userId)->count() > 0 ){
+                return response()->json(array('err' => true, 'msg' => null));
+            }
+            
+            try {
+                $clpAddress = new CLPWalletAPI();
+                $result = $clpAddress->generateWallet();
+
+                if ($result['success']) {
+                    CLPWallet::where('userId',$userId )->update(['address' => $result['address']]);
+                    return response()->json(array('data'=>$result['address'],'err' => false, 'msg' => null));
+                } else {
+                    CLPWallet::where('userId', $userId)->forcedelete();
+                    return response()->json(array('err' => true, 'msg' => null));
+                }
+            } catch ( \Exception $e) {
+                CLPWallet::where('userId', $userId)->forcedelete();
+                throw $e;
+            }
+        }
     }
 }

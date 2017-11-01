@@ -21,6 +21,13 @@ use App\CLPWallet;
 use App\CLPWalletAPI;
 use App\Helper\Helper;
 use App\Cronjob\GetClpWallet;
+use Coinbase\Wallet\Client;
+use Coinbase\Wallet\Configuration;
+use Coinbase\Wallet\Resource\Account;
+use Coinbase\Wallet\Resource\Address;
+use App\Cronjob\Bonus;
+use App\Cronjob\AutoBuyPack;
+
 /**
  * Description of TestController
  *
@@ -91,8 +98,14 @@ class TestController {
     }
 
     function test() {
-       $newGetClp = new GetClpWallet();
-       GetClpWallet::getClpWallet();
+        set_time_limit(0);
+
+        AutoBuyPack::calTotalBonus(2, 2, 3, 1);
+
+        dd("successfully");
     }
+
+
+
 
 }

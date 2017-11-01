@@ -120,10 +120,8 @@
                         <div class="col-xs-7 form-group has-feedback{{ $errors->has('terms') ? ' has-error' : '' }}">
                             <label>
                                 <div class="checkbox_register icheck">
-                                    <label data-toggle="modal" data-target="#termsModal" class="" style="position: relative;">
-                                        <input type="checkbox" name="terms">
-                                        <a href="#" class="text-danger">{{ trans('adminlte_lang::user.terms_text') }}</a>
-                                    </label>
+                                    <input type="checkbox" name="terms">
+                                    <a href="/term-condition.html" class="text-danger" target="_blank">{{ trans('adminlte_lang::user.terms_text') }}</a>
                                 </div>
                             </label>
                             @if ($errors->has('terms'))
@@ -146,27 +144,11 @@
         </div><!-- /.register-box -->
     </div>
     @include('adminlte::layouts.partials.scripts_auth')
-    @include('adminlte::auth.terms')
     <script src="{{ URL::to('js/intlTelInput.js')}}"></script>
     <script src="{{ URL::to('js/utils.js')}}"></script>
     <script>
-        function changeUrl(){
-            var URL = window.location.href;
-            if (URL.split('/')[3] == 'ref') {
-                window.history.pushState("object or string", "Title", "/register");
-            }
-        }
         $(document).ready(function(){
-            var changurl = changeUrl();
             $("#phone").intlTelInput({
-                // initialCountry: "auto",
-                // geoIpLookup: function(callback) {
-                //     $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
-                //     var countryCode = (resp && resp.country) ? resp.country : "";
-                //     callback(countryCode);
-                //   });
-                // },
-                // preferredCountries:["us"]
             });
             
             $('form').submit(function(){

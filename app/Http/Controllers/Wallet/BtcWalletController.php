@@ -208,6 +208,7 @@ class BtcWalletController extends Controller
 
             //Amount CLP
             $clpRate = ExchangeRate::getCLPBTCRate();
+
             $amountCLP = $request->btcAmount / $clpRate;
             $holdingAmount = 0;
 
@@ -232,7 +233,7 @@ class BtcWalletController extends Controller
                 {
 
                     if($request->clpAmount != 25000 || $amountCLP < 24950) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
                     }
 
                     $amountCLP = 10000;
@@ -242,9 +243,18 @@ class BtcWalletController extends Controller
                 //Private sale 2
                 if($secondSaleStart <= $currentDate && $currentDate <= $secondSaleEnd)
                 {
-                    
-                    if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                    //Get total sales
+                    $total = Wallet::where('walletType', Wallet::REINVEST_WALLET)
+                                    ->where('type', Wallet::BTC_CLP_TYPE)
+                                    ->where('amount', 6666.66)
+                                    ->count();
+
+                    if($total == 150) {
+                        $clpAmountErr = 'Sorry, the quota in this private sale reached.';
+                    } else if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
+                    } else if($userCoin->reinvestAmount > 0) {
+                        $clpAmountErr = 'You cannot buy more CLP.';
                     }
 
                     $amountCLP = 10000;
@@ -255,7 +265,9 @@ class BtcWalletController extends Controller
                 if($preSaleStart <= $currentDate && $currentDate <= $preSaleEnd)
                 {
                     if($request->clpAmount != 12500 || $amountCLP < 12475) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP' . trans('adminlte_lang::wallet.msg_sale_tail');
+                        $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
+                    } else if($userCoin->reinvestAmount > 0) {
+                        $clpAmountErr = 'You cannot buy more CLP.';
                     }
 
                     $amountCLP = 10000;
@@ -280,7 +292,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::OUT,
                     'userId' => Auth::user()->id,
                     'amount' => $request->btcAmount,
-                    'note'   => 'Rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                 ];
                 Wallet::create($fieldBTC);
 
@@ -290,7 +302,7 @@ class BtcWalletController extends Controller
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountCLP,
-                    'note'   => 'Rate ' . $clpRate . ' BTC'
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                 ];
                 Wallet::create($fieldCLP);
 
@@ -303,7 +315,7 @@ class BtcWalletController extends Controller
                         'inOut' => Wallet::IN,
                         'userId' => Auth::user()->id,
                         'amount' => $holdingAmount,
-                        'note'   => 'Rate ' . $clpRate . ' BTC'
+                        'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
                     ];
                     Wallet::create($fieldCLPHolding);
                 }

@@ -96,9 +96,4 @@ class MyBonusController extends Controller
 
         return view('adminlte::mybonus.loyalty', array('loyaltyUser' => $loyaltyUser, 'loyaltyBonus' => $loyaltyBonus, 'loyaltyUserData' => $loyaltyUserData));
     }
-    public function show($id)
-    {
-        echo $id;
-        //return redirect('members/genealogy');
-    }
 }

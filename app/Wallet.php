@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Wallet extends Model
 {
     protected $fillable = [
-        'walletType', 'type', 'note', 'inOut', 'userId', 'amount'
+        'walletType', 'type', 'note', 'inOut', 'userId', 'amount', 'updated_at'
     ];
 
     // Wallet Type
@@ -56,6 +56,8 @@ class Wallet extends Model
     const BUY_PACK_TYPE = 15;
     // withdraw Package
     const WITHDRAW_PACK_TYPE = 16;
+    // matching bonus
+    const MATCHING_TYPE = 17;
     //inOut 
     const IN = "in" ;
     

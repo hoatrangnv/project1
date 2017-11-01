@@ -70,6 +70,7 @@ return [
     'tl_withdraw_pack'          => 'Package Withdraw',
     'tl_holding_amount'         => 'Holding',
     'tl_released_amount'        => 'Released',
+    'tl_matching_amount'        => 'Matching',
 
     //Message
      'msg_sell_clp_success'     => 'Sell CLP successfully!',
@@ -104,5 +105,6 @@ return [
     'user_required'             =>'User is required',
     'fee'                       => 'Fee',
     'wallet_release_date'       => 'Realease Date',
+    'not_get_address_clp_wallet' => 'Cannot get clp wallet address!',
 
 ];
