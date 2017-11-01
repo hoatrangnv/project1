@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use App\Http\Controllers\Backend\RepoReportController as Report;
+use App\Http\Controllers\Backend\Report\RepoReportController as Report;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPasswords;

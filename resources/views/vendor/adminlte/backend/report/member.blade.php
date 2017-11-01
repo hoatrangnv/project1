@@ -1,7 +1,7 @@
 @extends('adminlte::backend.layouts.member')
 
-@section('htmlheader_title')
-    {{ trans('adminlte_lang::user.header_title') }}
+@section('contentheader_title')
+    {{ trans('adminlte_lang::user.report') }}
 @endsection
 
 @section('contentheader_description')
@@ -11,6 +11,15 @@
 @section('main-content')
     {{--import css--}}
     <link rel="stylesheet" type="text/css" href="{{URL::asset('css/report/index.css')}}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <style>
+        .test {
+           
+            -webkit-animation-duration: 3s;
+/*            -webkit-animation-delay: 3s;
+            -webkit-animation-iteration-count: infinite;*/
+          }
+    </style>
     {{--import plugin--}}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
@@ -22,8 +31,6 @@
         var data = {!! $data !!};
         console.log(data);
     </script>
-    {{--Chart--}}
-    <script type="text/javascript" src="{{URL::asset('js/report/chart-draw.js')}}"></script>
     {{--BODY--}}
     <div class="row ">
         <div class="col-xs-12 col-md-12 col-sm-12">
@@ -55,13 +62,15 @@
         </div>
     </div>
     {{--END-BODY--}}
+    
+    {{--Chart--}}
+    <script type="text/javascript" src="{{URL::asset('js/report/chart-draw.js')}}"></script>
     {{--<script type="text/javascript" src="{{URL::asset('js/report/index.js')}}"></script>--}}
     <script>
         $('input[name="daterange"]').daterangepicker();
         $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
             window.location.replace("{{ Request::url() }}?type={{$temp->type}}&opt={{$temp->opt}}&from_date="+picker.startDate.format('YYYY-MM-DD')+'&to_date='+picker.endDate.format('YYYY-MM-DD'));
         });
-        $('.total-package').html(totalValue);
         var from_date = getFormatDate(data.date_custom.from_date);
         var to_date = getFormatDate(data.date_custom.to_date);
         $('input[name="daterange"]').data('daterangepicker').setStartDate(from_date);
@@ -70,5 +79,20 @@
             date = new Date(date);
             return (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
         }
+        var animationName = 'animated zoomIn';
+        var animationend = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        
+        $('.total-package').addClass(animationName).one(animationend, function() {
+            $(this).removeClass(animationName);
+         })
+          
+        $(function() {
+            setInterval(function() {
+              animationName = 'animated bounce'
+              $('.total-package').addClass(animationName).one(animationend, function() {
+                $(this).removeClass(animationName);
+              });
+            }, 1000);
+          });
     </script>
 @endsection

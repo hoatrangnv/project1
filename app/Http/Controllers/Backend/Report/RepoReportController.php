@@ -6,7 +6,7 @@
  * Time: 1:41 PM
  */
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\Backend\Report;
 
 use App\Helper\Helper;
 use App\UserPackage;
@@ -34,7 +34,10 @@ class RepoReportController
         $this->userPackage = $userPackage;
         $this->userData = $userData;
     }
-
+    
+    public function getDateNow(){
+        return $this->helper->get_date_now();
+    }
     /**
      * @param $from_date
      * @param $to_date
@@ -104,7 +107,7 @@ class RepoReportController
                 //Get data for mini chart
                 $data['total'] = $this->get_all_total_each_type($dateCustom,$opt);
                 //Add data for another element
-                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "New User";$data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
                 //Json to return
                 $data = $this->helper->json_encode_prettify($data);
                 break;
@@ -113,7 +116,7 @@ class RepoReportController
                 // add first_day_week and last_day_week
                 $data['data_analytic'] = $this->addFristLastWeekDay($data['data_analytic'],$dateCustom);
                 $data['total'] = $this->get_all_total_each_type($dateCustom,$opt);
-                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "New User";$data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
                 $data = $this->helper->json_encode_prettify($data);
                 break;
             case ($type == self::NEW_USER && $opt == self::MONTH_NOW) :
@@ -121,7 +124,7 @@ class RepoReportController
                 // add first_day_week and last_day_week
                 $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
                 $data['total'] = $this->get_all_total_each_type($dateCustom,$opt);
-                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "New User";$data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
                 $data = $this->helper->json_encode_prettify($data);
                 break;
             /*----TOTAL_PACKAGE----*/
@@ -154,6 +157,5 @@ class RepoReportController
 
         return $data;
     }
-
-
+    
 }
