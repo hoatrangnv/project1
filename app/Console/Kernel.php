@@ -132,14 +132,6 @@ class Kernel extends ConsoleKernel
         } catch (\Exception $ex) {
             Log::info($ex);
         }
-        // Cron job auto buy pack 01/11/2017
-        try {
-            $schedule->call(function () {
-                AutoBuyPack::AutoBuyPack();
-            })->daily();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
     }
 
     /**
