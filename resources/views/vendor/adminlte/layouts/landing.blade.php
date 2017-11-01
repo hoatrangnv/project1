@@ -94,7 +94,7 @@
                             <a class="nav-link" href="https://twitter.com/CLPcoins?lang=de"><i class="fa fa-twitter"></i></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://clpcoin.co/login"><b>Login</b></a>
+                            <a class="nav-link" href="/login"><b>Login</b></a>
                         </li>
                     </ul>
 
