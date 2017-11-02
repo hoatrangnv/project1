@@ -137,7 +137,7 @@ class PackageController extends Controller
 
             $amountCLPDecrease = $amount_increase / ExchangeRate::getCLPUSDRate();
             $userCoin = $userData->userCoin;
-            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
+            $userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 2) - $amountCLPDecrease;
             $userCoin->save();
 
             //get package name
