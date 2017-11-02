@@ -26,6 +26,7 @@ use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Account;
 use Coinbase\Wallet\Resource\Address;
 use App\Cronjob\Bonus;
+use App\Cronjob\AutoBuyPack;
 
 /**
  * Description of TestController
@@ -69,9 +70,8 @@ class TestController {
     }
 
     function test() {
-        set_time_limit(0);
 
-        //AutoBuyPack::calTotalBonus(2, 2, 3, 1);
+        AutoBuyPack::updateProfitDay();
 
         dd("successfully");
     }

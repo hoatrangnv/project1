@@ -271,4 +271,65 @@ class AutoBuyPack
                 self::calTotalBonus($masterId, $user->userId, $maxLevel, $deepLevel);
         }
     }
+
+    public static function updateProfitDay()
+    {
+    	set_time_limit(0);
+		try {
+			$lstUser = User::where('active', '=', 1)->get();
+			foreach($lstUser as $user){
+				//Get cron status
+				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
+
+				if(isset($cronStatus) && $cronStatus->status == 1) continue;
+
+				$userData = $user->userData;
+				//Get all pack in user_packages
+				$package = UserPackage::where('userId', $user->id)
+							->where('withdraw', '<', 1)
+							->groupBy(['userId'])
+							->selectRaw('sum(amount_increase) as totalValue')
+							->get()
+							->first();
+				if($package)
+				{
+					$bonus = isset($userData->package->bonus) ? $userData->package->bonus : 0;
+
+					if($bonus == 0.001) $bonus = 0.0025;
+					if($bonus == 0.002) $bonus = 0.002;
+					if($bonus == 0.003) $bonus = 0.0015;
+					if($bonus == 0.004) $bonus = 0.001;
+					if($bonus == 0.005) $bonus = 0.0005;
+					if($bonus == 0.006) continue;
+
+					$usdAmount = $package->totalValue * $bonus;
+
+					$userCoin = $user->userCoin;
+					$userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+					$userCoin->save();
+
+					$fieldUsd = [
+						'walletType' => Wallet::USD_WALLET,//usd
+						'type' => Wallet::INTEREST_TYPE,//bonus day
+						'inOut' => Wallet::IN,
+						'userId' => $user->id,
+						'amount' => $usdAmount
+					];
+
+					Wallet::create($fieldUsd);
+
+					//Update cron status from 0 => 1
+					$cronStatus->status = 1;
+					$cronStatus->save();
+				}
+			}
+
+			//Update status from 1 => 0 after run all user
+			DB::table('cron_profit_day_logs')->update(['status' => 0]);
+
+		} catch(\Exception $e) {
+			\Log::error('Running bonusDayCron has error: ' . date('Y-m-d') .$e->getMessage());
+			//throw new \Exception("Running bonusDayCron has error");
+		}
+    }
 }
