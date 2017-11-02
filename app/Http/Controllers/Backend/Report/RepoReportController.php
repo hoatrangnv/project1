@@ -13,6 +13,7 @@ use App\UserPackage;
 use App\User;
 use App\Package;
 use App\UserData;
+use App\Wallet;
 use DB;
 
 
@@ -27,12 +28,13 @@ class RepoReportController
     const NEW_USER = 1;
     const TOTAL_PACKAGE = 2;
 
-    public function __construct(Helper $helper,User $user,UserPackage $userPackage,UserData $userData)
+    public function __construct(Helper $helper,User $user,UserPackage $userPackage,UserData $userData,Wallet $wallet)
     {
         $this->helper = $helper;
         $this->user = $user;
         $this->userPackage = $userPackage;
         $this->userData = $userData;
+        $this->wallet = $wallet;
     }
     
     public function getDateNow(){
@@ -90,6 +92,14 @@ class RepoReportController
             }
         }
         return $data;
+    }
+
+    public function action_commission($type, $opt, $dateCustom = array()){
+        switch ($opt){
+            case self::DAY_NOW :
+                $data['data_analytic'] = $this->wallet->getDataReport($dateCustom, $opt);
+//                dd($data);
+        }
     }
     /* Action get Data for report Controller
      * Type : new user, total package

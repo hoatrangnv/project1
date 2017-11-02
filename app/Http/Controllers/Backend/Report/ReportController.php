@@ -33,4 +33,21 @@ class ReportController extends Controller{
         return view('adminlte::backend.report.member',['data'=>$dada]);
     }
 
+    public function getDataCommissionReport(Request $request){
+        if ( $request->type && $request->type && $request->from_date && $request->to_date ) {
+            $type = $request->type;
+            $opt = $request->opt;
+            $dateCustom['from_date'] = $request->from_date;
+            $dateCustom['to_date'] = $request->to_date;
+        } else {
+            $type = 2;
+            $opt = 1;
+            $dateCustom = ['from_date' => $this->repo->getDateNow(), 'to_date' => $this->repo->getDateNow()];
+        }
+
+        $dada = $this->repo->action_commission($type,$opt,$dateCustom);
+//        return view('adminlte::backend.report.commission.index',['data'=>$dada]);
+        return view('adminlte::backend.report.commission.index');
+    }
+
 }
