@@ -14,8 +14,8 @@ function drawChart() {
     var options = {
         isStacked: true,
         title : 'Monthly Coffee Production by Country',
-        vAxis: {title: 'Cups',maxValue:25},
-        hAxis: {title: 'Month'},
+        vAxis: {title: 'Total Money',maxValue:25},
+        hAxis: {title: 'Time'},
         legend: { position: 'top', maxLines: 6 },
         seriesType: 'bars',
         series: {5: {type: 'line',color:"#000000"}},
