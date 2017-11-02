@@ -127,7 +127,7 @@ Route::post('clpnotification','GetNotificationController@clpNotification');
 //Route::get('test-matching', 'TestController@testMatching');
 //Route::get('test-interest',"TestController@testInterest");
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
-Route::get('test',"TestController@test");
+//Route::get('test',"TestController@test");
 
 
 /***------- END TEST -------***/
