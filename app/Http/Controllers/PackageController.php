@@ -77,7 +77,7 @@ class PackageController extends Controller
                         }
 
                         $clpCoinAmount = $usdCoinAmount / ExchangeRate::getCLPUSDRate();
-                        if($user->userCoin->clpCoinAmount >= $clpCoinAmount){
+                        if(round($user->userCoin->clpCoinAmount, 2) >= $clpCoinAmount){
                             return true;
                         }
                     }
