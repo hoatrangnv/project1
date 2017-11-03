@@ -265,6 +265,7 @@ class WithDrawController extends Controller
 					$withdrawConfirm->save();
 
 					Log::error('withdraw BTC has error: ' . $e->getMessage());
+					Log::info($e->getTraceAsString());
 				}
 			} 
 			else 
