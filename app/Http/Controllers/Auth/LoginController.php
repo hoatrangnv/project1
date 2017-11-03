@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Google2FA;
+use Illuminate\Support\Facades\Auth;
 use Session;
+
 use App\User;
 
 class LoginController extends Controller{
@@ -54,7 +57,11 @@ class LoginController extends Controller{
         return config('auth.providers.users.field', 'email');
     }
 
+
     protected function attemptLogin(Request $request){
+        //check if Admin then redirect to anotherSite
+        $this->redirectWithAdmin($request);
+
         if($this->username() === 'email'){
             return $this->attemptLoginAtAuthenticatesUsers($request);
         }
@@ -95,6 +102,13 @@ class LoginController extends Controller{
                 $this->guard()->logout();
                 return redirect('/authenticator');
             }
+        }
+    }
+
+
+    public function redirectWithAdmin($request){
+        if (count(User::userHasRole(User::where('email', $request->email)->pluck("id")[0])) > 0 ){
+            $this->redirectTo = '/admin/home';
         }
     }
 

@@ -42,16 +42,28 @@
                         <i class="glyphicon glyphicon-user"></i> Users
                     </a>
                 </li>
-                <li class="{{ Request::is('users/root') ? 'active' : '' }}">
-                    <a href="{{ route('users.root') }}">
-                        <i class="glyphicon glyphicon-user"></i> List Root
+                <li class="{{ Request::is('report*') ? 'active' : '' }}">
+                    <a href="#">
+                        <i class="glyphicon glyphicon-user"></i> Report
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::segment(2) === '' ? 'active' : null }}"><a href="{{ url('report') }}">{{ trans('adminlte_lang::default.member') }}</a></li>
+                        <li class="{{ Request::is('users/root') ? 'active' : '' }}">
+                            <a href="{{ route('users.root') }}">
+                                List Root
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('users/photo_approve') ? 'active' : '' }}">
+                            <a href="{{ route('users.photo_approve') }}">
+                                List Approve
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="{{ Request::is('users/photo_approve') ? 'active' : '' }}">
-                    <a href="{{ route('users.photo_approve') }}">
-                        <i class="glyphicon glyphicon-user"></i> List Approve
-                    </a>
-                </li>
+
             @endcan
             @can('view_roles')
                 <li class="{{ Request::is('roles*') ? 'active' : '' }}">

@@ -15,4 +15,8 @@ class Package extends Model
         parent::__construct($attributes);
         $this->setTable('packages');
     }
+    public function users() {
+        return $this->hasMany(UserData::class,  'packageId','id');
+    }
+
 }

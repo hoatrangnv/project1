@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\Backend\Report\RepoReportController as Report;
+
 
 class Wallet extends Model
 {
@@ -56,18 +58,63 @@ class Wallet extends Model
     const BUY_PACK_TYPE = 15;
     // withdraw Package
     const WITHDRAW_PACK_TYPE = 16;
-    // matching bonus
+
+    //inOut
     const MATCHING_TYPE = 17;
-    //inOut 
+
+
     const IN = "in" ;
     
     const OUT = "out";
     
     //Hạn mức tối thiều 
     const MIN_TRANFER_USD_CLP = 10;
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
         $this->setTable('wallets');
     }
+
+
+    public static function getDataReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('type, DATE(wallets.created_at) as date, SUM(wallets.amount) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::USD_WALLET)
+                    ->whereIn('type',[self::FAST_START_TYPE,self::INTEREST_TYPE,self::BINARY_TYPE,self::LTOYALTY_TYPE,self::MATCHING_TYPE])
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('type')
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(user_packages.created_at) AS date, 
+            CONCAT(WEEKOFYEAR(user_packages.created_at),YEAR(user_packages.created_at)) AS week_year,
+            SUM(user_packages.amount_increase) AS totalPrice')
+                    ->whereDate('user_packages.created_at','>=', $date['from_date'])
+                    ->whereDate('user_packages.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(user_packages.created_at) AS date, 
+            CONCAT(MONTH(user_packages.created_at),YEAR(user_packages.created_at)) AS week_year,
+            SUM(user_packages.amount_increase) AS totalPrice')
+                    ->whereDate('user_packages.created_at','>=', $date['from_date'])
+                    ->whereDate('user_packages.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
+
+    }
+
 }
