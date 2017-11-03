@@ -10,6 +10,7 @@ use Coinbase\Wallet\Resource\Transaction;
 use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
+use Log;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -50,40 +51,45 @@ class UpdateBtcCoin {
                         if(isset($userCoin->btcCoinAmount))
                         {
                             //Get transaction of this deposit
-                            $transactionDetail = $client->getAccountTransaction($account, $transaction_id);
-                            $rawData = $transactionDetail->getRawData();
-                            $status = isset($rawData['network']['status']) ? $rawData['network']['status'] : '';
+                            try {
+                                $transactionDetail = $client->getAccountTransaction($account, $transaction_id);
+                                $rawData = $transactionDetail->getRawData();
+                                $status = isset($rawData['network']['status']) ? $rawData['network']['status'] : '';
 
-                            $isExist = Notification::where('transaction_id', $transaction_id)->count();
-                            if( ($status == 'confirmed' || $transactionDetail->getStatus() == "completed") 
-                                && $notify->pending_status == 0 
-                                && $isExist == 0 )
-                            {
-                                $fieldBTC = [
-                                    'walletType' => Wallet::BTC_WALLET,
-                                    'type' => Wallet::DEPOSIT_BTC_TYPE,
-                                    'inOut' => Wallet::IN,
-                                    'userId' => $userCoin->userId,
-                                    'amount' => $temp->additional_data->amount->amount,
-                                    'note' => 'Pending' 
-                                ];
+                                $isExist = Notification::where('transaction_id', $transaction_id)->count();
+                                if( ($status == 'confirmed' || $transactionDetail->getStatus() == "completed") 
+                                    && $notify->pending_status == 0 
+                                    && $isExist == 0 )
+                                {
+                                    $fieldBTC = [
+                                        'walletType' => Wallet::BTC_WALLET,
+                                        'type' => Wallet::DEPOSIT_BTC_TYPE,
+                                        'inOut' => Wallet::IN,
+                                        'userId' => $userCoin->userId,
+                                        'amount' => $temp->additional_data->amount->amount,
+                                        'note' => 'Pending' 
+                                    ];
 
-                                $insertData = Wallet::create($fieldBTC);
+                                    $insertData = Wallet::create($fieldBTC);
 
-                                Notification::where("id", $notify->id)->update(['pending_status' => 1, 'transaction_id' => $transaction_id, 'wallet_id' => $insertData->id]);
-                            }
+                                    Notification::where("id", $notify->id)->update(['pending_status' => 1, 'transaction_id' => $transaction_id, 'wallet_id' => $insertData->id]);
+                                }
 
-                            if($notify->pending_status == 1 && $transactionDetail->getStatus() == "completed") 
-                            {
-                                $amountAddress = $userCoin->btcCoinAmount + $temp->additional_data->amount->amount;
-                                $userCoin->btcCoinAmount = $amountAddress;
-                                $result = $userCoin->save();
+                                if($notify->pending_status == 1 && $transactionDetail->getStatus() == "completed") 
+                                {
+                                    $amountAddress = $userCoin->btcCoinAmount + $temp->additional_data->amount->amount;
+                                    $userCoin->btcCoinAmount = $amountAddress;
+                                    $result = $userCoin->save();
 
-                                //Update wallet pending -> completed
-                                Wallet::where("id", $notify->wallet_id)->update(['note' => 'Completed']);
+                                    //Update wallet pending -> completed
+                                    Wallet::where("id", $notify->wallet_id)->update(['note' => 'Completed']);
 
-                                Notification::where("id",$notify->id)
-                                    ->update(['completed_status' => 1]);
+                                    Notification::where("id",$notify->id)
+                                        ->update(['completed_status' => 1]);
+                                }
+                            } catch (\Exception $e) {
+                                Log::error('Cronjob update btc amount has error: ' . $e->getMessage());
+                                Log::info($e->getTraceAsString());
                             }
                         }
                     }
