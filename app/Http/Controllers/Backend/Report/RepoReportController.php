@@ -15,6 +15,7 @@ use App\Package;
 use App\UserData;
 use App\Wallet;
 use DB;
+use Illuminate\Support\Facades\URL;
 
 
 class RepoReportController
@@ -36,7 +37,7 @@ class RepoReportController
         $this->userData = $userData;
         $this->wallet = $wallet;
     }
-    
+
     public function getDateNow(){
         return $this->helper->get_date_now();
     }
@@ -94,12 +95,80 @@ class RepoReportController
         return $data;
     }
 
-    public function action_commission($type, $opt, $dateCustom = array()){
-        switch ($opt){
+    /*
+     * Xử lý điều hướng lấy dữ liệu theo option
+     * */
+    public function action_commission($opt, $dateCustom = array()){
+        switch ($opt) {
             case self::DAY_NOW :
-                $data['data_analytic'] = $this->wallet->getDataReport($dateCustom, $opt);
-//                dd($data);
+                $data = $this->getDataForCommission($opt,$dateCustom);
+                break;
+            case self::WEEK_NOW :
+                $data = $this->getDataForCommission($opt,$dateCustom);
+                break;
+            case self::MONTH_NOW :
+                $data = $this->getDataForCommission($opt,$dateCustom);
+                break;
+            default:
+                break;
         }
+        return $this->helper->json_encode_prettify($data);
+    }
+
+    public function getDataForCommission($opt,$dateCustom){
+        $data = array();
+        $data['data_analytic'] = $this->wallet->getDataReport($dateCustom, $opt);
+        $data['action_type'] = ['Fast Start', 'Interest Type',
+            'Binary Type', 'Ltoyalty Type', 'Matching Type'];
+        $data['type'] = [Wallet::FAST_START_TYPE, Wallet::INTEREST_TYPE, Wallet::BINARY_TYPE,
+            Wallet::LTOYALTY_TYPE, Wallet::MATCHING_TYPE];
+        $type_10_6 = [Wallet::FAST_START_TYPE, Wallet::BINARY_TYPE,
+            Wallet::LTOYALTY_TYPE, Wallet::MATCHING_TYPE];
+        $temp = array();
+
+        foreach ($data['data_analytic'] as $value) {
+            if (in_array($value['type'], $type_10_6)) {
+                $temp[$value['date']][$value['type']] = $value['totalPrice'] * 10 / 6;
+            } else {
+                $temp[$value['date']][$value['type']] = $value['totalPrice'];
+            }
+        }
+
+        foreach ($temp as $key => $value) {
+            foreach ($data['type'] as $val) {
+                if (!isset($value[$val])) {
+                    $temp[$key][$val] = $value[$val] = 0;
+                }
+            }
+            //sort type wallet
+            ksort($temp[$key]);
+        }
+
+        $data['data_analytic'] = $temp;
+        $data['link'] = $this->renderLink($dateCustom);
+        $data['opt'] = (int)$opt;
+        return $data;
+    }
+
+    /**
+     * Get link day , week , month ...
+     */
+    private function renderLink($dateCustom){
+        $from_date = $dateCustom['from_date'];
+        $to_date = $dateCustom['to_date'];
+
+        $data['day'] = URL('report/commission');
+        $data['day'].= "?from_date=$from_date&to_date=$to_date";
+        $data['day'].= "&opt=".self::DAY_NOW;
+
+        $data['week'] = URL('report/commission');
+        $data['week'].= "?from_date=$from_date&to_date=$to_date";
+        $data['week'].= "&opt=".self::WEEK_NOW;
+
+        $data['month'] = URL('report/commission');
+        $data['month'].= "?from_date=$from_date&to_date=$to_date";
+        $data['month'].= "&opt=".self::MONTH_NOW;
+        return $data;
     }
     /* Action get Data for report Controller
      * Type : new user, total package
