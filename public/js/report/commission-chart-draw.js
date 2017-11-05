@@ -1,15 +1,8 @@
-console.log(DATA);
 var temp = [];
 dataType = DATA.action_type;
 dataType.unshift('Action Type');
 dataType.push('Total', {type: 'number', role: 'annotation'},{role: 'style'});
-
 temp.push(dataType);
-console.log(temp);
-console.log(DATA.data_analytic);
-// data.data_analytic.forEach(function(element,index) {
-//     console.log(index);
-// });
 Object.keys(DATA.data_analytic).forEach(function(key) {
     var tmp = []
     tmp.push(key);
@@ -24,7 +17,7 @@ Object.keys(DATA.data_analytic).forEach(function(key) {
     tmp.push('#000000');
     temp.push(tmp);
 });
-console.log(temp);
+
 google.charts.load("visualization", "1", {packages:["corechart"]});
 google.charts.setOnLoadCallback(drawChart);
 function drawChart() {
@@ -39,6 +32,7 @@ function drawChart() {
         legend: { position: 'top', maxLines: 6 },
         seriesType: 'bars',
         series: {5: {type: 'line',color:"#000000"}},
+        pointSize: 2,
     };
 
     let chart = new google.visualization.ComboChart(document.getElementById('chart_div'));

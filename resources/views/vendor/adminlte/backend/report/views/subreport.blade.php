@@ -1,6 +1,6 @@
 <div class="row">
     <a href="{{ Request::url() }}?type={{\App\Http\Controllers\Backend\Report\RepoReportController::NEW_USER}}&opt={{$temp->opt}}&from_date={{$temp->date_custom->from_date}}&to_date={{$temp->date_custom->to_date}}">
-        <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="col-md-4 col-sm-6 col-xs-12 new-user">
             <div class="info-box">
                 <span class="info-box-icon bg-yellow-gradient"><i class="ion ion-ios-people-outline"></i></span>
 

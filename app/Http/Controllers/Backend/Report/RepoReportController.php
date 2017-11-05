@@ -147,6 +147,7 @@ class RepoReportController
         $data['data_analytic'] = $temp;
         $data['link'] = $this->renderLink($dateCustom);
         $data['opt'] = (int)$opt;
+        $data['date_custom'] = $dateCustom;
         return $data;
     }
 
