@@ -28,6 +28,11 @@ class RepoReportController
     //TYPE
     const NEW_USER = 1;
     const TOTAL_PACKAGE = 2;
+    const BTC_DEPOSIT = 3;
+    const BTC_WITHDRAW = 4;
+    const CLP_DEPOSIT = 5;
+    const CLP_WITHDRAW = 6;
+    const TOTAL_SELL_CLP = 7;
 
     public function __construct(Helper $helper,User $user,UserPackage $userPackage,UserData $userData,Wallet $wallet)
     {
@@ -46,8 +51,8 @@ class RepoReportController
      * @param $to_date
      * @return array
      */
-    private function get_data_package_for_pie_chart($date, $opt){
-        $data = $this->userData->get_data_for_pie_chart($date , $opt);
+    private function get_data_package_for_pie_chart($date){
+        $data = $this->userData->get_data_for_pie_chart($date);
         return $data;
     }
 
@@ -56,10 +61,15 @@ class RepoReportController
      * Date Custom : from date, to date
      * Option : day , week, month
      */
-    private function get_all_total_each_type($date, $opt){
-        $total['totalTotalPackage'] = $this->userPackage->countTotalValue($date, $opt);
-        $total['totalNewUser'] = $this->user->getNewUser($date, $opt);
-        $total['totalPackageForPieChart'] = $this->get_data_package_for_pie_chart($date, $opt);
+    private function get_all_total_each_type($date){
+        $total['totalTotalPackage'] = $this->userPackage->countTotalValue($date);
+        $total['totalNewUser'] = $this->user->getNewUser($date);
+        $total['totalPackageForPieChart'] = $this->get_data_package_for_pie_chart($date);
+        $total['totalBtcDeposit'] = $this->wallet->getTotalBtcDeposit($date);
+        $total['totalBtcWithDraw'] = $this->wallet->getTotalBtcWithDraw($date);
+        $total['totalClpDeposit'] = $this->wallet->getTotalClpDeposit($date);
+        $total['totalClpWithDraw'] = $this->wallet->getTotalClpWithDraw($date);
+        $total['totalTotalSellClp'] = $this->wallet->getTotalSellCLPReport($date);
         return $total;
     }
 
@@ -226,6 +236,146 @@ class RepoReportController
                 break;
             case  ($type == self::TOTAL_PACKAGE && $opt == self::MONTH_NOW) :
                 $data['data_analytic'] =  $this->userPackage->getDataReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            /*----------------------------------BTC DEPOSIT------------------------------------------*/
+            case ($type == self::BTC_DEPOSIT && $opt == self::DAY_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForBtcDepositReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "BTC DEPOSIT";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::BTC_DEPOSIT && $opt == self::WEEK_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForBtcDepositReport($dateCustom, $opt);
+                // add first_day_week and last_day_week
+                $data['data_analytic'] = $this->addFristLastWeekDay($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::BTC_DEPOSIT && $opt == self::MONTH_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForBtcDepositReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            /*----------------------------------BTC WITHDRAW------------------------------------------*/
+            case ($type == self::BTC_WITHDRAW && $opt == self::DAY_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForBtcWithDrawReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "BTC DEPOSIT";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::BTC_WITHDRAW && $opt == self::WEEK_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForBtcWithDrawReport($dateCustom, $opt);
+                // add first_day_week and last_day_week
+                $data['data_analytic'] = $this->addFristLastWeekDay($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::BTC_WITHDRAW && $opt == self::MONTH_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForBtcWithDrawReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            /*----------------------------------CLP DEPOSIT------------------------------------------*/
+            case ($type == self::CLP_DEPOSIT && $opt == self::DAY_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForClpDepositReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "BTC DEPOSIT";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::CLP_DEPOSIT && $opt == self::WEEK_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForClpDepositReport($dateCustom, $opt);
+                // add first_day_week and last_day_week
+                $data['data_analytic'] = $this->addFristLastWeekDay($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::CLP_DEPOSIT && $opt == self::MONTH_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForClpDepositReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            /*----------------------------------CLP WITHDRAW------------------------------------------*/
+            case ($type == self::CLP_WITHDRAW && $opt == self::DAY_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForClpWithDrawReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "BTC DEPOSIT";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::CLP_WITHDRAW && $opt == self::WEEK_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForClpWithDrawReport($dateCustom, $opt);
+                // add first_day_week and last_day_week
+                $data['data_analytic'] = $this->addFristLastWeekDay($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::CLP_WITHDRAW && $opt == self::MONTH_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForClpWithDrawReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            /*----------------------------------TOTAL SELL CLP------------------------------------------*/
+            case ($type == self::TOTAL_SELL_CLP && $opt == self::DAY_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForTotalSellCLPReport($dateCustom, $opt);
+                // add first_day_month and last-day-month
+                $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "BTC DEPOSIT";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::TOTAL_SELL_CLP && $opt == self::WEEK_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForTotalSellCLPReport($dateCustom, $opt);
+                // add first_day_week and last_day_week
+                $data['data_analytic'] = $this->addFristLastWeekDay($data['data_analytic'],$dateCustom);
+                $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);
+                $data['type'] = $type;$data['opt'] = $opt;$data['date_custom']=$dateCustom;
+                $data['title'] = "Total Package";
+                $data = $this->helper->json_encode_prettify($data);
+                break;
+            case ($type == self::TOTAL_SELL_CLP && $opt == self::MONTH_NOW) :
+                $data['data_analytic'] =  $this->wallet->getDataForTotalSellCLPReport($dateCustom, $opt);
                 // add first_day_month and last-day-month
                 $data['data_analytic'] = $this->addFristLastMonth($data['data_analytic'],$dateCustom);
                 $data['total'] = $this->get_all_total_each_type($dateCustom, $opt);

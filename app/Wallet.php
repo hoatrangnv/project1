@@ -73,7 +73,9 @@ class Wallet extends Model
         $this->setTable('wallets');
     }
 
-
+    /*
+     * Get data for report Commission
+     * */
     public static function getDataReport($date,$opt){
         switch ($opt){
             case Report::DAY_NOW :
@@ -119,7 +121,270 @@ class Wallet extends Model
                     ->get()
                     ->toArray();
         }
-
+    }
+    /*Get DATA for BTC DEPOSIT Report*/
+    public static function getDataForBtcDepositReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('DATE(wallets.created_at) as date, SUM(wallets.amount) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::BTC_WALLET)
+                    ->where('type',self::DEPOSIT_BTC_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::BTC_WALLET)
+                    ->where('type',self::DEPOSIT_BTC_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(MONTH(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::BTC_WALLET)
+                    ->where('type',self::DEPOSIT_BTC_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
     }
 
+    public static function getTotalBtcDeposit($date){
+        return self::where('inOut','in')
+            ->where('walletType',self::BTC_WALLET)
+            ->where('type',self::DEPOSIT_BTC_TYPE)
+            ->whereDate('wallets.created_at','>=', $date['from_date'])
+            ->whereDate('wallets.created_at','<=', $date['to_date'])
+            ->sum('wallets.amount');
+    }
+    /*Get DATA for BTC WithDraw Report*/
+    public static function getDataForBtcWithDrawReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('DATE(wallets.created_at) as date, SUM(wallets.amount) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::BTC_WALLET)
+                    ->where('type',self::WITH_DRAW_BTC_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::BTC_WALLET)
+                    ->where('type',self::WITH_DRAW_BTC_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(MONTH(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::BTC_WALLET)
+                    ->where('type',self::WITH_DRAW_BTC_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
+    }
+
+    public static function getTotalBtcWithDraw($date){
+        return self::where('inOut','in')
+            ->where('walletType',self::BTC_WALLET)
+            ->where('type',self::WITH_DRAW_BTC_TYPE)
+            ->whereDate('wallets.created_at','>=', $date['from_date'])
+            ->whereDate('wallets.created_at','<=', $date['to_date'])
+            ->sum('wallets.amount');
+    }
+    /*Get DATA for CLP Deposit Report*/
+    public static function getDataForClpDepositReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('DATE(wallets.created_at) as date, SUM(wallets.amount) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::DEPOSIT_CLP_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::DEPOSIT_CLP_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(MONTH(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::DEPOSIT_CLP_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
+    }
+
+    public static function getTotalClpDeposit($date){
+        return self::where('inOut','in')
+            ->where('walletType',self::CLP_WALLET)
+            ->where('type',self::DEPOSIT_CLP_TYPE)
+            ->whereDate('wallets.created_at','>=', $date['from_date'])
+            ->whereDate('wallets.created_at','<=', $date['to_date'])
+            ->sum('wallets.amount') ;
+    }
+    /*Get DATA for CLP WithDraw Report*/
+    public static function getDataForClpWithDrawReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('DATE(wallets.created_at) as date, SUM(wallets.amount) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::WITH_DRAW_CLP_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::WITH_DRAW_CLP_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(MONTH(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::WITH_DRAW_CLP_TYPE)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
+    }
+
+    public static function getTotalClpWithDraw($date){
+        return self::where('inOut','in')
+            ->where('walletType',self::CLP_WALLET)
+            ->where('type',self::WITH_DRAW_CLP_TYPE)
+            ->whereDate('wallets.created_at','>=', $date['from_date'])
+            ->whereDate('wallets.created_at','<=', $date['to_date'])
+            ->sum('wallets.amount');
+    }
+    /*Get Total Sell CLp Report*/
+    public static function getDataForTotalSellCLPReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('DATE(wallets.created_at) as date, SUM(wallets.amount) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::MIN_TRANFER_USD_CLP)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::MIN_TRANFER_USD_CLP)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(wallets.created_at) AS date, 
+                CONCAT(MONTH(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
+                SUM(wallets.amount) AS totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->where('type',self::MIN_TRANFER_USD_CLP)
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('week_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
+    }
+
+    public static function getTotalSellCLPReport($date){
+        return self::where('inOut','in')
+            ->where('walletType',self::CLP_WALLET)
+            ->where('type',self::MIN_TRANFER_USD_CLP)
+            ->whereDate('wallets.created_at','>=', $date['from_date'])
+            ->whereDate('wallets.created_at','<=', $date['to_date'])
+            ->sum('wallets.amount');
+    }
 }
