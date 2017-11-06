@@ -26,9 +26,18 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ Request::segment(2) === '' ? 'active' : null }}"><a href="{{ url('report') }}">{{ trans('adminlte_lang::default.member') }}</a></li>
-                        <li class="{{ Request::segment(2) === 'commission' ? 'active' : null }}"><a href="{{ url('report/commission') }}">Commission</a></li>
-
+                        <li class="{{ Request::segment(2) === '' ? 'active' : null }}">
+                            <a href="{{ url('report') }}">{{ trans('adminlte_lang::default.member') }}
+                            </a>
+                        </li>
+                        <li class="{{ Request::segment(2) === 'commission' ? 'active' : null }}">
+                            <a href="{{ url('report/commission') }}">Commission
+                            </a>
+                        </li>
+                        <li class="{{ Request::segment(2) === 'commission' ? 'active' : null }}">
+                            <a href="{{ url('report/commission') }}">Top 50
+                            </a>
+                        </li>
                         <li class="{{ Request::is('users/root') ? 'active' : '' }}">
                             <a href="{{ route('users.root') }}">
                                 List Root
@@ -41,7 +50,6 @@
                         </li>
                     </ul>
                 </li>
-
             @endcan
             @can('view_roles')
                 <li class="{{ Request::is('roles*') ? 'active' : '' }}">
