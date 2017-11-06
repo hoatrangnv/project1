@@ -63,8 +63,4 @@
 
 <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
-<<<<<<< HEAD
 <div class='control-sidebar-bg'></div>
-=======
-<div class='control-sidebar-bg'></div>
->>>>>>> 28b49a4c236816ef9ed91d2075add5ac5653a2c0
