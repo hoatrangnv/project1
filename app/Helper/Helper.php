@@ -18,26 +18,45 @@ class Helper {
         $this->carbon = $carbon;
     }
 
+    public function get_frist_day_of_month($date){
+        $date = $this->carbon->createFromFormat('Y-m-d', $date); // 2015-07-02
+        return $date->startOfMonth()->toDateString();
+    }
+
+    public function get_end_day_of_month($date){
+        $date = $this->carbon->createFromFormat('Y-m-d', $date); // 2015-07-02
+        return $date->endOfMonth()->toDateString();
+    }
+
+    public function get_frist_day_of_week($date){
+        $date = $this->carbon->createFromFormat('Y-m-d', $date); // 2015-07-02
+        return $date->startOfWeek()->toDateString();
+    }
+
+    public function get_end_day_of_week($date){
+        $date = $this->carbon->createFromFormat('Y-m-d', $date); // 2015-07-02
+        return $date->endOfWeek()->toDateString();
+    }
     // To get the first week of the day we can do this
     // format Y-m-d <=> MONDAY
-    public function get_frist_day_of_week(){
+    public function get_frist_day_of_week_now(){
         return $this->carbon->now()->startOfWeek()->toDateString();
     }
 
     // To get the last week of the day we can do this format Y-m-d  <=> SUNDAY
-    public function get_end_day_of_week(){
+    public function get_end_day_of_week_now(){
         return $this->carbon->now()->endOfWeek()->toDateString();
     }
 
     // To get the first month of the day we can do this
-    public function get_frist_day_of_month(){
+    public function get_frist_day_of_month_now(){
         return $this->carbon->now()->startOfMonth()->toDateString();
     }
 
     /**
      * To get the end month of the day we can do this
      */
-    public function get_last_day_of_month(){
+    public function get_last_day_of_month_now(){
         return $this->carbon->now()->endOfMonth()->toDateString();
     }
 
