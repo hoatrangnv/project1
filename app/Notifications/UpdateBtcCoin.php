@@ -56,7 +56,7 @@ class UpdateBtcCoin {
                                 $rawData = $transactionDetail->getRawData();
                                 $status = isset($rawData['network']['status']) ? $rawData['network']['status'] : '';
 
-                                $dataId = $temp->data->id;
+                                $dataId = $temp->id;
                                 $isExist = Notification::where('transaction_id', $dataId)->count();
                                 if( ($status == 'confirmed' || $transactionDetail->getStatus() == "completed") 
                                     && $notify->pending_status == 0 
