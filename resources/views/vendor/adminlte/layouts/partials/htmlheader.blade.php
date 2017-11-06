@@ -2,6 +2,9 @@
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url('/favicon.ico') }}" />
     <title> CLP - @yield('htmlheader_title', 'Lending Project') </title>
+    <meta property="og:image" content="{{ url('/img/logo.png') }}" />
+    <meta content="Crypto Lending is a decentralized peer-to-peer lending platform that applies Blockchain technology and CLP coin as material.."
+        property="og:description" />
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- CSRF Token -->
     <meta name="google-site-verification" content="YoKxcLBO-buCnESjlFmmFeZqaNULyT4Z88cVN4OLqN0" />

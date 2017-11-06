@@ -17,29 +17,16 @@
                 <div class="alert alert-danger">
                     {{ session('error') }}
                 </div>
+                {{ session()->forget('error') }}
+            @endif
+            @if (session('successMessage'))
+                <div class="alert alert-success">
+                    {{ session('successMessage') }}
+                </div>
+                {{ session()->forget('successMessage') }}
             @endif
             <div class="login-box-body">
-                 @if ( session()->has("successMessage") )
-                    <div class="callout callout-success">
-                        <p>{!! session("successMessage") !!}</p>
-                    </div>
-                    {{ session()->forget('successMessage') }}
-                    <div class="form-horizontal" role="form">
-                        {{ csrf_field() }}
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                            {{ Form::number('withdrawAmount', $withdrawConfirm->withdrawAmount, array('class' => 'form-control input-sm', 'disabled' => "disabled")) }}
-                        </div>
-                        <br>
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
-                            {{ Form::text('walletAddress', $withdrawConfirm->walletAddress, array('class' => 'form-control input-sm', 'disabled' => "disabled")) }}
-                        </div>
-                        
-                    </div>
-                @else
-                    <p class="login-box-msg">Withdrawal {{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CLP') }} Confirmation</p>
-                @endif
+                <p class="login-box-msg">Withdrawal {{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CLP') }} Confirmation</p>
                 @if(!$isConfirm)
                     <form class="form-horizontal" role="form" method="POST" id="withdraw_confirm">
                         {{ csrf_field() }}
@@ -69,12 +56,18 @@
                         </div>
                     </form>
                 @else
-                    <div class="row">
-                        @if (session('status'))
-                            <div class="alert alert-success">
-                                {{ session('status') }}
-                            </div>
-                        @endif
+                    <div class="form-horizontal" role="form">
+                        {{ csrf_field() }}
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-btc"></i></span>
+                            {{ Form::number('withdrawAmount', $withdrawConfirm->withdrawAmount, array('class' => 'form-control input-sm', 'disabled' => "disabled")) }}
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
+                            {{ Form::text('walletAddress', $withdrawConfirm->walletAddress, array('class' => 'form-control input-sm', 'disabled' => "disabled")) }}
+                        </div>
+                        
                     </div>
                 @endif
             </div>

@@ -38,6 +38,7 @@ class Bonus
 			foreach($lstUser as $user){
 				//Get cron status
 				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
+
 				if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 				$userData = $user->userData;
@@ -117,6 +118,12 @@ class Bonus
 		{
 			//Get cron status
 			$cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
+
+			if(is_null($cronStatus)) {
+				Log::info("Binary week cron job have user " . $binary->userId . " have no binary logs row");
+				continue;
+			} 
+
 			if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 			$leftOver = $binary->leftOpen + $binary->leftNew;
@@ -232,23 +239,28 @@ class Bonus
 	}
 
 	/**
-	* This cronjob function will run every day caculate and return bonus to user's wallet 
+	* This cronjob function will run every day caculate and return matching bonus to user's wallet 
 	*/
 	public static function bonusMatchingDayCron()
 	{
 		set_time_limit(0);
 		try{
-			$lstUser = UserData::where('status', '=', 1)->get();
+			$lstUser = UserData::where('status', '=', 1)->where('isBinary', 1)->get();
 
 			foreach($lstUser as $user)
 			{
 				//Get cron status
 				$cronStatus = CronMatchingLogs::where('userId', $user->userId)->first();
+
+				if(is_null($cronStatus)) {
+					Log::info("Matching cron job have user " . $user->userId . " have no matching logs row");
+					continue;
+				} 
+
 				if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 				if (User::checkBinaryCount($user->userId, 1))
 				{
-					//dd($user);
 					if ($user->packageId == 1) {
 						$maxLevel = 1;
 					} elseif ($user->packageId == 2) {
@@ -265,7 +277,6 @@ class Bonus
 					
 					$totalBonus = 0;
 					self::calTotalBonus($totalBonus, $user->userId, $maxLevel, 1);
-					//dd($totalBonus);
 
 					if($totalBonus > 0)
 					{
@@ -296,10 +307,11 @@ class Bonus
 						];
 
 						Wallet::create($fieldInvest);
+
+						//Update cron status from 0 => 1
+						$cronStatus->status = 1;
+						$cronStatus->save();
 					}
-					//Update cron status from 0 => 1
-					$cronStatus->status = 1;
-					$cronStatus->save();
 				}
 			}
 
@@ -307,12 +319,12 @@ class Bonus
 			DB::table('cron_matching_day_logs')->update(['status' => 0]);
 
 		} catch(\Exception $e) {
-			\Log::error('Running bonusMatchingDayCron has error: ' . date('Y-m-d') .$e->getTraceAsString());
-			//throw new \Exception("Running bonusDayCron has error");
+			\Log::error('Running bonusMatchingDayCron has error: ' . date('Y-m-d'));
+			throw $e;
 		}
 	}
 
-	public static function calTotalBonus($totalBonus, $referralId, $maxLevel, $deepLevel = 1)
+	public static function calTotalBonus(&$totalBonus, $referralId, $maxLevel, $deepLevel = 1)
 	{
 		//Cal total member F1
 		$f1Users = UserData::where('refererId', $referralId)->where('packageId', '>', 0)->get();
@@ -322,8 +334,6 @@ class Bonus
 			$package = Package::where('pack_id', '=', $user->packageId)->first();
 			$bonusPack = isset($package->bonus) ? $package->bonus : 0;
 
-			//dd($bonusPack);
-			//Log::info($package);
 			$bonus += ($package->price * $bonusPack);
 		}
 

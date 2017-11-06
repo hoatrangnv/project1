@@ -46,13 +46,20 @@ class TestController {
     //put your code here
     function testInterest($param = null) {
         //Get Notification
-        User::bonusDayCron();
+        Bonus::bonusDayCron();
         echo "Return bonus day for user successfully!";
+    }
+
+    //put your code here
+    function testMatching($param = null) {
+        //Get Notification
+        Bonus::bonusMatchingDayCron();
+        echo "Return matching bonus day for user successfully!";
     }
 
     function testBinary($param = null) {
         //Get Notification
-        User::bonusBinaryWeekCron();
+        Bonus::bonusBinaryWeekCron();
         echo "Return binary bonus this week for user successfully!";
     }
 
@@ -62,45 +69,9 @@ class TestController {
         echo "Return auto add binary successfully!";
     }
 
-    function getAvailableAmount() {
-
-        try {
-
-            $passDate = date('Y-m-d', strtotime("-6 months"));
-
-            $dataRelaseTimeToday = DB::table('wallets')
-                    ->select('userId', 'inOut', DB::raw('SUM(amount) as sumamount'))
-                    ->whereDate('created_at', $passDate)
-                    ->groupBy('userId', 'inOut')
-                    ->get();
-
-            //get all userId from all record from $dataRelaseTimeYesterday
-            $availableUser = array();
-            foreach ($dataRelaseTimeToday as $value) {
-                if ($value->inOut == 'in')
-                    $availableUser[$value->userId] = $value->sumamount;
-            }
-            //update available amount
-            if (isset($availableUser) && count($availableUser) > 0) {
-                foreach ($availableUser as $key => $value) {
-                    UserCoin::where("userId", $key)
-                            ->update(
-                                    ["availableAmount" =>
-                                        ( UserCoin::where("userId", $key)->first()->
-                                        availableAmount + $value )
-                                    ]
-                    );
-                }
-            }
-        } catch (\Exception $ex) {
-            Log::error($ex->gettraceasstring());
-        }
-    }
-
     function test() {
-        set_time_limit(0);
 
-        AutoBuyPack::calTotalBonus(2, 2, 3, 1);
+        AutoBuyPack::updateProfitDay();
 
         dd("successfully");
     }
