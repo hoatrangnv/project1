@@ -181,7 +181,7 @@ class Wallet extends Model
         switch ($opt){
             case Report::DAY_NOW :
                 return self::selectRaw('DATE(wallets.created_at) as date, SUM(wallets.amount) as totalPrice')
-                    ->where('inOut','in')
+                    ->where('inOut','out')
                     ->where('walletType',self::BTC_WALLET)
                     ->where('type',self::WITH_DRAW_BTC_TYPE)
                     ->whereDate('wallets.created_at','>=', $date['from_date'])
@@ -195,7 +195,7 @@ class Wallet extends Model
                     'DATE(wallets.created_at) AS date, 
                 CONCAT(WEEKOFYEAR(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
                 SUM(wallets.amount) AS totalPrice')
-                    ->where('inOut','in')
+                    ->where('inOut','out')
                     ->where('walletType',self::BTC_WALLET)
                     ->where('type',self::WITH_DRAW_BTC_TYPE)
                     ->whereDate('wallets.created_at','>=', $date['from_date'])
@@ -222,7 +222,7 @@ class Wallet extends Model
     }
 
     public static function getTotalBtcWithDraw($date){
-        return self::where('inOut','in')
+        return self::where('inOut','out')
             ->where('walletType',self::BTC_WALLET)
             ->where('type',self::WITH_DRAW_BTC_TYPE)
             ->whereDate('wallets.created_at','>=', $date['from_date'])
@@ -287,7 +287,7 @@ class Wallet extends Model
         switch ($opt){
             case Report::DAY_NOW :
                 return self::selectRaw('DATE(wallets.created_at) as date, SUM(wallets.amount) as totalPrice')
-                    ->where('inOut','in')
+                    ->where('inOut','out')
                     ->where('walletType',self::CLP_WALLET)
                     ->where('type',self::WITH_DRAW_CLP_TYPE)
                     ->whereDate('wallets.created_at','>=', $date['from_date'])
@@ -301,7 +301,7 @@ class Wallet extends Model
                     'DATE(wallets.created_at) AS date, 
                 CONCAT(WEEKOFYEAR(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
                 SUM(wallets.amount) AS totalPrice')
-                    ->where('inOut','in')
+                    ->where('inOut','out')
                     ->where('walletType',self::CLP_WALLET)
                     ->where('type',self::WITH_DRAW_CLP_TYPE)
                     ->whereDate('wallets.created_at','>=', $date['from_date'])
@@ -315,7 +315,7 @@ class Wallet extends Model
                     'DATE(wallets.created_at) AS date, 
                 CONCAT(MONTH(wallets.created_at),YEAR(wallets.created_at)) AS week_year,
                 SUM(wallets.amount) AS totalPrice')
-                    ->where('inOut','in')
+                    ->where('inOut','out')
                     ->where('walletType',self::CLP_WALLET)
                     ->where('type',self::WITH_DRAW_CLP_TYPE)
                     ->whereDate('wallets.created_at','>=', $date['from_date'])
@@ -328,7 +328,7 @@ class Wallet extends Model
     }
 
     public static function getTotalClpWithDraw($date){
-        return self::where('inOut','in')
+        return self::where('inOut','out')
             ->where('walletType',self::CLP_WALLET)
             ->where('type',self::WITH_DRAW_CLP_TYPE)
             ->whereDate('wallets.created_at','>=', $date['from_date'])

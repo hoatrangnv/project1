@@ -22,7 +22,7 @@
 <!-- Roles Form Input -->
 <div class="form-group @if ($errors->has('roles')) has-error @endif">
     {!! Form::label('roles[]', 'Roles') !!}
-    {!! Form::select('roles[]', $roles, isset($user) ? $user->roles->pluck('id')->toArray() : null,  ['class' => 'form-control', 'multiple']) !!}
+    {!! Form::select('roles[]', $roles, isset($user) ? array_unshift($user->roles->pluck('id')->toArray(), ["[none]", ""]); : null,  ['class' => 'form-control', 'multiple']) !!}
     @if ($errors->has('roles')) <p class="help-block">{{ $errors->first('roles') }}</p> @endif
 </div>
 

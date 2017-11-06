@@ -53,7 +53,49 @@ class NewsController extends Controller{
      * @return type
      */
     public function create(Request $request) {
+        return view('adminlte::backend.news.add');
+    }
+
+    /** 
+     * @author Huynq
+     * @param Request $request
+     * @return type
+     */
+    public function store(Request $request) {
         if ($request->isMethod("post")) {
+
+            //action add a new
+            $this->validate($request, [
+                'title'=>'required',
+                'category'=>'required|numeric|isTypeCategory'
+            ]);
+            //category ??
+            $new = new News;
+            $new->title = $request->title;
+            $new->category_id = $request->category;
+            $new->desc = $request->body;
+            $new->short_desc = $this->shortDescription($request->body);
+            $new->created_by = Auth::user()->id;
+            if($new->save()){
+                $request->session()->flash( 'successMessage', 
+                        trans("adminlte_lang::news.success") );
+            }else{
+                $request->session()->flash( 'errorMessage', 
+                        trans("adminlte_lang::news.error") );
+            }
+
+            return redirect("news");
+        }
+    }
+
+    /** 
+     * @author Huynq
+     * @param Request $request
+     * @return type
+     */
+    public function show(Request $request) {
+        if ($request->isMethod("post")) {
+
             //action add a new
             $this->validate($request, [
                 'title'=>'required',
@@ -76,7 +118,6 @@ class NewsController extends Controller{
 
             return redirect("news/manage");
         }
-        return view('adminlte::backend.news.add');
     }
     
     /** 
@@ -106,9 +147,22 @@ class NewsController extends Controller{
      * @return type
      */
     public function edit(Request $request ,$id) {
-        $this->check($request,$id);
-        if ( $request->isMethod("get") ) {
-            
+        
+        //get data news   
+        $dataNew = News::withTrashed()
+                ->where('id',$id)->first();
+        
+        return view('adminlte::backend.news.edit',["news"=>$dataNew]);
+    }
+
+    /** 
+     * @author Huynq
+     * @param type $id
+     * @return type
+     */
+    public function update(Request $request ,$id) {
+        //$this->check($request,$id);
+        if ( $request->isMethod("put") ) {
             $this->validate($request, [
                 'title'=>'required',
                 'category'=>'required|numeric|isTypeCategory'
@@ -131,12 +185,8 @@ class NewsController extends Controller{
                         trans("adminlte_lang::news.error_update") );
             }
 
+            return redirect("news");
         }
-        //get data news   
-        $dataNew = News::withTrashed()
-                ->where('id',$id)->first();
-        
-        return view('adminlte::backend.news.edit',["news"=>$dataNew]);
     }
     
     /** 

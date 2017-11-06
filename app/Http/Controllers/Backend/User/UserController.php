@@ -138,7 +138,9 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name', 'id');
         $permissions = Permission::all('name', 'id');
+        $roles = $roles->toArray();
 
+        array_unshift($roles, "[None]");
         return view('adminlte::backend.user.edit', compact('user', 'roles', 'permissions'));
     }
 

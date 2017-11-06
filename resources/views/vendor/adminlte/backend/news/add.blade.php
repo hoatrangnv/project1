@@ -21,7 +21,7 @@
         <div></div>
     @endif
     
-    {{ Form::open(array('url' => 'news/add'))}}
+    {{ Form::open(array('url' => 'news'))}}
     <!-- Title of Post Form Input -->
     <div class="form-group @if ($errors->has('title')) has-error @endif">
         {!! Form::label('title', 'Title') !!}
