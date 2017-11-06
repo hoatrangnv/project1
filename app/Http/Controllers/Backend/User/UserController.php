@@ -19,18 +19,22 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        if($request->q){
-            $q = $request->q;
-            $result = User::latest()->where('name', 'LIKE', '%' . $q . '%')
-                ->orWhere('email', 'LIKE', '%' . $q . '%')
+        if($request->username){
+            $userName = $request->username;
+            $result = User::latest()->where('name', 'LIKE', '%' . $userName . '%')
+                ->orWhere('email', 'LIKE', '%' . $userName . '%')
                 ->paginate()->setPath ( '' );
             $pagination = $result->appends ( array (
-                'q' => $q
+                'q' => $userName
             ));
-            return view('adminlte::backend.user.index', compact('result'))->withQuery ( $q );
+            return view('adminlte::backend.user.index', compact('result'))->withQuery ( $userName );
         } else {
             $result = User::latest()
                 ->paginate();
+//            foreach ($result as $item){
+//                echo($item->usercoin->btcCoinAmount);
+//            }
+
             return view('adminlte::backend.user.index', compact('result'));
         }
     }

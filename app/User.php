@@ -57,7 +57,9 @@ class user extends authenticatable
     public function userloyatys() {
         return $this->hasmany(loyaltyuser::class, 'refererid', 'id');
     }
-
+    public function bonus_binary() {
+        return $this->hasone(bonusbinary::class, 'userid', 'id');
+    }
     public static function getuid(){
         $uid = mt_rand(1001, 999999);
         if(user::where('uid', $uid)->count()){

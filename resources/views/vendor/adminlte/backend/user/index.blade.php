@@ -41,6 +41,9 @@
                                 <th>Id</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>BTC</th>
+                                <th>CLP</th>
+                                <th>HHNP</th>
                                 <th>Role</th>
                                 <th>Created At</th>
                                 @can('edit_users', 'delete_users')
@@ -54,6 +57,9 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
+                                    <td>@isset($item->usercoin->btcCoinAmount){{ $item->usercoin->btcCoinAmount }}@endisset</td>
+                                    <td>@isset($item->usercoin->clpCoinAmount){{ $item->usercoin->clpCoinAmount }}@endisset</td>
+                                    <td>@isset($item->bonus_binary->bouus_tmp){{ $item->bonus_binary->bouus_tmp }}@endisset</td>
                                     <td>{{ $item->roles->implode('name', ', ') }}</td>
                                     <td>{{ $item->created_at->toFormattedDateString() }}</td>
                                     @can('edit_users')
