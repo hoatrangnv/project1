@@ -54,7 +54,7 @@
                 <a class="navbar-brand" href="#" style="float: left;">
                                          <img src="bbh/img/Logo1.png" alt="" class="nav-logo">
                                     </a>
-                            <a class="navbar-brand" href="#" style="font-size: 35px;">Term and Conditions</a>
+                            <a class="navbar-brand" href="#" style="font-size: 35px;">Terms and Conditions</a>
             </div>
         </nav>
         <!--/Navbar-->
