@@ -78,7 +78,11 @@ class UserController extends Controller
     {
         $roles = Role::pluck('name', 'id');
 
-        return view('adminlte::backend.user.new', compact('roles'));
+        $permissions = Permission::all('name', 'id');
+        $roles = $roles->toArray();
+        array_unshift($roles, "[None]");
+        
+        return view('adminlte::backend.user.new', compact('roles', 'permissions'));
     }
 
     /**

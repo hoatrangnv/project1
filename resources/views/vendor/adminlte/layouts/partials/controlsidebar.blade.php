@@ -1,5 +1,5 @@
 <?php 
-    use App\Http\Controllers\Backend\News\DisplayNewsController as News;
+    use App\Http\Controllers\News\DisplayNewsController as News;
     $tempNews = new News();
     $news = $tempNews->getNewsDataDisplay();
     $title = $tempNews->category;

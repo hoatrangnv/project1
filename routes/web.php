@@ -17,15 +17,19 @@ Route::post('authenticator', 'Auth\LoginController@auth2fa');
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
+    //Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
     Route::get('users/root', 'Backend\User\UserController@root')->name('users.root');
     Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
     Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
     Route::post('users/approve_ok/{id}', 'Backend\User\UserController@approve_ok')->name('approve.ok');
     Route::post('users/approve_cancel/{id}', 'Backend\User\UserController@approve_cancel')->name('approve.cancel');
+    
     Route::resource('users', 'Backend\User\UserController');
     Route::resource('roles', 'Backend\User\RoleController');
     Route::resource('posts', 'Backend\User\PostController');
+    Route::group(['middleware' => ['permission:view_admins']], function () {
+        Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
+    });
 
     Route::group(['middleware' => ['permission:view_reports']], function () {
         Route::get('/report', 'Backend\Report\ReportController@getDataReport')->name('report');
