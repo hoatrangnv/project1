@@ -19,8 +19,7 @@ trait Authorizable
         'update' => 'edit',
         'create' => 'add',
         'store' => 'add',
-        'destroy' => 'delete',
-//        'member_pack' => 'view'
+        'destroy' => 'delete'
     ];
 
     /**

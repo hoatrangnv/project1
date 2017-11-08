@@ -158,7 +158,7 @@ class User extends Authenticatable
             if($isUpgrade == true) 
             {
                 // If $userRoot already in binary tree
-                $userPackage = UserPackage::where('userId', $userId)
+				$userPackage = UserPackage::where('userId', $userId)
                                 ->where('packageId', $packageId)
                                 ->orderBy('packageId', 'desc')
                                 ->first();
@@ -184,8 +184,8 @@ class User extends Authenticatable
                     $user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
                     //$user->lastUserIdLeft = $userRoot ? $userRoot->lastUserIdLeft : $userId;
                     //$userRoot always have lastUserIdLeft, lastUserIdRight > 0 ( = userid or #userid )
-                    if($continue)
-                        $user->lastUserIdLeft = $userRoot->lastUserIdLeft;
+					if($continue)
+						$user->lastUserIdLeft = $userRoot->lastUserIdLeft;
                     $user->leftMembers = $user->leftMembers + 1;
 
                 }else{
@@ -193,7 +193,7 @@ class User extends Authenticatable
                     $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
                     //$user->lastUserIdRight = $userRoot ? $userRoot->lastUserIdRight : $userId;
                     if($continue) 
-                        $user->lastUserIdRight = $userRoot->lastUserIdRight;
+						$user->lastUserIdRight = $userRoot->lastUserIdRight;
                     $user->rightMembers = $user->rightMembers + 1;
                 }
 
@@ -231,19 +231,19 @@ class User extends Authenticatable
             
 
             //Caculate binary bonus for up level of $userRoot in binary tree
-            // $binaryUserId = $user->userId
+			// $binaryUserId = $user->userId
             self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
 
-            $nextLegpos = isset($user->leftRight) ? $user->leftRight : -1;
-            
-            if($nextLegpos == $userRoot->leftRight && $continue == true) $continue = true;
-            else $continue = false;
-            
-            //convert left, right to 1,2
-            $nextLegpos = ($nextLegpos == 'left') ? 1 : 2;
-            
-            //Caculate loyalty bonus for up level of $userRoot in binary tree
-            // $user->userId = $binaryUserId
+			$nextLegpos = isset($user->leftRight) ? $user->leftRight : -1;
+			
+			if($nextLegpos == $userRoot->leftRight && $continue == true) $continue = true;
+			else $continue = false;
+			
+			//convert left, right to 1,2
+			$nextLegpos = ($nextLegpos == 'left') ? 1 : 2;
+			
+			//Caculate loyalty bonus for up level of $userRoot in binary tree
+			// $user->userId = $binaryUserId
             if($user->packageId > 0) self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
             
             if($user->binaryUserId > 0 && $user->packageId > 0) {    
@@ -363,7 +363,7 @@ class User extends Authenticatable
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){
         $leftRight = $legpos == 1 ? 'left' : 'right';
         $users = UserData::where('refererId', '=', $userId)
-            ->where('isBinary', '=', 1)
+			->where('isBinary', '=', 1)
             ->groupBy(['packageId', 'leftRight'])
             ->selectRaw('packageId, leftRight, count(*) as num')
             ->get();
@@ -674,5 +674,6 @@ class User extends Authenticatable
         }
 
     }
+
 }
 
