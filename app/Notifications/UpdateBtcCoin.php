@@ -90,7 +90,8 @@ class UpdateBtcCoin {
                                 }
                             } catch (\Exception $e) {
                                 Log::error('Cronjob update btc amount has error: ' . $e->getMessage());
-                                Log::info($e->getTraceAsString());
+                                Log::error('Notificaiton Id: ' . $notify->id);
+                                //Log::info($e->getTraceAsString());
                             }
                         }
                     }
