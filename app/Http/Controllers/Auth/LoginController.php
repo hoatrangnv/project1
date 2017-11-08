@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Google2FA;
@@ -13,6 +14,8 @@ use Session;
 use App\User;
 
 class LoginController extends Controller{
+    //use ThrottlesLogins;
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -77,6 +80,46 @@ class LoginController extends Controller{
             return $this->attempLoginUsingUsernameAsAnEmail($request);
         }
         return false;
+    }
+
+    /**
+     * Redirect the user after determining they are locked out.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function sendLockoutResponse(Request $request)
+    {
+        $minutes = $this->limiter()->availableIn(
+            $this->throttleKey($request)
+        );
+
+        $minutes = $minutes / 60;
+
+        $message = trans('auth.throttle', ['minutes' => $minutes]);
+
+        $errors = [$this->username() => $message];
+
+        if ($request->expectsJson()) {
+            return response()->json($errors, 423);
+        }
+
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->withErrors($errors);
+    }
+
+    /**
+     * Determine if the user has too many failed login attempts.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function hasTooManyLoginAttempts(Request $request)
+    {
+        return $this->limiter()->tooManyAttempts(
+            $this->throttleKey($request), 5, 30
+        );
     }
 
     protected function validateLogin(Request $request){

@@ -137,7 +137,7 @@ Route::post('clpnotification','GetNotificationController@clpNotification');
 //Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
 //Route::get('test-binary', 'TestController@testBinary');
-//Route::get('test-matching', 'TestController@testMatching');
+Route::get('test-matching', 'TestController@testMatching');
 //Route::get('test-interest',"TestController@testInterest");
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 //Route::get('test',"TestController@test");

@@ -36,41 +36,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        /**
-         * @author Huynq 
-         * run every 30s update notification
-         */
-        $stringCronTab = "* * * * * *";
-        try {
-            $schedule->call(function () {
-                UpdateBtcCoin::UpdateBtcCoinAmount();
-            })->everyMinute();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
-        /** 
-         * @author Huynq
-         * run every day update availableAmount(from holding wallet) table usercoin
-         */
-        $stringCronTab = "* * * * * *";
-        try {
-            $schedule->call(function () {
-                AvailableAmount::getAvailableAmount();
-            })->daily();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
-        
-        // Cronjob update exchange BTC, CLP rate
-        try {
-            $schedule->call(function (){
-                UpdateExchangeRate::updateExchangRate();
-            })->everyMinute();
-        } catch (\Exception $ex) {
-            
-        }
-
         //Auto add to binary at 23:30 every sunday
+        $stringCronTab = "* * * * * *";
         try {
             $schedule->call(function () {
                 AutoAddBinary::addBinary();
@@ -105,6 +72,39 @@ class Kernel extends ConsoleKernel
         } catch (\Exception $ex) {
             Log::info($ex);
         }
+
+        /**
+         * @author Huynq 
+         * run every 30s update notification
+         */
+        try {
+            $schedule->call(function () {
+                UpdateBtcCoin::UpdateBtcCoinAmount();
+            })->everyMinute();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+        /** 
+         * @author Huynq
+         * run every day update availableAmount(from holding wallet) table usercoin
+         */
+        try {
+            $schedule->call(function () {
+                AvailableAmount::getAvailableAmount();
+            })->daily();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+        
+        // Cronjob update exchange BTC, CLP rate
+        try {
+            $schedule->call(function (){
+                UpdateExchangeRate::updateExchangRate();
+            })->everyMinute();
+        } catch (\Exception $ex) {
+            
+        }
+
 
         // Cron job update status withdraw BTC
         try {
