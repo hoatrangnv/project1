@@ -19,6 +19,7 @@ return [
     'btn_register'     => 'Register',
     'terms_text'     => 'Terms and conditions',
     'membreship'     => 'I already have a membership',
-
+    'report' => 'Report',
+    'commission'=>'Commission'
 
 ];

@@ -625,5 +625,55 @@ class User extends Authenticatable
             self::updateUserBinary($user->userData->binaryUserId, $userId);
     }
 
+    public static function userHasRole( $user_id )
+    {
+       return DB::table('model_has_roles')->where('model_id', '=', $user_id)->get();
+    }
+
+
+    public static function getNewUser( $date ){
+        return self::where('active' , 1)
+            ->whereDate('created_at','>=', $date['from_date'])
+            ->whereDate('created_at','<=', $date['to_date'])
+            ->count();
+    }
+
+    public static function getDataReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('date(created_at) as date,COUNT(users.id) as totalPrice')
+                    ->where('active' , 1)
+                    ->whereDate('created_at','>=', $date['from_date'])
+                    ->whereDate('created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(users.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(users.created_at),YEAR(users.created_at)) AS week_month_year,
+                COUNT(users.id) AS totalPrice')
+                    ->whereDate('users.created_at','>=', $date['from_date'])
+                    ->whereDate('users.created_at','<=', $date['to_date'])
+                    ->groupBy('week_month_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(users.created_at) AS date, 
+                CONCAT(MONTH(users.created_at),YEAR(users.created_at)) AS week_month_year,
+                COUNT(users.id) AS totalPrice')
+                    ->whereDate('users.created_at','>=', $date['from_date'])
+                    ->whereDate('users.created_at','<=', $date['to_date'])
+                    ->groupBy('week_month_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
+
+    }
+
 }
 

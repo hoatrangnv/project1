@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Google2FA;
+use Illuminate\Support\Facades\Auth;
 use Session;
+
 use App\User;
 
 class LoginController extends Controller{
@@ -39,7 +42,7 @@ class LoginController extends Controller{
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    //protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -52,6 +55,18 @@ class LoginController extends Controller{
 
     public function username(){
         return config('auth.providers.users.field', 'email');
+    }
+
+    protected function redirectTo()
+    {
+        $user = Auth::user();
+        if (count(User::userHasRole(User::where('email', $user->email)->pluck("id")[0])) > 0 ){
+            $this->redirectTo = '/admin/home';
+            return '/admin/home';
+        }
+
+        $this->redirectTo = '/home';
+        return '/home';
     }
 
     protected function attemptLogin(Request $request){
@@ -98,8 +113,18 @@ class LoginController extends Controller{
         }
     }
 
+    public function redirectWithAdmin($email){
+        if (count(User::userHasRole(User::where('email', $email)->pluck("id")[0])) > 0 ){
+            $this->redirectTo = '/admin/home';
+            return redirect(url('/admin/home'));
+        }
+
+        $this->redirectTo = '/home';
+        return redirect(url('/home'));
+    }
+
     public function auth2fa(Request $request){
-        if(Session::get('google2fa'))
+        if(Session::get('google2fa')) 
             return redirect('/home');
         $valid = true;
         if($request->isMethod('post')){
@@ -119,11 +144,14 @@ class LoginController extends Controller{
                                 'email' => Session::get('authy:auth:email'),
                                 'password' => Session::get('authy:auth:password')
                             ];
+
                             $this->guard()->attempt(
                                 $user, Session::get('authy:auth:remember')
                             );
+
                             Session::put('google2fa', true);
-                            return redirect('home');
+
+                            return $this->redirectWithAdmin(Session::get('authy:auth:email'));
                         }
                     }
                     return redirect(url('login'));

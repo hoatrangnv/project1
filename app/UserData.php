@@ -32,4 +32,15 @@ class UserData extends Model
     public function userTreePermission() {
         return $this->hasOne(UserTreePermission::class, 'userId', 'userId');
     }
+
+    public function get_data_for_pie_chart($date) {
+
+        return self::selectRaw('packages.name as name, COUNT(user_datas.userId) as totalPerson')
+            ->join('packages', 'packages.id', 'user_datas.packageId')
+            ->whereDate('user_datas.packageDate','>=', $date['from_date'])
+            ->whereDate('user_datas.packageDate','<=', $date['to_date'])
+            ->groupBy('packages.name')
+            ->get()
+            ->toArray();
+    }
 }
