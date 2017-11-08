@@ -36,7 +36,6 @@ return [
     'add'						=> 'Add',
 	'welcome' 					=> 'Welcome',
 	'loyalty'					=> 'Loyalty',
-	'submit'					=> 'Submit',
-    'member_pack'					=> 'Member pack',
-	'member'					=> 'Member',
+	'submit'					=> 'Submit'
+    
 ];

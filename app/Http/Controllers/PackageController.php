@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers;
 
 use App\UserCoin;
 use App\UserData;
 use App\UserPackage;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+
 use App\User;
 use App\Package;
 use Auth;
@@ -31,11 +31,11 @@ class PackageController extends Controller
     public function index()
     {
         $packages = Package::all();
-        return view('adminlte::backend.package.index')->with('packages', $packages);
+        return view('adminlte::package.index')->with('packages', $packages);
     }
     public function create()
     {
-        return view('adminlte::backend.package.create');
+        return view('adminlte::package.create');
     }
     public function store(Request $request)
     {
@@ -130,7 +130,6 @@ class PackageController extends Controller
                 'userId' => $currentuserid,
                 'packageId' => $userData->packageId,
                 'amount_increase' => $amount_increase,
-                'dt' => date('Y-m-d'),
                 'buy_date' => date('Y-m-d H:i:s'),
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 6 months")),
                 'weekYear' => $weekYear,
@@ -187,7 +186,7 @@ class PackageController extends Controller
     public function edit($id)
     {
         $package = Package::find($id);
-        return view('adminlte::backend.package.edit', compact('package'));
+        return view('adminlte::package.edit', compact('package'));
     }
 
     public function update(Request $request, $id)
