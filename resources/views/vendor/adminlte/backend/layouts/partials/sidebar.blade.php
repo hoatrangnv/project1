@@ -12,7 +12,7 @@
             <li {{ Request::is('admin/home') ? 'class=active' : '' }}><a href="{{ url('admin/home') }}"><i class='fa fa-home'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
             @can('view_users')
                 <li class="{{ Request::is('users*') ? 'active' : '' }}">
-                    <a href="{{ route('users.index') }}">
+                    <a href="/users">
                         <i class="glyphicon glyphicon-user"></i> Users
                     </a>
                 </li>

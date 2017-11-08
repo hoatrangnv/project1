@@ -19,14 +19,15 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        if($request->username){
-            $userName = $request->username;
+        if($request->q){
+            $userName = $request->q;
             $result = User::latest()->where('name', 'LIKE', '%' . $userName . '%')
                 ->orWhere('email', 'LIKE', '%' . $userName . '%')
                 ->paginate()->setPath ( '' );
             $pagination = $result->appends ( array (
                 'q' => $userName
             ));
+
             return view('adminlte::backend.user.index', compact('result'))->withQuery ( $userName );
         } else {
             $result = User::latest()
