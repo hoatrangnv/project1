@@ -40,6 +40,7 @@ class Kernel extends ConsoleKernel
         $stringCronTab = "* * * * * *";
         try {
             $schedule->call(function () {
+                Log::info('Auto add to binary date: ' . date('Y-m-d H:i:s'));
                 AutoAddBinary::addBinary();
             })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
         } catch (\Exception $ex) {
@@ -49,6 +50,7 @@ class Kernel extends ConsoleKernel
         // Profit run everyday
 		try {
             $schedule->call(function () {
+                Log::info('Interest date: ' . date('Y-m-d'));
                 Bonus::bonusDayCron();
             })->daily();
         } catch (\Exception $ex) {
@@ -58,6 +60,7 @@ class Kernel extends ConsoleKernel
         // Matching run everyday
         try {
             $schedule->call(function () {
+                Log::info('Matching date: ' . date('Y-m-d'));
                 Bonus::bonusMatchingDayCron();
             })->dailyAt('00:15');
         } catch (\Exception $ex) {
@@ -67,6 +70,7 @@ class Kernel extends ConsoleKernel
         // Binary bonus run on monday each week
         try {
             $schedule->call(function () {
+                Log::info('Binary date: ' . date('Y-m-d'));
                 Bonus::bonusBinaryWeekCron();
             })->weekly()->mondays()->at('00:30'); //->weekly()->mondays()->at('00:30');
         } catch (\Exception $ex) {
