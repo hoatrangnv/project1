@@ -36,6 +36,7 @@ class UpdateBtcCoin {
         
         //Get Notification
         $dataNotApproved = Notification::where("completed_status",0)->get();
+        return ;
         //Action
         if( count($dataNotApproved) > 0 ) 
         {
