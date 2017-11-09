@@ -36,7 +36,6 @@ class UpdateBtcCoin {
         
         //Get Notification
         $dataNotApproved = Notification::where("completed_status",0)->get();
-        return ;
         //Action
         if( count($dataNotApproved) > 0 ) 
         {
@@ -57,8 +56,7 @@ class UpdateBtcCoin {
                                 $rawData = $transactionDetail->getRawData();
                                 $status = isset($rawData['network']['status']) ? $rawData['network']['status'] : '';
 
-                                $dataId = $temp->id;
-                                $isExist = Notification::where('transaction_id', $dataId)->count();
+                                $isExist = Notification::where('transaction_id', $transaction_id)->where('name', $temp->data->name)->count();
                                 if( ($status == 'confirmed' || $transactionDetail->getStatus() == "completed") 
                                     && $notify->pending_status == 0 
                                     && $isExist == 0 )
@@ -74,7 +72,7 @@ class UpdateBtcCoin {
 
                                     $insertData = Wallet::create($fieldBTC);
 
-                                    Notification::where("id", $notify->id)->update(['pending_status' => 1, 'transaction_id' => $dataId, 'wallet_id' => $insertData->id]);
+                                    Notification::where("id", $notify->id)->update(['pending_status' => 1, 'transaction_id' => $transaction_id, 'name' => $temp->data->name,'wallet_id' => $insertData->id]);
                                 }
 
                                 if($notify->pending_status == 1 && $transactionDetail->getStatus() == "completed") 
