@@ -295,7 +295,8 @@ class WithDrawController extends Controller
 
 					$clpApi = new CLPWalletAPI();
 					//Transfer CLP to investor
-					$result = $clpApi->addInvestor($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
+					//$result = $clpApi->addInvestor($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
+					$result = $clpApi->transferCLP($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
 
 					$newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withrawAmount;
 					
