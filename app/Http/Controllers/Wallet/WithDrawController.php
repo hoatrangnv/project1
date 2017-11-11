@@ -181,7 +181,6 @@ class WithDrawController extends Controller
 	
 	function sendCoinBTC(Request $request, $id)
 	{
-		return false;
 		$withdrawConfirm = WithdrawConfirm::where('id', '=', $id)->first();
 
 		if($request->status == 1){
