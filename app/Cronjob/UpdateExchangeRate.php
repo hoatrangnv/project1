@@ -28,6 +28,9 @@ class UpdateExchangeRate {
                 if (ExchangeRate::count() == self::SO_LUONG_TY_GIA_CAN_UPDATE) {
                     $dataArrayExrateWihUpdate = self::getDataUpdate();
                     foreach ($dataArrayExrateWihUpdate as $exrate) {
+
+                        if((int)$exrate['exchrate'] == 0) continue;
+
                         ExchangeRate::where('from_currency', $exrate['from_currency'])
                                 ->where('to_currency', $exrate['to_currency'])
                                 ->update($exrate);
