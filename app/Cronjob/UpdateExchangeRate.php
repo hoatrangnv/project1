@@ -29,11 +29,11 @@ class UpdateExchangeRate {
                     $dataArrayExrateWihUpdate = self::getDataUpdate();
                     foreach ($dataArrayExrateWihUpdate as $exrate) {
 
-                        if((int)$exrate['exchrate'] == 0) continue;
-
-                        ExchangeRate::where('from_currency', $exrate['from_currency'])
-                                ->where('to_currency', $exrate['to_currency'])
-                                ->update($exrate);
+                        if($exrate['exchrate'] > 0) {
+                            ExchangeRate::where('from_currency', $exrate['from_currency'])
+                                    ->where('to_currency', $exrate['to_currency'])
+                                    ->update($exrate);
+                        }
                     }
                 } else {
                     $dataArrayExrateWihInsert = self::getDataInsert();
