@@ -75,4 +75,16 @@ class CLPWalletAPI
         
         return $result;
     }
+
+    public function getTransactionInfo($transactionHash)
+    {
+        $path = $this->apiUrl . '/get-transaction/' . $transactionHash;
+        $result = $this->client->request('GET', $path);
+
+        $result = json_decode($result);
+
+        if($result['tx_status'] == 'error') throw new \Exception($result['err']);
+        
+        return $result['tx_status'];
+    }
 }
