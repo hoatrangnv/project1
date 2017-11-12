@@ -195,7 +195,7 @@ class BtcWalletController extends Controller
         if($request->ajax()) 
         {
             return response()->json(array('err' => false));
-            
+
             $userCoin = Auth::user()->userCoin;
 
             $btcAmountErr = '';
@@ -228,7 +228,6 @@ class BtcWalletController extends Controller
 
             if($currentDate <= $preSaleEnd) 
             {
-
 
                 //Private sale 1
                 if($privateSaleStart <= $currentDate && $currentDate <= $privateSaleEnd)
@@ -278,6 +277,16 @@ class BtcWalletController extends Controller
 
             }
             
+            //Get total CLPAmount buy by BTC
+            $amountCLPByBTC = 0;
+            $historyCLPByBTC = Wallet::where('walletType', Wallet::CLP_WALLET)->where('type', Wallet::BTC_CLP_TYPE)->get();
+            foreach($historyCLPByBTC as $history) {
+                $amountCLPByBTC += $history->amount;
+            }
+
+            if($amountCLPByBTC > 11000) {
+                $clpAmountErr = 'You can not buy more CLP';
+            }
 
             // nếu tổng số tiền sau khi trừ đi phí lơn hơn 
             // số tiền chuyển đi thì thực hiện giao dịch
