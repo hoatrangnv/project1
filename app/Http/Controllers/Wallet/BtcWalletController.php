@@ -194,6 +194,8 @@ class BtcWalletController extends Controller
     public function buyCLP(Request $request){
         if($request->ajax()) 
         {
+            return response()->json(array('err' => false));
+            
             $userCoin = Auth::user()->userCoin;
 
             $btcAmountErr = '';

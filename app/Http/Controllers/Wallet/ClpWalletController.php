@@ -114,6 +114,7 @@ class ClpWalletController extends Controller {
     {
         if($request->ajax()) 
         {
+            return response()->json(array('err' => false));
 
             $userCoin = Auth::user()->userCoin;
 
