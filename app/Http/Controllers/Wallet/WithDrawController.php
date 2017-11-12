@@ -136,6 +136,7 @@ class WithDrawController extends Controller
 							{
 								if ($request->isMethod('post'))
 								{
+									return ;
 									if($withdrawConfirm->type == 'btc'){
 										self::sendCoinBTC($request, $id);
 									}elseif($withdrawConfirm->type == 'clp'){
