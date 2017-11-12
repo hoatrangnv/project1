@@ -194,7 +194,7 @@ class BtcWalletController extends Controller
     public function buyCLP(Request $request){
         if($request->ajax()) 
         {
-            return response()->json(array('err' => false));
+            //return response()->json(array('err' => false));
 
             $userCoin = Auth::user()->userCoin;
 
@@ -279,12 +279,17 @@ class BtcWalletController extends Controller
             
             //Get total CLPAmount buy by BTC
             $amountCLPByBTC = 0;
-            $historyCLPByBTC = Wallet::where('walletType', Wallet::CLP_WALLET)->where('type', Wallet::BTC_CLP_TYPE)->get();
+            $historyCLPByBTC = Wallet::where('walletType', Wallet::CLP_WALLET)
+                                ->where('type', Wallet::BTC_CLP_TYPE)
+                                ->where('inOut', Wallet::IN)
+                                ->where('userId', Auth::user()->id)
+                                ->get();
+
             foreach($historyCLPByBTC as $history) {
                 $amountCLPByBTC += $history->amount;
             }
 
-            if($amountCLPByBTC > 11000) {
+            if(($amountCLPByBTC + $amountCLP) > 11000) {
                 $clpAmountErr = 'You can not buy more CLP';
             }
 
