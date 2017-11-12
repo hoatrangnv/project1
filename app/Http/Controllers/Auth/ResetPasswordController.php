@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\User;
 use Validator;
 
 class ResetPasswordController extends Controller
