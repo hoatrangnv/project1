@@ -194,7 +194,6 @@ class BtcWalletController extends Controller
     public function buyCLP(Request $request){
         if($request->ajax()) 
         {
-            //return response()->json(array('err' => false));
 
             $userCoin = Auth::user()->userCoin;
 
@@ -208,74 +207,19 @@ class BtcWalletController extends Controller
                 $btcAmountErr = trans('adminlte_lang::wallet.error_not_enough_btc');
             }
 
+            // If the last price on livecoin is lower than 0.95 target price that day => block buy CLP
+            $clpUSDRate = ExchangeRate::getCLPUSDRate();
+
+            if($clpUSDRate < 0.95 * config('app.clp_target_price')) {
+                return response()->json(array('err' => false));
+            }
+
             //Amount CLP
             $clpRate = ExchangeRate::getCLPBTCRate();
 
             $amountCLP = $request->btcAmount / $clpRate;
             $holdingAmount = 0;
 
-            $currentDate = date('Y-m-d');
-
-
-            $privateSaleStart = date('Y-m-d', strtotime(config('app.first_private_start')));
-            $privateSaleEnd = date('Y-m-d', strtotime(config('app.first_private_end')));
-
-            $secondSaleStart = date('Y-m-d', strtotime(config('app.second_private_start')));
-            $secondSaleEnd = date('Y-m-d', strtotime(config('app.second_private_end')));
-
-            $preSaleStart = date('Y-m-d', strtotime(config('app.pre_sale_start')));
-            $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
-
-            if($currentDate <= $preSaleEnd) 
-            {
-
-                //Private sale 1
-                if($privateSaleStart <= $currentDate && $currentDate <= $privateSaleEnd)
-                {
-
-                    if($request->clpAmount != 25000 || $amountCLP < 24950) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_1') . ' 25,000 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
-                    }
-
-                    $amountCLP = 10000;
-                    $holdingAmount = 15000;
-                }
-
-                //Private sale 2
-                if($secondSaleStart <= $currentDate && $currentDate <= $secondSaleEnd)
-                {
-                    //Get total sales
-                    $total = Wallet::where('walletType', Wallet::REINVEST_WALLET)
-                                    ->where('type', Wallet::BTC_CLP_TYPE)
-                                    ->where('amount', 6666.66)
-                                    ->count();
-
-                    if($total == 150) {
-                        $clpAmountErr = 'Sorry, the quota in this private sale reached.';
-                    } else if($request->clpAmount != 16666.66 || $amountCLP < 16630) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_private_sale_2') . ' 16,666.66 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
-                    } else if($userCoin->reinvestAmount > 0) {
-                        $clpAmountErr = 'You cannot buy more CLP.';
-                    }
-
-                    $amountCLP = 10000;
-                    $holdingAmount = 6666.66;
-                }
-
-                //Pre sale
-                if($preSaleStart <= $currentDate && $currentDate <= $preSaleEnd)
-                {
-                    if($request->clpAmount != 12500 || $amountCLP < 12475) {
-                        $clpAmountErr = trans('adminlte_lang::wallet.msg_pre_sale') . ' 12,500 CLP ' . trans('adminlte_lang::wallet.msg_sale_tail');
-                    } else if($userCoin->reinvestAmount > 0) {
-                        $clpAmountErr = 'You cannot buy more CLP.';
-                    }
-
-                    $amountCLP = 10000;
-                    $holdingAmount = 2500;
-                }
-
-            }
             
             //Get total CLPAmount buy by BTC
             $amountCLPByBTC = 0;

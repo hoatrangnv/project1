@@ -50,6 +50,8 @@ class ResetPasswordController extends Controller
                     $this->resetPassword($user, $password);
                 }
             );
+        } else {
+            $response = null;
         }
 
         // If the password was successfully reset, we will redirect the user back to

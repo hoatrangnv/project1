@@ -155,6 +155,8 @@ return [
     'pre_price'=> env('PRE_PRICE', 0.8),
     'pre_sale_end'=> env('PRE_SALE_END', '2017-10-31'),
     'clp_price' => env('CLP_PRICE', 1),
+    'freeze_withdraw' => env('FREEZE_WITHDRAW', 0),
+    'clp_target_price' => env('CLP_TARGET_PRICE', 3),
     
     /*
     |--------------------------------------------------------------------------
