@@ -6,7 +6,7 @@
     $i = 1;
 ?>
 <!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark control-sidebar-close" style="max-height: 1200px; overflow-y: scroll;">
+<aside class="control-sidebar control-sidebar-dark control-sidebar-open" style="max-height: 1200px; overflow-y: scroll;">
     <!-- Tab panes -->
     <div class="tab-content">
         <!-- Home tab content -->
