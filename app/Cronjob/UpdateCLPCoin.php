@@ -12,6 +12,7 @@ use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
 use App\CLPWalletAPI;
+use Log;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
