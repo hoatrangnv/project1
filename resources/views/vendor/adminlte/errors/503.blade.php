@@ -10,7 +10,7 @@
         <div class="error-content">
             <h3><i class="fa fa-warning text-red"></i> {{ trans('adminlte_lang::message.maintenance_mode') }}</h3>
             <p>
-                {{ $message }}. @if($retryAfter) Please try back in {{ $retryAfter }} days @endif
+                We are integrating our system with the public exchange platform, so we are temporary postponing. We are sorry about this inconvenience caused and will overcome this issue in soonest
             </p>
         </div>
     </div><!-- /.error-page -->
