@@ -278,10 +278,6 @@
                     <span><i>{{ trans("adminlte_lang::wallet.fee") }}:{{ config("app.fee_withRaw_CLP")}}</i></span>
                 </div>
                 <div class="clearfix"></div>
-                <div class="pull-left" style="width: 99%; color: red;">
-                      <strong>***Warning!</strong><i>You only withdraw CLP to token compatible ethereum wallets (ex: Mist, Parity, MyEtherWallet, MetaMask...).</i>
-                </div>
-                <div class="clearfix"></div>
           </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
