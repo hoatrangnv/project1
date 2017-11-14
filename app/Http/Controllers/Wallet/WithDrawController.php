@@ -138,7 +138,8 @@ class WithDrawController extends Controller
 								if ($request->isMethod('post'))
 								{
 									if($withdrawConfirm->type == 'btc'){
-										self::sendCoinBTC($request, $id);
+										throw new \ErrorException("The withdrawal fail!");
+										//self::sendCoinBTC($request, $id);
 									}elseif($withdrawConfirm->type == 'clp'){
 										self::sendCoinCLP($request, $id);
 									}
@@ -377,6 +378,10 @@ class WithDrawController extends Controller
 			{
 				$withdrawAmountErr = 'You cannot withdraw more than $3000';
 			}
+
+			//Get clpcoin amount withdraw history in day
+			//Wallet::where('userId', Auth::user()->id)->where(' ');
+
 
 			if($request->walletAddress == ''){
 				$walletAddressErr = 'Ethereum Address is required';
