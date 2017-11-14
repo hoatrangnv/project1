@@ -22,6 +22,7 @@ use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
 use App\Notifications\WithDrawConfirm as WithDrawConfirmNoti;
 use Carbon\Carbon;
+use App\ExchangeRate;
 use URL;
 use Google2FA;
 
@@ -363,13 +364,18 @@ class WithDrawController extends Controller
 			$userCoin = Auth::user()->userCoin;
 
 			$withdrawAmountErr = $walletAddressErr = $withdrawOTPErr = '';
-			
+
 			if($request->withdrawAmount == ''){
 				$withdrawAmountErr = trans('adminlte_lang::wallet.amount_required');
 			}elseif (!is_numeric($request->withdrawAmount)){
 				$withdrawAmountErr = trans('adminlte_lang::wallet.amount_number');
 			}elseif (($userCoin->clpCoinAmount - config('app.fee_withRaw_CLP')) < $request->withdrawAmount){
 				$withdrawAmountErr = trans('adminlte_lang::wallet.error_not_enough_clp');
+			}
+
+			if($request->withdrawAmount * ExchangeRate::getCLPUSDRate() > 3000)
+			{
+				$withdrawAmountErr = 'You cannot withdraw more than $3000';
 			}
 
 			if($request->walletAddress == ''){
