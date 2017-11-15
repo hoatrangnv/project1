@@ -1,4 +1,4 @@
-@extends(count(\App\User::userHasRole(\App\User::where('email', Auth::user()->email)->pluck("id")[0])) > 0 ? 'adminlte::backend.layouts.member' : 'adminlte::layouts.member');
+@extends(count(\App\User::userHasRole(\App\User::where('email', Auth::user()->email)->pluck("id")[0])) > 0 ? 'adminlte::backend.layouts.member' : 'adminlte::layouts.member')
 @section('contentheader_title')
     {{ trans('adminlte_lang::profile.my_profile') }}
 @endsection

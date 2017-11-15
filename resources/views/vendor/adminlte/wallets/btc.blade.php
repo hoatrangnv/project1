@@ -211,6 +211,11 @@
                     <div class="pull-right">
                         <span><i>{{ trans("adminlte_lang::wallet.fee") }}:{{ config("app.fee_withRaw_BTC")}}</i></span>
                     </div>
+                    <div class="clearfix"></div>
+                    <div class="pull-left" style="width: 99%; color: red;">
+                          <strong>***Warning!</strong><i>Do not withdraw your BTC to other member’s wallet. You can only withdraw to wallets that are not relevant to CLP's system.</i>
+                    </div>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>

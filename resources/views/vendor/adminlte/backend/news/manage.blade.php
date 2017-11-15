@@ -49,7 +49,7 @@
                         </td>
                         <td>{!! $new->short_desc !!}</td>
                         <td>
-                            <a href="/news/edit/{{ $new->id }}" class="btn btn-default glyphicon glyphicon-edit">Edit</a>
+                            <a href="/news/{{ $new->id }}/edit" class="btn btn-default glyphicon glyphicon-edit">Edit</a>
                             <a href="/news/delete/{{ $new->id }}" class="btn btn-default glyphicon glyphicon-trash">Delete</a>
                         </td>
                     </tr>

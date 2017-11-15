@@ -23,19 +23,27 @@ class UpdateExchangeRate {
     public static function updateExchangRate() {
         $interval = 30;
 
-        for ($i = 0; $i < ceil(60 / $interval); $i++) {
-            if (ExchangeRate::count() == self::SO_LUONG_TY_GIA_CAN_UPDATE) {
-                $dataArrayExrateWihUpdate = self::getDataUpdate();
-                foreach ($dataArrayExrateWihUpdate as $exrate) {
-                    ExchangeRate::where('from_currency', $exrate['from_currency'])
-                            ->where('to_currency', $exrate['to_currency'])
-                            ->update($exrate);
+        try {
+            for ($i = 0; $i < ceil(60 / $interval); $i++) {
+                if (ExchangeRate::count() == self::SO_LUONG_TY_GIA_CAN_UPDATE) {
+                    $dataArrayExrateWihUpdate = self::getDataUpdate();
+                    foreach ($dataArrayExrateWihUpdate as $exrate) {
+
+                        if($exrate['exchrate'] > 0) {
+                            ExchangeRate::where('from_currency', $exrate['from_currency'])
+                                    ->where('to_currency', $exrate['to_currency'])
+                                    ->update($exrate);
+                        }
+                    }
+                } else {
+                    $dataArrayExrateWihInsert = self::getDataInsert();
+                    ExchangeRate::insert($dataArrayExrateWihInsert);
                 }
-            } else {
-                $dataArrayExrateWihInsert = self::getDataInsert();
-                ExchangeRate::insert($dataArrayExrateWihInsert);
+                sleep($interval);
             }
-            sleep($interval);
+        }
+        catch (\Exception $e) {
+            \Log::error('Running updateExchangRate has error: ' . date('Y-m-d') .$e->getMessage());
         }
     }
 

@@ -59,18 +59,13 @@
                                     </th>
                                     <th class="wallet-amount"><span class="icon-clp-icon" style="font-size: 16px;"></span>{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}  </th>
                                     <th style="min-width: 500px;">
-                                    @if($active)
-                                        <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#sell">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
-                                    @else
-                                        <a href="#" class="btn bg-olive" disabled="true">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
-                                    @endif
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#buy-package">{{ trans("adminlte_lang::wallet.buy_package") }}</a>
                                     @if($active)
                                         <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                                     @else
                                         <a href="#" class="btn bg-olive" disabled="true">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
                                     @endif
-                                    @if($active)
+                                    @if(!$active)
                                         <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#deposit">{{ trans("adminlte_lang::wallet.deposit") }}</a>
                                     @else
                                         <a href="#" class="btn bg-olive" disabled="true">{{ trans("adminlte_lang::wallet.deposit") }}</a>
@@ -281,10 +276,6 @@
                 </div>
                 <div class="pull-right">
                     <span><i>{{ trans("adminlte_lang::wallet.fee") }}:{{ config("app.fee_withRaw_CLP")}}</i></span>
-                </div>
-                <div class="clearfix"></div>
-                <div class="pull-left" style="width: 99%; color: red;">
-                      <strong>***Warning!</strong><i>You only withdraw CLP to token compatible ethereum wallets (ex: Mist, Parity, MyEtherWallet, MetaMask...).</i>
                 </div>
                 <div class="clearfix"></div>
           </div>

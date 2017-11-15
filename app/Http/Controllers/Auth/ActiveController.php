@@ -43,7 +43,7 @@ class ActiveController extends Controller
             }
             
             $count = User::where('email','=', $data[1])
-                            ->where('updated_at','>', Carbon::now()->subDay(3))
+                            ->where('updated_at','>', Carbon::now()->subDay(1))
                             ->count();
             if($count==0){
                 $request->session()->flash('error', 'Link Active Account expired!');

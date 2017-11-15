@@ -13,12 +13,12 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    @can('add_users')
-                        <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create</a>
-                    @endcan
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-8">
                     {!! Form::open(['method'=>'GET','url'=>'users','class'=>'','role'=>'search'])  !!}
 
-                    <div class="input-group custom-search-form">
+                    <div class="input-group custom-search-form pull-right" style="width: 60%">
                         <input type="text" class="form-control" name="q" placeholder="Search...">
                         <span class="input-group-btn">
                             <button class="btn btn-default-sm" type="submit">
@@ -27,6 +27,7 @@
                         </span>
                     </div>
                     {!! Form::close() !!}
+                    </div>
                 </div>
                 <div class="box-body" style="padding-top:0;">
                     <div class="result-set">
@@ -37,6 +38,9 @@
                                 <th>Id</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>BTC</th>
+                                <th>CLP</th>
+                                <th>HHNP</th>
                                 <th>Role</th>
                                 <th>Created At</th>
                                 @can('edit_users', 'delete_users')
@@ -50,6 +54,9 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
+                                    <td>@isset($item->usercoin->btcCoinAmount){{ $item->usercoin->btcCoinAmount }}@endisset</td>
+                                    <td>@isset($item->usercoin->clpCoinAmount){{ $item->usercoin->clpCoinAmount }}@endisset</td>
+                                    <td>@isset($item->bonus_binary->bouus_tmp){{ $item->bonus_binary->bouus_tmp }}@endisset</td>
                                     <td>{{ $item->roles->implode('name', ', ') }}</td>
                                     <td>{{ $item->created_at->toFormattedDateString() }}</td>
                                     @can('edit_users')

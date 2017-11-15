@@ -1,5 +1,5 @@
 <?php 
-    use App\Http\Controllers\Backend\News\DisplayNewsController as News;
+    use App\Http\Controllers\News\DisplayNewsController as News;
     $tempNews = new News();
     $news = $tempNews->getNewsDataDisplay();
     $title = $tempNews->category;
@@ -63,8 +63,4 @@
 
 <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
-<<<<<<< HEAD
 <div class='control-sidebar-bg'></div>
-=======
-<div class='control-sidebar-bg'></div>
->>>>>>> 28b49a4c236816ef9ed91d2075add5ac5653a2c0

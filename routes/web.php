@@ -12,35 +12,59 @@ Route::get('/package-term-condition.html', function () {
 });
 
 Auth::routes();
-
 Route::get('authenticator', 'Auth\LoginController@auth2fa');
 Route::post('authenticator', 'Auth\LoginController@auth2fa');
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
-    Route::get('users/root', 'Backend\User\UserController@root')->name('users.root');
-    Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
-    Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
-    Route::post('users/approve_ok/{id}', 'Backend\User\UserController@approve_ok')->name('approve.ok');
-    Route::post('users/approve_cancel/{id}', 'Backend\User\UserController@approve_cancel')->name('approve.cancel');
+    //Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
+    //Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
+    //Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
+    //Route::post('users/approve_ok/{id}', 'Backend\User\UserController@approve_ok')->name('approve.ok');
+    //Route::post('users/approve_cancel/{id}', 'Backend\User\UserController@approve_cancel')->name('approve.cancel');
+    
     Route::resource('users', 'Backend\User\UserController');
     Route::resource('roles', 'Backend\User\RoleController');
     Route::resource('posts', 'Backend\User\PostController');
+    Route::group(['middleware' => ['permission:view_admins']], function () {
+        Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
+    });
+
+    Route::group(['middleware' => ['permission:add_users']], function () {
+        Route::post('users/approve_ok/{id}', 'Backend\User\UserController@approve_ok')->name('approve.ok');
+        Route::post('users/approve_cancel/{id}', 'Backend\User\UserController@approve_cancel')->name('approve.cancel');
+        Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
+    });
+
+    Route::group(['middleware' => ['permission:view_users']], function () {
+        Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
+    });
+
+    Route::group(['middleware' => ['permission:view_users']], function () {
+        Route::post('withdraw/approve', 'Backend\User\WithdrawController@withdrawApprove')->name('withdraw.approve');
+    });
+
+    Route::group(['middleware' => ['permission:view_users']], function () {
+        Route::get('withdraw/', 'Backend\User\WithdrawController@index')->name('withdraw.list');
+    });
+
+    Route::group(['middleware' => ['permission:view_users']], function () {
+        Route::get('wallet/history/', 'Backend\User\WalletController@index')->name('wallet.list');
+    });
 
     Route::group(['middleware' => ['permission:view_reports']], function () {
         Route::get('/report', 'Backend\Report\ReportController@getDataReport')->name('report');
         Route::get('/report/commission', 'Backend\Report\ReportController@getDataCommissionReport');
     });
+    
+    Route::get('members/genealogy', 'User\MemberController@genealogy');
+    Route::get('members/binary', 'User\MemberController@binary');
+    Route::get('members/referrals', 'User\MemberController@refferals');
+    Route::get('members/referrals/{id}/detail', 'User\MemberController@refferalsDetail');
+    Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
+    Route::resource('members', 'User\MemberController');
 
-    Route::get('members/genealogy', 'Backend\User\MemberController@genealogy');
-    Route::get('members/binary', 'Backend\User\MemberController@binary');
-    Route::get('members/referrals', 'Backend\User\MemberController@refferals');
-    Route::get('members/referrals/{id}/detail', 'Backend\User\MemberController@refferalsDetail');
-    Route::post('members/pushIntoTree', 'Backend\User\MemberController@pushIntoTree');
-    Route::resource('members', 'Backend\User\MemberController');
-    Route::get('authenticator', 'Auth\Auth2FAController@index');
-    Route::post('authenticator', 'Auth\Auth2FAController@index');
+
     
     //USD WALLET
     Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet')->name('wallet.usd');
@@ -92,10 +116,10 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
     Route::resource('mybonus', 'MyBonusController');
 
-    Route::get('packages/invest', 'Backend\PackageController@invest');
-    Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'Backend\PackageController@invest']);
-    Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'Backend\PackageController@withDraw']);
-    Route::resource('packages', 'Backend\PackageController');
+    Route::get('packages/invest', 'PackageController@invest');
+    Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
+    Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'PackageController@withDraw']);
+    Route::resource('packages', 'PackageController');
 
     //Profile router
     Route::any('profile/upload','User\ProfileController@upload');
@@ -106,11 +130,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('profile', 'User\ProfileController');
 
     
-
-
-
     //News
-    Route::get('news/detail/{id}','Backend\News\DisplayNewsController@displayDetailNews');
+    Route::get('news/detail/{id}','News\DisplayNewsController@displayDetailNews');
     Route::resource('news','Backend\News\NewsController');
     //get ty gia
     Route::get('exchange',function(App\ExchangeRate $rate){

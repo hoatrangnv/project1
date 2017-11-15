@@ -28,7 +28,7 @@ if (data.opt == 1) {
                 animation:{ duration: 1000, easing: 'out', startup: true },
                 title: title,
                 hAxis: {
-                    format: 'd-MMM-y'
+                    format: 'd-MM-y'
                     //format: "HH:mm:ss"
                     //format:'MMM d, y'
                 },
@@ -67,7 +67,7 @@ if (data.opt == 1) {
                         curveType: 'function', 
                         animation:{ duration: 1000, easing: 'out', startup: true },
                         tooltip: {isHtml: true},
-                        hAxis: {format:'MMM-y'}, 
+                        hAxis: {format:'MM-y'},
         //		vAxis: {
         //			
         //			viewWindowMode:'maximized',
@@ -100,7 +100,7 @@ if (data.opt == 1) {
                 curveType: 'function',
                 animation:{ duration: 1000, easing: 'out', startup: true },
                 tooltip: {isHtml: true},
-                hAxis: {format:'MMM-y'},
+                hAxis: {format:'MM-y'},
                 //		vAxis: {
                 //
                 //			viewWindowMode:'maximized',

@@ -51,6 +51,19 @@ class CLPWalletAPI
         return $result['responseResult'];
     }
 
+    public function transferCLP($address, $amount)
+    {
+        $path = $this->apiUrl . '/transfer/' . $address . '/' . $amount;
+        $response = $this->client->request('GET', $path);
+
+        //SUCCESS: responseResult = { success : 1, tx : result.tx, gasUsed : result.receipt.gasUsed };
+        //FAIL : responseResult = { success : 0, err : err };
+        $contents = $response->getBody()->getContents();
+        $result = json_decode($contents, true);
+
+        return $result['responseResult'];
+    }
+
     public function withdrawCLPFromUserWallet() 
     {
         $path = $this->apiUrl . '/generate-wallet';
@@ -61,5 +74,17 @@ class CLPWalletAPI
         $result = json_decode($result);
         
         return $result;
+    }
+
+    public function getTransactionInfo($transactionHash)
+    {
+        $path = $this->apiUrl . '/get-transaction/' . $transactionHash;
+        $result = $this->client->request('GET', $path);
+
+        $result = json_decode($result);
+
+        if($result['tx_status'] == 'error') throw new \Exception($result['err']);
+        
+        return $result['tx_status'];
     }
 }

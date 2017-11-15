@@ -131,7 +131,7 @@ return [
     'user_referral_register' => env('USER_REFERRAL_REGISTER', 'root'),
     'fee_withRaw_BTC' => env('FEE_WITHDRAW_BTC', 0.0005),
     'fee_withRaw_CLP' => env('FEE_WITHDRAW_CLP', 2),
-    'enable_captcha' => FALSE,
+    'enable_captcha' => true,
     'f1_bonus' => 0.1,
     'f2_bonus' => 0.02,
     'f3_bonus' => 0.01,
@@ -142,7 +142,7 @@ return [
     'news_blockchain' => 3,
     'news_clp' => 3,
     'news_p2p' => 3,
-    'admin_id' => 1,
+    'admin_id' => 51,
     'count_down_time_login' => 10,
     'amount_add_wallet'=> 10,
     'first_private_start'=> env('FIRST_PRIVATE_START', '2017-10-16'),
@@ -155,6 +155,8 @@ return [
     'pre_price'=> env('PRE_PRICE', 0.8),
     'pre_sale_end'=> env('PRE_SALE_END', '2017-10-31'),
     'clp_price' => env('CLP_PRICE', 1),
+    'freeze_withdraw' => env('FREEZE_WITHDRAW', 0),
+    'clp_target_price' => env('CLP_TARGET_PRICE', 3),
     
     /*
     |--------------------------------------------------------------------------

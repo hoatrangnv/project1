@@ -36,11 +36,51 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        //Auto add to binary at 23:30 every sunday
+        $stringCronTab = "* * * * * *";
+        try {
+            $schedule->call(function () {
+                Log::info('Auto add to binary date: ' . date('Y-m-d H:i:s'));
+                AutoAddBinary::addBinary();
+            })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+		
+        // Profit run everyday
+		try {
+            $schedule->call(function () {
+                Log::info('Interest date: ' . date('Y-m-d'));
+                Bonus::bonusDayCron();
+            })->daily();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
+        // Matching run everyday
+        try {
+            $schedule->call(function () {
+                Log::info('Matching date: ' . date('Y-m-d'));
+                Bonus::bonusMatchingDayCron();
+            })->dailyAt('00:15');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
+        // Binary bonus run on monday each week
+        try {
+            $schedule->call(function () {
+                Log::info('Binary date: ' . date('Y-m-d'));
+                Bonus::bonusBinaryWeekCron();
+            })->weekly()->mondays()->at('00:30'); //->weekly()->mondays()->at('00:30');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
         /**
          * @author Huynq 
          * run every 30s update notification
          */
-        $stringCronTab = "* * * * * *";
         try {
             $schedule->call(function () {
                 UpdateBtcCoin::UpdateBtcCoinAmount();
@@ -52,7 +92,6 @@ class Kernel extends ConsoleKernel
          * @author Huynq
          * run every day update availableAmount(from holding wallet) table usercoin
          */
-        $stringCronTab = "* * * * * *";
         try {
             $schedule->call(function () {
                 AvailableAmount::getAvailableAmount();
@@ -70,41 +109,6 @@ class Kernel extends ConsoleKernel
             
         }
 
-        //Auto add to binary at 23:30 every sunday
-        try {
-            $schedule->call(function () {
-                AutoAddBinary::addBinary();
-            })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
-		
-        // Profit run everyday
-		try {
-            $schedule->call(function () {
-                Bonus::bonusDayCron();
-            })->daily();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
-
-        // Matching run everyday
-        try {
-            $schedule->call(function () {
-                Bonus::bonusMatchingDayCron();
-            })->dailyAt('00:15');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
-
-        // Binary bonus run on monday each week
-        try {
-            $schedule->call(function () {
-                Bonus::bonusBinaryWeekCron();
-            })->weekly()->mondays()->at('00:30'); //->weekly()->mondays()->at('00:30');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
 
         // Cron job update status withdraw BTC
         try {

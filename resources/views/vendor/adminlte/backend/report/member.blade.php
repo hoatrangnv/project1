@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <style>
         .test {
-           
             -webkit-animation-duration: 3s;
 /*            -webkit-animation-delay: 3s;
             -webkit-animation-iteration-count: infinite;*/
@@ -65,34 +64,20 @@
     
     {{--Chart--}}
     <script type="text/javascript" src="{{URL::asset('js/report/chart-draw.js')}}"></script>
-    {{--<script type="text/javascript" src="{{URL::asset('js/report/index.js')}}"></script>--}}
     <script>
-        $('input[name="daterange"]').daterangepicker();
+          $('input[name="daterange"]').daterangepicker({
+                locale: {
+                  format: 'YYYY/MM/DD'
+                }
+          });
         $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
             window.location.replace("{{ Request::url() }}?type={{$temp->type}}&opt={{$temp->opt}}&from_date="+picker.startDate.format('YYYY-MM-DD')+'&to_date='+picker.endDate.format('YYYY-MM-DD'));
         });
-        var from_date = getFormatDate(data.date_custom.from_date);
-        var to_date = getFormatDate(data.date_custom.to_date);
-        $('input[name="daterange"]').data('daterangepicker').setStartDate(from_date);
-        $('input[name="daterange"]').data('daterangepicker').setEndDate(to_date);
-        function getFormatDate(date){
-            date = new Date(date);
-            return (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
-        }
+        $('input[name="daterange"]').data('daterangepicker').setStartDate(data.date_custom.from_date);
+        $('input[name="daterange"]').data('daterangepicker').setEndDate(data.date_custom.to_date);
         var animationName = 'animated zoomIn';
         var animationend = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-        
-        $('.total-package').addClass(animationName).one(animationend, function() {
-            $(this).removeClass(animationName);
-         })
-          
-        $(function() {
-            setInterval(function() {
-              animationName = 'animated bounce'
-              $('.total-package').addClass(animationName).one(animationend, function() {
-                $(this).removeClass(animationName);
-              });
-            }, 1000);
-          });
+        var type = {{$temp->type}};
     </script>
+    <script type="text/javascript" src="{{URL::asset('js/report/index.js')}}"></script>
 @endsection

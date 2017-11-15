@@ -20,17 +20,22 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if($request->q){
-            $q = $request->q;
-            $result = User::latest()->where('name', 'LIKE', '%' . $q . '%')
-                ->orWhere('email', 'LIKE', '%' . $q . '%')
+            $userName = $request->q;
+            $result = User::latest()->where('name', 'LIKE', '%' . $userName . '%')
+                ->orWhere('email', 'LIKE', '%' . $userName . '%')
                 ->paginate()->setPath ( '' );
             $pagination = $result->appends ( array (
-                'q' => $q
+                'q' => $userName
             ));
-            return view('adminlte::backend.user.index', compact('result'))->withQuery ( $q );
+
+            return view('adminlte::backend.user.index', compact('result'))->withQuery ( $userName );
         } else {
             $result = User::latest()
                 ->paginate();
+//            foreach ($result as $item){
+//                echo($item->usercoin->btcCoinAmount);
+//            }
+
             return view('adminlte::backend.user.index', compact('result'));
         }
     }
@@ -74,7 +79,11 @@ class UserController extends Controller
     {
         $roles = Role::pluck('name', 'id');
 
-        return view('adminlte::backend.user.new', compact('roles'));
+        $permissions = Permission::all('name', 'id');
+        $roles = $roles->toArray();
+        array_unshift($roles, "[None]");
+        
+        return view('adminlte::backend.user.new', compact('roles', 'permissions'));
     }
 
     /**
@@ -138,7 +147,9 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name', 'id');
         $permissions = Permission::all('name', 'id');
+        $roles = $roles->toArray();
 
+        array_unshift($roles, "[None]");
         return view('adminlte::backend.user.edit', compact('user', 'roles', 'permissions'));
     }
 

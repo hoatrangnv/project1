@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Google2FA;
@@ -13,6 +14,8 @@ use Session;
 use App\User;
 
 class LoginController extends Controller{
+    //use ThrottlesLogins;
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -42,7 +45,7 @@ class LoginController extends Controller{
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    //protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -57,11 +60,19 @@ class LoginController extends Controller{
         return config('auth.providers.users.field', 'email');
     }
 
+    protected function redirectTo()
+    {
+        $user = Auth::user();
+        if (count(User::userHasRole(User::where('email', $user->email)->pluck("id")[0])) > 0 ){
+            $this->redirectTo = '/admin/home';
+            return '/admin/home';
+        }
+
+        $this->redirectTo = '/home';
+        return '/home';
+    }
 
     protected function attemptLogin(Request $request){
-        //check if Admin then redirect to anotherSite
-        $this->redirectWithAdmin($request);
-
         if($this->username() === 'email'){
             return $this->attemptLoginAtAuthenticatesUsers($request);
         }
@@ -69,6 +80,46 @@ class LoginController extends Controller{
             return $this->attempLoginUsingUsernameAsAnEmail($request);
         }
         return false;
+    }
+
+    /**
+     * Redirect the user after determining they are locked out.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function sendLockoutResponse(Request $request)
+    {
+        $minutes = $this->limiter()->availableIn(
+            $this->throttleKey($request)
+        );
+
+        $minutes = $minutes / 60;
+
+        $message = trans('auth.throttle', ['minutes' => $minutes]);
+
+        $errors = [$this->username() => $message];
+
+        if ($request->expectsJson()) {
+            return response()->json($errors, 423);
+        }
+
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->withErrors($errors);
+    }
+
+    /**
+     * Determine if the user has too many failed login attempts.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function hasTooManyLoginAttempts(Request $request)
+    {
+        return $this->limiter()->tooManyAttempts(
+            $this->throttleKey($request), 5, 30
+        );
     }
 
     protected function validateLogin(Request $request){
@@ -105,15 +156,18 @@ class LoginController extends Controller{
         }
     }
 
-
-    public function redirectWithAdmin($request){
-        if (count(User::userHasRole(User::where('email', $request->email)->pluck("id")[0])) > 0 ){
+    public function redirectWithAdmin($email){
+        if (count(User::userHasRole(User::where('email', $email)->pluck("id")[0])) > 0 ){
             $this->redirectTo = '/admin/home';
+            return redirect(url('/admin/home'));
         }
+
+        $this->redirectTo = '/home';
+        return redirect(url('/home'));
     }
 
     public function auth2fa(Request $request){
-        if(Session::get('google2fa'))
+        if(Session::get('google2fa')) 
             return redirect('/home');
         $valid = true;
         if($request->isMethod('post')){
@@ -133,11 +187,14 @@ class LoginController extends Controller{
                                 'email' => Session::get('authy:auth:email'),
                                 'password' => Session::get('authy:auth:password')
                             ];
+
                             $this->guard()->attempt(
                                 $user, Session::get('authy:auth:remember')
                             );
+
                             Session::put('google2fa', true);
-                            return redirect('home');
+
+                            return $this->redirectWithAdmin(Session::get('authy:auth:email'));
                         }
                     }
                     return redirect(url('login'));

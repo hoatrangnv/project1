@@ -12,7 +12,7 @@
             <li {{ Request::is('admin/home') ? 'class=active' : '' }}><a href="{{ url('admin/home') }}"><i class='fa fa-home'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
             @can('view_users')
                 <li class="{{ Request::is('users*') ? 'active' : '' }}">
-                    <a href="{{ route('users.index') }}">
+                    <a href="/users">
                         <i class="glyphicon glyphicon-user"></i> Users
                     </a>
                 </li>
@@ -26,14 +26,17 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ Request::segment(2) === '' ? 'active' : null }}"><a href="{{ url('report') }}">{{ trans('adminlte_lang::default.member') }}</a></li>
-                        <li class="{{ Request::segment(2) === 'commission' ? 'active' : null }}"><a href="{{ url('report/commission') }}">Commission</a></li>
-
-                        <li class="{{ Request::is('users/root') ? 'active' : '' }}">
-                            <a href="{{ route('users.root') }}">
-                                List Root
+                        <li class="{{ Request::segment(2) === '' ? 'active' : null }}"><a href="{{ url('report') }}">Statistics</a>
+                        </li>
+                        <li class="{{ Request::segment(2) === 'commission' ? 'active' : null }}">
+                            <a href="{{ url('report/commission') }}">Commission
                             </a>
                         </li>
+                        <li class="{{ Request::segment(2) === 'commission' ? 'active' : null }}">
+                            <a href="{{ url('report/commission') }}">Top 50
+                            </a>
+                        </li>
+                        
                         <li class="{{ Request::is('users/photo_approve') ? 'active' : '' }}">
                             <a href="{{ route('users.photo_approve') }}">
                                 List Approve
@@ -41,19 +44,21 @@
                         </li>
                     </ul>
                 </li>
-
             @endcan
+            <li class="{{ Request::is('roles*') ? 'active' : '' }}">
+                <a href="{{ route('withdraw.list') }}">
+                    <i class='glyphicon glyphicon-lock'></i> Withdraw Approve</a>
+                </a>
+            </li>
+            <li class="{{ Request::is('roles*') ? 'active' : '' }}">
+                <a href="{{ route('wallet.list') }}">
+                    <i class='glyphicon glyphicon-lock'></i> Wallet History</a>
+                </a>
+            </li>
             @can('view_roles')
                 <li class="{{ Request::is('roles*') ? 'active' : '' }}">
                     <a href="{{ route('roles.index') }}">
                         <i class='glyphicon glyphicon-lock'></i> Roles</a>
-                    </a>
-                </li>
-            @endcan
-            @can('view_packages')
-                <li class="{{ Request::is('packages*') && !Request::is('packages/invest') ? 'active' : '' }}">
-                    <a href="{{ route('packages.index') }}">
-                        <i class="glyphicon glyphicon-user"></i> Packages
                     </a>
                 </li>
             @endcan

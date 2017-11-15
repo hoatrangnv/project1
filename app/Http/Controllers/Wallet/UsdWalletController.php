@@ -153,6 +153,7 @@ class UsdWalletController extends Controller
     public function buyCLP(Request $request)
     {
         if($request->ajax()) {
+            
             $userCoin = Auth::user()->userCoin;
 
             $usdAmountErr = '';

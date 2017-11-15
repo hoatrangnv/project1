@@ -6,6 +6,7 @@ namespace App\Helper;
  * and open the template in the editor.
  */
 use DateTime;
+use Carbon\Carbon;
 /**
  * Description of Helper
  *
@@ -13,9 +14,9 @@ use DateTime;
  */
 class Helper {
 
-    public function __construct(\Carbon\Carbon $carbon)
+    public function __construct()
     {
-        $this->carbon = $carbon;
+        $this->carbon = new \Carbon\Carbon();
     }
 
     public function get_frist_day_of_month($date){

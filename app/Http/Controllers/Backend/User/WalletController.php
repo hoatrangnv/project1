@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Backend\User;
 
 use App\User;
 use App\UserData;
 use App\UserCoin;
+use App\Wallet;
 use App\Role;
 use App\Permission;
 use App\Authorizable;
@@ -13,16 +14,56 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Google2FA;
 
-class UserController extends Controller
+class WalletController extends Controller
 {
-    use Authorizable;
+    //use Authorizable;
 
-    public function index()
+    public function index(Request $request)
     {
-        $result = User::latest()->paginate();
+        if($request->q){
+            $userId = $request->q;
+            $result = Wallet::latest()->where('userId', $userId)
+                ->paginate()->setPath ( '' );
+            $pagination = $result->appends ( array (
+                'q' => $userId
+            ));
 
-        return view('adminlte::backend.user.index', compact('result'));
+            $all_wallet_type = config('cryptolanding.wallet_type');
+
+            $wallet_type = [1 => 'USD Wallet', 2 => 'BTC Wallet', 3 => 'CLP Wallet', 4 => 'Holding Wallet'];
+
+            $bonus_type = [];
+            foreach ($all_wallet_type as $key => $val) {
+                if($key == 1) $bonus_type[$key] = trans($val);
+                if($key == 2) $bonus_type[$key] = trans($val);
+                if($key == 3) $bonus_type[$key] = trans($val);
+                if($key == 4) $bonus_type[$key] = trans($val);
+                if($key == 5) $bonus_type[$key] = trans($val);
+                if($key == 6) $bonus_type[$key] = trans($val);
+                if($key == 7) $bonus_type[$key] = trans($val);
+                if($key == 8) $bonus_type[$key] = trans($val);
+                if($key == 9) $bonus_type[$key] = trans($val);
+                if($key == 10) $bonus_type[$key] = trans($val);
+                if($key == 11) $bonus_type[$key] = trans($val);
+                if($key == 12) $bonus_type[$key] = trans($val);
+                if($key == 13) $bonus_type[$key] = trans($val);
+                if($key == 14) $bonus_type[$key] = trans($val);
+                if($key == 15) $bonus_type[$key] = trans($val);
+                if($key == 16) $bonus_type[$key] = trans($val);
+                if($key == 17) $bonus_type[$key] = trans($val);
+            }
+
+            //dd($wallet_type);
+
+            return view('adminlte::backend.wallet.index', compact('result', 'bonus_type', 'wallet_type'))->withQuery ( $userId );
+        }
+        else{
+            $wallet_type = [];
+            $result = Wallet::where('userId', -1)->paginate();
+            return view('adminlte::backend.wallet.index', compact('result', 'wallet_type'));
+        }
     }
+
     public function root()
     {
         $result = User::where('refererId', 0)->paginate();
@@ -63,7 +104,11 @@ class UserController extends Controller
     {
         $roles = Role::pluck('name', 'id');
 
-        return view('adminlte::backend.user.new', compact('roles'));
+        $permissions = Permission::all('name', 'id');
+        $roles = $roles->toArray();
+        array_unshift($roles, "[None]");
+        
+        return view('adminlte::backend.user.new', compact('roles', 'permissions'));
     }
 
     /**
@@ -127,7 +172,9 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name', 'id');
         $permissions = Permission::all('name', 'id');
+        $roles = $roles->toArray();
 
+        array_unshift($roles, "[None]");
         return view('adminlte::backend.user.edit', compact('user', 'roles', 'permissions'));
     }
 
@@ -203,53 +250,5 @@ class UserController extends Controller
         }
         return redirect()->back();
     }
-    /**
-     * Sync roles and permissions
-     *
-     * @param Request $request
-     * @param $user
-     * @return string
-     */
-    private function syncPermissions(Request $request, $user)
-    {
-        // Get the submitted roles
-        $roles = $request->get('roles', []);
-        $permissions = $request->get('permissions', []);
-
-        // Get the roles
-        $roles = Role::find($roles);
-
-        // check for current role changes
-        if( ! $user->hasAllRoles( $roles ) ) {
-            // reset all direct permissions for user
-            $user->permissions()->sync([]);
-        } else {
-            // handle permissions
-            $user->syncPermissions($permissions);
-        }
-
-        $user->syncRoles($roles);
-
-        return $user;
-    }
-
-    public function search(Request $request)
-    {
-        $userId = $request->get('id', 0);
-        $userName = $request->get('username', '');
-        if($userId > 0 || $userName != ''){
-            if($userId > 0)
-                $user = User::where('uid', $userId)->where('active', 1)->first();
-            elseif($userName != '')
-                $user = User::where('name', '=', $userName)->where('active', 1)->first();
-            if($user){
-                if($user->uid == 0 || $user->uid == null){
-                    $user->uid = User::getUid();
-                    $user->save();
-                }
-                return response()->json(array('id' => $user->uid, 'username'=>$user->name));
-            }
-        }
-        return response()->json(array('err' => 'User not exit.'));
-    }
+   
 }

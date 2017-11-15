@@ -1,26 +1,40 @@
+var temp = [];
+dataType = DATA.action_type;
+dataType.unshift('Action Type');
+dataType.push('Total', {type: 'number', role: 'annotation'},{role: 'style'});
+temp.push(dataType);
+Object.keys(DATA.data_analytic).forEach(function(key) {
+    var tmp = []
+    tmp.push(key);
+    var tp = DATA.data_analytic[key];
+    var total = 0;
+    Object.keys(tp).forEach(function(ky) {
+        total += tp[ky];
+        tmp.push(tp[ky]);
+    });
+    tmp.push(total);
+    tmp.push(total);
+    tmp.push('#000000');
+    temp.push(tmp);
+});
+
 google.charts.load("visualization", "1", {packages:["corechart"]});
 google.charts.setOnLoadCallback(drawChart);
 function drawChart() {
     // Some raw data (not necessarily accurate)
-    var data = google.visualization.arrayToDataTable([
-        ['Month', 'Bolivia', 'Ecuador', 'Madagascar', 'Papua New Guinea', 'Rwanda', 'Total', {type: 'number', role: 'annotation'},{role: 'style'}],
-        ['Application',5,2,2,8,0,17,17,'#000000'],
-        ['Friend',4,3,5,6,2,20,20,'#000000'],
-        ['Newspaper',  6,      1,        0,             2,           0,      9, 9,'#000000'],
-        ['Radio',  8,      0,        8,             1,           1,      18, 18,'#000000'],
-        ['No Referral',  2,      2,        3,             0,          6,      13, 13,'#000000']
-    ]);
+    let data = google.visualization.arrayToDataTable(temp);
 
-    var options = {
+    let options = {
         isStacked: true,
-        title : 'Monthly Coffee Production by Country',
+        title : 'Commission chart',
         vAxis: {title: 'Total Money',maxValue:25},
         hAxis: {title: 'Time'},
         legend: { position: 'top', maxLines: 6 },
         seriesType: 'bars',
         series: {5: {type: 'line',color:"#000000"}},
+        pointSize: 2,
     };
 
-    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+    let chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
     chart.draw(data, options);
 }
