@@ -71,11 +71,15 @@
                                     </td>
                                     <td>{{ $item->created_at }}</td>
                                     <td class="text-center">
+                                    @if($item->status == 1)
                                         {!! Form::open( ['method' => 'post', 'url' => route('withdraw.approve', ['id' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure want to approve request ?")']) !!}
                                         <button type="submit" class="btn btn-xs btn-info">
                                             Approve
                                         </button>
                                         {!! Form::close() !!}
+                                    @else
+                                        &nbsp;
+                                    @endif
                                     </td>
                                 </tr>
                             @endforeach

@@ -14,9 +14,6 @@
             <div class="box">
                 <div class="box-header">
                     <div class="col-md-4">
-                    @can('add_users')
-                        <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create</a>
-                    @endcan
                     </div>
                     <div class="col-md-8">
                     {!! Form::open(['method'=>'GET','url'=>'users','class'=>'','role'=>'search'])  !!}
