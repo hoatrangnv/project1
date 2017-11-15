@@ -45,6 +45,16 @@
                     </ul>
                 </li>
             @endcan
+            <li class="{{ Request::is('roles*') ? 'active' : '' }}">
+                <a href="{{ route('withdraw.list') }}">
+                    <i class='glyphicon glyphicon-lock'></i> Withdraw Approve</a>
+                </a>
+            </li>
+            <li class="{{ Request::is('roles*') ? 'active' : '' }}">
+                <a href="{{ route('wallet.list') }}">
+                    <i class='glyphicon glyphicon-lock'></i> Wallet History</a>
+                </a>
+            </li>
             @can('view_roles')
                 <li class="{{ Request::is('roles*') ? 'active' : '' }}">
                     <a href="{{ route('roles.index') }}">

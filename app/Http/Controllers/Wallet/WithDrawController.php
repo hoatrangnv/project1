@@ -138,8 +138,7 @@ class WithDrawController extends Controller
 								if ($request->isMethod('post'))
 								{
 									if($withdrawConfirm->type == 'btc'){
-										throw new \ErrorException("The withdrawal fail!");
-										//self::sendCoinBTC($request, $id);
+										self::sendCoinBTC($request, $id);
 									}elseif($withdrawConfirm->type == 'clp'){
 										self::sendCoinCLP($request, $id);
 									}
@@ -179,6 +178,62 @@ class WithDrawController extends Controller
 		}
 
 		return view('adminlte::wallets.confirmWithdraw', compact('isConfirm', 'withdrawConfirm'));
+	}
+
+	function withdawBTC(Request $request, $id)
+	{
+		$withdrawConfirm = WithdrawConfirm::where('id', '=', $id)->first();
+
+		if($request->status == 1){
+			$withdrawConfirm->status = 2;
+			$withdrawConfirm->save();
+
+			$request->session()->flash('error', 'The withdrawal is cancelled!');
+		} else {
+			$user = UserCoin::where('userId', $withdrawConfirm->userId)->first();
+			// nếu tổng số tiền sau khi trừ đi phí lơn hơn
+			// số tiền chuyển đi thì thực hiện giao dịch
+			if ($user->btcCoinAmount - config('app.fee_withRaw_BTC') >= $withdrawConfirm->withdrawAmount)
+			{
+				//Change status withdraw confirm
+				$withdrawConfirm->status = 1;
+				$withdrawConfirm->save();
+
+				$request->session()->flash('successMessage', 'You have withdrawn successfully!');
+			} 
+			else 
+			{
+				$request->session()->flash('error', 'Not enought BTC');
+			}
+		}
+	}
+
+	function withdawCLP(Request $request, $id)
+	{
+		$withdrawConfirm = WithdrawConfirm::where('id', '=', $id)->first();
+
+		if($request->status == 1){
+			$withdrawConfirm->status = 2;
+			$withdrawConfirm->save();
+
+			$request->session()->flash('error', 'The withdrawal is cancelled!');
+		} else {
+			$user = UserCoin::where('userId', $withdrawConfirm->userId)->first();
+			// nếu tổng số tiền sau khi trừ đi phí lơn hơn
+			// số tiền chuyển đi thì thực hiện giao dịch
+			if ($user->clpCoinAmount - config('app.fee_withRaw_CLP') >= $withdrawConfirm->withdrawAmount)
+			{
+				//Change status withdraw confirm
+				$withdrawConfirm->status = 1;
+				$withdrawConfirm->save();
+
+				$request->session()->flash('successMessage', 'You have withdrawn successfully!');
+			} 
+			else 
+			{
+				$request->session()->flash('error', 'Not enought BTC');
+			}
+		}
 	}
 	
 	function sendCoinBTC(Request $request, $id)
@@ -378,10 +433,6 @@ class WithDrawController extends Controller
 			{
 				$withdrawAmountErr = 'You cannot withdraw more than $3000';
 			}
-
-			//Get clpcoin amount withdraw history in day
-			//Wallet::where('userId', Auth::user()->id)->where(' ');
-
 
 			if($request->walletAddress == ''){
 				$walletAddressErr = 'Ethereum Address is required';

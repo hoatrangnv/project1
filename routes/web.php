@@ -40,6 +40,18 @@ Route::group( ['middleware' => ['auth']], function() {
         Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
     });
 
+    Route::group(['middleware' => ['permission:view_users']], function () {
+        Route::post('withdraw/approve', 'Backend\User\WithdrawController@withdrawApprove')->name('withdraw.approve');
+    });
+
+    Route::group(['middleware' => ['permission:view_users']], function () {
+        Route::get('withdraw/', 'Backend\User\WithdrawController@index')->name('withdraw.list');
+    });
+
+    Route::group(['middleware' => ['permission:view_users']], function () {
+        Route::get('wallet/history/', 'Backend\User\WalletController@index')->name('wallet.list');
+    });
+
     Route::group(['middleware' => ['permission:view_reports']], function () {
         Route::get('/report', 'Backend\Report\ReportController@getDataReport')->name('report');
         Route::get('/report/commission', 'Backend\Report\ReportController@getDataCommissionReport');
@@ -51,6 +63,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('members/referrals/{id}/detail', 'User\MemberController@refferalsDetail');
     Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
     Route::resource('members', 'User\MemberController');
+
 
     
     //USD WALLET
