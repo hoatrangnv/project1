@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\User;
 use App\User;
 use App\UserData;
 use App\UserCoin;
+use App\Wallet;
 use App\WithdrawConfirm;
 use App\Role;
 use App\Permission;
@@ -19,6 +20,8 @@ use Coinbase\Wallet\Resource\Transaction;
 use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
+
+use Log;
 
 use App\Withdraw;
 use App\CLPWalletAPI;
@@ -65,7 +68,7 @@ class WithdrawController extends Controller
         if ($user->clpCoinAmount - config('app.fee_withRaw_CLP') >= $withdrawConfirm->withdrawAmount)
         {
             //Change status withdraw confirm
-            $withdrawConfirm->status = 1;
+            $withdrawConfirm->status = 3;
             $withdrawConfirm->save();
 
             try {
@@ -77,7 +80,11 @@ class WithdrawController extends Controller
 
                 $newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withdrawAmount;
                 
+
                 if ($result["success"] == 1) {
+                    if(!isset($result["tx"])) throw new \Exception("Transaction have none value");
+                    
+
                     $update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
                     
                     //insert wallet
@@ -205,7 +212,7 @@ class WithdrawController extends Controller
                 } catch (\Exception $e) {
                     $request->session()->flash('error', "The withdrawal fail: " . $e->getMessage());
                     //Change status withdraw confirm to 0 if have error
-                    $withdrawConfirm->status = 1;
+                    $withdrawConfirm->status = 0;
                     $withdrawConfirm->save();
 
                     Log::error('withdraw BTC has error: ' . $e->getMessage());

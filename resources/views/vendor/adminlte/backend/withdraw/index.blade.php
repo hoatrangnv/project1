@@ -69,7 +69,7 @@
                                             Cancel
                                         @endif
                                     </td>
-                                    <td>{{ $item->created_at }}</td>
+                                    <td>{{ date('Y-m-d H:i:s', strtotime("+6 hours", strtotime($item->created_at))) }}</td>
                                     <td class="text-center">
                                     @if($item->status == 1)
                                         {!! Form::open( ['method' => 'post', 'url' => route('withdraw.approve', ['id' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure want to approve request ?")']) !!}
