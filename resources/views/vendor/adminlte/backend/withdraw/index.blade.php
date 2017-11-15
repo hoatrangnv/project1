@@ -43,7 +43,7 @@
                                 <th>Email</th>
                                 <th>UserId</th>
                                 <th>WithdrawAmount</th>
-                                <th>WalletAdress</th>
+                                <!-- <th>WalletAdress</th> -->
                                 <th>Type</th>
                                 <th>Status</th>
                                 <th>Created At</th>
@@ -58,7 +58,7 @@
                                     <td>@isset($item->users->email){{ $item->users->email }}@endisset</td>
                                     <td>@isset($item->users->id){{ $item->users->id }}@endisset</td>
                                     <td>{{ $item->withdrawAmount }}</td>
-                                    <td>{{ $item->walletAddress }}</td>
+                                    <!-- <td>{{ $item->walletAddress }}</td> -->
                                     <td style="text-transform: uppercase;">{{ $item->type }}</td>
                                     <td>
                                         @if($item->status == 1) 
