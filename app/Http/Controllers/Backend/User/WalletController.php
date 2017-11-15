@@ -28,11 +28,39 @@ class WalletController extends Controller
                 'q' => $userId
             ));
 
-            return view('adminlte::backend.wallet.index', compact('result'))->withQuery ( $userId );
+            $all_wallet_type = config('cryptolanding.wallet_type');
+
+            $wallet_type = [1 => 'USD Wallet', 2 => 'BTC Wallet', 3 => 'CLP Wallet', 4 => 'Holding Wallet'];
+
+            $bonus_type = [];
+            foreach ($all_wallet_type as $key => $val) {
+                if($key == 1) $bonus_type[$key] = trans($val);
+                if($key == 2) $bonus_type[$key] = trans($val);
+                if($key == 3) $bonus_type[$key] = trans($val);
+                if($key == 4) $bonus_type[$key] = trans($val);
+                if($key == 5) $bonus_type[$key] = trans($val);
+                if($key == 6) $bonus_type[$key] = trans($val);
+                if($key == 7) $bonus_type[$key] = trans($val);
+                if($key == 8) $bonus_type[$key] = trans($val);
+                if($key == 9) $bonus_type[$key] = trans($val);
+                if($key == 10) $bonus_type[$key] = trans($val);
+                if($key == 11) $bonus_type[$key] = trans($val);
+                if($key == 12) $bonus_type[$key] = trans($val);
+                if($key == 13) $bonus_type[$key] = trans($val);
+                if($key == 14) $bonus_type[$key] = trans($val);
+                if($key == 15) $bonus_type[$key] = trans($val);
+                if($key == 16) $bonus_type[$key] = trans($val);
+                if($key == 17) $bonus_type[$key] = trans($val);
+            }
+
+            //dd($wallet_type);
+
+            return view('adminlte::backend.wallet.index', compact('result', 'bonus_type', 'wallet_type'))->withQuery ( $userId );
         }
         else{
-            $result = Wallet::where('userId', 0)->paginate();
-            return view('adminlte::backend.wallet.index', compact('result'));
+            $wallet_type = [];
+            $result = Wallet::where('userId', -1)->paginate();
+            return view('adminlte::backend.wallet.index', compact('result', 'wallet_type'));
         }
     }
 

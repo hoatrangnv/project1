@@ -116,7 +116,7 @@ class WithdrawController extends Controller
                 } else {
                     flash()->error('The withdrawal fail.');
                     //Change status withdraw confirm to 0 if have error
-                    $withdrawConfirm->status = 2;
+                    $withdrawConfirm->status = 1;
                     $withdrawConfirm->save();
                 }
 

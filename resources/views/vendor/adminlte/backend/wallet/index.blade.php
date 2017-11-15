@@ -19,7 +19,7 @@
                     {!! Form::open(['method'=>'GET','url'=>'wallet/history','class'=>'','role'=>'search'])  !!}
 
                     <div class="input-group custom-search-form pull-right" style="width: 60%">
-                        <input type="text" class="form-control" name="q" placeholder="Search...">
+                        <input type="text" class="form-control" name="q" placeholder="userId...">
                         <span class="input-group-btn">
                             <button class="btn btn-default-sm" type="submit">
                                 <i class="fa fa-search"></i>
@@ -50,8 +50,8 @@
                                 <tr>
                                     <td>{{ $item->created_at }}</td>
                                     <td>{{ $item->updated_at }}</td>
-                                    <td>{{ $item->walletType }}</td>
-                                    <td>{{ $item->type }}</td>
+                                    <td>{{ $wallet_type[$item->walletType] }}</td>
+                                    <td>{{ $bonus_type[$item->type] }}</td>
                                     <td>{{ $item->note }}</td>
                                     <td>{{ $item->inOut }}</td>
                                     <td>{{ $item->amount }}</td>

@@ -35,18 +35,19 @@
                 <div class="box-body" style="padding-top:0;">
                     <div class="result-set">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover" id="data-table">
+                            <table class="table table-responsive table-bordered table-striped table-hover" id="data-table">
                             <thead>
                             <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>UserId</th>
-                                <th>WithdrawAmount</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th>Created At</th>
-                                <th class="text-center">Approve</th>
+                                <th width="5%">Id</th>
+                                <th width="10%">Name</th>
+                                <th width="20%">Email</th>
+                                <th width="5%">UserId</th>
+                                <th width="10%">WithdrawAmount</th>
+                                <th width="10%" style="overflow: scroll;">WalletAdress</th>
+                                <th width="10%">Type</th>
+                                <th width="10%">Status</th>
+                                <th width="10%">Created At</th>
+                                <th width="10%"class="text-center">Approve</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -57,6 +58,7 @@
                                     <td>@isset($item->users->email){{ $item->users->email }}@endisset</td>
                                     <td>@isset($item->users->id){{ $item->users->id }}@endisset</td>
                                     <td>{{ $item->withdrawAmount }}</td>
+                                    <td>{{ $item->walletAddress }}</td>
                                     <td style="text-transform: uppercase;">{{ $item->type }}</td>
                                     <td>
                                         @if($item->status == 1) 
