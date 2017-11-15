@@ -38,16 +38,16 @@
                             <table class="table table-responsive table-bordered table-striped table-hover" id="data-table">
                             <thead>
                             <tr>
-                                <th width="5%">Id</th>
-                                <th width="10%">Name</th>
-                                <th width="20%">Email</th>
-                                <th width="5%">UserId</th>
-                                <th width="10%">WithdrawAmount</th>
-                                <th width="10%" style="overflow: scroll;">WalletAdress</th>
-                                <th width="10%">Type</th>
-                                <th width="10%">Status</th>
-                                <th width="10%">Created At</th>
-                                <th width="10%"class="text-center">Approve</th>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>UserId</th>
+                                <th>WithdrawAmount</th>
+                                <th>WalletAdress</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <th class="text-center">Approve</th>
                             </tr>
                             </thead>
                             <tbody>
