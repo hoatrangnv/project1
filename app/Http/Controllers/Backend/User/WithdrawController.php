@@ -114,23 +114,23 @@ class WithdrawController extends Controller
 
                     flash()->success("Request withdraw id: $request->id  has been approved");
                 } else {
-                    $request->session()->flash('error', 'The withdrawal fail.');
+                    flash()->error('The withdrawal fail.');
                     //Change status withdraw confirm to 0 if have error
-                    $withdrawConfirm->status = 0;
+                    $withdrawConfirm->status = 2;
                     $withdrawConfirm->save();
                 }
 
             } catch (\Exception $e) {
-                $request->session()->flash('error', 'The withdrawal fail.');
+                flash()->error('The withdrawal fail - Exception -' . $e->getMessage());
                 //Change status withdraw confirm to 0 if have error
-                $withdrawConfirm->status = 0;
+                $withdrawConfirm->status = 2;
                 $withdrawConfirm->save();
 
                 Log::error('withdraw CLP has error: ' . $e->getMessage());
             }
         
         } else {
-            $request->session()->flash('error', 'Not enought CLP');
+            flash()->error('Not enought CLP');
         }
 
         return redirect()->back();
