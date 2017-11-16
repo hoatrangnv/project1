@@ -656,6 +656,7 @@ CREATE TABLE `withdraws` (
   `wallet_id` int(10) DEFAULT NULL,
   `amountCLP` double DEFAULT NULL,
   `amountBTC` double DEFAULT NULL,
+  `at_rate` float DEFAULT NULL,
   `transaction_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `transaction_hash` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fee` double DEFAULT NULL,

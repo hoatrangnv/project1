@@ -220,20 +220,17 @@ class BtcWalletController extends Controller
             $amountCLP = $request->btcAmount / $clpRate;
             $holdingAmount = 0;
 
-            
-            //Get total CLPAmount buy by BTC
-            $amountCLPByBTC = 0;
-            $historyCLPByBTC = Wallet::where('walletType', Wallet::CLP_WALLET)
-                                ->where('type', Wallet::BTC_CLP_TYPE)
-                                ->where('inOut', Wallet::IN)
-                                ->where('userId', Auth::user()->id)
-                                ->get();
+            //Get all pack in user_packages
+            $package = UserPackage::where('userId', Auth::user()->id)
+                        ->where('withdraw', '<', 1)
+                        ->groupBy(['userId'])
+                        ->selectRaw('sum(amount_increase) as totalValue')
+                        ->get()
+                        ->first();
+            $totalAmount = $package->totalValue + ($userCoin->clpCoinAmount + $amountCLP) * ExchangeRate::getCLPUSDRate();
 
-            foreach($historyCLPByBTC as $history) {
-                $amountCLPByBTC += $history->amount;
-            }
-
-            if(($amountCLPByBTC + $amountCLP) > 11000) {
+            if($totalAmount > 11000)
+            {
                 $clpAmountErr = 'You can not buy more CLP';
             }
 

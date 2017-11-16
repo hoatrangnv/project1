@@ -20,6 +20,7 @@ use Coinbase\Wallet\Resource\Transaction;
 use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Client;
+use App\ExchangeRate;
 
 use Log;
 
@@ -60,6 +61,44 @@ class WithdrawController extends Controller
         return redirect()->back();
     }
 
+    public function withdrawReject(Request $request)
+    {
+        if ($request->isMethod('post'))
+        {
+            if( $request->id ) {
+                $withdrawConfirm = WithdrawConfirm::where('id', '=', $request->id)->first();
+
+                $withdrawRecord = Withdraw::where('id', $withdrawConfirm->wallet_id)->first();
+                $withdrawRecord->status = 3; //Reject
+                $withdrawRecord->save();
+
+                //User
+                $user = User::where('id', $withdrawRecord->userId)->first();
+                $userCoin = $user->userCoin;
+
+                $walletId = $withdrawRecord->wallet_id;
+                $wallet = Wallet::where('id', $withdrawRecord->wallet_id)->first();
+                $wallet->note = "Rejected";
+                $wallet->save();
+
+                //Return money for user
+                if($withdrawConfirm->type == 'btc')
+                {
+                    $userCoin->btcCoinAmount += config('app.fee_withRaw_BTC') + $withdrawConfirm->withdrawAmount;
+                }elseif($withdrawConfirm->type == 'clp')
+                {
+                    $userCoin->clpCoinAmount += config('app.fee_withRaw_CLP') + $withdrawConfirm->withdrawAmount;
+                }
+                $userCoin->save();
+
+            } else {
+                flash()->success('Request not approve ok');
+            }
+        }
+
+        return redirect()->back();
+    }
+
     public function sendCLP(Request $request)
     {
         $withdrawConfirm = WithdrawConfirm::where('id', '=', $request->id)->first();
@@ -68,7 +107,7 @@ class WithdrawController extends Controller
         if ($user->clpCoinAmount - config('app.fee_withRaw_CLP') >= $withdrawConfirm->withdrawAmount)
         {
             //Change status withdraw confirm
-            $withdrawConfirm->status = 3;
+            $withdrawConfirm->status = 1; //Approve
             $withdrawConfirm->save();
 
             try {
@@ -78,53 +117,50 @@ class WithdrawController extends Controller
                 //$result = $clpApi->addInvestor($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
                 $result = $clpApi->transferCLP($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
 
-                $newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withdrawAmount;
-                
-
                 if ($result["success"] == 1) {
                     if(!isset($result["tx"])) throw new \Exception("Transaction have none value");
                     
+                    //withdraw
+                    $withdrawRecord = Withdraw::where('id', $withdrawConfirm->withdraw_id)->first();
+                    $withdrawRecord->status = 0;
+                    $withdrawRecord->save();
 
-                    $update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
-                    
-                    //insert wallet
-                    $dataInsertWallet = [
-                        "walletType" => Wallet::CLP_WALLET,
-                        "type" => Wallet::WITH_DRAW_CLP_TYPE,
-                        "userId" => $withdrawConfirm->userId,
-                        "note" => "Pending",
-                        "amount" => $withdrawConfirm->withdrawAmount,
-                        "inOut" => Wallet::OUT
-                    ];
-
-                    $resultInsert = Wallet::create($dataInsertWallet);
-
-                    //insert withdraw
-                    $dataInsertWithdraw = [
-                        "walletAddress" => $withdrawConfirm->walletAddress,
-                        "userId" => $withdrawConfirm->userId,
-                        "amountCLP" => $withdrawConfirm->withdrawAmount,
-                        "wallet_id" => $resultInsert->id,
-                        "transaction_id" => '',
-                        "transaction_hash" => $result["tx"],
-                        "status" => 0
-                    ];
-
-                    Withdraw::create($dataInsertWithdraw);
+                    //wallet
+                    $wallet = Wallet::where('id', $withdrawRecord->wallet_id)->first();
+                    $wallet->note = "Pending";
+                    $wallet->save();
 
                     flash()->success("Request withdraw id: $request->id  has been approved");
                 } else {
                     flash()->error('The withdrawal fail.');
-                    //Change status withdraw confirm to 0 if have error
-                    $withdrawConfirm->status = 1;
+                    //Change status withdraw confirm to 3 if have error
+                    $withdrawConfirm->status = 3;
                     $withdrawConfirm->save();
                 }
 
             } catch (\Exception $e) {
                 flash()->error('The withdrawal fail - Exception -' . $e->getMessage());
-                //Change status withdraw confirm to 0 if have error
+                //Change status withdraw confirm to 2 - Cancel if have error
                 $withdrawConfirm->status = 2;
                 $withdrawConfirm->save();
+
+                //Withdraw record
+                $withdrawRecord = Withdraw::where('id', $withdrawConfirm->withdraw_id)->first();
+                $withdrawRecord->status = 3; //Reject
+                $withdrawRecord->save();
+
+                //User
+                $user = User::where('id', $withdrawRecord->userId)->first();
+                $userCoin = $user->userCoin;
+
+                //Wallet
+                $wallet = Wallet::where('id', $withdrawRecord->wallet_id)->first();
+                $wallet->note = "Rejected";
+                $wallet->save();
+
+                //Return money for user
+                $userCoin->clpCoinAmount += config('app.fee_withRaw_CLP') + $withdrawConfirm->withdrawAmount;
+                $userCoin->save();
 
                 Log::error('withdraw CLP has error: ' . $e->getMessage());
             }
@@ -146,7 +182,7 @@ class WithdrawController extends Controller
             if ($user->btcCoinAmount - config('app.fee_withRaw_BTC') >= $withdrawConfirm->withdrawAmount)
             {
                 //Change status withdraw confirm
-                $withdrawConfirm->status = 3;
+                $withdrawConfirm->status = 1;
                 $withdrawConfirm->save();
 
                 //begin send
@@ -166,23 +202,6 @@ class WithdrawController extends Controller
                     //send btc
                     $client->createAccountTransaction($account, $transaction);
                 
-                    //Update btCoinAmount
-                    $btcCoinAmount = $user->btcCoinAmount - config('app.fee_withRaw_BTC') - $withdrawConfirm->withdrawAmount;
-
-                    UserCoin::where('userId', '=', $withdrawConfirm->userId)->update(['btcCoinAmount' => $btcCoinAmount]);
-
-                    //insert wallet
-                    $dataInsertWallet = [
-                        "walletType" => Wallet::BTC_WALLET,
-                        "type" => Wallet::WITH_DRAW_BTC_TYPE,
-                        "userId" => $withdrawConfirm->userId,
-                        "note" => "Pending",
-                        "amount" => $withdrawConfirm->withdrawAmount,
-                        "inOut" => Wallet::OUT
-                    ];
-
-                    $dataInsert = Wallet::create($dataInsertWallet);
-
                     //Get transaction request
                     $transaction_hash = '';
                     $transaction_id = '';
@@ -195,25 +214,43 @@ class WithdrawController extends Controller
                         }
                     }
 
-                    //insert withdraw -- lưu lịch sử giao dịch -- trạng thái success
-                    $dataInsertWithdraw = [
-                        "walletAddress" => $withdrawConfirm->walletAddress,
-                        "userId" => $withdrawConfirm->userId,
-                        "amountBTC" => $withdrawConfirm->withdrawAmount,
-                        "wallet_id" => $dataInsert->id,
-                        "transaction_id" => $transaction_id,
-                        "transaction_hash" => $transaction_hash,
-                        "status" => 0
-                    ];
+                    //Withdraw record
+                    $withdrawRecord = Withdraw::where('id', $withdrawConfirm->withdraw_id)->first();
+                    $withdrawRecord->transaction_hash = $transaction_hash;
+                    $withdrawRecord->transaction_id = $transaction_id;
+                    $withdrawRecord->status = 0;
+                    $withdrawRecord->save();
 
-                    $dataInsertWithdraw = Withdraw::create($dataInsertWithdraw);
+
+                    $walletId = $withdrawRecord->wallet_id;
+                    $wallet = Wallet::where('id', $withdrawRecord->wallet_id)->first();
+                    $wallet->note = "Pending";
+                    $wallet->save();
 
                     flash()->success("Request withdraw id: $request->id  has been approved");
                 } catch (\Exception $e) {
                     $request->session()->flash('error', "The withdrawal fail: " . $e->getMessage());
                     //Change status withdraw confirm to 0 if have error
-                    $withdrawConfirm->status = 0;
+                    $withdrawConfirm->status = 2;
                     $withdrawConfirm->save();
+
+                    //Withdraw record
+                    $withdrawRecord = Withdraw::where('id', $withdrawConfirm->withdraw_id)->first();
+                    $withdrawRecord->status = 3; //Reject
+                    $withdrawRecord->save();
+
+                    //User
+                    $user = User::where('id', $withdrawRecord->userId)->first();
+                    $userCoin = $user->userCoin;
+
+                    $walletId = $withdrawRecord->wallet_id;
+                    $wallet = Wallet::where('id', $withdrawRecord->wallet_id)->first();
+                    $wallet->note = "Rejected";
+                    $wallet->save();
+
+                    //Return money for user
+                    $userCoin->btcCoinAmount += config('app.fee_withRaw_BTC') + $withdrawConfirm->withdrawAmount;
+                    $userCoin->save();
 
                     Log::error('withdraw BTC has error: ' . $e->getMessage());
                     Log::info($e->getTraceAsString());

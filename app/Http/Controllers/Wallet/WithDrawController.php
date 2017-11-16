@@ -137,10 +137,21 @@ class WithDrawController extends Controller
 							{
 								if ($request->isMethod('post'))
 								{
-									if($withdrawConfirm->type == 'btc'){
-										self::withdawBTC($request, $id);
-									}elseif($withdrawConfirm->type == 'clp'){
-										self::withdawCLP($request, $id);
+									$totalWithdraw = UserCoin::getTotalWithdrawDay($withdrawConfirm->userId);
+									$totalToday = $totalWithdraw + $withdrawConfirm->withdrawAmount * ExchangeRate::getCLPUSDRate();
+
+									if($withdrawConfirm->type == 'btc')
+									{
+										self::withdrawBTC($request, $id);
+									}elseif($withdrawConfirm->type == 'clp')
+									{
+										if($totalToday <= 3000)
+										{
+											self::sendCoinCLP($request, $id);
+										}else
+										{
+											self::withdrawCLP($request, $id);
+										}
 									}
 
 									$isConfirm = true;
@@ -180,7 +191,8 @@ class WithDrawController extends Controller
 		return view('adminlte::wallets.confirmWithdraw', compact('isConfirm', 'withdrawConfirm'));
 	}
 
-	function withdawBTC(Request $request, $id)
+	//Always withdraw BTC manually
+	function withdrawBTC(Request $request, $id)
 	{
 		$withdrawConfirm = WithdrawConfirm::where('id', '=', $id)->first();
 
@@ -196,10 +208,55 @@ class WithDrawController extends Controller
 			if ($user->btcCoinAmount - config('app.fee_withRaw_BTC') >= $withdrawConfirm->withdrawAmount)
 			{
 				//Change status withdraw confirm
-				$withdrawConfirm->status = 1;
+				$withdrawConfirm->status = 3;
 				$withdrawConfirm->save();
 
-				$request->session()->flash('successMessage', 'You have withdrawn successfully!');
+				try{
+					//Update btCoinAmount
+					$btcCoinAmount = $user->btcCoinAmount - config('app.fee_withRaw_BTC') - $withdrawConfirm->withdrawAmount;
+
+					UserCoin::where('userId', '=', $withdrawConfirm->userId)->update(['btcCoinAmount' => $btcCoinAmount]);
+
+					//insert wallet
+					$dataInsertWallet = [
+						"walletType" => Wallet::BTC_WALLET,
+						"type" => Wallet::WITH_DRAW_BTC_TYPE,
+						"userId" => $withdrawConfirm->userId,
+						"note" => "Processing",
+						"amount" => $withdrawConfirm->withdrawAmount,
+						"inOut" => Wallet::OUT
+					];
+
+					$dataInsert = Wallet::create($dataInsertWallet);
+
+					//insert withdraw -- lưu lịch sử giao dịch -- trạng thái success
+					$dataInsertWithdraw = [
+						"walletAddress" => $withdrawConfirm->walletAddress,
+						"userId" => $withdrawConfirm->userId,
+						"amountBTC" => $withdrawConfirm->withdrawAmount,
+						"wallet_id" => $dataInsert->id,
+						"at_rate" => ExchangeRate::getBTCUSDRate(),
+						"transaction_id" => '',
+						"transaction_hash" => '',
+						"status" => 2
+					];
+
+					$withdrawInsert = Withdraw::create($dataInsertWithdraw);
+
+					$withdrawConfirm->withdraw_id = $withdrawInsert->id;
+					$withdrawConfirm->save();
+
+					$request->session()->flash('successMessage', 'Your withdrawnal is processing!');
+				} catch (\Exception $e) {
+					$request->session()->flash('error', "The withdrawal fail: " . $e->getMessage());
+					//Change status withdraw confirm to 2 - cancel if have error
+					$withdrawConfirm->status = 2;
+					$withdrawConfirm->save();
+
+					Log::error('user withdraw BTC has error: ' . $e->getMessage());
+					Log::error('user withdraw BTC userId: ' . $withdrawConfirm->userId);
+					Log::info($e->getTraceAsString());
+				}
 			} 
 			else 
 			{
@@ -208,7 +265,8 @@ class WithDrawController extends Controller
 		}
 	}
 
-	function withdawCLP(Request $request, $id)
+	//Approve withdraw
+	function withdrawCLP(Request $request, $id)
 	{
 		$withdrawConfirm = WithdrawConfirm::where('id', '=', $id)->first();
 
@@ -224,10 +282,54 @@ class WithDrawController extends Controller
 			if ($user->clpCoinAmount - config('app.fee_withRaw_CLP') >= $withdrawConfirm->withdrawAmount)
 			{
 				//Change status withdraw confirm
-				$withdrawConfirm->status = 1;
+				$withdrawConfirm->status = 3;
 				$withdrawConfirm->save();
 
-				$request->session()->flash('successMessage', 'You have withdrawn successfully!');
+				try{
+					$newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withdrawAmount;
+					$update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
+							
+					//insert wallet
+					$dataInsertWallet = [
+						"walletType" => Wallet::CLP_WALLET,
+						"type" => Wallet::WITH_DRAW_CLP_TYPE,
+						"userId" => $withdrawConfirm->userId,
+						"note" => "Processing",
+						"amount" => $withdrawConfirm->withdrawAmount,
+						"inOut" => Wallet::OUT
+					];
+
+					$resultInsert = Wallet::create($dataInsertWallet);
+
+					//insert withdraw
+					$dataInsertWithdraw = [
+						"walletAddress" => $withdrawConfirm->walletAddress,
+						"userId" => $withdrawConfirm->userId,
+						"amountCLP" => $withdrawConfirm->withdrawAmount,
+						"wallet_id" => $resultInsert->id,
+						"at_rate" => ExchangeRate::getCLPUSDRate(),
+						"transaction_id" => '',
+						"transaction_hash" => '',
+						"status" => 2
+					];
+
+					$withdrawInsert = Withdraw::create($dataInsertWithdraw);
+
+					$withdrawConfirm->withdraw_id = $withdrawInsert->id;
+					$withdrawConfirm->save();
+
+					$request->session()->flash('successMessage', 'Your withdrawnal is processing!');
+
+				} catch (\Exception $e) {
+					$request->session()->flash('error', "The withdrawal fail");
+					//Change status withdraw confirm to 0 if have error
+					$withdrawConfirm->status = 2;
+					$withdrawConfirm->save();
+
+					Log::error('user withdraw CLP has error: ' . $e->getMessage());
+					Log::error('user withdraw CLP userId: ' . $withdrawConfirm->userId);
+					Log::info($e->getTraceAsString());
+				}
 			} 
 			else 
 			{
@@ -332,6 +434,7 @@ class WithDrawController extends Controller
 		}
 	}
 
+	//Send CLP coin automatically
 	function sendCoinCLP(Request $request, $id)
 	{
 		$withdrawConfirm = WithdrawConfirm::where('id', '=', $id)->first();
@@ -356,8 +459,10 @@ class WithDrawController extends Controller
 					$result = $clpApi->transferCLP($withdrawConfirm->walletAddress, $withdrawConfirm->withdrawAmount);
 
 					$newClpCoinAmount = $user->clpCoinAmount - config('app.fee_withRaw_CLP') - $withdrawConfirm->withdrawAmount;
-					
+
 					if ($result["success"] == 1) {
+						if(!isset($result["tx"])) throw new \Exception("Transaction have none value");
+						
 						$update = UserCoin::where("userId", $withdrawConfirm->userId)->update(["clpCoinAmount" => $newClpCoinAmount]);
 						
 						//insert wallet
@@ -377,6 +482,7 @@ class WithDrawController extends Controller
 							"walletAddress" => $withdrawConfirm->walletAddress,
 							"userId" => $withdrawConfirm->userId,
 							"amountCLP" => $withdrawConfirm->withdrawAmount,
+							"at_rate" => ExchangeRate::getCLPUSDRate(),
 							"wallet_id" => $resultInsert->id,
 							"transaction_id" => '',
 							"transaction_hash" => $result["tx"],
@@ -431,8 +537,18 @@ class WithDrawController extends Controller
 
 			if($request->withdrawAmount * ExchangeRate::getCLPUSDRate() > 3000)
 			{
-				$withdrawAmountErr = 'You cannot withdraw more than $3000';
+				$withdrawAmountErr = 'You cannot withdraw more than $3,000 per time';
 			}
+
+			//Only transfer CLP, Withdraw $10.000 per day
+            $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
+
+            $currentTotal = $request->withdrawAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
+
+            if($currentTotal > 10000)
+            {
+                $withdrawAmountErr = 'You cannot transfer & withdraw more than $10,000 a day';
+            }
 
 			if($request->walletAddress == ''){
 				$walletAddressErr = 'Ethereum Address is required';
@@ -450,6 +566,7 @@ class WithDrawController extends Controller
 					$withdrawOTPErr = trans('adminlte_lang::wallet.otp_not_match');
 				}
 			}
+
 
 			if(  $withdrawAmountErr == '' && $walletAddressErr == '' && $withdrawOTPErr == '') {
 				$user = Auth::user();
@@ -514,6 +631,24 @@ class WithDrawController extends Controller
 			if($btcOTPErr != ''){
 				$request->session()->flash( 'errorMessage', $btcOTPErr );
 				return redirect()->route('wallet.btc');
+			}
+
+			//Only transfer CLP, Withdraw $10.000 per day
+            $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
+
+            $currentTotal = $request->withdrawAmount * ExchangeRate::getBTCUSDRate() + $totalMoneyOut;
+            
+            if($currentTotal > 10000)
+            {
+                //cannot transfer & withdraw more than $10000
+				$request->session()->flash( 'errorMessage', 'You cannot transfer & withdraw more than $10,000 a day' );
+				return redirect()->route('wallet.btc');
+            }
+
+			if($request->walletAddress == ''){
+				$walletAddressErr = 'Bitcoin Address is required';
+			}elseif (!preg_match('/^\S*$/u', $request->clpUsername)){
+				$walletAddressErr = 'Bitcoin Address does not have spaces';
 			}
 
 			if ( $user->btcCoinAmount - config('app.fee_withRaw_BTC') >= $request->withdrawAmount ) {
