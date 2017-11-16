@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Wallet;
 use App\Withdraw;
+use App\UserPackage;
 use Auth;
 use Symfony\Component\HttpFoundation\Session\Session; 
 use Validator;
