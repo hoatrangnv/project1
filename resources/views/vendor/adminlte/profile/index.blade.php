@@ -183,24 +183,38 @@
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <p class="" id="photo_msg"></p>
                         <?php $photo_verification = Auth::user()->photo_verification ? json_decode(Auth::user()->photo_verification, true) : [];?>
                         <table class="table no-margin">
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.scan_photo') }}</td>
-                                <!-- <td>
-                                    <button id="scan_photo_view" class="btn btn-xs btn-info">Preview</button>
-                                    <input type="file" name="scan_photo" id="scan_photo" accept="image/*" />
+                                <td>
+                                    <img class="modal-content" id="img01" width="100px">
+                                    <output id="filesInfo"></output>
+                                    <br>
+                                    @if(Auth::user()->approve == 0 || Auth::user()->approve == null )
+                                        <label class="btn btn-success btn-file">
+                                            Change <input type="file" style="display: none;" name="scan_photo" id="scan_photo" accept="image/*">
+                                        </label>
+                                        <p class="" id="photo_msg" style="color:blue"></p>
+                                    @else
+                                        <p class="" id="photo_msg" style="color:blue">Accpected</p>
+                                    @endif
+
                                     <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['scan_photo']) ? $photo_verification['scan_photo'] : '') }}" id="scan_photo_thumb"/>
-                                </td> -->
+                                </td>
                             </tr>
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.holding_photo') }}</td>
-                                <!-- <td>
-                                    <button id="holding_photo_view" class="btn btn-xs btn-info">Preview</button>
-                                    <input type="file" name="holding_photo" id="holding_photo" accept="image/*" />
+                                <td>
+                                    <img class="modal-content" id="img02" width="100px">
+                                    <output id="filesInfo_2"></output>
+                                    <br>
+                                    <label class="btn btn-success btn-file">
+                                        Change <input type="file" style="display: none;" name="holding_photo" id="holding_photo" accept="image/*">
+                                    </label>
+                                    <p class="" id="photo_msg_02" style="color:blue"></p>
                                     <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['holding_photo']) ? $photo_verification['holding_photo'] : '') }}" id="holding_photo_thumb"/>
-                                </td> -->
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -404,22 +418,26 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Priview-->
     <div id="myModalPreview" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <div class="modal-body">
-                    <img class="modal-content" id="img01">
+                    <img class="modal-content" id="img02">
                 </div>
             </div>
         </div>
     </div>
+
     <style>
         #myModalPreview img {max-width: 100%;}
     </style>
     <!-- js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script type="text/javascript" src={{ url('js/jquery.bighover.js') }}></script>
     <link href="/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
     <script src="/bootstrap-switch/bootstrap-switch.js"></script>
     <script type="text/javascript">
@@ -462,13 +480,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            //show image
+            $("#img01").attr('src',$('#scan_photo_thumb').val());
+            $('#img01').bighover();
 
-            $('#scan_photo_view').on('click', function () {
-                var modal = $('#myModalPreview');
-                $("#img01").attr('src',$('#scan_photo_thumb').val());
-                modal.modal('show');
-            });
-            $('#scan_photo').on('change', function () {
+            $('#scan_photo').on('change', function (evt) {
                 //$(this).val("");
                 if ($(this).val() != '') {
                     var file_data = $('#scan_photo').prop('files')[0];
@@ -486,7 +502,34 @@
                         success: function (response) {
                             if(!response.err){
                                 $('#scan_photo_thumb').val(response.image);
-                                $('#photo_msg').text('Upload successfully.');
+                                $('#photo_msg').text('Processing...');
+                                $('#img01').hide();
+                                      if (window.File && window.FileReader && window.FileList && window.Blob) {
+                                            var files = evt.target.files;
+
+                                            var result = '';
+                                            var file;
+                                            for (var i = 0; file = files[i]; i++) {
+                                                  // if the file is not an image, continue
+                                                  if (!file.type.match('image.*')) {
+                                                    continue;
+                                                  }
+
+                                                  reader = new FileReader();
+                                                  reader.onload = (function (tFile) {
+                                                        return function (evt) {
+                                                              $('#filesInfo').empty();
+                                                              var div = document.createElement('div');
+                                                              div.innerHTML = '<img style="width: 90px;" id="img01-repale" src="' + evt.target.result + '" />';
+                                                              document.getElementById('filesInfo').appendChild(div);
+                                                              $('#img01-repale').bighover();
+                                                        };
+                                                  }(file));
+                                                  reader.readAsDataURL(file);
+                                            }
+                                      } else {
+                                            alert('The File APIs are not fully supported in this browser.');
+                                      }
                             }else{
                                 alert(response.msg);
                             }
@@ -495,12 +538,13 @@
                 }
                 $(this).val("");
             });
-            $('#holding_photo_view').on('click', function () {
-                var modal = $('#myModalPreview');
-                $("#img01").attr('src',$('#holding_photo_thumb').val());
-                modal.modal('show');
+
+            $("#img02").attr('src',$('#holding_photo_thumb').val());
+            $('#img02').bighover({
+              position: 'left'
             });
-            $('#holding_photo').on('change', function () {
+
+            $('#holding_photo').on('change', function (evt) {
                 //$(this).val("");
                 if ($(this).val() != '') {
                     var file_data = $('#holding_photo').prop('files')[0];
@@ -518,7 +562,34 @@
                         success: function (response) {
                             if(!response.err){
                                 $('#holding_photo_thumb').val(response.image);
-                                $('#photo_msg').text('Upload successfully.');
+                                $('#photo_msg_02').text('Processing...');
+                                  $('#img02').hide();
+                                  if (window.File && window.FileReader && window.FileList && window.Blob) {
+                                        var files = evt.target.files;
+
+                                        var result = '';
+                                        var file;
+                                        for (var i = 0; file = files[i]; i++) {
+                                          // if the file is not an image, continue
+                                          if (!file.type.match('image.*')) {
+                                            continue;
+                                          }
+
+                                          reader = new FileReader();
+                                          reader.onload = (function (tFile) {
+                                            return function (evt) {
+                                              $('#filesInfo_2').empty();
+                                              var div = document.createElement('div');
+                                              div.innerHTML = '<img style="width: 90px;" id="img02-repale" src="' + evt.target.result + '" />';
+                                              document.getElementById('filesInfo_2').appendChild(div);
+                                              $('#img02-repale').bighover();
+                                            };
+                                          }(file));
+                                          reader.readAsDataURL(file);
+                                        }
+                                  } else {
+                                    alert('The File APIs are not fully supported in this browser.');
+                                  }
                             }else{
                                 alert(response.msg);
                             }

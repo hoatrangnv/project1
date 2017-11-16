@@ -1,6 +1,6 @@
 <style>
     .clp-home h3 {font-size: 30px;}
-    
+
     .clp-dashboard .icon {
         padding-top: 2px;
         padding-right: 0px;
@@ -66,12 +66,12 @@
     </div>
 </div>
 <script>
-    
+
     function getBtcCoin(){
         $.get("{{URL::to('wallets/getbtccoin')}}", function (data) {
             $('.btcAmount').html(data);
         });
     }
     setInterval(function(){ getBtcCoin(); }, {{config('app.time_interval')}});
-    
+
 </script>
