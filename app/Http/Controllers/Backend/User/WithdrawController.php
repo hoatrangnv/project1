@@ -155,7 +155,7 @@ class WithdrawController extends Controller
 
                 //Wallet
                 $wallet = Wallet::where('id', $withdrawRecord->wallet_id)->first();
-                $wallet->note = "Rejected";
+                $wallet->note = "Error";
                 $wallet->save();
 
                 //Return money for user
