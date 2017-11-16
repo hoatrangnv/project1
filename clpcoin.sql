@@ -679,6 +679,7 @@ CREATE TABLE `withdraw_confirm` (
   `walletAddress` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `withdrawAmount` double DEFAULT NULL,
   `userId` int(10) NOT NULL,
+  `withdraw_id` int(10) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `type` enum('clp','btc') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`,`userId`),
