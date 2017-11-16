@@ -197,7 +197,7 @@
                                         </label>
                                         <p class="" id="photo_msg" style="color:blue"></p>
                                     @else
-                                        <p class="" id="photo_msg" style="color:blue">Accpected</p>
+                                        <p class="" id="photo_msg" style="color:green">Accpected</p>
                                     @endif
 
                                     <input type="hidden" value="{{ ($photo_verification && isset($photo_verification['scan_photo']) ? $photo_verification['scan_photo'] : '') }}" id="scan_photo_thumb"/>
