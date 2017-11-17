@@ -228,7 +228,9 @@ class BtcWalletController extends Controller
                         ->selectRaw('sum(amount_increase) as totalValue')
                         ->get()
                         ->first();
-            $totalAmount = $package->totalValue + ($userCoin->clpCoinAmount + $amountCLP) * ExchangeRate::getCLPUSDRate();
+
+            $packValue = isset($package->totalValue) ? $package->totalValue : 0;
+            $totalAmount = $packValue + ($userCoin->clpCoinAmount + $amountCLP) * ExchangeRate::getCLPUSDRate();
 
             if($totalAmount > 11000)
             {
