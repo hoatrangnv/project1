@@ -141,9 +141,9 @@ class WithdrawController extends Controller
             flash()->error('The withdrawal fail - Exception -' . $e->getMessage());
             //Change status withdraw confirm to 2 - Cancel if have error
             //Do NOTHING
-            /*$withdrawConfirm->status = 2;
+            $withdrawConfirm->status = 3;
             $withdrawConfirm->save();
-
+            /*
             //Withdraw record
             $withdrawRecord = Withdraw::where('id', $withdrawConfirm->withdraw_id)->first();
             $withdrawRecord->status = 3; //Reject
@@ -229,9 +229,9 @@ class WithdrawController extends Controller
                 $request->session()->flash('error', "The withdrawal fail: " . $e->getMessage());
                 //Change status withdraw confirm to 0 if have error
                 //Do NOTHING
-                /*$withdrawConfirm->status = 2;
+                $withdrawConfirm->status = 3;
                 $withdrawConfirm->save();
-
+                /*
                 //Withdraw record
                 $withdrawRecord = Withdraw::where('id', $withdrawConfirm->withdraw_id)->first();
                 $withdrawRecord->status = 3; //Reject
