@@ -142,7 +142,7 @@ class WithDrawController extends Controller
 
 									if($withdrawConfirm->type == 'btc')
 									{
-										self::withdrawBTC($request, $id);
+										self::sendCoinBTC($request, $id);
 									}elseif($withdrawConfirm->type == 'clp')
 									{
 										if($totalToday <= 3000)
@@ -420,7 +420,7 @@ class WithDrawController extends Controller
 				} catch (\Exception $e) {
 					$request->session()->flash('error', "The withdrawal fail: " . $e->getMessage());
 					//Change status withdraw confirm to 0 if have error
-					$withdrawConfirm->status = 0;
+					$withdrawConfirm->status = 2;
 					$withdrawConfirm->save();
 
 					Log::error('withdraw BTC has error: ' . $e->getMessage());
