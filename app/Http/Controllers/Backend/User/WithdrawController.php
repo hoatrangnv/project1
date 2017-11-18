@@ -229,9 +229,9 @@ class WithdrawController extends Controller
                 $request->session()->flash('error', "The withdrawal fail: " . $e->getMessage());
                 //Change status withdraw confirm to 0 if have error
                 //Do NOTHING
-                $withdrawConfirm->status = 3;
+                $withdrawConfirm->status = 2;
                 $withdrawConfirm->save();
-                /*
+                
                 //Withdraw record
                 $withdrawRecord = Withdraw::where('id', $withdrawConfirm->withdraw_id)->first();
                 $withdrawRecord->status = 3; //Reject
@@ -248,7 +248,7 @@ class WithdrawController extends Controller
 
                 //Return money for user
                 $userCoin->btcCoinAmount += config('app.fee_withRaw_BTC') + $withdrawConfirm->withdrawAmount;
-                $userCoin->save();*/
+                $userCoin->save();
 
                 Log::error('withdraw BTC has error: ' . $e->getMessage());
                 Log::info('confirm id:' . $withdrawConfirm->id);
