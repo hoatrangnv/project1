@@ -77,12 +77,15 @@ class UpdateBtcCoin {
 
                                 if($notify->pending_status == 1 && $transactionDetail->getStatus() == "completed") 
                                 {
-                                    $amountAddress = $userCoin->btcCoinAmount + $temp->additional_data->amount->amount;
+                                    $wallet = Wallet::where("id", $notify->wallet_id)->first();
+
+                                    $amountAddress = $userCoin->btcCoinAmount + $wallet->amount;
                                     $userCoin->btcCoinAmount = $amountAddress;
                                     $result = $userCoin->save();
 
                                     //Update wallet pending -> completed
-                                    Wallet::where("id", $notify->wallet_id)->update(['note' => 'Completed']);
+                                    $wallet->note = "Completed";
+                                    $wallet->save();
 
                                     Notification::where("id",$notify->id)
                                         ->update(['completed_status' => 1]);
