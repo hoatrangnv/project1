@@ -14,6 +14,7 @@ use Log;
 use Auth;
 use Session;
 use App\Authorizable;
+use App\ReadNew;
 
 /**
  * Description of NewsController
@@ -79,6 +80,8 @@ class NewsController extends Controller{
             if($new->save()){
                 $request->session()->flash( 'successMessage', 
                         trans("adminlte_lang::news.success") );
+                //make notification
+                $this->makeNotificaion($new->id);
             }else{
                 $request->session()->flash( 'errorMessage', 
                         trans("adminlte_lang::news.error") );
@@ -86,6 +89,14 @@ class NewsController extends Controller{
 
             return redirect("news");
         }
+    }
+
+    /*
+     * @author Huynq
+     *
+     * */
+    public function makeNotificaion($newId){
+        
     }
 
     /** 
