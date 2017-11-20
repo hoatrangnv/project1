@@ -508,9 +508,11 @@
                 var walletAddress = $('#walletAddress').val();
                 var withdrawOTP = $('#withdrawOTP').val();
 
+                var hasError = false;
                 if($.trim(withdrawAmount) == ''){
                     $("#withdrawAmount").parents("div.form-group").addClass('has-error');
                     $("#withdrawAmount").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.amount_required')}}");
+                    hasError = true;
                 }else{
                     $("#withdrawAmount").parents("div.form-group").removeClass('has-error');
                     $("#withdrawAmount").parents("div.form-group").find('.help-block').text('');
@@ -518,24 +520,28 @@
                 if($.trim(walletAddress) == ''){
                     $("#walletAddress").parents("div.form-group").addClass('has-error');
                     $("#walletAddress").parents("div.form-group").find('.help-block').text("Ethereum Address is required");
+                    hasError = true;
                 }else{
                     if(/^(0x)?[0-9a-fA-F]{40}$/.test(walletAddress) == false) {
                         $("#walletAddress").parents("div.form-group").addClass('has-error');
                         $("#walletAddress").parents("div.form-group").find('.help-block').text("Ethereum Address is not valid");
+                        hasError = true;
                     } else {
                         $("#walletAddress").parents("div.form-group").removeClass('has-error');
                         $("#walletAddress").parents("div.form-group").find('.help-block').text('');
                     }
                 }
-                    
                 
                 if($.trim(withdrawOTP) == ''){
                     $("#withdrawOTP").parents("div.form-group").addClass('has-error');
                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.otp_required')}}");
+                    hasError = true;
                 }else{
                     $("#withdrawOTP").parents("div.form-group").removeClass('has-error');
                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
                 }
+
+                if(hasError) return;
 
                 if($.trim(withdrawAmount) != '' && $.trim(walletAddress) != '' && $.trim(withdrawOTP) != ''){
                     $('#withdraw-clp').attr('disabled', true);

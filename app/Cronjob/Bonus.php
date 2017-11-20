@@ -34,7 +34,7 @@ class Bonus
 	public static function bonusDayCron(){
 		set_time_limit(0);
 		try {
-			$lstUser = User::where('active', '>=', 0)->get();
+			$lstUser = User::where('active', '>=', 1)->get();
 			foreach($lstUser as $user){
 				//Get cron status
 				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();

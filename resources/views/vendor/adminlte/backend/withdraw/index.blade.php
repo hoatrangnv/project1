@@ -62,9 +62,9 @@
                                     <td style="text-transform: uppercase;">{{ $item->type }}</td>
                                     <td>
                                         @if($item->status == 1) 
-                                            Request
+                                            Success
                                         @elseif($item->status == 3) 
-                                            Approved
+                                            Request
                                         @elseif($item->status == 0 && $item->updated_at > $expiredTime) 
                                             Waiting
                                         @elseif($item->status == 2 || $item->updated_at < $expiredTime) 
@@ -73,7 +73,7 @@
                                     </td>
                                     <td>{{ date('Y-m-d H:i:s', strtotime("+6 hours", strtotime($item->created_at))) }}</td>
                                     <td class="text-center">
-                                    @if($item->status == 1)
+                                    @if($item->status == 3)
                                         {!! Form::open( ['method' => 'post', 'url' => route('withdraw.approve', ['id' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure want to approve request ?")']) !!}
                                         <button type="submit" class="btn btn-xs btn-info">
                                             Approve

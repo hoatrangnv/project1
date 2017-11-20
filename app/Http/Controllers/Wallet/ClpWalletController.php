@@ -23,6 +23,7 @@ use App\CLPWalletAPI;
 use App\CLPWallet;
 use App\ExchangeRate;
 use Google2FA;
+use Carbon\Carbon;
 
 /**
  * Description of ClpWalletController
@@ -220,6 +221,17 @@ class ClpWalletController extends Controller {
                     $clpOTPErr = trans('adminlte_lang::wallet.otp_not_match');
                 }
             }
+
+            //Only transfer CLP, Withdraw $10.000 per day
+            $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
+
+            $currentTotal = $request->clpAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
+
+            if($currentTotal > 10000)
+            {
+                $clpAmountErr = 'You cannot transfer & withdraw more than $10,000 a day';
+            }
+            
 
             /******************* Only transfer in Genealogy ***************/
             // Get all Genealogy current user
