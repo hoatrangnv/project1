@@ -62,6 +62,12 @@ class BtcWalletController extends Controller
         $walletAddress = Auth::user()->userCoin->walletAddress;
 
         $wallets = $query->where('walletType', Wallet::BTC_WALLET)->orderBy('id', 'desc')->paginate();
+
+        if(isset($request->type) && $request->type > 0){
+            $pagination = $wallets->appends ( array (
+                'type' => $request->type
+            ));
+        }
         $requestQuery = $request->query();
 
 
