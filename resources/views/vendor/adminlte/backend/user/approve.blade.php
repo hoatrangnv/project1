@@ -48,10 +48,20 @@
                                         </td>
                                         <td>
                                             {!! Form::open( ['method' => 'post', 'url' => url('users/approve_ok', ['user' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure wanted to OK it?")']) !!}
-                                                <button class="btn btn-xs btn-info scan_photo_ok" data-id="{{ $item->id }}">OK</button>
+                                            <input type="hidden" value="1" name="type" >
+                                            <button class="btn btn-xs btn-info scan_photo_ok" data-id="{{ $item->id }}">Accpet ScanPhoTO</button>
                                             {!! Form::close() !!}
-                                            {!! Form::open( ['method' => 'post', 'url' => url('users/approve_cancel', ['user' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure wanted to Cancel it?")']) !!}
-                                             <button class="btn btn-xs btn-danger scan_photo_cancel" data-id="{{ $item->id }}">Cancel</button>
+                                            {!! Form::open( ['method' => 'post', 'url' => url('users/approve_ok', ['user' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure wanted to OK it?")']) !!}
+                                            <input type="hidden" value="2" name="type" >
+                                            <button class="btn btn-xs btn-info scan_photo_ok" data-id="{{ $item->id }}">Accpet HoldingPhoTO</button>
+                                            {!! Form::close() !!}
+                                            {!! Form::open( ['method' => 'post', 'url' => url('users/approve_ok', ['user' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure wanted to Cancel it?")']) !!}
+                                            <input type="hidden" value="3" name="type" >
+                                            <button class="btn btn-xs btn-danger scan_photo_cancel" data-id="{{ $item->id }}">Cancel Scanphoto</button>
+                                            {!! Form::close() !!}
+                                            {!! Form::open( ['method' => 'post', 'url' => url('users/approve_ok', ['user' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure wanted to Cancel it?")']) !!}
+                                            <input type="hidden" value="4" name="type" >
+                                            <button class="btn btn-xs btn-danger scan_photo_cancel" data-id="{{ $item->id }}">Cancel HoldingPhoTo</button>
                                             {!! Form::close() !!}
 
                                         </td>
@@ -87,12 +97,12 @@
     <script>
         $('.holding_photo_view').on('click', function () {
             var modal = $('#myModalPreview');
-            $("#img01").attr('src', $(this).data('image'));
+            $("#img01").attr('src', "{{ url( $photo_verification && isset($photo_verification['holding_photo']) ? $photo_verification['holding_photo'] : '' ) }}");
             modal.modal('show');
         });
         $('.scan_photo_view').on('click', function () {
             var modal = $('#myModalPreview');
-            $("#img01").attr('src', $(this).data('image'));
+            $("#img01").attr('src', "{{ url( $photo_verification && isset($photo_verification['scan_photo']) ? $photo_verification['scan_photo'] : '' ) }}");
             modal.modal('show');
         });
     </script>

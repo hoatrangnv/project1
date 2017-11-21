@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Google2FA;
+use App\Http\Controllers\User\ProfileController;
 
 class UserController extends Controller
 {
@@ -47,16 +48,42 @@ class UserController extends Controller
 
     public function photo_approve()
     {
-        $result = User::where('approve', 1)->paginate();
+        $result = User::whereNotNull('approve')->paginate();
         return view('adminlte::backend.user.approve', compact('result'));
     }
-    public function approve_ok($id)
+    public function approve_ok(Request $request,$id)
     {
-        if( User::find($id)->update(['approve'=> 2]) ) {
-            flash()->success('User has been approve ok');
-        } else {
-            flash()->success('User not approve ok');
+        $user = (array) json_decode(User::find((int)$id)->approve);
+        if($request->type == 1){
+            $user['scan_photo'] = ProfileController::SCAN_PHOTO_APPROVE_OK;
+            if( User::find($id)->update(['approve'=> json_encode($user)]) ) {
+                flash()->success('User has been approve ok');
+            } else {
+                flash()->success('User not approve ok');
+            }
+        } elseif ($request->type == 2){
+            $user['holding_photo'] = ProfileController::HOLDING_PHOTO_APPROVE_OK;
+            if( User::find($id)->update(['approve'=> json_encode($user)]) ) {
+                flash()->success('User has been approve ok');
+            } else {
+                flash()->success('User not approve ok');
+            }
+        } elseif ($request->type == 3){
+            $user['scan_photo'] = ProfileController::SCAN_PHOTO_APPROVE_CANCEL;
+            if( User::find($id)->update(['approve'=> json_encode($user)]) ) {
+                flash()->success('User has been approve ok');
+            } else {
+                flash()->success('User not approve ok');
+            }
+        } elseif ($request->type == 4){
+            $user['holding_photo'] = ProfileController::HOLDING_PHOTO_APPROVE_CANCEL;
+            if( User::find($id)->update(['approve'=> json_encode($user)]) ) {
+                flash()->success('User has been approve ok');
+            } else {
+                flash()->success('User not approve ok');
+            }
         }
+
 
         return redirect()->back();
     }

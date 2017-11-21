@@ -184,7 +184,8 @@
                 <div class="box-body">
                     <div class="table-responsive">
                         <?php $photo_verification = Auth::user()->photo_verification ? json_decode(Auth::user()->photo_verification, true) : [];?>
-                        <?php $approve = Auth::user()->approve ? json_decode(Auth::user()->approve, true) : [];?>
+                        <?php $approve = Auth::user()->approve ? json_decode(Auth::user()->approve, true) : [];
+                        ?>
                         <table class="table no-margin">
                             <tr>
                                 <td class="label-td">{{ trans('adminlte_lang::profile.scan_photo') }}</td>
@@ -192,14 +193,14 @@
                                     <img class="modal-content" id="img01" width="100px">
                                     <output id="filesInfo"></output>
                                     <br>
-                                    @if($approve['scan_photo'] == \App\Http\Controllers\User\ProfileController::SCAN_PHOTO_APPROVE_PENDING)
+                                    @if(count($approve)>0 && $approve['scan_photo'] == \App\Http\Controllers\User\ProfileController::SCAN_PHOTO_APPROVE_PENDING)
                                         <label class="btn btn-success btn-file">
                                             Change <input type="file" style="" name="scan_photo" id="scan_photo" accept="image/*">
                                         </label>
                                         <p class="" id="photo_msg" style="color:orange">Pending...</p>
-                                    @elseif($approve['scan_photo'] == \App\Http\Controllers\User\ProfileController::SCAN_PHOTO_APPROVE_OK)
+                                    @elseif(count($approve)>0 && $approve['scan_photo'] == \App\Http\Controllers\User\ProfileController::SCAN_PHOTO_APPROVE_OK)
                                         <p class="" id="photo_msg" style="color:green">Accpeted</p>
-                                    @elseif($approve['scan_photo'] == \App\Http\Controllers\User\ProfileController::SCAN_PHOTO_APPROVE_CANCEL)
+                                    @elseif(count($approve)>0 && $approve['scan_photo'] == \App\Http\Controllers\User\ProfileController::SCAN_PHOTO_APPROVE_CANCEL)
                                         <label class="btn btn-success btn-file">
                                             Change <input type="file" style="" name="scan_photo" id="scan_photo" accept="image/*" >
                                         </label>
@@ -220,14 +221,14 @@
                                     <img class="modal-content" id="img02" width="100px">
                                     <output id="filesInfo_2"></output>
                                     <br>
-                                    @if($approve['holding_photo'] == \App\Http\Controllers\User\ProfileController::HOLDING_PHOTO_APPROVE_PENDING)
+                                    @if(count($approve)>0 && $approve['holding_photo'] == \App\Http\Controllers\User\ProfileController::HOLDING_PHOTO_APPROVE_PENDING)
                                         <label class="btn btn-success btn-file">
                                             Change <input type="file" style="" name="holding_photo" id="holding_photo" accept="image/*">
                                         </label>
                                         <p class="" id="photo_msg_02" style="color:orange">Pending...</p>
-                                    @elseif($approve['holding_photo'] == \App\Http\Controllers\User\ProfileController::HOLDING_PHOTO_APPROVE_OK)
+                                    @elseif(count($approve)>0 && $approve['holding_photo'] == \App\Http\Controllers\User\ProfileController::HOLDING_PHOTO_APPROVE_OK)
                                         <p class="" id="photo_msg_02" style="color:green">Accpeted</p>
-                                    @elseif($approve['holding_photo'] == \App\Http\Controllers\User\ProfileController::HOLDING_PHOTO_APPROVE_CANCEL)
+                                    @elseif(count($approve)>0 && $approve['holding_photo'] == \App\Http\Controllers\User\ProfileController::HOLDING_PHOTO_APPROVE_CANCEL)
                                         <label class="btn btn-success btn-file">
                                             Change <input type="file" style="" name="holding_photo" id="holding_photo" accept="image/*">
                                         </label>
