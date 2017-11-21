@@ -18,6 +18,7 @@ use Hash;
 use Google2FA;
 use App\Http\Controllers\Controller;
 use Validator;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class ProfileController
@@ -25,10 +26,15 @@ use Validator;
  */
 class ProfileController extends Controller
 {
-    const PHOTO_APPROVE_NONE = 0;
-    const PHOTO_APPROVE_PENDING = 1;
-    const PHOTO_APPROVE_OK = 2;
-    const PHOTO_APPROVE_CANCEL = 3;
+    const SCAN_PHOTO_APPROVE_NONE = 0;
+    const SCAN_PHOTO_APPROVE_PENDING = 1;
+    const SCAN_PHOTO_APPROVE_OK = 2;
+    const SCAN_PHOTO_APPROVE_CANCEL = 3;
+
+    const HOLDING_PHOTO_APPROVE_NONE = 4;
+    const HOLDING_PHOTO_APPROVE_PENDING = 5;
+    const HOLDING_PHOTO_APPROVE_OK = 6;
+    const HOLDING_PHOTO_APPROVE_CANCEL = 7;
 
     public function __construct()
     {
@@ -204,27 +210,38 @@ class ProfileController extends Controller
                 'err' => true,
                 'msg' => $validator->getMessageBag()->toArray()['file'][0]
             );
+        //save image
         $extension = $request->file('file')->getClientOriginalExtension(); // getting image extension
-        $folder ='/uploads/images/';
+        $folder ='storage/uploads/images/';
         $dir = public_path($folder);
         $filename = uniqid() . '_' . time() . '.' . $extension;
         $request->file('file')->move($dir, $filename);
+
         $user = Auth::user();
-        $user->approve = self::PHOTO_APPROVE_PENDING;
+        $approve = $user->approve ? json_decode($user->approve, true) : [] ;
         $photo_verification = $user->photo_verification ? json_decode($user->photo_verification, true) : [];
         if($photo_verification){
             if($request->type == 'scan_photo'){
+                //xóa ảnh cũ
+
                 $photo_verification['scan_photo'] = $folder.$filename;
+                $approve['scan_photo'] = self::SCAN_PHOTO_APPROVE_PENDING;
             }elseif($request->type == 'holding_photo'){
+                //xóa ảnh cũ
+
                 $photo_verification['holding_photo'] = $folder.$filename;
+                $approve['holding_photo'] = self::HOLDING_PHOTO_APPROVE_PENDING;
             }
         }else{
             if($request->type == 'scan_photo'){
                 $photo_verification['scan_photo'] = $folder.$filename;
+                $approve['scan_photo'] = self::SCAN_PHOTO_APPROVE_PENDING;
             }elseif($request->type == 'holding_photo'){
                 $photo_verification['holding_photo'] = $folder.$filename;
+                $approve['holding_photo'] = self::HOLDING_PHOTO_APPROVE_PENDING;
             }
         }
+        $user->approve = json_encode($approve);
         $user->photo_verification = json_encode($photo_verification);
         $user->save();
         return array(

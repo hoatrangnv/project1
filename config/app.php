@@ -157,6 +157,7 @@ return [
     'clp_price' => env('CLP_PRICE', 1),
     'freeze_withdraw' => env('FREEZE_WITHDRAW', 0),
     'clp_target_price' => env('CLP_TARGET_PRICE', 3),
+    'link_limit' => 7,
     
     /*
     |--------------------------------------------------------------------------
