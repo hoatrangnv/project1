@@ -46,9 +46,24 @@ class UserController extends Controller
         return view('adminlte::backend.user.root', compact('result'));
     }
 
-    public function photo_approve()
+    public function photo_approve(Request $request)
     {
-        $result = User::whereNotNull('approve')->paginate();
+        if($request->isMethod('post')){
+            if( $request->input('scan_photo') == 'all' && $request->input('holding_photo')=='all' ){
+                $result = User::whereNotNull('approve')
+                    ->paginate();
+                return view('adminlte::backend.user.approve', compact('result'));
+            }
+            $scanPhoto = (int)$request->input('scan_photo');
+            $holdingPhoto = (int)$request->input('holding_photo');
+            $result = User::whereNotNull('approve')
+            ->where('approve','like','%'. '{"scan_photo":'.$scanPhoto.'%')
+            ->orWhere('approve','like','%'.'"holding_photo":'.$holdingPhoto.'%')
+            ->paginate();
+            return view('adminlte::backend.user.approve', compact('result','scanPhoto','holdingPhoto'));
+        }
+        $result = User::whereNotNull('approve')
+            ->paginate();
         return view('adminlte::backend.user.approve', compact('result'));
     }
     public function approve_ok(Request $request,$id)
