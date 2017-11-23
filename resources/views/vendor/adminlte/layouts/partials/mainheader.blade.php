@@ -16,10 +16,10 @@
             <span class="sr-only">{{ trans('adminlte_lang::message.togglenav') }}</span>
         </a>
         &nbsp;
-        <span class="hidden-xs" style="font-size: 14px;line-height: 50px;text-align: center;color: white">
-            <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
-            <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;
-            <span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
+        <span style="font-size: 14px;line-height: 50px;text-align: center;color: white">
+            <span  class="hidden-xs" >1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span>&nbsp;|&nbsp;</span>
+            <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>
+            <span class="hidden-xs" >&nbsp;|&nbsp;1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
         </span>
        
         <!-- Navbar Right Menu -->
