@@ -533,6 +533,8 @@ class WithDrawController extends Controller
 				$withdrawAmountErr = trans('adminlte_lang::wallet.amount_number');
 			}elseif (($userCoin->clpCoinAmount - config('app.fee_withRaw_CLP')) < $request->withdrawAmount){
 				$withdrawAmountErr = trans('adminlte_lang::wallet.error_not_enough_clp');
+			}elseif ($request->withdrawAmount < 0){
+				$withdrawAmountErr = 'The withdraw amount must be at least 0.01';
 			}
 
 			if($request->withdrawAmount * ExchangeRate::getCLPUSDRate() > 3000)
@@ -612,7 +614,7 @@ class WithDrawController extends Controller
 		if ( $request->isMethod('post') ) {
 			//validate
 			$this->validate($request, [
-				'withdrawAmount'=>'required|numeric',
+				'withdrawAmount'=>'required|numeric|min:0.0001',
 				'walletAddress'=>'required',
 				'withdrawOPT'=>'required'
 			]);
