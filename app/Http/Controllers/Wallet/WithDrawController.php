@@ -636,7 +636,15 @@ class WithDrawController extends Controller
 			//Only transfer CLP, Withdraw $10.000 per day
             $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
 
-            $currentTotal = $request->withdrawAmount * ExchangeRate::getBTCUSDRate() + $totalMoneyOut;
+            //Cannot withdraw more than $3000 per time
+            $withdrawValue = $request->withdrawAmount * ExchangeRate::getBTCUSDRate();
+            if($withdrawValue > 3000)
+            {
+            	$request->session()->flash( 'errorMessage', 'You cannot withdraw more than $3,000 per time' );
+				return redirect()->route('wallet.btc');
+            }
+
+            $currentTotal = $withdrawValue + $totalMoneyOut;
             
             if($currentTotal > 10000)
             {
