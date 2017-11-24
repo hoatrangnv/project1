@@ -25,7 +25,7 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body" style="padding-top:0;">
-                    <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
+                    <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute; z-index: 100;">
                         {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
                         <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
                             {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username']) }}
