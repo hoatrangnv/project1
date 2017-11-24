@@ -537,6 +537,12 @@ class WithDrawController extends Controller
 				$withdrawAmountErr = 'The withdraw amount must be at least 0.01';
 			}
 
+			$userData = Auth::user()->userData;
+			if($userData->packageId < 1)
+			{
+				$withdrawAmountErr = 'Please be noted that the minimum mining pack for any withdrawal requests is $100';
+			}
+
 			if($request->withdrawAmount * ExchangeRate::getCLPUSDRate() > 3000)
 			{
 				$withdrawAmountErr = 'You cannot withdraw more than $3,000 per time';
