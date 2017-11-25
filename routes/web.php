@@ -34,6 +34,7 @@ Route::group( ['middleware' => ['auth']], function() {
         Route::post('users/approve_ok/{id}', 'Backend\User\UserController@approve_ok')->name('approve.ok');
         Route::post('users/approve_cancel/{id}', 'Backend\User\UserController@approve_cancel')->name('approve.cancel');
         Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
+        Route::post('users/lock', 'Backend\User\UserController@lock')->name('users.lock');
     });
 
     Route::group(['middleware' => ['permission:view_users']], function () {

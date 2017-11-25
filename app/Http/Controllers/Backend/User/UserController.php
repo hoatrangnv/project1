@@ -225,6 +225,27 @@ class UserController extends Controller
         }
         return redirect()->back();
     }
+
+    public function lock(Request $request)
+    {
+        if($request->userid && $request->userid > 0){
+            $user = User::find($request->userid);
+            if( $user->active == 1 ) {
+                $user->active = 0;
+                $user->save();
+                flash()->success('User has been lock');
+            } else {
+                $user->active = 1;
+                $user->save();
+                flash()->success('User has been unlock');
+            }
+
+        }else{
+            flash()->success('Cannot lock');
+        }
+        return redirect()->back();
+    }
+
     /**
      * Sync roles and permissions
      *
