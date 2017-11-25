@@ -14,6 +14,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="/AdminLTE/bower_components/bootstrap/dist/js/bootstrap-confirmation.min.js"></script>
 <script src="/AdminLTE/bower_components/fastclick/lib/fastclick.js"></script>
 <script src="/AdminLTE/dist/js/app.js"></script>
+<script src="/js/jquery.storageapi.min.js"></script>
 <body class="skin-purple sidebar-mini">
 <div>
     <div class="wrapper">
@@ -38,13 +39,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
     
-    @include('adminlte::layouts.partials.controlsidebar')
-
     @include('adminlte::layouts.partials.footer')
     
-
- 
-
     </div><!-- ./wrapper -->
 </div>
 </body>

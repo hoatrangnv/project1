@@ -28,14 +28,6 @@ class NewsController extends Controller{
         $this->middleware('auth');
     }
     
-    public function check($id){
-        if(News::find($id)->created_by !=
-               Auth::user()->id){
-            if(!$this->isAdmin()){
-                header('Location: '."/home");
-            }
-        }
-    }
     /** 
      * @author huynq
      * @return type
@@ -116,7 +108,7 @@ class NewsController extends Controller{
                         trans("adminlte_lang::news.error") );
             }
 
-            return redirect("news/manage");
+            return redirect("news");
         }
     }
     
@@ -196,8 +188,7 @@ class NewsController extends Controller{
      * @return type
      */
     public function destroy(Request $request ,$id) {
-        $this->check($request);
-        if( $request->isMethod("get") ){
+        if( $request->isMethod("delete") ){
             //delete
             $del = News::where('id', $id)->delete(); 
             
@@ -208,7 +199,7 @@ class NewsController extends Controller{
                 $request->session()->flash( 'errorMessage', 
                         trans("adminlte_lang::news.error_delete") );
             }
-            return redirect()->route('news.manage');
+            return redirect("news");
         }
     }
  

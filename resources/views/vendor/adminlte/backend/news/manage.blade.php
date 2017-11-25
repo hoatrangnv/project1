@@ -50,7 +50,10 @@
                         <td>{!! $new->short_desc !!}</td>
                         <td>
                             <a href="/news/{{ $new->id }}/edit" class="btn btn-default glyphicon glyphicon-edit">Edit</a>
-                            <a href="/news/delete/{{ $new->id }}" class="btn btn-default glyphicon glyphicon-trash">Delete</a>
+                            {{ Form::open(['method' => 'DELETE', 'route' => ['news.destroy', $new->id] ]) }}
+                                {{ Form::hidden('id', $new->id) }}
+                                {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                            {{ Form::close() }}
                         </td>
                     </tr>
                 @endforeach

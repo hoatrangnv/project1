@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
 use Validator;
+use DB;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,20 @@ class AppServiceProvider extends ServiceProvider
             }
                 return false;
         });
+
+        //Get CLP news
+        $clpNews = DB::table('news')
+                ->where('category_id', 3)
+                ->select('id')
+                ->get();
+
+        $aCLPNews = [];
+        foreach($clpNews as $news) {
+            $aCLPNews[] = $news->id;
+        }
+        $aCLPNews = json_encode($aCLPNews);
+
+        View::share('aCLPNews', $aCLPNews);
     }
 
     /**

@@ -12,44 +12,19 @@
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" style="padding-right: 10px;">
             <span class="sr-only">{{ trans('adminlte_lang::message.togglenav') }}</span>
         </a>
         &nbsp;
         <span style="font-size: 14px;line-height: 50px;text-align: center;color: white">
             <span  class="hidden-xs" >1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span>&nbsp;|&nbsp;</span>
             <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>
-            <span class="hidden-xs" >&nbsp;|&nbsp;1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
+            <span>&nbsp;|&nbsp;1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
         </span>
        
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu" style="display: none">
-                    <!-- Menu toggle button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-envelope-o"></i>
-                        <span class="label label-success">4</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans('adminlte_lang::message.tabmessages') }}</li>
-                        <li>
-                            <!-- inner menu: contains the messages -->
-                            <ul class="menu">
-                                <li><!-- start message -->
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <!-- User Image -->
-                                            <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image"/>
-                                        </div>
-                                    </a>
-                                </li><!-- end message -->
-                            </ul><!-- /.menu -->
-                        </li>
-                    </ul>
-                </li><!-- /.messages-menu -->
-
                 @if (Auth::guest())
                     <li><a href="{{ url('/register') }}">{{ trans('adminlte_lang::message.register') }}</a></li>
                     <li><a href="{{ url('/login') }}">{{ trans('adminlte_lang::message.login') }}</a></li>
@@ -105,11 +80,6 @@
                         </ul>
                     </li>
                 @endif
-
-                <!-- Control Sidebar Toggle Button -->
-                <li>
-                    <a href="#" data-toggle="control-sidebar" class="clp-news"><i class="fa fa-newspaper-o"></i>&nbsp{{ trans('adminlte_lang::news.title_news') }}</a>
-                </li>
             </ul>
         </div>
     </nav>
@@ -153,5 +123,31 @@
         getRate();
         setInterval(function(){ getRate() }, {{ config('app.time_interval') }});
     });  
+
+    function getCountNewsNotRead()
+    {
+        storage = $.localStorage;
+        var clpNews = {{ $aCLPNews }};
+
+        //CLP News
+        var arr_clp_news = new Array();
+        if(storage.get("clp_news") != null) arr_clp_news = JSON.parse(JSON.stringify(storage.get("clp_news")));
+
+        var count = 0;
+        $.each(clpNews, function(index, value){
+            if($.inArray(value, arr_clp_news) == -1)
+            {
+              count += 1;
+            }
+        });
+
+        if(count > 0) {
+            $("#has-news").text("New");
+        }
+    }
+
+    $(document).ready(function (){
+        getCountNewsNotRead();
+    });
     
 </script>

@@ -127,6 +127,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('profile/changepassword','User\ProfileController@changePassword');
     Route::get('profile/switchauthen','User\ProfileController@switchTwoFactorAuthen');
 
+    Route::get('info','User\InfoController@clp');
+
     Route::resource('profile', 'User\ProfileController');
 
     

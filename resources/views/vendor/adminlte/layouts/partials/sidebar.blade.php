@@ -53,6 +53,13 @@
                     <li class="{{ Request::segment(2) === 'loyalty' ? 'active' : null }}"><a href="{{ url('mybonus/loyalty') }}">{{ trans('adminlte_lang::default.side_mybonus_loyalty') }}</a></li>
                 </ul>
             </li>
+            <li class="treeview{{ Request::is('info*') ? ' active' : null }}">
+                <a href="{{ url('info') }}"><i class='fa fa-newspaper-o'></i> <span>News</span>
+                <span class="pull-right-container">
+                  <small class="label pull-right bg-yellow" id="has-news"></small>
+                </span>
+                </a>
+            </li>
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->
