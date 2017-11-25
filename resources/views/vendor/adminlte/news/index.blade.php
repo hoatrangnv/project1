@@ -72,6 +72,7 @@
                 storage = $.localStorage;
 
                 var arr = new Array();
+                arr[0] = 1;
                 if(storage.get("{{ $type }}_news") != null) arr = JSON.parse(JSON.stringify(storage.get("{{ $type }}_news")));
 
                 $('.list_news').each( function(){

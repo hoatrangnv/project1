@@ -12,7 +12,7 @@
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" style="padding-right: 10px;">
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" style="padding-right: 5px;">
             <span class="sr-only">{{ trans('adminlte_lang::message.togglenav') }}</span>
         </a>
         &nbsp;
@@ -131,6 +131,7 @@
 
         //CLP News
         var arr_clp_news = new Array();
+        arr_clp_news[0] = 1;
         if(storage.get("clp_news") != null) arr_clp_news = JSON.parse(JSON.stringify(storage.get("clp_news")));
 
         var count = 0;
