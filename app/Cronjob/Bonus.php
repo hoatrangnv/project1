@@ -34,16 +34,15 @@ class Bonus
 	public static function bonusDayCron(){
 		set_time_limit(0);
 		try {
-			$lstUser = User::where('active', '>=', 1)->get();
+			$lstUser = UserData::where('status', '=', 1)->get();
 			foreach($lstUser as $user){
 				//Get cron status
-				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
+				$cronStatus = CronProfitLogs::where('userId', $user->userId)->first();
 
 				if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
-				$userData = $user->userData;
 				//Get all pack in user_packages
-				$package = UserPackage::where('userId', $user->id)
+				$package = UserPackage::where('userId', $user->userId)
 							->where('withdraw', '<', 1)
 							->groupBy(['userId'])
 							->selectRaw('sum(amount_increase) as totalValue')
@@ -51,7 +50,7 @@ class Bonus
 							->first();
 				if($package)
 				{
-					$bonus = isset($userData->package->bonus) ? $userData->package->bonus : 0;
+					$bonus = isset($user->package->bonus) ? $user->package->bonus : 0;
 
 					$usdAmount = $package->totalValue * $bonus;
 
@@ -63,7 +62,7 @@ class Bonus
 						'walletType' => Wallet::USD_WALLET,//usd
 						'type' => Wallet::INTEREST_TYPE,//bonus day
 						'inOut' => Wallet::IN,
-						'userId' => $user->id,
+						'userId' => $user->userId,
 						'amount' => $usdAmount
 					];
 
