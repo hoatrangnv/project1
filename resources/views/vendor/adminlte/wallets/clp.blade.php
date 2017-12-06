@@ -19,6 +19,10 @@
             background-color: #d9edf7 !important;
         }
     </style>
+    @inject("exchange","App\ExchangeRate");
+    @php
+        $exchange = $exchange::getExchRateCLPBTC();
+    @endphp
     @if ( session()->has("errorMessage") )
         <div class="callout callout-danger">
             <h4>Warning!</h4>
@@ -199,6 +203,7 @@
                             <th>{{ trans('adminlte_lang::package.name') }}</th>
                             <th>{{ trans('adminlte_lang::package.price') }}</th>
                             <th>{{ trans('adminlte_lang::package.clp_coin') }}</th>
+                            <th>Equivalent BTC</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -207,6 +212,7 @@
                                 <td>{{ $package->name }}</td>
                                 <td><i class="fa fa-usd"></i>{{ number_format($package->price) }}</td>
                                 <td><span class="icon-clp-icon"></span>{{ number_format($package->price / App\ExchangeRate::getCLPUSDRate(), 2, '.', ',') }}</td>
+                                <td><span class="fa fa-btc"></span>{{ $package->price/$exchange }}</td>
                             </tr>
                         @endforeach
                         </tbody>
