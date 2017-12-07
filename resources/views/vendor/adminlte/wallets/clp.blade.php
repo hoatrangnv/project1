@@ -206,13 +206,13 @@
                             <th>Equivalent BTC</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="package-clp-wallet">
                         @foreach ($packages as $package)
                             <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
                                 <td>{{ $package->name }}</td>
                                 <td><i class="fa fa-usd"></i>{{ number_format($package->price) }}</td>
-                                <td><span class="icon-clp-icon"></span>{{ number_format($package->price / App\ExchangeRate::getCLPUSDRate(), 2, '.', ',') }}</td>
-                                <td><span class="fa fa-btc"></span>{{ $package->price/$exchange }}</td>
+                                <td><span class="icon-clp-icon"></span><clp-{{ $package->id  }}>{{ number_format($package->price / App\ExchangeRate::getCLPUSDRate(), 2, '.', ',') }}</clp-{{ $package->id  }}></td>
+                                <td><span class="fa fa-btc"></span><btc-{{ $package->id  }}>{{ number_format($package->price/$exchange,5) }}</btc-{{ $package->id  }}</td>
                             </tr>
                         @endforeach
                         </tbody>

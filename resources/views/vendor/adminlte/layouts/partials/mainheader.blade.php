@@ -91,7 +91,7 @@
         });
     var formatterBTC = new Intl.NumberFormat('en-US', {
             style: 'decimal',
-            minimumFractionDigits: 8,
+            minimumFractionDigits: 5,
         });
     function doLogout(){
          document.cookie = "open=1";
@@ -102,19 +102,39 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    
+
+    @if (\Illuminate\Support\Facades\Request::is('wallets/clp'))
+        @php
+            $array = App\Package::all();
+            $arr = [];
+            foreach ($array as $a){
+                array_push($arr,$a->price);
+            }
+            $arr = json_encode($arr);
+        @endphp
+    @endif
+
+
     function getRate(){
         $.ajax({
             dataType: "json",
             url: '{{ URL::to("exchange") }}',
             success: function(data){
-               $('.btcusd').html(formatter.format(data[1].exchrate));
-               $('.clpusd').html(formatter.format(data[2].exchrate));
-               $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
-               $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
-               globalBTCUSD = data[1].exchrate;
-               globalCLPUSD = data[2].exchrate; //clpUSD
-               globalCLPBTC = data[0].exchrate;
+                   $('.btcusd').html(formatter.format(data[1].exchrate));
+                   $('.clpusd').html(formatter.format(data[2].exchrate));
+                   $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
+                   $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
+                   globalBTCUSD = data[1].exchrate;
+                   globalCLPUSD = data[2].exchrate; //clpUSD
+                   globalCLPBTC = data[0].exchrate;
+                @if (\Illuminate\Support\Facades\Request::is('wallets/clp'))
+                     var array = JSON.parse('{{ $arr }}');
+                     array.forEach(function (i,e) {
+                       e++;
+                       $('clp-'+e).html(formatter.format(i/data[2].exchrate));
+                       $('btc-'+e).html(formatterBTC.format(i/data[1].exchrate));
+                     })
+                @endif
             }
         });
     }
