@@ -102,7 +102,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-
+    // if url clp wallet get all value package
     @if (\Illuminate\Support\Facades\Request::is('wallets/clp'))
         @php
             $array = App\Package::all();
@@ -120,13 +120,15 @@
             dataType: "json",
             url: '{{ URL::to("exchange") }}',
             success: function(data){
-                   $('.btcusd').html(formatter.format(data[1].exchrate));
-                   $('.clpusd').html(formatter.format(data[2].exchrate));
-                   $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
-                   $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
-                   globalBTCUSD = data[1].exchrate;
-                   globalCLPUSD = data[2].exchrate; //clpUSD
-                   globalCLPBTC = data[0].exchrate;
+                $('.btcusd').html(formatter.format(data[1].exchrate));
+                $('.clpusd').html(formatter.format(data[2].exchrate));
+                $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
+                $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
+                globalBTCUSD = data[1].exchrate;
+                globalCLPUSD = data[2].exchrate; //clpUSD
+                globalCLPBTC = data[0].exchrate;
+
+                // if url clp wallet update all table package modal
                 @if (\Illuminate\Support\Facades\Request::is('wallets/clp'))
                      var array = JSON.parse('{{ $arr }}');
                      array.forEach(function (i,e) {
