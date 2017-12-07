@@ -60,7 +60,7 @@ class ActiveController extends Controller
                                 //$accountWallet = $this->GenerateWallet(self::COINBASE,$user->name);
                                 $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
                             }
-                            
+
                             if(!$accountWallet){
                                 return false;
                             }
@@ -78,7 +78,7 @@ class ActiveController extends Controller
                             //gửi mail cho người giới thiệu
                             $sponsor = User::where('id',$user->refererId)->first();
                             $linkActive = url('/');
-                            $sponsor->notify(new NotifySponsor($sponsor, $linkActive));
+                            $sponsor->notify(new NotifySponsor($sponsor, $user->name));
                             //gửi mail cho người dùng
                             $linkActive = 2;
                             $user->notify(new UserRegistered($user, $linkActive));

@@ -8,12 +8,12 @@ class NotifySponsor extends Notification
 {
     use Queueable;
     public $sponsor;
-    public $link_active;
+    public $user_name;
 
-    public function __construct($sponsor, $link_active)
+    public function __construct($sponsor, $userName)
     {
         $this->sponsor = $sponsor;
-        $this->link_active = $link_active;
+        $this->user_name = $userName;
     }
     public function via($notifiable)
     {
@@ -27,9 +27,9 @@ class NotifySponsor extends Notification
             ->subject('CLP Coin')
             // ->cc($dataSendMail['mail_to'], $this->user->name)
             ->greeting('Dear '.$this->sponsor->name. ',')
-            ->line('Congratulations, you have a new member yyy joining CLP.')
+            ->line('Congratulations, you have a new member ' . $this->user_name . ' joining CLP.')
             ->line('To ensure the new member is successful and understands our business model and is geared for success, please call him/her and set up a meeting as soon as possible.')
-            ->action("Anytime you need any help or support, Please contact your sponsor or visit the FAQ section on our member website ", $this->link_active)
+            ->line("Anytime you need any help or support, Please contact your sponsor or visit the FAQ section on our member website ")
             ->line('Best regards')
             ->line('The CLP Team')
             ->line('"Good energy always wins!"');
