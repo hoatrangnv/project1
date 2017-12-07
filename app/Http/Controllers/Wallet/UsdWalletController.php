@@ -164,6 +164,13 @@ class UsdWalletController extends Controller
     public function buyCLP(Request $request)
     {
         if($request->ajax()) {
+
+            // If the last price on livecoin is lower than 0.95 target price that day => block buy CLP
+            $clpUSDRate = ExchangeRate::getCLPUSDRate();
+
+            if($clpUSDRate < 0.95 * config('app.clp_target_price')) {
+                return response()->json(array('err' => false));
+            }
             
             $userCoin = Auth::user()->userCoin;
 
