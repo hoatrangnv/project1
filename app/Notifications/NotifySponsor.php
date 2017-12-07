@@ -7,12 +7,12 @@ use Illuminate\Notifications\Messages\MailMessage;
 class NotifySponsor extends Notification
 {
     use Queueable;
-    public $user;
+    public $sponsor;
     public $link_active;
 
-    public function __construct($user, $link_active)
+    public function __construct($sponsor, $link_active)
     {
-        $this->user = $user;
+        $this->sponsor = $sponsor;
         $this->link_active = $link_active;
     }
     public function via($notifiable)
@@ -24,12 +24,14 @@ class NotifySponsor extends Notification
     {
         return (new MailMessage)
             ->from('no-reply@clpcoin.co', 'CLP')
-            ->subject('Welcome to the CLP Coin')
+            ->subject('CLP Coin')
             // ->cc($dataSendMail['mail_to'], $this->user->name)
-            ->greeting('Dear '.$this->user->name. ',')
-            ->line('Welcome to the CLP Coin.')
-            ->action("Active Account", $this->link_active)
-            ->line('Link active account will expire in 1 days.')
-            ->line('If you did not request register account, no further action is required. Please contact us if you did not submit this request.');
+            ->greeting('Dear '.$this->sponsor->name. ',')
+            ->line('Congratulations, you have a new member yyy joining CLP.')
+            ->line('To ensure the new member is successful and understands our business model and is geared for success, please call him/her and set up a meeting as soon as possible.')
+            ->action("Anytime you need any help or support, Please contact your sponsor or visit the FAQ section on our member website ", $this->link_active)
+            ->line('Best regards')
+            ->line('The CLP Team')
+            ->line('"Good energy always wins!"');
     }
 }
