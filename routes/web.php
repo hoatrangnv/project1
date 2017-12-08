@@ -140,8 +140,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('exchange',function(App\ExchangeRate $rate){
         return $rate->getExchRate();
     });
-    
 
+    Route::get('faq/{type}','FaqController@index');
 });
 Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');

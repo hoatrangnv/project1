@@ -87,6 +87,20 @@ class ExchangeRate extends Model
         
     }
 
+    public static function getExchRateCLPBTC(){
+        $data = DB::table('exchange_rates')
+            ->select('exchrate')
+            ->where([
+                ["from_currency" , "=" , "btc"],
+                ["to_currency" , "=" , "usd"],
+            ])
+            ->orderby('id','DESC')
+            ->first();
+
+        return $data->exchrate;
+
+    }
+
     public static function getCLPUSDRate(){
         
         $data = DB::table('exchange_rates')
