@@ -693,3 +693,6 @@ CREATE TABLE `withdraw_confirm` (
 -- Records of withdraw_confirm
 -- ----------------------------
 SET FOREIGN_KEY_CHECKS=1;
+
+-- SQL update 17/12/2017
+ALTER TABLE users ADD `mailchimp` tinyint(1) DEFAULT NULL;

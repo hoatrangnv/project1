@@ -19,8 +19,10 @@ class ClpcoinMailchimpSubscriptionV_0_1
     public static function cronjobUpdate(){
         set_time_limit(0);
 
-        $users = User::whereNull('mailchimp')->get();
-        $client = new Client();
+        $users = User::whereNull('mailchimp')
+                    ->orWhere('mailchimp', 0)
+                    ->get();
+        //$client = new Client();
 
         foreach ($users as $user)
         {
@@ -53,18 +55,15 @@ class ClpcoinMailchimpSubscriptionV_0_1
             if ($httpCode == 200) {
                 $user->mailchimp = 1;
                 $user->save();
-                echo " is subscribed\r\n";
             } else {
                 switch ($httpCode) {
                     case 214:
                         $user->mailchimp = 1;
                         $user->save();
-                        Log::info("user already subscribed.\r\n");
                         break;
                     default:
                         $user->mailchimp = 0;
                         $user->save();
-                        Log::info("is not subscribed. Some problem occurred, please try again.\r\n");
                         break;
                 }
             }
