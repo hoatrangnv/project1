@@ -19,6 +19,10 @@
             background-color: #d9edf7 !important;
         }
     </style>
+    @inject("exchange","App\ExchangeRate");
+    @php
+        $exchange = $exchange::getExchRateCLPBTC();
+    @endphp
     @if ( session()->has("errorMessage") )
         <div class="callout callout-danger">
             <h4>Warning!</h4>
@@ -199,14 +203,16 @@
                             <th>{{ trans('adminlte_lang::package.name') }}</th>
                             <th>{{ trans('adminlte_lang::package.price') }}</th>
                             <th>{{ trans('adminlte_lang::package.clp_coin') }}</th>
+                            <th>Equivalent BTC</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="package-clp-wallet">
                         @foreach ($packages as $package)
                             <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
                                 <td>{{ $package->name }}</td>
                                 <td><i class="fa fa-usd"></i>{{ number_format($package->price) }}</td>
-                                <td><span class="icon-clp-icon"></span>{{ number_format($package->price / App\ExchangeRate::getCLPUSDRate(), 2, '.', ',') }}</td>
+                                <td><span class="icon-clp-icon"></span><clp-{{ $package->id  }}>{{ number_format($package->price / App\ExchangeRate::getCLPUSDRate(), 2, '.', ',') }}</clp-{{ $package->id  }}></td>
+                                <td><span class="fa fa-btc"></span><btc-{{ $package->id  }}>{{ number_format($package->price/$exchange,5) }}</btc-{{ $package->id  }}</td>
                             </tr>
                         @endforeach
                         </tbody>

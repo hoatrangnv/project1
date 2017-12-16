@@ -60,6 +60,21 @@
                 </span>
                 </a>
             </li>
+            <li class="treeview{{ Request::is('faq*') ? ' active' : null }}">
+                <a href="#"><i class='fa fa-info'></i> <span>FAQ</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li class="{{ Request::segment(2) === '1' ? 'active' : null }}">
+                        <a href="{{ url('faq/1') }}">
+                            How to activate account?
+                        </a>
+                    </li>
+                    <li class="{{ Request::segment(2) === '2' ? 'active' : null }}">
+                        <a href="{{ url('faq/2') }}">
+                            How to buy CLP?
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->
