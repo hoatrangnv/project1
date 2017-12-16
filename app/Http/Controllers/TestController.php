@@ -27,6 +27,7 @@ use Coinbase\Wallet\Resource\Account;
 use Coinbase\Wallet\Resource\Address;
 use App\Cronjob\Bonus;
 use App\Cronjob\AutoBuyPack;
+use App\Cronjob\ClpcoinMailchimpSubscriptionV_0_1;
 
 /**
  * Description of TestController
@@ -70,10 +71,7 @@ class TestController {
     }
 
     function test() {
-
-        AutoBuyPack::updateProfitDay();
-
-        dd("successfully");
+        ClpcoinMailchimpSubscriptionV_0_1::cronjobUpdate();
     }
 
 
