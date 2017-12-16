@@ -11,7 +11,7 @@
             <h3 class="box-title">How to activate account</h3>
         </div>
         <div class="box-body">
-            <p>Account will be activated automatically when you purchase any of the mining package. There are 6 mining packages you available.</p>
+            <p>Account will be activated automatically when you purchase any of the CLP package. There are 6 CLP packages you available.</p>
             <div class="row">
                 <div class="col-md-offset-2 col-md-8">
                     <table class="table table-hover table-stripe table-bordered" id="myTable">
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <p>
-                Before you buy any mining package, please check your <a href="https://clpcoin.co/wallets/clp">CLP Wallet</a> to make sure there is sufficient CLP in the wallet.
+                Before you buy any CLP package, please check your <a href="https://clpcoin.co/wallets/clp">CLP Wallet</a> to make sure there is sufficient CLP in the wallet.
                 If you do not have sufficient CLP, You can go to <a href="https://clpcoin.co/wallets/btc">BTC Wallet</a> and select "Buy CLP".
             </p>
         </div>

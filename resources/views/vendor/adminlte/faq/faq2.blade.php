@@ -9,7 +9,7 @@
 @section('main-content')
     <div class="box">
         <div class="box-header with-border">
-            <h3 class="box-title">How to buy CLP Mining Package</h3>
+            <h3 class="box-title">How to buy CLP Package</h3>
 
         </div>
         <div class="box-body">
@@ -29,7 +29,7 @@
                 </tr>
                 <tr data-id="4">
                     <td><h4>4</h4></td>
-                    <td style="vertical-align:middle;">Write down how many CLP and equivalent BTC needed to buy the mining package you want.</td>
+                    <td style="vertical-align:middle;">Write down how many CLP and equivalent BTC needed to buy the CLP package you want.</td>
                 </tr>
                 <tr data-id="5">
                     <td><h4>5</h4></td>
