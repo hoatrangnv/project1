@@ -192,7 +192,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Mining Package</h4>
+                    <h4 class="modal-title">CLP Package</h4>
                 </div>
                 {{ Form::open(array('url' => 'packages/invest', 'id'=>'formPackage')) }}
                 <div class="modal-body">

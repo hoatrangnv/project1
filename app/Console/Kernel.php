@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use function foo\func;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\AuthPermissionCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -15,6 +16,7 @@ use App\Cronjob\AutoBuyPack;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
 use App\Cronjob\UpdateCLPCoin;
+use App\Cronjob\ClpcoinMailchimpSubscriptionV_0_1;
 use Log;
 
 class Kernel extends ConsoleKernel
@@ -134,6 +136,14 @@ class Kernel extends ConsoleKernel
                 UpdateCLPCoin::UpdateClpCoinAmount();
             })->everyMinute();
         } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
+        try {
+            $schedule->call(function (){
+                ClpcoinMailchimpSubscriptionV_0_1::cronjobUpdate();
+            })->hourly();
+        } catch (\Exception $ex){
             Log::info($ex);
         }
     }
