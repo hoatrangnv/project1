@@ -13,8 +13,8 @@ use Log;
 
 class ClpcoinMailchimpSubscriptionV_0_1
 {
-    CONST API_KEY = '9dc2b4cb8e5e61be15c9a480ce1c7f27-us17';
-    CONST LIST_ID = '991dbb6910';
+    CONST API_KEY = '0f4bb6bdf7908588c5e2034eb3cd0453-us17';
+    CONST LIST_ID = '7de3361075';
 
     public static function cronjobUpdate(){
         try{
@@ -22,6 +22,7 @@ class ClpcoinMailchimpSubscriptionV_0_1
 
             $users = User::whereNull('mailchimp')
                         ->orWhere('mailchimp', 0)
+                        ->where('active', 1)
                         ->get();
             //$client = new Client();
 
