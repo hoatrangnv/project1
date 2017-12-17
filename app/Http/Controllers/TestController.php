@@ -71,7 +71,7 @@ class TestController {
     }
 
     function test() {
-        ClpcoinMailchimpSubscriptionV_0_1::cronjobUpdate();
+        //ClpcoinMailchimpSubscriptionV_0_1::cronjobUpdate();
     }
 
 
