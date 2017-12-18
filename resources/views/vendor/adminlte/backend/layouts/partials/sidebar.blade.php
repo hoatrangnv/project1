@@ -45,11 +45,13 @@
                     </ul>
                 </li>
             @endcan
+            @can('add_users')
             <li class="{{ Request::is('roles*') ? 'active' : '' }}">
                 <a href="{{ route('withdraw.list') }}">
                     <i class='glyphicon glyphicon-lock'></i> Withdraw Approve</a>
                 </a>
             </li>
+            @endcan
             <li class="{{ Request::is('roles*') ? 'active' : '' }}">
                 <a href="{{ route('wallet.list') }}">
                     <i class='glyphicon glyphicon-lock'></i> Wallet History</a>

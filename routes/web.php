@@ -30,7 +30,7 @@ Route::group( ['middleware' => ['auth']], function() {
         Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
     });
 
-    Route::group(['middleware' => ['permission:add_users']], function () {
+    Route::group(['middleware' => ['permission:view_users']], function () {
         Route::post('users/approve_ok/{id}', 'Backend\User\UserController@approve_ok')->name('approve.ok');
         Route::post('users/approve_cancel/{id}', 'Backend\User\UserController@approve_cancel')->name('approve.cancel');
         Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
@@ -41,11 +41,11 @@ Route::group( ['middleware' => ['auth']], function() {
         Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
     });
 
-    Route::group(['middleware' => ['permission:view_users']], function () {
+    Route::group(['middleware' => ['permission:add_users']], function () {
         Route::post('withdraw/approve', 'Backend\User\WithdrawController@withdrawApprove')->name('withdraw.approve');
     });
 
-    Route::group(['middleware' => ['permission:view_users']], function () {
+    Route::group(['middleware' => ['permission:add_users']], function () {
         Route::get('withdraw/', 'Backend\User\WithdrawController@index')->name('withdraw.list');
     });
 

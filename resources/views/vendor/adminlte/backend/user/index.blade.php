@@ -65,16 +65,18 @@
                                         <button type="submit" class="btn btn-xs btn-info">
                                             Reset 2FA
                                         </button>
-                                        {!! Form::close() !!}
-                                        {!! Form::open( ['method' => 'post', 'url' => route('users.lock', ['userid' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Lock this user?")']) !!}
-                                        <button type="submit" class="btn btn-xs btn-info">
-                                            @if($item->active == 1) Lock @else Unlock @endif
-                                        </button>
-                                        {!! Form::close() !!}
-                                        @include('shared._actions', [
-                                            'entity' => 'users',
-                                            'id' => $item->id
-                                        ])
+                                        @can('add_users')
+                                            {!! Form::close() !!}
+                                            {!! Form::open( ['method' => 'post', 'url' => route('users.lock', ['userid' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Lock this user?")']) !!}
+                                            <button type="submit" class="btn btn-xs btn-info">
+                                                @if($item->active == 1) Lock @else Unlock @endif
+                                            </button>
+                                            {!! Form::close() !!}
+                                            @include('shared._actions', [
+                                                'entity' => 'users',
+                                                'id' => $item->id
+                                            ])
+                                        @endcan
                                     </td>
                                     @endcan
                                 </tr>
