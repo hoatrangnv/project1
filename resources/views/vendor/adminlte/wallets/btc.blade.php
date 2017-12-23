@@ -58,8 +58,6 @@
                             </th>
                             <th>
                                 <button class="btn bg-olive" data-toggle="modal"
-                                        data-target="#deposit">{{trans("adminlte_lang::wallet.deposit")}}</button>
-                                <button class="btn bg-olive" data-toggle="modal"
                                         data-target="#withdraw">{{trans("adminlte_lang::wallet.withdraw")}}</button>
                             </th>
                         </tr>
@@ -121,55 +119,6 @@
             </div>
         </div>
     </div>
-    <!--Deposit modal-->
-    <div class="modal fade" id="deposit" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Deposit to your wallet</h4>
-                </div>
-                <div class="modal-body">
-                    <!-- <div class="col-lg-12"> -->
-                        <div class="box no-border" style="border-top:none;">
-                            <div class="box-body">
-                                <div class="form-group" style="text-align: center">
-                                    <h5 for="qrcode" style="font-weight: 600; color:#34495e">Your BTC Wallet
-                                        address</h5>
-                                    <div class="form-group">
-                                    <div class="input-group input-group-md col-xs-12 col-lg-8" style="margin: 0 auto;">
-                                        <input type="text" value="{{ $walletAddress }}" class="wallet-address form-control" id="wallet-address" readonly="true">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default btnwallet-address" data-clipboard-target="#wallet-address" title="copy">
-                                                <i class="fa fa-clone"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-                                    </div>
-                                    <!-- Trigger -->
-                                    
-                                    <h5 for="qrcode" style="font-weight: 600; color: #34495e; margin-bottom: 0px">BTC
-                                        Wallet link</h5>
-                                    <a class="link-blockchain" href="https://blockchain.info/address/{{ $walletAddress }}" target="_blank">blockchain</a>, <a
-                                            class="link-blockexplorer" href="https://blockexplorer.com/address/{{ $walletAddress }}" target="_blank">blockexplorer</a>
-                                    <center>
-                                        <div id="qrcode" style="padding-bottom: 10px;"></div>
-                                    </center>
-                                </div>
-                            </div>
-                        </div>
-                    <!-- </div> -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
     <!--Withdraw modal-->
     {{ Form::open(array('url' => 'wallets/btcwithdraw', 'id' => 'form-withdraw-btc'))}}
     <div class="modal fade" id="withdraw" style="display: none;">
