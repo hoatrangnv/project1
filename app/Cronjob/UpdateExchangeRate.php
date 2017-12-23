@@ -44,6 +44,7 @@ class UpdateExchangeRate {
         }
         catch (\Exception $e) {
             \Log::error('Running updateExchangRate has error: ' . date('Y-m-d') .$e->getMessage());
+            \Log::error($e->getTraceAsString());
         }
     }
 

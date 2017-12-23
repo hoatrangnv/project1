@@ -44,7 +44,7 @@ class ExchangeRateAPI
     public function getCLPBTCRate()
     {
         $url = self::CLP_EXCHANGE_URL;
-        $path = rtrim($url, '/') . '?currencyPair=CLP/BTC';
+        $path = rtrim($url, '/') . '?currencyPair=CLPC/BTC';
 
         $response = $this->client->request('GET', $path);
 
