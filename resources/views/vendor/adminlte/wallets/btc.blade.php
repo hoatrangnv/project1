@@ -61,8 +61,6 @@
                                         data-target="#deposit">{{trans("adminlte_lang::wallet.deposit")}}</button>
                                 <button class="btn bg-olive" data-toggle="modal"
                                         data-target="#withdraw">{{trans("adminlte_lang::wallet.withdraw")}}</button>
-                                <button class="btn bg-olive" data-toggle="modal"
-                                        data-target="#buy">{{trans("adminlte_lang::wallet.tranfer_to_clp")}}</button>
                             </th>
                         </tr>
                         </tbody>
@@ -228,45 +226,7 @@
     </div>
     {{ Form::close() }}
 
-    <!--Buy CLP modal-->
-    <div class="modal fade" id="buy" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbuyclp" data-type="btctranfer">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 2) }}</a></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="box no-border">
-                        <div class="box-body" style="padding-top:0;">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP clp-input', 'id' => 'btcAmount', 'placeholder' => "BTC Amount")) }}
-                                </div>
-                                <span class="help-block"></span>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                    {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC clp-input', 'id' => 'clpAmount', 'placeholder' => "CLP Amount")) }}
-                                </div>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'buy-clp')) }}
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
+    
     <script src="{{ URL::to("js/qrcode.min.js") }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
     <script>
