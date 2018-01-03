@@ -1,4 +1,5 @@
 <?php
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -59,7 +60,7 @@ Route::group( ['middleware' => ['auth']], function() {
     });
     
     Route::get('members/genealogy', 'User\MemberController@genealogy');
-    Route::get('members/binary', 'User\MemberController@binary');
+    Route::get('members/binary', 'User\MemberController@binary')->middleware(App\Http\Middleware\HoldingUser::class);
     Route::get('members/referrals', 'User\MemberController@refferals');
     Route::get('members/referrals/{id}/detail', 'User\MemberController@refferalsDetail');
     Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
