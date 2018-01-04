@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\HoldingUser;
 use App\UserCoin;
 use App\UserData;
 use App\UserPackage;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Package;
 use Auth;
+use Illuminate\Support\Facades\DB;
 use Session;
 use App\Authorizable;
 use Validator;
@@ -19,6 +21,7 @@ use App\Wallet;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
 use App\CronMatchingLogs;
+
 
 class PackageController extends Controller
 {
@@ -153,8 +156,15 @@ class PackageController extends Controller
             ];
             Wallet::create($fieldUsd);
 
-            // Calculate fast start bonus
-            User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
+            //holding user list
+            $holdingUser = new HoldingUser();
+
+            if ($holdingUser->action()){
+                User::investBonusHoldingUser($user->id, $user->refererId, $request['packageId'], $amount_increase);
+            }else{
+                // Calculate fast start bonus
+                User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
+            }
 
             // Case: User already in tree and then upgrade package => re-caculate loyalty
             if($userData->binaryUserId && $userData->packageId > 0)

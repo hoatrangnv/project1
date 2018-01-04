@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
@@ -126,6 +127,94 @@ class User extends Authenticatable
         }
     }
 
+    public static function investBonusHoldingUser($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0, $level = 1)
+    {
+        if($refererId > 0){
+            $packageBonus = 0;
+            $userData = UserData::find($refererId);
+            if($userData && $level <= 3 && $userData->packageId > 0){
+                if($level == 1){//F1
+                    $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f1_pay');
+                    $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                    $userData->save();
+                }elseif($level == 2){//F2
+                    if(isset($userData->package->pack_id) &&  $userData->package->pack_id >= 3){
+                        $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f2_pay');
+                        $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                        $userData->save();
+                    }
+                }elseif($level == 3){//F3
+                    if(isset($userData->package->pack_id) &&  $userData->package->pack_id >= 5){
+                        $packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f3_pay');
+                        $userData->totalBonus = $userData->totalBonus + $packageBonus;
+                        $userData->save();
+                    }
+                }
+                $userCoin = $userData->userCoin;
+                $table = 'user_coins_holding_user';
+                //check nếu chưa có userId thì tạo record mới $userCoin->userId
+                $usersHolding = DB::table($table)->where('userId',$userCoin->userId)->count();
+                if ($usersHolding == 0){
+                    //create
+                    DB::table($table)->insert(
+                        $userCoin->toArray()
+                    );
+                    DB::table($table)->where('userId',$userCoin->userId)->update([
+                        'usdAmount' => 0,
+                        'reinvestAmount' => 0,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+
+                $dataUserCoin = DB::table($table)->where('userId',$userCoin->userId)->first();
+                $newUsdAmount = $dataUserCoin->usdAmount;
+                $newReinvestAmount = $dataUserCoin->reinvestAmount;
+
+                if($userCoin && $packageBonus > 0){
+                    //Get info of user
+                    $user = Auth::user();
+
+                    $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
+                    $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate());
+//                    $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+//                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+//                    $userCoin->save();
+
+                    //update into table user_coins_holding_user
+                    DB::table($table)->where('userId',$userCoin->userId)->update([
+                        'usdAmount' => $newUsdAmount + $usdAmount,
+                        'reinvestAmount' => $newReinvestAmount + $reinvestAmount,
+                        'updated_at' => Carbon::now()
+                    ]);
+
+                    $fieldUsd = [
+                        'walletType' => Wallet::USD_WALLET,//usd
+                        'type' => Wallet::FAST_START_TYPE,//bonus f1
+                        'inOut' => Wallet::IN,
+                        'userId' => $userData->userId,
+                        'amount' => $usdAmount,
+                        'note'   => $user->name . ' bought package'
+                    ];
+                    Wallet::create($fieldUsd);
+                    $fieldInvest = [
+                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                        'type' => Wallet::FAST_START_TYPE,//bonus f1
+                        'inOut' => Wallet::IN,
+                        'userId' => $userData->userId,
+                        'amount' => $reinvestAmount,
+                        'note'   => $user->name . ' bought package'
+                    ];
+                    Wallet::create($fieldInvest);
+                }
+                if($packageBonus > 0)
+                    self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
+            }
+            if($userData)
+                self::investBonusHoldingUser($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
+            self::bonusBinaryThisWeek($refererId);
+        }
+    }
     /**
     *   Insert log for Fast Start Bonus
     */
@@ -629,8 +718,7 @@ class User extends Authenticatable
     {
        return DB::table('model_has_roles')->where('model_id', '=', $user_id)->get();
     }
-
-
+    
     public static function getNewUser( $date ){
         return self::where('active' , 1)
             ->whereDate('created_at','>=', $date['from_date'])

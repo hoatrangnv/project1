@@ -15,7 +15,7 @@ use Closure;
 
 class HoldingUser
 {
-    private $holding_user,
+    protected $holding_user,
         $list,$enable_date,
         $disable_date,$country;
 
@@ -28,9 +28,17 @@ class HoldingUser
         $this->country = config('holding_user.holding_user_country');
     }
 
-    function __invoke()
+    public function __invoke()
     {
         $this->action();
+    }
+
+    public function __call($method, $arguments) {
+        $prop = lcfirst(substr($method, 5));
+        if( !property_exists($this, $prop) ){
+            throw new \Exception('Property '. $prop . ' does not exist');
+        }
+        return $this->$prop;
     }
 
     public function handle($request, Closure $next){
@@ -66,7 +74,6 @@ class HoldingUser
             if ($now->gte($enableDate) && $now->lt($disableDate)){
 
                 $userlist = UserTreePermission::select('genealogy')->whereIn('userId',$this->list)->get();
-
                 $user = array();
 
                 foreach ($userlist as $value){
