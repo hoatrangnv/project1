@@ -25,7 +25,7 @@ class HoldingUser
         $this->list = array_map('intval', explode(',', config('holding_user.holding_user_list')));
         $this->enable_date = config('holding_user.holding_user_enable_date');
         $this->disable_date = config('holding_user.holding_user_disable_date');
-        $this->country = config('holding_user.holding_user_country');
+        $this->country = array_map('intval', explode(',', config('holding_user.holding_user_country')));
     }
 
     public function __invoke()
@@ -80,7 +80,7 @@ class HoldingUser
                     $user = array_merge($user,array_map('intval',explode(',',$value->genealogy)));
                 }
 
-                if (in_array(Auth::user()->id,$user) && Auth::user()->country == $this->country )
+                if (in_array(Auth::user()->id,$user) && in_array(Auth::user()->country,$this->country))
                     return true;
 
                 return false;

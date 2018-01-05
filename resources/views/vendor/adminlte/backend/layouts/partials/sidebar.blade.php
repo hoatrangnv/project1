@@ -42,6 +42,11 @@
                                 List Approve
                             </a>
                         </li>
+                        <li class="{{ Request::is('report/holdinguser') ? 'active' : '' }}">
+                            <a href="{{ url('report/holdinguser') }}">
+                                List Holding
+                            </a>
+                        </li>
                     </ul>
                 </li>
             @endcan

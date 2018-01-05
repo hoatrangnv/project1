@@ -57,7 +57,11 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:view_reports']], function () {
         Route::get('/report', 'Backend\Report\ReportController@getDataReport')->name('report');
         Route::get('/report/commission', 'Backend\Report\ReportController@getDataCommissionReport');
+        Route::get('/report/holdinguser', 'Backend\HoldingList\HoldingListController@index');
+        Route::get('/report/holdinguser/userdata', 'Backend\HoldingList\HoldingListController@getData');
     });
+
+
     
     Route::get('members/genealogy', 'User\MemberController@genealogy');
     Route::get('members/binary', 'User\MemberController@binary')->middleware(App\Http\Middleware\HoldingUser::class);

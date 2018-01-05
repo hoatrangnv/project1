@@ -388,4 +388,8 @@ class Wallet extends Model
             ->whereDate('wallets.created_at','<=', $date['to_date'])
             ->sum('wallets.amount');
     }
+
+    public function user(){
+        return $this->belongsTo('App\User', 'userId', 'id');
+    }
 }
