@@ -108,7 +108,7 @@ class Bonus
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
 
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+		if($firstWeek < 10) $firstWeekYear = $firstYear.'00'.$firstWeek;
 
 		/* =======END ===== */
 
