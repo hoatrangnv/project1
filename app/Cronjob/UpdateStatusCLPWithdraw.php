@@ -22,6 +22,7 @@ class UpdateStatusCLPWithdraw
     {
         //List withdraw not completed
         $listWithdrawNotUpdated = Withdraw::where("status", 0)->whereNotNull('amountCLP')->get();
+        $clpApi = new CLPWalletAPI();
 
         foreach($listWithdrawNotUpdated as $withdraw) {
 
@@ -33,10 +34,13 @@ class UpdateStatusCLPWithdraw
             $interval = $datetime2->diff($datetime1);
             //compare
             if( $interval->format('%i') >= 0 ) {
-                $withdraw->status = 1;
-                $withdraw->save();
-                //Updat status in table wallets from "Pending" => "Completed"
-                Wallet::find($withdraw->wallet_id)->update(['note' => "Completed"]);
+                $tranStatus = $clpApi->getTransactionInfo($withdraw->transaction_hash);
+                if($tranStatus == 'completed') {
+                    $withdraw->status = 1;
+                    $withdraw->save();
+                    //Updat status in table wallets from "Pending" => "Completed"
+                    Wallet::find($withdraw->wallet_id)->update(['note' => "Completed"]);
+                }
             }
             
         }
