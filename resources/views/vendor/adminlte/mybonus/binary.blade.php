@@ -29,7 +29,11 @@
 						<tbody>
 							@foreach ($binarys as $binary)
 							<tr>
+								@if($binary->weeked > 9)
 								<td>{{ date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")) }} - {{ date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")) }}</td>
+								@else
+								<td>{{ date( "Y/m/d", strtotime($binary->year."W0".$binary->weeked."1")) }} - {{ date( "Y/m/d", strtotime($binary->year."W0".$binary->weeked."7")) }}</td>
+								@endif
 								<td>{{ number_format($binary->leftOpen, 2) }}</td>
 								<td>{{ number_format($binary->rightOpen,2) }}</td>
 								<td>{{ number_format($binary->leftNew, 2) }}</td>
