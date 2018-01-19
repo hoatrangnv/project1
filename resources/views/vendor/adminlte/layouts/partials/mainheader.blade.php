@@ -84,6 +84,89 @@
         </div>
     </nav>
 </header>
+
+
+<!--modal buy package-->
+
+    <div class="modal fade" id="buy-package" >
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">CLP Package</h4>
+                </div>
+                <form method="POST" action="http://127.0.0.1:8000/packages/invest" accept-charset="UTF-8" id="formPackage"><input name="_token" type="hidden" value="jt6ipUAtpG2fSbbJn5KUXEfPFZh2UHAZ3SGKU5nB">
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                        @if(count($packages)>0)
+                            @foreach($packages as $pKey=>$pVal)
+                                <div class="col-md-4 m-b-lg">
+                                      <div class="package-wrapper {{floatval($pKey+1)==Auth::user()->userData->packageId?'active':''}} {{strtolower($pVal->name)}}">
+                                        <div class="package-title">
+                                          <div class="package-logo">
+                                            <img src="{{asset('img/p-'.strtolower($pVal->name).'.png')}}"/>
+                                            {{$pVal->name}}
+                                          </div>
+                                        </div>
+                                        <div class="package-content">
+                                          <div class="item">
+                                            <div class="h1 no-m">${{number_format($pVal->price,0)}}</div>
+                                          </div>
+                                          <div class="item display-flex justify-content-center">
+                                            <span class="m-r-lg">Equivalent CLP<div class="h4 no-m"><b><span class="icon-clp-icon"></span><clp-1>{{number_format($pVal->price/$ExchangeRate['CLP_USD'],2)}}</clp-1></b></div></span>
+                                            <span class="m-l-lg">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],5)}}</btc-1></b></div></span>
+                                          </div>
+                                          <div class="item">
+                                            Reward<div class="h4 no-m"><b>{{$pVal->bonus*100}}% / Day</b></div>
+                                          </div>
+                                          <div class="item">
+                                            <label class="iCheck">
+                                              <input type="radio" value="{{$pVal->id}}" name="choose-package" {{floatval($pKey+1)==Auth::user()->userData->packageId?'checked':''}} class="flat-red">
+                                              <span class="m-l-xxs">Choose</span>
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                            @endforeach
+                        @else
+                            <h1 class="text-center">There are no packages to buy</h1>
+                        @endif
+                        
+                        
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer p-h-lg" style="text-align: left;">
+                   <div class="form-group">
+                      <label class="iCheck">
+                        <input type="checkbox" name="terms" id="termsPackage" class="flat-red">
+                        <a class="m-l-xxs" href="/package-term-condition.html" target="_blank">Term and condition</a>
+                      </label>
+                      <span class="help-block error" id="package_term_error"></span>
+                    </div>
+
+                  <p>Buy Package by</p>
+                    <button class="btn btn-success" data-wid="3" id="btn_submit_clp" type="button">CLP Wallet</button>
+                    <button class="btn btn-success" data-wid="2" id="btn_submit_btc" type="button">BTC Wallet</button>
+                    <button class="btn btn-default pull-right" id="btn_submit" type="button" data-dismiss="modal">Close</button>
+                </form>
+                {!! Form::open(['action'=>'UserOrderController@addNew','style'=>'display:none','id'=>'fBuy']) !!}
+                    <input type="hidden" name="packageId" id="packageId"/>
+                    <input type="hidden" name="walletId" id="walletId" />
+                {!! Form::close() !!}
+            </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+<!--end modal-->
+
+
 <script>
     var formatter = new Intl.NumberFormat('en-US', {
             style: 'decimal',

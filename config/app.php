@@ -131,7 +131,7 @@ return [
     'user_referral_register' => env('USER_REFERRAL_REGISTER', 'root'),
     'fee_withRaw_BTC' => env('FEE_WITHDRAW_BTC', 0.0005),
     'fee_withRaw_CLP' => env('FEE_WITHDRAW_CLP', 2),
-    'enable_captcha' => true,
+    'enable_captcha' => false,
     'f1_bonus' => 0.1,
     'f2_bonus' => 0.02,
     'f3_bonus' => 0.01,

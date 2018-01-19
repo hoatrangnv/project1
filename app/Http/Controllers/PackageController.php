@@ -19,6 +19,7 @@ use App\Wallet;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
 use App\CronMatchingLogs;
+use App\UserOrder;
 
 class PackageController extends Controller
 {
@@ -30,7 +31,6 @@ class PackageController extends Controller
     }
     public function index()
     {
-        $packages = Package::all();
         return view('adminlte::package.index')->with('packages', $packages);
     }
     public function create()
@@ -55,6 +55,26 @@ class PackageController extends Controller
     /**
     * Buy package action( upgrade package)
     */
+
+    public function buyPackage(Request $request)
+    {
+
+        $currentuserid = Auth::user()->id;
+        $packages = Package::all();
+        $query = UserOrder::where('userId',$currentuserid);
+        if(isset($request->type) && $request->type > 0){
+            $query->where('status', $request->type);
+        }
+        $userOrders=$query->orderBy('id', 'desc')->get();
+
+        // $time=$userOrders[0]->buy_date;
+        // var_dump($time);exit;
+        //$timestamp = strtotime($userOrders[0]->buy_date) + 60*60;
+        //$time = date('H:i', $timestamp);
+
+        return view('adminlte::package.buy',compact('packages','userOrders'));
+    }
+
     public function invest(Request $request)
     {
         $currentuserid = Auth::user()->id;

@@ -117,6 +117,13 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
     Route::resource('mybonus', 'MyBonusController');
 
+
+    Route::post('orders/add','UserOrderController@addNew');
+
+    Route::get('packages/buy',['as'=>'package.buy','uses'=>'PackageController@buyPackage']);
+
+
+
     Route::get('packages/invest', 'PackageController@invest');
     Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
     Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'PackageController@withDraw']);
