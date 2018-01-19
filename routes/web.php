@@ -119,6 +119,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
 
     Route::post('orders/add','UserOrderController@addNew');
+    Route::post('orders/pay','UserOrderController@payOrder');
 
     Route::get('packages/buy',['as'=>'package.buy','uses'=>'PackageController@buyPackage']);
 

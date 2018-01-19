@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'timeToExpired'=>1,
+    'timeToExpired'=>1,//hours
 
 	'usd_bonus_pay' => 0.6,
 	'reinvest_bonus_pay' => 0.4,

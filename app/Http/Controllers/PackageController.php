@@ -67,10 +67,18 @@ class PackageController extends Controller
         }
         $userOrders=$query->orderBy('id', 'desc')->get();
 
-        // $time=$userOrders[0]->buy_date;
-        // var_dump($time);exit;
-        //$timestamp = strtotime($userOrders[0]->buy_date) + 60*60;
-        //$time = date('H:i', $timestamp);
+        if(count($userOrders)>0)
+        {
+            foreach ($userOrders as $usKey => $usVal) {
+                $buyDate=strtotime($usVal->buy_date)+config('cryptolanding.timeToExpired')*3600;
+                $time=time();
+                if($buyDate<time() && $usVal->status==UserOrder::STATUS_PENDING)
+                {
+                    $usVal->status=UserOrder::STATUS_EXPRIED;//exprired
+                    $usVal->save();
+                }
+            }
+        }
 
         return view('adminlte::package.buy',compact('packages','userOrders'));
     }

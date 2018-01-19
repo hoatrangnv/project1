@@ -103,7 +103,7 @@
                         @if(count($packages)>0)
                             @foreach($packages as $pKey=>$pVal)
                                 <div class="col-md-4 m-b-lg">
-                                      <div class="package-wrapper {{floatval($pKey+1)==Auth::user()->userData->packageId?'active':''}} {{strtolower($pVal->name)}}">
+                                      <div class="package-wrapper {{floatval($pKey+1)==Auth::user()->userData->packageId?'active':''}} {{strtolower($pVal->name)=='small'?'Small':strtolower($pVal->name)}}">
                                         <div class="package-title">
                                           <div class="package-logo">
                                             <img src="{{asset('img/p-'.strtolower($pVal->name).'.png')}}"/>
@@ -166,6 +166,102 @@
 
 <!--end modal-->
 
+<!--buy package script-->
+<script src="{{asset('plugins/icheck/icheck.min.js')}}"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        var packageId = {{ Auth::user()->userData->packageId }};
+        var packageIdPick = packageId;
+
+        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+          checkboxClass: 'icheckbox_flat-green',
+          radioClass   : 'iradio_flat-green'
+        })
+
+        $('.package-wrapper').each(function(index, el) {
+            $(el).hasClass('active') ? $(el) : $(el).addClass('disabled');
+        });
+
+        $('.iCheck,[name="choose-package"]+ins').click(function(event) {
+            var _packageId=packageId;
+            if(event.target.className=='iCheck-helper')
+            {
+                _packageId=$(this).parent().children('input[type="radio"]').val();
+                packageIdPick=_packageId;
+            }
+            if(event.target.className=='m-l-xxs' || event.target.className=="iCheck hover")
+            {
+                _packageId=$(this).children().find('input[type="radio"]').val();
+                packageIdPick=_packageId;
+            }
+            if (parseInt(_packageId)>0)
+            {
+                if (parseInt(_packageId) < parseInt(packageId))
+                {
+                    swal("Whoops","You can not downgrade package.","error");
+                }
+                if (_packageId == packageId) {
+                    swal("Whoops","You purchased this package.","error");
+                }
+            }
+
+            $('#packageId').val(_packageId);
+            packageIdPick=_packageId;
+
+            $('.package-wrapper').each(function(index, el) {
+                $(el).hasClass('active') ? ($(el).removeClass('active'), $(el).addClass('disabled')) : $(el);
+            });
+            $(this).closest('.package-wrapper').removeClass('disabled');
+            $(this).closest('.package-wrapper').addClass('active');
+
+
+
+        });
+
+
+
+        $('#btn_submit_clp, #btn_submit_btc').click(function(){
+            $('#package_term_error').text('');
+            var walletId=$(this).attr('data-wid');
+            if (parseInt(packageIdPick)>0)
+            {
+                if (parseInt(packageIdPick) < parseInt(packageId))
+                {
+                    swal("Whoops","You can not downgrade package.","error");
+                }
+                else if (packageIdPick == packageId) {
+                    swal("Whoops","You purchased this package.","error");
+                }
+                else 
+                {
+                    $('#walletId').val(walletId);
+                    if($('#termsPackage').is(':checked'))
+                    {
+                        $('#buy-package').modal('hide');
+                        swal({
+                          title: "Are you sure?",
+                          type: "warning",
+                          showCancelButton: true,
+                          confirmButtonClass: "btn-info",
+                          confirmButtonText: "Yes, buy it!",
+                          closeOnConfirm: false
+                        },function(){
+                          $('#fBuy').submit();
+                        });
+                    }
+                    else
+                    {
+                        $('#package_term_error').text('Please checked term!');
+                        return false;
+                    }
+                }
+            }
+
+        });
+
+    });
+</script>
+<!--end buy package-->
 
 <script>
     var formatter = new Intl.NumberFormat('en-US', {

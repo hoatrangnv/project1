@@ -5,14 +5,8 @@
 @endsection
 
 @section('custome_css')
-<link rel="stylesheet" type="text/css" href="{{asset('plugins/icheck/skins/all.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTable/media/css/datatables.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{asset('css/clp.css')}}">
-<style type="text/css">
-	.error{
-		color: #DD4B39;
-	}
-</style>
+
 @endsection
 
 @section('main-content')
@@ -92,7 +86,7 @@
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
-												<a href='#' class='btn btn-xs bg-olive pull-left'>Pay Now</a>
+												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-id="{{$userOrder->id}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
 											@elseif($userOrder->status==2)
 												<b class='text-info'>Paid</b>
 											@else
@@ -111,10 +105,12 @@
 		    </div>
 		</section>
 	</div>
-
+	{!! Form::open(['action'=>'UserOrderController@payOrder','method'=>'post','style'=>'display:none','id'=>'fPay']) !!}
+		<input type="hidden" name="orderId" id="orderId" />
+	{!! Form::close() !!}
 
 	<script src="{{asset('plugins/dataTable/media/js/datatables.min.js')}}"></script>
-    <script src="{{asset('plugins/icheck/icheck.min.js')}}"></script>
+    
 	<script type="text/javascript">
 		$('.dataTables-package').DataTable({
             pageLength: 10,
@@ -124,95 +120,33 @@
             bInfo:false,
             sort:false
         });
-		var packageId = {{ Auth::user()->userData->packageId }};
-        var packageIdPick = packageId;
 
-        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-          checkboxClass: 'icheckbox_flat-green',
-          radioClass   : 'iradio_flat-green'
-        })
-
-        $('.package-wrapper').each(function(index, el) {
-            $(el).hasClass('active') ? $(el) : $(el).addClass('disabled');
-        });
-
-        $('.iCheck,[name="choose-package"]+ins').click(function(event) {
-        	var _packageId=packageId;
-        	if(event.target.className=='iCheck-helper')
-        	{
-        		_packageId=$(this).parent().children('input[type="radio"]').val();
-        		packageIdPick=_packageId;
-        	}
-        	if(event.target.className=='m-l-xxs' || event.target.className=="iCheck hover")
-        	{
-        		_packageId=$(this).children().find('input[type="radio"]').val();
-        		packageIdPick=_packageId;
-        	}
-        	if (parseInt(_packageId)>0)
-        	{
-        		if (parseInt(_packageId) < parseInt(packageId))
-        		{
-        			swal("Whoops","You can not downgrade package.","error");
-        		}
-        		if (_packageId == packageId) {
-        			swal("Whoops","You purchased this package.","error");
-        		}
-        	}
-
-        	$('#packageId').val(_packageId);
-        	packageIdPick=_packageId;
-
-            $('.package-wrapper').each(function(index, el) {
-                $(el).hasClass('active') ? ($(el).removeClass('active'), $(el).addClass('disabled')) : $(el);
-            });
-            $(this).closest('.package-wrapper').removeClass('disabled');
-            $(this).closest('.package-wrapper').addClass('active');
-
-
-
-        });
-
-
-
-        $('#btn_submit_clp, #btn_submit_btc').click(function(){
-        	$('#package_term_error').text('');
-        	var walletId=$(this).attr('data-wid');
-        	if (parseInt(packageIdPick)>0)
-        	{
-        		if (parseInt(packageIdPick) < parseInt(packageId))
-        		{
-        			swal("Whoops","You can not downgrade package.","error");
-        		}
-        		else if (packageIdPick == packageId) {
-        			swal("Whoops","You purchased this package.","error");
-        		}
-        		else 
-        		{
-        			$('#walletId').val(walletId);
-        			if($('#termsPackage').is(':checked'))
-        			{
-        				$('#buy-package').modal('hide');
-        				swal({
-                          title: "Are you sure?",
-                          type: "warning",
-                          showCancelButton: true,
-                          confirmButtonClass: "btn-info",
-                          confirmButtonText: "Yes, buy it!",
-                          closeOnConfirm: false
-                        },function(){
-                          $('#fBuy').submit();
-                        });
-        			}
-        			else
-        			{
-        				$('#package_term_error').text('Please checked term!');
-        				return false;
-        			}
-        		}
-        	}
-
-        });
-
+		$(document).on('click','.btn-pay',function(){
+			var currPack={{Auth::user()->userData->packageId}};
+			var pid=$(this).attr('data-package-id');
+			var oid=$(this).attr('data-id');
+			if(currPack > pid)
+			{
+				swal('Whoops','You can not downgrade package.','error');
+			}
+			else if(currPack==pid){
+				swal('Whoops','You purchased this package.','error');
+			}
+			else
+			{
+				$('#orderId').val(oid);
+				swal({
+	                  title: "Are you sure?",
+	                  type: "warning",
+	                  showCancelButton: true,
+	                  confirmButtonClass: "btn-info",
+	                  confirmButtonText: "Yes, pay it!",
+	                  closeOnConfirm: false
+	                },function(){
+	                  $('#fPay').submit();
+	                });
+			}
+		});
 
 	</script>
 
