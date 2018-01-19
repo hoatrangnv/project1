@@ -10,5 +10,8 @@
 		    public function package() {
 		        return $this->hasOne(Package::class, 'id', 'packageId');
 		    }
+		    public function user(){
+		    	return $this->hasOne(User::class, 'id', 'userId');
+		    }
 	}
 ?>

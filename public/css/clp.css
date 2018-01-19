@@ -540,4 +540,8 @@
     .sidebar-menu > li.upgrade-package a span {
       font-weight: 600; }
 
+.dataTables-orders i.fa-user {
+  margin-right: 5px;
+  color: #3c8dbc; }
+
 /*# sourceMappingURL=clp.css.map */

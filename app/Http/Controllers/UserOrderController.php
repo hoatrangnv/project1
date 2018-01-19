@@ -307,7 +307,7 @@ class UserOrderController extends Controller
 							            $userData->packageId = $order->packageId;
 							            $userData->status = 1;
 							            $userData->save();
-							            $amount_increase = $order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,5):round($order->amountBTC*$rateBTCUSD);
+							            $amount_increase = $order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,5):round($order->amountBTC*$rateBTCUSD,5);
 
 							            //Insert to cron logs for binary, profit
 							            if($packageOldId == 0) {

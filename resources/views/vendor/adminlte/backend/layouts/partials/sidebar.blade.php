@@ -73,6 +73,11 @@
                 </ul>
             </li>
             @endcan
+            <li class="treeview{{ Request::is('admin/packages*') ? ' active' : null }}">
+                <a href="{{ route('backend.package_order') }}">
+                    <i class='fa fa-book'></i> Package Orders</a>
+                </a>
+            </li>
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->
