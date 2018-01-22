@@ -236,7 +236,7 @@
 
 
 
-        jQuery('.btn_submit_clp, .btn_submit_btc').click(function(){
+        jQuery('#btn_submit_clp, #btn_submit_btc').click(function(){
             $('#package_term_error').text('');
             var walletId=$(this).attr('data-wid');
             if (parseInt(packageIdPick)>0)
@@ -255,7 +255,7 @@
                     {
 
                         swal({
-                          title: "Are you sure?",
+                          title: "Your BTC/CLP balance is not sufficient. Would you like to put an order and pay later?",
                           type: "warning",
                           showCancelButton: true,
                           confirmButtonClass: "btn-info",

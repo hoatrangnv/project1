@@ -82,8 +82,8 @@
 			                    </div>
 
 			                  <p>Buy Package by</p>
-			                    <button class="btn btn-success btn_submit_clp" data-wid="3" type="button">CLP Wallet</button>
-			                    <button class="btn btn-success btn_submit_btc" data-wid="2" type="button">BTC Wallet</button>
+			                    <button class="btn btn-success" id="btn_submit_clp" data-wid="3" type="button">CLP Wallet</button>
+			                    <button class="btn btn-success" id="btn_submit_btc" data-wid="2" type="button">BTC Wallet</button>
 								<button class="btn btn-danger pull-right" onclick="window.history.back()" type="button" data-dismiss="modal">Back</button>
 							</div>
                     	</div>

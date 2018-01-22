@@ -84,6 +84,8 @@ class UserOrderController extends Controller
 						'amountBTC'=>$request->walletId==Wallet::BTC_WALLET?$amount:null,
 						'buy_date'=>(new \DateTime())->format('Y-m-d H:i:s'),
 						'paid_date'=>null,
+						'type'=>(isset($user->userData->packageId) && $user->userData->packageId!=0)?UserOrder::TYPE_UPGRADE:UserOrder::TYPE_NEW,
+						'original'=>$user->userData->packageId,
 						'status'=>1
 					];
 					if($enough){//add order, process user packages
@@ -125,6 +127,7 @@ class UserOrderController extends Controller
 			                if(CronMatchingLogs::where('userId', $currentuserid)->count() < 1) 
 			                    CronMatchingLogs::create(['userId' => $currentuserid]);
 			            }
+
 
 			            if($packageOldId > 0){
 			                $amount_increase = $package->price - $packageOldPrice;
@@ -212,7 +215,7 @@ class UserOrderController extends Controller
 					{
 						UserOrder::create($orderField);
 						return redirect()->route('package.buy')
-							->with('flash_message','Your balance is not enough to buy this package. So, an order has been created!');
+							->with('flash_message','Your order has been placed. You have '.config('cryptolanding.timeToExpired`').' hour(s) to pay your order!');
 					}
 
 					
@@ -406,7 +409,7 @@ class UserOrderController extends Controller
 								else
 								{
 									return redirect()->route('package.buy')
-	                            ->with('errorMessage','Whoops. Your balance is not enough to pay this order!');
+	                            ->with('errorMessage','Whoops. Your BTC/CLP balance is not sufficient!');
 								}
 
 							}

@@ -696,3 +696,29 @@ SET FOREIGN_KEY_CHECKS=1;
 
 -- SQL update 17/12/2017
 ALTER TABLE users ADD `mailchimp` tinyint(1) DEFAULT NULL;
+
+
+CREATE TABLE `user_orders` (
+  `id` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `packageId` int(11) NOT NULL,
+  `walletType` tinyint(4) NOT NULL,
+  `amountCLP` double DEFAULT NULL,
+  `amountBTC` double DEFAULT NULL,
+  `status` tinyint(4) NOT NULL COMMENT '1: pending, 2: paid, 3:expired',
+  `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1: buy new, 2: upgrade',
+  `original` int(11) DEFAULT NULL,
+  `buy_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `paid_date` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `user_orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `userId` (`userId`),
+  ADD KEY `packageId` (`packageId`);
+
+ALTER TABLE `user_orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+COMMIT;

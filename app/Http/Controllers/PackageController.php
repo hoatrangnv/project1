@@ -80,6 +80,7 @@ class PackageController extends Controller
                     $usVal->status=UserOrder::STATUS_EXPRIED;//exprired
                     $usVal->save();
                 }
+                $usVal->timeLeft=$buyDate-time();
             }
         }
 

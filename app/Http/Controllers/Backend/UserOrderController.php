@@ -36,6 +36,14 @@
 	    	{
 	    		$query->where('buy_date','<=',$request->end);
 	    	}
+	    	if(isset($request->orderType) && $request->orderType!='')
+	    	{
+	    		$query->where('type',floatval($request->orderType));
+	    	}
+	    	if(isset($request->originalPackage) && $request->originalPackage!='')
+	    	{
+	    		$query->where('original',floatval($request->originalPackage));
+	    	}
 	    	$orders=$query->orderBy('id', 'desc')->get();
 	    	if(count($orders)>0)
 	        {
@@ -47,18 +55,20 @@
 	                    $usVal->status=UserOrder::STATUS_EXPRIED;//exprired
 	                    $usVal->save();
 	                }
+	                $pack=Package::find($usVal->original);
+	                $usVal->original=!empty($pack)?$pack->name:'';
 	            }
 	        }
-	        
 	    	$status=[''=>'Select Status',UserOrder::STATUS_PAID=>'Paid',UserOrder::STATUS_PENDING=>'Not Paid',UserOrder::STATUS_EXPRIED=>'Expired'];
 	    	$purchases=[''=>'Purchases By','all'=>'All',Wallet::BTC_WALLET=>'BTC',Wallet::CLP_WALLET=>'CLP'];
+	    	$orderTypes=[''=>'All Order Types',UserOrder::TYPE_NEW=>'Buy New',UserOrder::TYPE_UPGRADE=>'Upgrade'];
 
 
 
 
 	    	$packages=Package::all();
 
-	    	return view('adminlte::backend.order.order',compact('status','purchases','packages','orders'));
+	    	return view('adminlte::backend.order.order',compact('status','purchases','packages','orders','orderTypes'));
 	    }
 	}
 ?>
