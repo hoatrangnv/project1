@@ -96,7 +96,7 @@
                         <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">CLP Package</h4>
                 </div>
-                <form method="POST" action="http://127.0.0.1:8000/packages/invest" accept-charset="UTF-8" id="formPackage"><input name="_token" type="hidden" value="jt6ipUAtpG2fSbbJn5KUXEfPFZh2UHAZ3SGKU5nB">
+                <form method="" action="" accept-charset="UTF-8" id="formPackage">
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-12">
@@ -153,23 +153,38 @@
                     <button class="btn btn-success" data-wid="2" id="btn_submit_btc" type="button">BTC Wallet</button>
                     <button class="btn btn-default pull-right" id="btn_submit" type="button" data-dismiss="modal">Close</button>
                 </form>
-                {!! Form::open(['action'=>'UserOrderController@addNew','style'=>'display:none','id'=>'fBuy']) !!}
-                    <input type="hidden" name="packageId" id="packageId"/>
-                    <input type="hidden" name="walletId" id="walletId" />
-                {!! Form::close() !!}
+                
             </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
+        
     </div>
-
+    {!! Form::open(['action'=>'UserOrderController@addNew','style'=>'display:none','id'=>'fBuy']) !!}
+            <input type="hidden" name="packageId" id="packageId"/>
+            <input type="hidden" name="walletId" id="walletId" />
+        {!! Form::close() !!}
 <!--end modal-->
 
 <!--buy package script-->
 <script src="{{asset('plugins/icheck/icheck.min.js')}}"></script>
 <script type="text/javascript">
     jQuery(document).ready(function(){
+        var ua = navigator.userAgent;
+        window.iOS = /iPad|iPhone|iPod/.test(ua),
+        window.iOS11 = /OS 11_0_1|OS 11_0_2|OS 11_0_3|OS 11_1|OS 11_1_1|OS 11_1_2|OS 11_2|OS 11_2_1|OS 11_2_2|OS 11_2_5/.test(ua);
+        jQuery(document).on('click','.btn-buyPack',function(){
+            if ( window.iOS && window.iOS11 )
+            {
+                window.location.href="{{URL::to('packages/ibuy')}}";
+            }
+            else
+            {
+                $('#buy-package').modal('show');
+            }
+        });
+
         var packageId = {{ Auth::user()->userData->packageId }};
         var packageIdPick = packageId;
 
@@ -182,7 +197,8 @@
             $(el).hasClass('active') ? $(el) : $(el).addClass('disabled');
         });
 
-        $('.iCheck,[name="choose-package"]+ins').click(function(event) {
+        jQuery('.iCheck,[name="choose-package"]+ins').click(function(event) {
+            console.log('choose package');
             var _packageId=packageId;
             if(event.target.className=='iCheck-helper')
             {
@@ -220,7 +236,7 @@
 
 
 
-        $('#btn_submit_clp, #btn_submit_btc').click(function(){
+        jQuery('.btn_submit_clp, .btn_submit_btc').click(function(){
             $('#package_term_error').text('');
             var walletId=$(this).attr('data-wid');
             if (parseInt(packageIdPick)>0)
@@ -237,7 +253,7 @@
                     $('#walletId').val(walletId);
                     if($('#termsPackage').is(':checked'))
                     {
-                        $('#buy-package').modal('hide');
+
                         swal({
                           title: "Are you sure?",
                           type: "warning",
@@ -246,7 +262,7 @@
                           confirmButtonText: "Yes, buy it!",
                           closeOnConfirm: false
                         },function(){
-                          $('#fBuy').submit();
+                          jQuery('#fBuy').submit();
                         });
                     }
                     else

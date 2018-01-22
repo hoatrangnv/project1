@@ -44,7 +44,7 @@
 		            <h3 class="box-title">Buy Package</h3>
 		          </div>
 		          <div class="box-body">
-		            <a href="#" class="btn bg-olive m-b-lg" data-toggle="modal" data-target="#buy-package">Buy Package</a>
+		            <a href="javascript:;" class="btn bg-olive m-b-lg btn-buyPack">Buy Package</a>
 		            <div class="row">
 		            	{!! Form::open(['action'=>'PackageController@buyPackage','method'=>'get']) !!}
                         <div class="col-xs-6 col-md-2 col-lg-2">
@@ -112,6 +112,7 @@
 	<script src="{{asset('plugins/dataTable/media/js/datatables.min.js')}}"></script>
     
 	<script type="text/javascript">
+	
 		$('.dataTables-package').DataTable({
             pageLength: 10,
             responsive: true,

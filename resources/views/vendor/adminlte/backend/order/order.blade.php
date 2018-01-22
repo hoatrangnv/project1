@@ -147,6 +147,8 @@
 	                    for( var i = 0; i < count.length; i++ ){
 	                        sumData += parseFloat( count[i] );
 	                    }
+                        if(!Number.isInteger(sumData))
+                            sumData=sumData.toFixed(5);
 	                    return sumData;
 	                }
 
@@ -179,11 +181,7 @@
 			let purchased=url.searchParams.get('purchased');
 			let package=url.searchParams.get('package');
 			let today = new Date().toISOString().slice(0, 10)
-			if(start==null || start=='')
-			{
-				$('#start').val(today);
-			}
-			else
+			if(start!=null && start!='')
 			{
 				$('#start').val(start);
 			}

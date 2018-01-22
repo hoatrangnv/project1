@@ -339,8 +339,8 @@ class UserOrderController extends Controller
 							            ]);
 
 
-							            $amountCLPDecrease = $amount_increase / ExchangeRate::getCLPUSDRate();
-							            $amountBTCDecrease = $amount_increase / ExchangeRate::getBTCUSDRate();
+							            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),5);
+							            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),5);
 
 							            $userCoin = $userData->userCoin;
 
@@ -390,6 +390,7 @@ class UserOrderController extends Controller
 
 							            //update order
 							            $order->status=UserOrder::STATUS_PAID;
+							            $order->paid_date=date('Y-m-d H:i:s');
 							            $order->save();
 
 							            return redirect()->route('package.buy')

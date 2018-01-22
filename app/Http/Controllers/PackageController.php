@@ -55,7 +55,10 @@ class PackageController extends Controller
     /**
     * Buy package action( upgrade package)
     */
-
+    public function getIbuyPackage(Request $request)
+    {
+        return view('adminlte::package.ibuy');
+    }
     public function buyPackage(Request $request)
     {
 

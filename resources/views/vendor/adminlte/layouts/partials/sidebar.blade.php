@@ -47,7 +47,7 @@
             </li>
 
             <li class="treeview{{ Request::is('packages*') ? ' active' : null }}">
-                <a href="{{ url('packages/buy') }}"><i class='fa fa-shopping-cart'></i> <span>{{ trans('adminlte_lang::wallet.buy_package') }}</span>
+                <a href="{{ url('packages/buy') }}" ><i class='fa fa-shopping-cart'></i> <span>{{ trans('adminlte_lang::wallet.buy_package') }}</span>
                 </a>
             </li>
 
@@ -82,7 +82,7 @@
                 </ul>
             </li>
             <li class="treeview upgrade-package">
-                <a href="" data-toggle="modal" data-target="#buy-package">
+                <a href="javascript:;" class="btn-buyPack">
                     <i class="fa fa-level-up"></i>
                     <span>Activate</span>
                 </a>
