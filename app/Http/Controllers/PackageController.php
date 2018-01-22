@@ -19,6 +19,7 @@ use App\Wallet;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
 use App\CronMatchingLogs;
+use App\UserOrder;
 
 class PackageController extends Controller
 {
@@ -30,7 +31,6 @@ class PackageController extends Controller
     }
     public function index()
     {
-        $packages = Package::all();
         return view('adminlte::package.index')->with('packages', $packages);
     }
     public function create()
@@ -55,6 +55,37 @@ class PackageController extends Controller
     /**
     * Buy package action( upgrade package)
     */
+    public function getIbuyPackage(Request $request)
+    {
+        return view('adminlte::package.ibuy');
+    }
+    public function buyPackage(Request $request)
+    {
+
+        $currentuserid = Auth::user()->id;
+        $packages = Package::all();
+        $query = UserOrder::where('userId',$currentuserid);
+        if(isset($request->type) && $request->type > 0){
+            $query->where('status', $request->type);
+        }
+        $userOrders=$query->orderBy('id', 'desc')->get();
+
+        if(count($userOrders)>0)
+        {
+            foreach ($userOrders as $usKey => $usVal) {
+                $buyDate=strtotime($usVal->buy_date)+config('cryptolanding.timeToExpired')*3600;
+                $time=time();
+                if($buyDate<time() && $usVal->status==UserOrder::STATUS_PENDING)
+                {
+                    $usVal->status=UserOrder::STATUS_EXPRIED;//exprired
+                    $usVal->save();
+                }
+            }
+        }
+
+        return view('adminlte::package.buy',compact('packages','userOrders'));
+    }
+
     public function invest(Request $request)
     {
         $currentuserid = Auth::user()->id;

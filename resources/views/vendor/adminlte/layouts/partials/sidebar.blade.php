@@ -45,6 +45,12 @@
                     <li class="{{ Request::segment(2) === 'reinvest' ? 'active' : null }}"><a href="{{ url('wallets/reinvest') }}">{{ trans('adminlte_lang::default.side_wallet_reinvest') }}</a></li>
                 </ul>
             </li>
+
+            <li class="treeview{{ Request::is('packages*') ? ' active' : null }}">
+                <a href="{{ url('packages/buy') }}" ><i class='fa fa-shopping-cart'></i> <span>{{ trans('adminlte_lang::wallet.buy_package') }}</span>
+                </a>
+            </li>
+
             <li class="treeview{{ Request::is('mybonus*') ? ' active' : null }}">
                 <a href="#"><i class='fa fa-money'></i> <span>{{ trans('adminlte_lang::default.side_mybonus') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
@@ -74,6 +80,12 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li class="treeview upgrade-package">
+                <a href="javascript:;" class="btn-buyPack">
+                    <i class="fa fa-level-up"></i>
+                    <span>Activate</span>
+                </a>
             </li>
         </ul><!-- /.sidebar-menu -->
     </section>

@@ -37,6 +37,35 @@ class AppServiceProvider extends ServiceProvider
         $aCLPNews = json_encode($aCLPNews);
 
         View::share('aCLPNews', $aCLPNews);
+
+
+        $exchanges=DB::table('exchange_rates')->get();
+        $ExchangeRate['CLP_USD']=1;
+        $ExchangeRate['BTC_USD']=1;
+        $ExchangeRate['CLP_BTC']=1;
+        if(count($exchanges)>0)
+        {
+            foreach ($exchanges as $key => $value) {
+                if($value->from_currency=='clp' && $value->to_currency=='usd')
+                {
+                    $ExchangeRate['CLP_USD']=$value->exchrate;
+                }
+                if($value->from_currency=='btc' && $value->to_currency=='usd')
+                {
+                    $ExchangeRate['BTC_USD']=$value->exchrate;
+                }
+                if($value->from_currency=='clp' && $value->to_currency=='btc')
+                {
+                    $ExchangeRate['CLP_BTC']=$value->exchrate;
+                }
+            }
+        }
+        View::share('ExchangeRate',$ExchangeRate);
+
+
+        $packages = DB::table('packages')->get();
+        View::share('packages',$packages);
+
     }
 
     /**

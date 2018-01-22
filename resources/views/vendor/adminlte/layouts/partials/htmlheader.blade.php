@@ -13,7 +13,15 @@
     <link href="{{ mix('/css/all.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('/css/sweetalert.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('/css/custom.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/icheck/skins/all.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/clp.css')}}">
+    <style type="text/css">
+        .error{
+            color: #DD4B39;
+        }
+    </style>
     <script src="{{ url('/js/sweetalert.min.js') }}"></script>
+    
     @yield('custome_css')
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

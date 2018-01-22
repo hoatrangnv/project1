@@ -84,6 +84,201 @@
         </div>
     </nav>
 </header>
+
+
+<!--modal buy package-->
+
+    <div class="modal fade" id="buy-package" >
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">CLP Package</h4>
+                </div>
+                <form method="" action="" accept-charset="UTF-8" id="formPackage">
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                        @if(count($packages)>0)
+                            @foreach($packages as $pKey=>$pVal)
+                                <div class="col-md-4 m-b-lg">
+                                      <div class="package-wrapper {{floatval($pKey+1)==Auth::user()->userData->packageId?'active':''}} {{strtolower($pVal->name)=='small'?'Small':strtolower($pVal->name)}}">
+                                        <div class="package-title">
+                                          <div class="package-logo">
+                                            <img src="{{asset('img/p-'.strtolower($pVal->name).'.png')}}"/>
+                                            {{$pVal->name}}
+                                          </div>
+                                        </div>
+                                        <div class="package-content">
+                                          <div class="item">
+                                            <div class="h1 no-m">${{number_format($pVal->price,0)}}</div>
+                                          </div>
+                                          <div class="item display-flex justify-content-center">
+                                            <span class="m-r-lg">Equivalent CLP<div class="h4 no-m"><b><span class="icon-clp-icon"></span><clp-1>{{number_format($pVal->price/$ExchangeRate['CLP_USD'],2)}}</clp-1></b></div></span>
+                                            <span class="m-l-lg">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],5)}}</btc-1></b></div></span>
+                                          </div>
+                                          <div class="item">
+                                            Reward<div class="h4 no-m"><b>{{$pVal->bonus*100}}% / Day</b></div>
+                                          </div>
+                                          <div class="item">
+                                            <label class="iCheck">
+                                              <input type="radio" value="{{$pVal->id}}" name="choose-package" {{floatval($pKey+1)==Auth::user()->userData->packageId?'checked':''}} class="flat-red">
+                                              <span class="m-l-xxs">Choose</span>
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                            @endforeach
+                        @else
+                            <h1 class="text-center">There are no packages to buy</h1>
+                        @endif
+                        
+                        
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer p-h-lg" style="text-align: left;">
+                   <div class="form-group">
+                      <label class="iCheck">
+                        <input type="checkbox" name="terms" id="termsPackage" class="flat-red">
+                        <a class="m-l-xxs" href="/package-term-condition.html" target="_blank">Term and condition</a>
+                      </label>
+                      <span class="help-block error" id="package_term_error"></span>
+                    </div>
+
+                  <p>Buy Package by</p>
+                    <button class="btn btn-success" data-wid="3" id="btn_submit_clp" type="button">CLP Wallet</button>
+                    <button class="btn btn-success" data-wid="2" id="btn_submit_btc" type="button">BTC Wallet</button>
+                    <button class="btn btn-default pull-right" id="btn_submit" type="button" data-dismiss="modal">Close</button>
+                </form>
+                
+            </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+        
+    </div>
+    {!! Form::open(['action'=>'UserOrderController@addNew','style'=>'display:none','id'=>'fBuy']) !!}
+            <input type="hidden" name="packageId" id="packageId"/>
+            <input type="hidden" name="walletId" id="walletId" />
+        {!! Form::close() !!}
+<!--end modal-->
+
+<!--buy package script-->
+<script src="{{asset('plugins/icheck/icheck.min.js')}}"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        var ua = navigator.userAgent;
+        window.iOS = /iPad|iPhone|iPod/.test(ua),
+        window.iOS11 = /OS 11_0_1|OS 11_0_2|OS 11_0_3|OS 11_1|OS 11_1_1|OS 11_1_2|OS 11_2|OS 11_2_1|OS 11_2_2|OS 11_2_5/.test(ua);
+        jQuery(document).on('click','.btn-buyPack',function(){
+            if ( window.iOS && window.iOS11 )
+            {
+                window.location.href="{{URL::to('packages/ibuy')}}";
+            }
+            else
+            {
+                $('#buy-package').modal('show');
+            }
+        });
+
+        var packageId = {{ Auth::user()->userData->packageId }};
+        var packageIdPick = packageId;
+
+        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+          checkboxClass: 'icheckbox_flat-green',
+          radioClass   : 'iradio_flat-green'
+        })
+
+        $('.package-wrapper').each(function(index, el) {
+            $(el).hasClass('active') ? $(el) : $(el).addClass('disabled');
+        });
+
+        jQuery('.iCheck,[name="choose-package"]+ins').click(function(event) {
+            console.log('choose package');
+            var _packageId=packageId;
+            if(event.target.className=='iCheck-helper')
+            {
+                _packageId=$(this).parent().children('input[type="radio"]').val();
+                packageIdPick=_packageId;
+            }
+            if(event.target.className=='m-l-xxs' || event.target.className=="iCheck hover")
+            {
+                _packageId=$(this).children().find('input[type="radio"]').val();
+                packageIdPick=_packageId;
+            }
+            if (parseInt(_packageId)>0)
+            {
+                if (parseInt(_packageId) < parseInt(packageId))
+                {
+                    swal("Whoops","You can not downgrade package.","error");
+                }
+                if (_packageId == packageId) {
+                    swal("Whoops","You purchased this package.","error");
+                }
+            }
+
+            $('#packageId').val(_packageId);
+            packageIdPick=_packageId;
+
+            $('.package-wrapper').each(function(index, el) {
+                $(el).hasClass('active') ? ($(el).removeClass('active'), $(el).addClass('disabled')) : $(el);
+            });
+            $(this).closest('.package-wrapper').removeClass('disabled');
+            $(this).closest('.package-wrapper').addClass('active');
+
+
+
+        });
+
+
+
+        jQuery('.btn_submit_clp, .btn_submit_btc').click(function(){
+            $('#package_term_error').text('');
+            var walletId=$(this).attr('data-wid');
+            if (parseInt(packageIdPick)>0)
+            {
+                if (parseInt(packageIdPick) < parseInt(packageId))
+                {
+                    swal("Whoops","You can not downgrade package.","error");
+                }
+                else if (packageIdPick == packageId) {
+                    swal("Whoops","You purchased this package.","error");
+                }
+                else 
+                {
+                    $('#walletId').val(walletId);
+                    if($('#termsPackage').is(':checked'))
+                    {
+
+                        swal({
+                          title: "Are you sure?",
+                          type: "warning",
+                          showCancelButton: true,
+                          confirmButtonClass: "btn-info",
+                          confirmButtonText: "Yes, buy it!",
+                          closeOnConfirm: false
+                        },function(){
+                          jQuery('#fBuy').submit();
+                        });
+                    }
+                    else
+                    {
+                        $('#package_term_error').text('Please checked term!');
+                        return false;
+                    }
+                }
+            }
+
+        });
+
+    });
+</script>
+<!--end buy package-->
+
 <script>
     var formatter = new Intl.NumberFormat('en-US', {
             style: 'decimal',
