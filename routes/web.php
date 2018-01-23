@@ -27,7 +27,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('roles', 'Backend\User\RoleController');
     Route::resource('posts', 'Backend\User\PostController');
 
-    Route::get('admin/packages/orders','Backend\UserOrderController@index')->name('backend.package_order');
+    
 
     Route::group(['middleware' => ['permission:view_admins']], function () {
         Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
@@ -59,6 +59,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:view_reports']], function () {
         Route::get('/report', 'Backend\Report\ReportController@getDataReport')->name('report');
         Route::get('/report/commission', 'Backend\Report\ReportController@getDataCommissionReport');
+
+        Route::get('admin/packages/orders','Backend\UserOrderController@index')->name('backend.package_order');
+        
     });
     
     Route::get('members/genealogy', 'User\MemberController@genealogy');
