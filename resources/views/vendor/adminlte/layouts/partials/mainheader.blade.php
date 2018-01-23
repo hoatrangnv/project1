@@ -253,17 +253,41 @@
                     $('#walletId').val(walletId);
                     if($('#termsPackage').is(':checked'))
                     {
+                        //check banlance
+                            $.post('{{route("order.checkBalance")}}',{_token:'{{csrf_token()}}',pid:packageIdPick,wallet:walletId},function(response){
+                                if(response=='true')
+                                {
+                                    swal({
+                                      title:'Are you sure?',
+                                      type: "warning",
+                                      showCancelButton: true,
+                                      confirmButtonClass: "btn-info",
+                                      confirmButtonText: "Yes, buy it!",
+                                      closeOnConfirm: false
+                                    },function(){
+                                      jQuery('#fBuy').submit();
+                                    });
+                                }
+                                else if(response=='false'){
+                                    swal({
+                                      title:"Your BTC/CLP balance is not sufficient. Would you like to put an order and pay later?",
+                                      type: "warning",
+                                      showCancelButton: true,
+                                      confirmButtonClass: "btn-info",
+                                      confirmButtonText: "Yes, I do!",
+                                      closeOnConfirm: false
+                                    },function(){
+                                      jQuery('#fBuy').submit();
+                                    });
+                                }
+                                else
+                                {
+                                    swal("Error","Whoops. Look like somthing went wrong","error");
+                                }
+                            });
+                        //
 
-                        swal({
-                          title: "Your BTC/CLP balance is not sufficient. Would you like to put an order and pay later?",
-                          type: "warning",
-                          showCancelButton: true,
-                          confirmButtonClass: "btn-info",
-                          confirmButtonText: "Yes, buy it!",
-                          closeOnConfirm: false
-                        },function(){
-                          jQuery('#fBuy').submit();
-                        });
+                        
                     }
                     else
                     {
@@ -271,6 +295,10 @@
                         return false;
                     }
                 }
+            }
+            else
+            {
+                swal("Error","Please choose a package!","error");
             }
 
         });

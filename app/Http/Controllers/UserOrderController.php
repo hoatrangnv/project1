@@ -20,6 +20,47 @@ use App\UserOrder;
 
 class UserOrderController extends Controller
 {
+
+		public function checkBalance(Request $request)
+		{
+			if($request->ajax())
+			{
+				$user=Auth::user();
+				$package=Package::find($request->pid);
+				if(!empty($package))
+				{
+					//check upgrade or update
+					$oldPackage=$user->userData->packageId;
+					$amount=$package->price;
+					$check='false';
+					if($oldPackage!=0)
+					$amount=$amount-$user->userData->package->price;
+					if($request->wallet==Wallet::CLP_WALLET){
+						$amount=round($amount/ExchangeRate::getCLPUSDRate(),5);
+						$clpCoinAmount=$user->UserCoin->clpCoinAmount;
+						if($amount<=$clpCoinAmount)
+							$check='true';
+					}
+					if($request->wallet==Wallet::BTC_WALLET){
+						$amount=round($amount/ExchangeRate::getBTCUSDRate(),5);
+						$btcCoinAmount=$user->UserCoin->btcCoinAmount;
+						if($amount<=$btcCoinAmount)
+							$check='true';
+					}
+					return $check;
+				}
+				else
+				{
+					return 'error';
+				}
+				
+			}
+			else
+			{
+				return 'Restricted Access';
+			}
+		}
+
 		public function addNew(Request $request)
 		{
 			$currentuserid = Auth::user()->id;
@@ -150,18 +191,18 @@ class UserOrderController extends Controller
 			            ]);
 
 
-			            $amountCLPDecrease = $amount_increase / ExchangeRate::getCLPUSDRate();
-			            $amountBTCDecrease = $amount_increase / ExchangeRate::getBTCUSDRate();
+			            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),5);
+			            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),5);
 
 			            $userCoin = $userData->userCoin;
 
 			            if($request->walletId==Wallet::CLP_WALLET)
 		            	{
-		            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 2) - $amountCLPDecrease;
+		            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 5) - $amountCLPDecrease;
 		            	}
 		            	if($request->walletId==Wallet::BTC_WALLET)
 	            		{
-	            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 2) - $amountBTCDecrease;
+	            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 5) - $amountBTCDecrease;
 	            		}
 			            
 
@@ -349,11 +390,11 @@ class UserOrderController extends Controller
 
 							            if($order->walletType==Wallet::CLP_WALLET)
 						            	{
-						            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 2) - $amountCLPDecrease;
+						            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 5) - $amountCLPDecrease;
 						            	}
 						            	if($order->walletType==Wallet::BTC_WALLET)
 					            		{
-					            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 2) - $amountBTCDecrease;
+					            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 5) - $amountBTCDecrease;
 					            		}
 							           
 							            $userCoin->save();
