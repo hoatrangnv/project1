@@ -7,6 +7,7 @@ use Laravel\Dusk\DuskServiceProvider;
 use Validator;
 use DB;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
+
         Validator::extend('isTypeCategory', function($attribute, $value, $parameters, $validator) {
             if( $value == 1 || $value == 2 || $value == 3 || $value ==4 ){
                 return true;
