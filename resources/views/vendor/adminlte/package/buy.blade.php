@@ -87,7 +87,7 @@
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
-												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-id="{{$userOrder->id}}" data-package-id="{{$userOrder->packageId}}">Pay Now <br/><b class="text-warning"><?=$userOrder->timeLeft.' min(s) left';
+												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-id="{{$userOrder->id}}" data-package-id="{{$userOrder->packageId}}">Pay Now <br/><b class="text-warning"><?=floor($userOrder->timeLeft).' min(s) left';
 													?></b></a>
 											@elseif($userOrder->status==2)
 												<b class='text-info'>Paid</b>

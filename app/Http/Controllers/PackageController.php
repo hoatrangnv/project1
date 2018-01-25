@@ -74,13 +74,14 @@ class PackageController extends Controller
         {
             foreach ($userOrders as $usKey => $usVal) {
                 $buyDate=strtotime($usVal->buy_date)+config('cryptolanding.timeToExpired')*3600;
+
                 $time=time();
                 if($buyDate<time() && $usVal->status==UserOrder::STATUS_PENDING)
                 {
                     $usVal->status=UserOrder::STATUS_EXPRIED;//exprired
                     $usVal->save();
                 }
-                $usVal->timeLeft=floor((floatval($buyDate-time())/60)%60);
+                $usVal->timeLeft=($buyDate-time())/60;
             }
         }
 
