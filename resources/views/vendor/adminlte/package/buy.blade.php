@@ -50,10 +50,11 @@
                         <div class="col-xs-6 col-md-2 col-lg-2">
                             <div class="form-group">
                               <select class="form-control input-sm" name="type">
-                                <option {{isset($_GET['type']) && $_GET['type']==''?'selected':''}} value="">Select Status</option>
-                                <option {{isset($_GET['type']) && $_GET['type']==2?'selected':''}} value="2">Paid</option>
-                                <option {{isset($_GET['type']) && $_GET['type']==1?'selected':''}} value="1">Not Paid</option>
-                                <option {{isset($_GET['type']) && $_GET['type']==3?'selected':''}} value="3">Expired</option>
+                              	@if(count($filters)>0)
+                              		@foreach($filters as $fKey=>$fVal)
+                              			<option {{isset($_GET['type']) && $_GET['type']==$fKey?'selected':''}}  value="{{$fKey}}">{{$fVal}}</option>
+                              		@endforeach
+                              	@endif
                               </select>
                             </div>
                         </div>
@@ -86,12 +87,7 @@
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
-												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-id="{{$userOrder->id}}" data-package-id="{{$userOrder->packageId}}">Pay Now <br/><b class="text-warning"><?php
-													$init = $userOrder->timeLeft;
-													$hours = floor($init / 3600);
-													$minutes = floor(($init / 60) % 60);
-													$seconds = $init % 60;
-													echo $minutes.' minute(s) '.$seconds.'s left';
+												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-id="{{$userOrder->id}}" data-package-id="{{$userOrder->packageId}}">Pay Now <br/><b class="text-warning"><?=$userOrder->timeLeft.' min(s) left';
 													?></b></a>
 											@elseif($userOrder->status==2)
 												<b class='text-info'>Paid</b>

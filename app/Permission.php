@@ -24,6 +24,8 @@ class Permission extends \Spatie\Permission\Models\Permission
             'delete_posts',
 
             'view_reports',
+            'view_orders',
+            'view_admins'
         ];
     }
 }

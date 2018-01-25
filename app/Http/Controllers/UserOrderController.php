@@ -36,13 +36,13 @@ class UserOrderController extends Controller
 					if($oldPackage!=0)
 					$amount=$amount-$user->userData->package->price;
 					if($request->wallet==Wallet::CLP_WALLET){
-						$amount=round($amount/ExchangeRate::getCLPUSDRate(),5);
+						$amount=round($amount/ExchangeRate::getCLPUSDRate(),8);
 						$clpCoinAmount=$user->UserCoin->clpCoinAmount;
 						if($amount<=$clpCoinAmount)
 							$check='true';
 					}
 					if($request->wallet==Wallet::BTC_WALLET){
-						$amount=round($amount/ExchangeRate::getBTCUSDRate(),5);
+						$amount=round($amount/ExchangeRate::getBTCUSDRate(),8);
 						$btcCoinAmount=$user->UserCoin->btcCoinAmount;
 						if($amount<=$btcCoinAmount)
 							$check='true';
@@ -93,7 +93,7 @@ class UserOrderController extends Controller
 
 					if(floatval($request->walletId)==Wallet::CLP_WALLET)//clp wallet
 					{
-						$amount=round(($amount-$pOldPrice)/$rateCLPUSD,5);
+						$amount=round(($amount-$pOldPrice)/$rateCLPUSD,8);
 						if(floatval($amount)<=$balanceCLP)
 						{
 							$enough=true;
@@ -105,7 +105,7 @@ class UserOrderController extends Controller
 					}
 
 					if(floatval($request->walletId)==Wallet::BTC_WALLET){
-						$amount=round(($amount-$pOldPrice)/$rateBTCUSD,5);
+						$amount=round(($amount-$pOldPrice)/$rateBTCUSD,8);
 						if(floatval($amount)<=$balanceBTC)
 						{
 							$enough=true;
@@ -191,18 +191,18 @@ class UserOrderController extends Controller
 			            ]);
 
 
-			            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),5);
-			            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),5);
+			            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),8);
+			            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),8);
 
 			            $userCoin = $userData->userCoin;
 
 			            if($request->walletId==Wallet::CLP_WALLET)
 		            	{
-		            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 5) - $amountCLPDecrease;
+		            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 8) - $amountCLPDecrease;
 		            	}
 		            	if($request->walletId==Wallet::BTC_WALLET)
 	            		{
-	            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 5) - $amountBTCDecrease;
+	            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 8) - $amountBTCDecrease;
 	            		}
 			            
 
@@ -249,14 +249,19 @@ class UserOrderController extends Controller
 			            $orderField['status']=2;
 			            UserOrder::create($orderField);
 
+
+			            $msg='The '.$package->name.' package has been bought successfully.';
+			            if(isset($userData->packageId) && $userData->packageId!=0 && isset($userData->package->name))//upgrade
+			            	$msg='Your '.$userData->package->name.' package has been upgraded to '.$package->name.' package successfully.';
+
 			            return redirect()->route('package.buy')
-			                            ->with('flash_message','Buy package successfully.');
+			                            ->with('flash_message',$msg);
 					}
 					else//add order
 					{
 						UserOrder::create($orderField);
 						return redirect()->route('package.buy')
-							->with('flash_message','Your order has been placed. You have '.config('cryptolanding.timeToExpired`').' hour(s) to pay your order!');
+							->with('flash_message','Your order has been placed. You have '.config('cryptolanding.timeToExpired').' hour(s) to pay your order!');
 					}
 
 					
@@ -308,12 +313,12 @@ class UserOrderController extends Controller
 								$rateBTCUSD=$exchangeRate[1]->exchrate;
 								$balanceCLP=$userCoin->clpCoinAmount;
 								$balanceBTC=$userCoin->btcCoinAmount;
-								$amount=$order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,5):round($order->amountBTC*$rateBTCUSD);
+								$amount=$order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,8):round($order->amountBTC*$rateBTCUSD);
 								$enough=false;
 
 								if(floatval($order->walletType)==Wallet::CLP_WALLET)//clp wallet
 								{
-									$amount=round($amount/$rateCLPUSD,5);
+									$amount=round($amount/$rateCLPUSD,8);
 									if(floatval($amount)<=$balanceCLP)
 									{
 										$enough=true;
@@ -325,7 +330,7 @@ class UserOrderController extends Controller
 								}
 
 								if(floatval($order->walletType)==Wallet::BTC_WALLET){
-									$amount=round($amount/$rateBTCUSD,5);
+									$amount=round($amount/$rateBTCUSD,8);
 									if(floatval($amount)<=$balanceBTC)
 									{
 										$enough=true;
@@ -342,7 +347,7 @@ class UserOrderController extends Controller
 									$user = Auth::user();
 					                if($user->userData->packageId < $order->packageId)
 					                {
-					                    $amount_increase = $packageOldId = 0;
+					                    $amount_increase = $packageOldId =$amount_newincrease= 0;
 							            $userData = $user->userData;
 							            $packageOldId = $userData->packageId;
 							            $packageOldPrice = isset($userData->package->price) ? $userData->package->price : 0;
@@ -351,7 +356,7 @@ class UserOrderController extends Controller
 							            $userData->packageId = $order->packageId;
 							            $userData->status = 1;
 							            $userData->save();
-							            $amount_increase = $order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,5):round($order->amountBTC*$rateBTCUSD,5);
+							            $amount_increase = $order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,8):round($order->amountBTC*$rateBTCUSD,8);
 
 							            //Insert to cron logs for binary, profit
 							            if($packageOldId == 0) {
@@ -363,9 +368,9 @@ class UserOrderController extends Controller
 							                    CronMatchingLogs::create(['userId' => $currentuserid]);
 							            }
 
-							            // if($packageOldId > 0){
-							            //     $amount_increase = $package->price - $packageOldPrice;
-							            // }
+							            if($packageOldId > 0){
+							                $amount_newincrease = $package->price - $packageOldPrice;
+							            }
 
 							            //Get weekYear
 							            $weeked = date('W');
@@ -375,26 +380,26 @@ class UserOrderController extends Controller
 							            if($weeked < 10) $weekYear = $year.'0'.$weeked;
 							            UserPackage::create([
 							                'userId' => $currentuserid,
-							                'packageId' => $userData->packageId,
-							                'amount_increase' => $amount_increase,
+							                'packageId' => $order->packageId,
+							                'amount_increase' => $amount_newincrease,
 							                'buy_date' => date('Y-m-d H:i:s'),
 							                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 6 months")),
 							                'weekYear' => $weekYear,
 							            ]);
 
 
-							            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),5);
-							            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),5);
+							            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),8);
+							            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),8);
 
 							            $userCoin = $userData->userCoin;
 
 							            if($order->walletType==Wallet::CLP_WALLET)
 						            	{
-						            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 5) - $amountCLPDecrease;
+						            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 8) - $amountCLPDecrease;
 						            	}
 						            	if($order->walletType==Wallet::BTC_WALLET)
 					            		{
-					            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 5) - $amountBTCDecrease;
+					            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 8) - $amountBTCDecrease;
 					            		}
 							           
 							            $userCoin->save();
@@ -413,7 +418,7 @@ class UserOrderController extends Controller
 							            Wallet::create($fieldUsd);
 
 							            // Calculate fast start bonus
-							            User::investBonus($user->id, $user->refererId, $order->packageId, $amount_increase);
+							            User::investBonus($user->id, $user->refererId, $order->packageId, $amount_newincrease);
 
 							            // Case: User already in tree and then upgrade package => re-caculate loyalty
 							            if($userData->binaryUserId && $userData->packageId > 0)
@@ -437,8 +442,12 @@ class UserOrderController extends Controller
 							            $order->paid_date=date('Y-m-d H:i:s');
 							            $order->save();
 
+							            $msg='The '.$package->name.' package has been bought successfully.';
+							            if(isset($userData->packageId) && $userData->packageId!=0 && isset($userData->package->name))//upgrade
+							            	$msg='Your '.$userData->package->name.' package has been upgraded to '.$package->name.' package successfully.';
+
 							            return redirect()->route('package.buy')
-							                            ->with('flash_message','Order has been paid successfully.');
+							                            ->with('flash_message',$msg);
 					                }
 					                else
 					                {

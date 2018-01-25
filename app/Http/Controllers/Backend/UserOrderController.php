@@ -59,7 +59,7 @@
 	                $usVal->original=!empty($pack)?$pack->name:'';
 	            }
 	        }
-	    	$status=[''=>'Select Status',UserOrder::STATUS_PAID=>'Paid',UserOrder::STATUS_PENDING=>'Not Paid',UserOrder::STATUS_EXPRIED=>'Expired'];
+	    	$status=[''=>'Select Status',UserOrder::STATUS_PAID=>'Paid',UserOrder::STATUS_PENDING=>'Pending',UserOrder::STATUS_EXPRIED=>'Expired'];
 	    	$purchases=[''=>'Purchases By','all'=>'All',Wallet::BTC_WALLET=>'BTC',Wallet::CLP_WALLET=>'CLP'];
 	    	$orderTypes=[''=>'All Order Types',UserOrder::TYPE_NEW=>'Buy New',UserOrder::TYPE_UPGRADE=>'Upgrade'];
 

@@ -59,9 +59,10 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:view_reports']], function () {
         Route::get('/report', 'Backend\Report\ReportController@getDataReport')->name('report');
         Route::get('/report/commission', 'Backend\Report\ReportController@getDataCommissionReport');
+    });
 
+    Route::group(['middleware'=>['permission:view_orders']],function(){
         Route::get('admin/packages/orders','Backend\UserOrderController@index')->name('backend.package_order');
-        
     });
     
     Route::get('members/genealogy', 'User\MemberController@genealogy');
@@ -165,8 +166,8 @@ Route::post('getnotification','GetNotificationController@getNotification');
 Route::post('clpnotification','GetNotificationController@clpNotification');
 
 /***------- TEST -------***/
-//Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
 //Route::get('test-binary', 'TestController@testBinary');
 //Route::get('test-matching', 'TestController@testMatching');

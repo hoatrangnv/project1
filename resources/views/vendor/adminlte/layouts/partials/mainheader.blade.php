@@ -119,7 +119,7 @@
                                             
                                           </div>
                                           <div class="item">
-                                            <span class="text-center">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],5)}}</btc-1></b></div></span>
+                                            <span class="text-center">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],8)}}</btc-1></b></div></span>
                                           </div>
                                           <div class="item">
                                             <label class="iCheck">
@@ -185,9 +185,10 @@
             }
         });
 
-        var packageId = {{ Auth::user()->userData->packageId }};
-        var packageIdPick = packageId;
 
+        var packageId = {{ Auth::user()->userData->packageId }};
+        var packName = "{{isset(Auth::user()->userData->package->name)?Auth::user()->userData->package->name:''}}";
+        var packageIdPick = packageId;
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
           checkboxClass: 'icheckbox_flat-green',
           radioClass   : 'iradio_flat-green'
@@ -197,27 +198,58 @@
             $(el).hasClass('active') ? $(el) : $(el).addClass('disabled');
         });
 
-        jQuery('.iCheck,[name="choose-package"]+ins').click(function(event) {
-            console.log('choose package');
+        $('#buy-package').on('hidden.bs.modal', function () {
+            $('#package_term_error').text('');
+            $('#packageId').val(packageId);
+            packageIdPick=packageId;
+            $('.package-wrapper').addClass('disabled');
+            $('[name="choose-package"]').removeAttr('checked');
+            $('.iCheck .checked').removeClass('checked');
+            $('.package-wrapper').each(function(index, el) {
+                let oldP=$(this).children().find('[name="choose-package"]');
+
+                if(oldP.val()==packageId)
+                {
+                    $(this).removeClass('disabled');
+                    $(this).addClass('active');
+                    oldP.attr('checked',true);
+                    oldP.parent().addClass('checked');
+                }
+                //$(el).hasClass('active') ? ($(el).removeClass('active'), $(el).addClass('disabled')) : $(el);
+            });
+            //$(this).closest('.package-wrapper').removeClass('disabled');
+            //$(this).closest('.package-wrapper').addClass('active');
+
+        });
+
+        jQuery('.item.iCheck,[name="choose-package"]+ins').click(function(event) {
+
+            $('[name="choose-package"]').removeAttr('checked');
+            $('[name="choose-package"]').parent().removeClass('checked');
+
             var _packageId=packageId;
             if(event.target.className=='iCheck-helper')
             {
                 _packageId=$(this).parent().children('input[type="radio"]').val();
+                $(this).parent().children('input[type="radio"]').attr('checked',true);//add checked
+                $(this).parent().children('input[type="radio"]').parent().addClass('checked');
                 packageIdPick=_packageId;
             }
             if(event.target.className=='m-l-xxs' || event.target.className=="iCheck hover")
             {
                 _packageId=$(this).children().find('input[type="radio"]').val();
+                $(this).children().find('input[type="radio"]').attr('checked',true);
+                $(this).children().find('input[type="radio"]').parent().addClass('checked');
                 packageIdPick=_packageId;
             }
             if (parseInt(_packageId)>0)
             {
                 if (parseInt(_packageId) < parseInt(packageId))
                 {
-                    swal("Whoops","You can not downgrade package.","error");
+                    swal("Whoops","Your current package is "+packName+". You are unable to downgrade the package.","error");
                 }
                 if (_packageId == packageId) {
-                    swal("Whoops","You purchased this package.","error");
+                    swal("Whoops","You have already purchased this package. Please try again with the larger package or go back if your current package is Angel.","error");
                 }
             }
 
@@ -226,6 +258,7 @@
 
             $('.package-wrapper').each(function(index, el) {
                 $(el).hasClass('active') ? ($(el).removeClass('active'), $(el).addClass('disabled')) : $(el);
+
             });
             $(this).closest('.package-wrapper').removeClass('disabled');
             $(this).closest('.package-wrapper').addClass('active');
@@ -243,10 +276,10 @@
             {
                 if (parseInt(packageIdPick) < parseInt(packageId))
                 {
-                    swal("Whoops","You can not downgrade package.","error");
+                    swal("Whoops","Your current package is "+packName+". You are unable to downgrade the package.","error");
                 }
                 else if (packageIdPick == packageId) {
-                    swal("Whoops","You purchased this package.","error");
+                    swal("Whoops","You have already purchased this package. Please try again with the larger package or go back if your current package is Angel","error");
                 }
                 else 
                 {
@@ -269,8 +302,11 @@
                                     });
                                 }
                                 else if(response=='false'){
+                                    var title='Your CLP balance is not sufficient. Would you like to put an order and pay later?';
+                                    if(walletId==2)
+                                        title='Your BTC balance is not sufficient. Would you like to put an order and pay later?';
                                     swal({
-                                      title:"Your BTC/CLP balance is not sufficient. Would you like to put an order and pay later?",
+                                      title:title,
                                       type: "warning",
                                       showCancelButton: true,
                                       confirmButtonClass: "btn-info",
@@ -282,7 +318,7 @@
                                 }
                                 else
                                 {
-                                    swal("Error","Whoops. Look like somthing went wrong","error");
+                                    swal("Error","Whoops. Look like something went wrong","error");
                                 }
                             });
                         //
@@ -291,7 +327,7 @@
                     }
                     else
                     {
-                        $('#package_term_error').text('Please checked term!');
+                        $('#package_term_error').text('In order to buy/upgrade package, you must read and check the Term and Condition!');
                         return false;
                     }
                 }

@@ -119,7 +119,7 @@
                                 <td>{{$oVal->original}}</td>
                 				<td>
                 					@if($oVal->status==1)
-                						<b class='text-warning'>Not Paid</b>
+                						<b class='text-warning'>Pending</b>
                 					@elseif($oVal->status==2)
 										<b class='text-info'>Paid</b>
                 					@else
@@ -195,7 +195,7 @@
 	                        sumData += parseFloat( count[i] );
 	                    }
                         if(!Number.isInteger(sumData))
-                            sumData=sumData.toFixed(5);
+                            sumData=sumData.toFixed(8);
 	                    return sumData;
 	                }
 
