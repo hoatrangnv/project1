@@ -4,6 +4,7 @@ use App\UserData;
 use App\UserPackage;
 use Illuminate\Http\Request;
 
+
 use App\User;
 use App\Package;
 use Auth;
@@ -31,27 +32,30 @@ class UserOrderController extends Controller
 				{
 					//check upgrade or update
 					$oldPackage=$user->userData->packageId;
-					$amount=$package->price;
-					$check='false';
+					$amount=$damount=$package->price;
+					$check=false;
 					if($oldPackage!=0)
-					$amount=$amount-$user->userData->package->price;
+					{
+						$amount=$damount=$amount-$user->userData->package->price;
+
+					}
 					if($request->wallet==Wallet::CLP_WALLET){
 						$amount=round($amount/ExchangeRate::getCLPUSDRate(),8);
 						$clpCoinAmount=$user->UserCoin->clpCoinAmount;
 						if($amount<=$clpCoinAmount)
-							$check='true';
+							$check=true;
 					}
 					if($request->wallet==Wallet::BTC_WALLET){
 						$amount=round($amount/ExchangeRate::getBTCUSDRate(),8);
 						$btcCoinAmount=$user->UserCoin->btcCoinAmount;
 						if($amount<=$btcCoinAmount)
-							$check='true';
+							$check=true;
 					}
-					return $check;
+					return json_encode(['status'=>$check,'packName'=>$package->name,'packPriceBTC'=>round($damount/ExchangeRate::getBTCUSDRate(),8),'packPriceCLP'=>floatval(round($damount/ExchangeRate::getCLPUSDRate(),8))]);
 				}
 				else
 				{
-					return 'error';
+					return json_encode(['status'=>'error']);
 				}
 				
 			}
@@ -250,9 +254,9 @@ class UserOrderController extends Controller
 			            UserOrder::create($orderField);
 
 
-			            $msg='The '.$package->name.' package has been bought successfully.';
+			            $msg='Thank for your purchase. The '.$package->name.' package has been bought successfully.';
 			            if(isset($userData->packageId) && $userData->packageId!=0 && isset($userData->package->name))//upgrade
-			            	$msg='Your '.$userData->package->name.' package has been upgraded to '.$package->name.' package successfully.';
+			            	$msg='Thank for your upgrade. Your '.$userData->package->name.' package has been upgraded to '.$package->name.' package successfully.';
 
 			            return redirect()->route('package.buy')
 			                            ->with('flash_message',$msg);
@@ -442,9 +446,9 @@ class UserOrderController extends Controller
 							            $order->paid_date=date('Y-m-d H:i:s');
 							            $order->save();
 
-							            $msg='The '.$package->name.' package has been bought successfully.';
+							            $msg='Thank for your purchase. The '.$package->name.' package has been bought successfully.';
 							            if(isset($userData->packageId) && $userData->packageId!=0 && isset($userData->package->name))//upgrade
-							            	$msg='Your '.$userData->package->name.' package has been upgraded to '.$package->name.' package successfully.';
+							            	$msg='Thank for your upgrade. Your '.$userData->package->name.' package has been upgraded to '.$package->name.' package successfully.';
 
 							            return redirect()->route('package.buy')
 							                            ->with('flash_message',$msg);
@@ -458,8 +462,11 @@ class UserOrderController extends Controller
 								}
 								else
 								{
+									$wallet='CLP';
+									if(floatval($order->walletType)==Wallet::BTC_WALLET)
+										$wallet='BTC';
 									return redirect()->route('package.buy')
-	                            ->with('errorMessage','Whoops. Your BTC/CLP balance is not sufficient!');
+	                            ->with('errorMessage','Your '.$wallet.' balance is not sufficient. Please deposit more coin and try again later.');
 								}
 
 							}

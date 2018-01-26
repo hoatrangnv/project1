@@ -288,20 +288,27 @@
                     {
                         //check banlance
                             $.post('{{route("order.checkBalance")}}',{_token:'{{csrf_token()}}',pid:packageIdPick,wallet:walletId},function(response){
-                                if(response=='true')
+                                var response=$.parseJSON(response);
+                                if(response.status==true)
                                 {
+                                    var action='buy';
+                                    if(packageId>0)//upgrade
+                                        action='upgrade to';
+                                    var title='Are you going to '+action+' '+response.packName+' package. '+response.packPriceCLP+' CLP will be deducted in your wallet.';
+                                    if(walletId==2)
+                                        title='Are you going to '+action+' '+response.packName+' package. '+response.packPriceBTC+' BTC will be deducted in your wallet.';
                                     swal({
-                                      title:'Are you sure?',
+                                      title:title,
                                       type: "warning",
                                       showCancelButton: true,
                                       confirmButtonClass: "btn-info",
-                                      confirmButtonText: "Yes, buy it!",
+                                      confirmButtonText: "Yes",
                                       closeOnConfirm: false
                                     },function(){
                                       jQuery('#fBuy').submit();
                                     });
                                 }
-                                else if(response=='false'){
+                                else if(response.status==false){
                                     var title='Your CLP balance is not sufficient. Would you like to put an order and pay later?';
                                     if(walletId==2)
                                         title='Your BTC balance is not sufficient. Would you like to put an order and pay later?';
@@ -310,7 +317,7 @@
                                       type: "warning",
                                       showCancelButton: true,
                                       confirmButtonClass: "btn-info",
-                                      confirmButtonText: "Yes, I do!",
+                                      confirmButtonText: "Yes",
                                       closeOnConfirm: false
                                     },function(){
                                       jQuery('#fBuy').submit();
@@ -327,7 +334,10 @@
                     }
                     else
                     {
-                        $('#package_term_error').text('In order to buy/upgrade package, you must read and check the Term and Condition!');
+                        var act='buy';
+                        if(packageId>0)
+                            act='upgrade';
+                        $('#package_term_error').text('In order to '+act+' package, you must read and check the Term and Condition!');
                         return false;
                     }
                 }

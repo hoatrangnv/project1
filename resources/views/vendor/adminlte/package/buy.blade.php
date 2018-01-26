@@ -87,7 +87,7 @@
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
-												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-id="{{$userOrder->id}}" data-package-id="{{$userOrder->packageId}}">Pay Now <br/><b class="text-warning"><?=floor($userOrder->timeLeft).' min(s) left';
+												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now <br/><b class="text-warning"><?=floor($userOrder->timeLeft).' min(s) left';
 													?></b></a>
 											@elseif($userOrder->status==2)
 												<b class='text-info'>Paid</b>
@@ -126,24 +126,40 @@
 
 		$(document).on('click','.btn-pay',function(){
 			var currPack={{Auth::user()->userData->packageId}};
+			var currPackName="{{isset(Auth::user()->userData->package->name)?Auth::user()->userData->package->name:''}}";
 			var pid=$(this).attr('data-package-id');
 			var oid=$(this).attr('data-id');
+			var packName=$(this).attr('data-packname');
+			var walletType=$(this).attr('data-walletType');
+			var amountCLP=$(this).attr('data-amountclp');
+			var amountBTC=$(this).attr('data-amountbtc');
+			var time=$(this).attr('data-time');
 			if(currPack > pid)
 			{
-				swal('Whoops','You can not downgrade package.','error');
+				swal("Whoops","Your current package is "+currPackName+". You are unable to downgrade the package, and this order will be expired in "+time+" min(s)","error");
 			}
 			else if(currPack==pid){
-				swal('Whoops','You purchased this package.','error');
+				swal('Whoops','You have already purchased this package. This order will be expired in '+time+' min(s)','error');
 			}
 			else
 			{
 				$('#orderId').val(oid);
+
+				var amount=amountBTC!=0?amountBTC:amountCLP;
+				var wallet='CLP';
+					if(walletType==2)
+						wallet='BTC';
+				var action='buy';
+				if(currPack>0)
+					action='upgrade to';
+				var title='Are you going to '+action+' '+packName+' package. '+amount+' '+wallet+' will be deducted in your wallet.';
+
 				swal({
-	                  title: "Are you sure?",
+	                  title: title,
 	                  type: "warning",
 	                  showCancelButton: true,
 	                  confirmButtonClass: "btn-info",
-	                  confirmButtonText: "Yes, pay it!",
+	                  confirmButtonText: "Yes",
 	                  closeOnConfirm: false
 	                },function(){
 	                  $('#fPay').submit();
