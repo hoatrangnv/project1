@@ -87,10 +87,19 @@
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
-												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now <br/><b class="text-warning"><?=floor($userOrder->timeLeft).' min(s) left';
-													?></b></a>
+												<b class="text-warning small pull-left"><?=floor($userOrder->timeLeft).' min(s) left';
+													?></b>
+												<div class="pull-right">
+													<a href='javascript:;' class='btn btn-xs bg-olive btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
+													<a href="javascript:;" data-name="{{$userOrder->package->name}}" class="btn btn-danger btn-xs btn-cancel" data-id="{{$userOrder->id}}">Cancel</a>
+													
+												</div>
+												
+												
 											@elseif($userOrder->status==2)
 												<b class='text-info'>Paid</b>
+											@elseif($userOrder->status==4)
+												<b class="text-warning">Canceled</b>
 											@else
 												<b class='text-danger'>Expired</b>
 											@endif
@@ -110,6 +119,10 @@
 	{!! Form::open(['action'=>'UserOrderController@payOrder','method'=>'post','style'=>'display:none','id'=>'fPay']) !!}
 		<input type="hidden" name="orderId" id="orderId" />
 	{!! Form::close() !!}
+	
+	{!! Form::open(['action'=>'UserOrderController@cancelOrder','method'=>'post','style'=>'display:none','id'=>'fCancel']) !!}
+		<input type="hidden" name="orderId" id="oId" />
+	{!! Form::close() !!}
 
 	<script src="{{asset('plugins/dataTable/media/js/datatables.min.js')}}"></script>
     
@@ -123,6 +136,28 @@
             bInfo:false,
             sort:false
         });
+
+		$(document).on('click','.btn-cancel',function(){
+			var id=$(this).attr('data-id');
+			var name=$(this).attr('data-name');
+			var currPack={{Auth::user()->userData->packageId}};
+			var action='Buy';
+			if(currPack>0)
+				action='Upgrade to';
+			var title='Are you going to cancel the '+action+' '+name+' package Order?';
+			swal({
+              title: title,
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonClass: "btn-info",
+              confirmButtonText: "Yes",
+              closeOnConfirm: false
+            },function(){
+              $('#oId').val(id);
+              $('#fCancel').submit();
+            });
+
+		});
 
 		$(document).on('click','.btn-pay',function(){
 			var currPack={{Auth::user()->userData->packageId}};

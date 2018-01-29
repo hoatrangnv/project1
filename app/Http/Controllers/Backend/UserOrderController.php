@@ -15,7 +15,7 @@
 	    public function index(Request $request)
 	    {
 
-	    	$query=UserOrder::whereIn('status',[UserOrder::STATUS_PENDING,UserOrder::STATUS_PAID,UserOrder::STATUS_EXPRIED]);
+	    	$query=UserOrder::whereIn('status',[UserOrder::STATUS_PENDING,UserOrder::STATUS_PAID,UserOrder::STATUS_EXPRIED,UserOrder::STATUS_CANCEL]);
 	    	if(isset($request->status) && $request->status!='')
 	    	{
 	    		$query->where('status',$request->status);
@@ -59,7 +59,7 @@
 	                $usVal->original=!empty($pack)?$pack->name:'';
 	            }
 	        }
-	    	$status=[''=>'Select Status',UserOrder::STATUS_PAID=>'Paid',UserOrder::STATUS_PENDING=>'Pending',UserOrder::STATUS_EXPRIED=>'Expired'];
+	    	$status=[''=>'Select Status',UserOrder::STATUS_PAID=>'Paid',UserOrder::STATUS_PENDING=>'Pending',UserOrder::STATUS_CANCEL=>'Canceled',UserOrder::STATUS_EXPRIED=>'Expired'];
 	    	$purchases=[''=>'Purchases By','all'=>'All',Wallet::BTC_WALLET=>'BTC',Wallet::CLP_WALLET=>'CLP'];
 	    	$orderTypes=[''=>'All Order Types',UserOrder::TYPE_NEW=>'Buy New',UserOrder::TYPE_UPGRADE=>'Upgrade'];
 

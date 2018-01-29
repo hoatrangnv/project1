@@ -63,7 +63,7 @@ class PackageController extends Controller
     {
         $currentuserid = Auth::user()->id;
         $packages = Package::all();
-        $filters=[''=>'Select Status',UserOrder::STATUS_PAID=>'Paid',UserOrder::STATUS_PENDING=>'Pending',UserOrder::STATUS_EXPRIED=>'Exprired'];
+        $filters=[''=>'Select Status',UserOrder::STATUS_PAID=>'Paid',UserOrder::STATUS_PENDING=>'Pending',UserOrder::STATUS_CANCEL=>'Canceled',UserOrder::STATUS_EXPRIED=>'Exprired'];
         $query = UserOrder::where('userId',$currentuserid);
         if(isset($request->type) && $request->type > 0){
             $query->where('status', $request->type);

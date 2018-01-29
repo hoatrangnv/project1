@@ -22,10 +22,57 @@ use App\UserOrder;
 class UserOrderController extends Controller
 {
 
+		public function cancelOrder(Request $request)
+		{
+			if(!$request->ajax())
+			{
+				$currentuserid=Auth::user()->id;
+				$order=UserOrder::where('userId',$currentuserid)->where('id',$request->orderId)->where('status',UserOrder::STATUS_PENDING)->first();
+				$oldPackage=Auth::user()->userData->packageId;
+				if($order)
+				{
+					$order->status=UserOrder::STATUS_CANCEL;
+					$order->save();
+					$msg='The Order Buy '.$order->package->name.' package has been canceled.';
+					if($oldPackage>0)
+						$msg='The Order Upgrade to '.$order->package->name.' package has been canceled.';
+					return redirect()->route('package.buy')
+			                            ->with('flash_message',$msg);
+				}
+				else
+				{
+					return redirect()->route('package.buy')
+	                            ->with('errorMessage','Whoops. Something went wrong.');
+				}
+			}
+			else
+			{
+				return 'Restricted Access';
+			}
+		}
+
+		public function checkOrder(Request $request)
+		{
+			if($request->ajax())
+			{
+				$currentuserid=Auth::user()->id;
+				$orders=UserOrder::where('userId',$currentuserid)->where('status',UserOrder::STATUS_PENDING)->get();
+				if(count($orders)>0)
+				{
+					return json_encode(['status'=>false,'data'=>$orders[0]->package->name]);
+				}
+				else
+				{
+					return json_encode(['status'=>true,'data'=>null]);
+				}
+			}
+		}
+
 		public function checkBalance(Request $request)
 		{
 			if($request->ajax())
 			{
+
 				$user=Auth::user();
 				$package=Package::find($request->pid);
 				if(!empty($package))
@@ -360,7 +407,7 @@ class UserOrderController extends Controller
 							            $userData->packageId = $order->packageId;
 							            $userData->status = 1;
 							            $userData->save();
-							            $amount_increase = $order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,8):round($order->amountBTC*$rateBTCUSD,8);
+							            $amount_increase =$amount_newincrease = $order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,8):round($order->amountBTC*$rateBTCUSD,8);
 
 							            //Insert to cron logs for binary, profit
 							            if($packageOldId == 0) {

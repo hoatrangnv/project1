@@ -127,6 +127,8 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::post('orders/add','UserOrderController@addNew');
     Route::post('orders/pay','UserOrderController@payOrder');
+    Route::post('orders/cancel','UserOrderController@cancelOrder');
+    Route::post('orders/check-order','UserOrderController@checkOrder');
     Route::post('orders/check-balance','UserOrderController@checkBalance')->name('order.checkBalance');;
     Route::get('packages/ibuy','PackageController@getIbuyPackage')->name('packages.ibuy');
 

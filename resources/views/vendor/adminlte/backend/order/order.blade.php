@@ -122,6 +122,8 @@
                 						<b class='text-warning'>Pending</b>
                 					@elseif($oVal->status==2)
 										<b class='text-info'>Paid</b>
+                                    @elseif($oVal->status==4)
+                                        <b class='text-warning'>Canceled</b>
                 					@else
                 						<b class='text-danger'>Expired</b>
                 					@endif

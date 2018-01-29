@@ -181,9 +181,21 @@
             }
             else
             {
-                $('#buy-package').modal('show');
+                //$('#buy-package').modal('show');
+                $.post('{{URL::to("orders/check-order")}}',function(response){
+                    var rsp=$.parseJSON(response);
+                    if(rsp.status==true)
+                    {
+                        $('#buy-package').modal('show');
+                    }
+                    else
+                    {
+                        swal('Whoops','You are unable to create an order or buy a new package, since your buy '+rsp.data+' package order is not completed yet. Please complete or cancel that oder then try again.','error');
+                    }
+                });
             }
         });
+
 
 
         var packageId = {{ Auth::user()->userData->packageId }};
@@ -199,6 +211,7 @@
         });
 
         $('#buy-package').on('hidden.bs.modal', function () {
+            $('#termsPackage').prop('checked',false);
             $('#package_term_error').text('');
             $('#packageId').val(packageId);
             packageIdPick=packageId;
@@ -222,8 +235,7 @@
 
         });
 
-        jQuery('.item.iCheck,[name="choose-package"]+ins').click(function(event) {
-
+        jQuery('.item .iCheck, [name="choose-package"]+ins').click(function(event) {
             $('[name="choose-package"]').removeAttr('checked');
             $('[name="choose-package"]').parent().removeClass('checked');
 
@@ -284,51 +296,67 @@
                 else 
                 {
                     $('#walletId').val(walletId);
-                    if($('#termsPackage').is(':checked'))
+
+                    if($('#termsPackage').is(':checked')==true)
                     {
-                        //check banlance
-                            $.post('{{route("order.checkBalance")}}',{_token:'{{csrf_token()}}',pid:packageIdPick,wallet:walletId},function(response){
-                                var response=$.parseJSON(response);
-                                if(response.status==true)
-                                {
-                                    var action='buy';
-                                    if(packageId>0)//upgrade
-                                        action='upgrade to';
-                                    var title='Are you going to '+action+' '+response.packName+' package. '+response.packPriceCLP+' CLP will be deducted in your wallet.';
-                                    if(walletId==2)
-                                        title='Are you going to '+action+' '+response.packName+' package. '+response.packPriceBTC+' BTC will be deducted in your wallet.';
-                                    swal({
-                                      title:title,
-                                      type: "warning",
-                                      showCancelButton: true,
-                                      confirmButtonClass: "btn-info",
-                                      confirmButtonText: "Yes",
-                                      closeOnConfirm: false
-                                    },function(){
-                                      jQuery('#fBuy').submit();
+                        console.log($('#termsPackage').is(':checked'));
+
+                        $.post('{{URL::to("orders/check-order")}}',function(response){
+                            var rsp=$.parseJSON(response);
+                            if(rsp.status==false)
+                            {
+                                swal('Whoops','You are unable to create an order or buy a new package, since your buy '+rsp.data+' package order is not completed yet. Please complete or cancel that oder then try again.','error');
+                                return false;
+                            }
+                            else
+                            {
+                                //check banlance
+                                    $.post('{{route("order.checkBalance")}}',{_token:'{{csrf_token()}}',pid:packageIdPick,wallet:walletId},function(response){
+                                        var response=$.parseJSON(response);
+                                        if(response.status==true)
+                                        {
+                                            var action='buy';
+                                            if(packageId>0)//upgrade
+                                                action='upgrade to';
+                                            var title='Are you going to '+action+' '+response.packName+' package. '+response.packPriceCLP+' CLP will be deducted in your wallet.';
+                                            if(walletId==2)
+                                                title='Are you going to '+action+' '+response.packName+' package. '+response.packPriceBTC+' BTC will be deducted in your wallet.';
+                                            swal({
+                                              title:title,
+                                              type: "warning",
+                                              showCancelButton: true,
+                                              confirmButtonClass: "btn-info",
+                                              confirmButtonText: "Yes",
+                                              closeOnConfirm: false
+                                            },function(){
+                                              jQuery('#fBuy').submit();
+                                            });
+                                        }
+                                        else if(response.status==false){
+                                            var title='Your CLP balance is not sufficient. Would you like to put an order and pay later?';
+                                            if(walletId==2)
+                                                title='Your BTC balance is not sufficient. Would you like to put an order and pay later?';
+                                            swal({
+                                              title:title,
+                                              type: "warning",
+                                              showCancelButton: true,
+                                              confirmButtonClass: "btn-info",
+                                              confirmButtonText: "Yes",
+                                              closeOnConfirm: false
+                                            },function(){
+                                              jQuery('#fBuy').submit();
+                                            });
+                                        }
+                                        else
+                                        {
+                                            swal("Error","Whoops. Look like something went wrong","error");
+                                        }
                                     });
-                                }
-                                else if(response.status==false){
-                                    var title='Your CLP balance is not sufficient. Would you like to put an order and pay later?';
-                                    if(walletId==2)
-                                        title='Your BTC balance is not sufficient. Would you like to put an order and pay later?';
-                                    swal({
-                                      title:title,
-                                      type: "warning",
-                                      showCancelButton: true,
-                                      confirmButtonClass: "btn-info",
-                                      confirmButtonText: "Yes",
-                                      closeOnConfirm: false
-                                    },function(){
-                                      jQuery('#fBuy').submit();
-                                    });
-                                }
-                                else
-                                {
-                                    swal("Error","Whoops. Look like something went wrong","error");
-                                }
-                            });
-                        //
+                                //
+                            }
+                        });
+
+                        
 
                         
                     }
@@ -382,6 +410,7 @@
             $arr = json_encode($arr);
         @endphp
     @endif
+
 
 
     function getRate(){
