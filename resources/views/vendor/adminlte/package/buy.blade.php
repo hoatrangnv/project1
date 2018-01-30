@@ -106,7 +106,7 @@
 										<td>
 											@if($userOrder->status==1)
 												
-												<div class="pull-right">
+												<div class="pull-left">
 													<a href='javascript:;' class='btn btn-xs bg-olive btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
 													<a href="javascript:;" data-name="{{$userOrder->package->name}}" class="btn btn-danger btn-xs btn-cancel" data-id="{{$userOrder->id}}">Cancel</a>
 													
