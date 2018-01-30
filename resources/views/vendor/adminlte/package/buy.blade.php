@@ -6,7 +6,11 @@
 
 @section('custome_css')
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTable/media/css/datatables.min.css')}}">
-
+<style type="text/css" media="screen">
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+		vertical-align: middle;
+	}
+</style>
 @endsection
 
 @section('main-content')
@@ -88,7 +92,9 @@
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
-												<b class="text-success">Pending</b>
+												<b class="text-success">Pending</b><br/>
+												<b class="text-warning small pull-left"><?=floor($userOrder->timeLeft).' min(s) left';
+													?></b>
 											@elseif($userOrder->status==2)
 												<b class='text-info'>Paid</b>
 											@elseif($userOrder->status==4)
@@ -99,8 +105,7 @@
 										</td>
 										<td>
 											@if($userOrder->status==1)
-												<b class="text-warning small pull-left"><?=floor($userOrder->timeLeft).' min(s) left';
-													?></b>
+												
 												<div class="pull-right">
 													<a href='javascript:;' class='btn btn-xs bg-olive btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
 													<a href="javascript:;" data-name="{{$userOrder->package->name}}" class="btn btn-danger btn-xs btn-cancel" data-id="{{$userOrder->id}}">Cancel</a>

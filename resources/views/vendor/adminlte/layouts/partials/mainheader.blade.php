@@ -190,7 +190,7 @@
                     }
                     else
                     {
-                        swal('Whoops','You are unable to create an order or buy a new package, since your buy '+rsp.data+' package order is not completed yet. Please complete or cancel that oder then try again.','error');
+                        swal('Whoops','You are unable to create an order or buy a new package, since your buy '+rsp.data+' package order is not completed yet. Please complete or cancel that order then try again.','error');
                     }
                 });
             }
@@ -305,7 +305,7 @@
                             var rsp=$.parseJSON(response);
                             if(rsp.status==false)
                             {
-                                swal('Whoops','You are unable to create an order or buy a new package, since your buy '+rsp.data+' package order is not completed yet. Please complete or cancel that oder then try again.','error');
+                                swal('Whoops','You are unable to create an order or buy a new package, since your buy '+rsp.data+' package order is not completed yet. Please complete or cancel that order then try again.','error');
                                 return false;
                             }
                             else

@@ -119,7 +119,7 @@
                                 <td>{{$oVal->original}}</td>
                 				<td>
                 					@if($oVal->status==1)
-                						<b class='text-warning'>Pending</b>
+                						<b class='text-success'>Pending</b>
                 					@elseif($oVal->status==2)
 										<b class='text-info'>Paid</b>
                                     @elseif($oVal->status==4)
