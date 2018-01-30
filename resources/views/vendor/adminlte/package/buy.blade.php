@@ -73,6 +73,7 @@
 	                            <th>Purchased By</th>
 	                            <th>CLP Amount</th>
 	                            <th>BTC Amount</th>
+	                            <th>Status</th>
 	                            <th>Action</th>
                           	</tr>
 		                </thead>
@@ -87,15 +88,7 @@
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
-												<b class="text-warning small pull-left"><?=floor($userOrder->timeLeft).' min(s) left';
-													?></b>
-												<div class="pull-right">
-													<a href='javascript:;' class='btn btn-xs bg-olive btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
-													<a href="javascript:;" data-name="{{$userOrder->package->name}}" class="btn btn-danger btn-xs btn-cancel" data-id="{{$userOrder->id}}">Cancel</a>
-													
-												</div>
-												
-												
+												<b class="text-success">Pending</b>
 											@elseif($userOrder->status==2)
 												<b class='text-info'>Paid</b>
 											@elseif($userOrder->status==4)
@@ -103,6 +96,19 @@
 											@else
 												<b class='text-danger'>Expired</b>
 											@endif
+										</td>
+										<td>
+											@if($userOrder->status==1)
+												<b class="text-warning small pull-left"><?=floor($userOrder->timeLeft).' min(s) left';
+													?></b>
+												<div class="pull-right">
+													<a href='javascript:;' class='btn btn-xs bg-olive btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
+													<a href="javascript:;" data-name="{{$userOrder->package->name}}" class="btn btn-danger btn-xs btn-cancel" data-id="{{$userOrder->id}}">Cancel</a>
+													
+												</div>
+											@endif
+												
+											
 										</td>
 									</tr>
 		                		@endforeach
