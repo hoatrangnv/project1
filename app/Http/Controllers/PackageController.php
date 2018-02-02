@@ -61,9 +61,9 @@ class PackageController extends Controller
     }
     public function buyPackage(Request $request)
     {
-
         $currentuserid = Auth::user()->id;
         $packages = Package::all();
+        $filters=[''=>'Select Status',UserOrder::STATUS_PAID=>'Paid',UserOrder::STATUS_PENDING=>'Pending',UserOrder::STATUS_CANCEL=>'Canceled',UserOrder::STATUS_EXPRIED=>'Exprired'];
         $query = UserOrder::where('userId',$currentuserid);
         if(isset($request->type) && $request->type > 0){
             $query->where('status', $request->type);
@@ -74,16 +74,18 @@ class PackageController extends Controller
         {
             foreach ($userOrders as $usKey => $usVal) {
                 $buyDate=strtotime($usVal->buy_date)+config('cryptolanding.timeToExpired')*3600;
+
                 $time=time();
                 if($buyDate<time() && $usVal->status==UserOrder::STATUS_PENDING)
                 {
                     $usVal->status=UserOrder::STATUS_EXPRIED;//exprired
                     $usVal->save();
                 }
+                $usVal->timeLeft=($buyDate-time())/60;
             }
         }
 
-        return view('adminlte::package.buy',compact('packages','userOrders'));
+        return view('adminlte::package.buy',compact('packages','userOrders','filters'));
     }
 
     public function invest(Request $request)

@@ -4,6 +4,7 @@ use App\UserData;
 use App\UserPackage;
 use Illuminate\Http\Request;
 
+
 use App\User;
 use App\Package;
 use Auth;
@@ -20,6 +21,97 @@ use App\UserOrder;
 
 class UserOrderController extends Controller
 {
+
+		public function cancelOrder(Request $request)
+		{
+			if(!$request->ajax())
+			{
+				$currentuserid=Auth::user()->id;
+				$order=UserOrder::where('userId',$currentuserid)->where('id',$request->orderId)->where('status',UserOrder::STATUS_PENDING)->first();
+				$oldPackage=Auth::user()->userData->packageId;
+				if($order)
+				{
+					$order->status=UserOrder::STATUS_CANCEL;
+					$order->save();
+					$msg='The Order Buy '.$order->package->name.' package has been canceled.';
+					if($oldPackage>0)
+						$msg='The Order Upgrade to '.$order->package->name.' package has been canceled.';
+					return redirect()->route('package.buy')
+			                            ->with('flash_message',$msg);
+				}
+				else
+				{
+					return redirect()->route('package.buy')
+	                            ->with('errorMessage','Whoops. Something went wrong.');
+				}
+			}
+			else
+			{
+				return 'Restricted Access';
+			}
+		}
+
+		public function checkOrder(Request $request)
+		{
+			if($request->ajax())
+			{
+				$currentuserid=Auth::user()->id;
+				$orders=UserOrder::where('userId',$currentuserid)->where('status',UserOrder::STATUS_PENDING)->get();
+				if(count($orders)>0)
+				{
+					return json_encode(['status'=>false,'data'=>$orders[0]->package->name]);
+				}
+				else
+				{
+					return json_encode(['status'=>true,'data'=>null]);
+				}
+			}
+		}
+
+		public function checkBalance(Request $request)
+		{
+			if($request->ajax())
+			{
+
+				$user=Auth::user();
+				$package=Package::find($request->pid);
+				if(!empty($package))
+				{
+					//check upgrade or update
+					$oldPackage=$user->userData->packageId;
+					$amount=$damount=$package->price;
+					$check=false;
+					if($oldPackage!=0)
+					{
+						$amount=$damount=$amount-$user->userData->package->price;
+
+					}
+					if($request->wallet==Wallet::CLP_WALLET){
+						$amount=round($amount/ExchangeRate::getCLPUSDRate(),8);
+						$clpCoinAmount=$user->UserCoin->clpCoinAmount;
+						if($amount<=$clpCoinAmount)
+							$check=true;
+					}
+					if($request->wallet==Wallet::BTC_WALLET){
+						$amount=round($amount/ExchangeRate::getBTCUSDRate(),8);
+						$btcCoinAmount=$user->UserCoin->btcCoinAmount;
+						if($amount<=$btcCoinAmount)
+							$check=true;
+					}
+					return json_encode(['status'=>$check,'packName'=>$package->name,'packPriceBTC'=>round($damount/ExchangeRate::getBTCUSDRate(),8),'packPriceCLP'=>floatval(round($damount/ExchangeRate::getCLPUSDRate(),8))]);
+				}
+				else
+				{
+					return json_encode(['status'=>'error']);
+				}
+				
+			}
+			else
+			{
+				return 'Restricted Access';
+			}
+		}
+
 		public function addNew(Request $request)
 		{
 			$currentuserid = Auth::user()->id;
@@ -52,7 +144,7 @@ class UserOrderController extends Controller
 
 					if(floatval($request->walletId)==Wallet::CLP_WALLET)//clp wallet
 					{
-						$amount=round(($amount-$pOldPrice)/$rateCLPUSD,5);
+						$amount=round(($amount-$pOldPrice)/$rateCLPUSD,8);
 						if(floatval($amount)<=$balanceCLP)
 						{
 							$enough=true;
@@ -64,7 +156,7 @@ class UserOrderController extends Controller
 					}
 
 					if(floatval($request->walletId)==Wallet::BTC_WALLET){
-						$amount=round(($amount-$pOldPrice)/$rateBTCUSD,5);
+						$amount=round(($amount-$pOldPrice)/$rateBTCUSD,8);
 						if(floatval($amount)<=$balanceBTC)
 						{
 							$enough=true;
@@ -84,6 +176,8 @@ class UserOrderController extends Controller
 						'amountBTC'=>$request->walletId==Wallet::BTC_WALLET?$amount:null,
 						'buy_date'=>(new \DateTime())->format('Y-m-d H:i:s'),
 						'paid_date'=>null,
+						'type'=>(isset($user->userData->packageId) && $user->userData->packageId!=0)?UserOrder::TYPE_UPGRADE:UserOrder::TYPE_NEW,
+						'original'=>$user->userData->packageId,
 						'status'=>1
 					];
 					if($enough){//add order, process user packages
@@ -126,6 +220,7 @@ class UserOrderController extends Controller
 			                    CronMatchingLogs::create(['userId' => $currentuserid]);
 			            }
 
+
 			            if($packageOldId > 0){
 			                $amount_increase = $package->price - $packageOldPrice;
 			            }
@@ -147,18 +242,18 @@ class UserOrderController extends Controller
 			            ]);
 
 
-			            $amountCLPDecrease = $amount_increase / ExchangeRate::getCLPUSDRate();
-			            $amountBTCDecrease = $amount_increase / ExchangeRate::getBTCUSDRate();
+			            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),8);
+			            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),8);
 
 			            $userCoin = $userData->userCoin;
 
 			            if($request->walletId==Wallet::CLP_WALLET)
 		            	{
-		            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 2) - $amountCLPDecrease;
+		            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 8) - $amountCLPDecrease;
 		            	}
 		            	if($request->walletId==Wallet::BTC_WALLET)
 	            		{
-	            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 2) - $amountBTCDecrease;
+	            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 8) - $amountBTCDecrease;
 	            		}
 			            
 
@@ -205,14 +300,19 @@ class UserOrderController extends Controller
 			            $orderField['status']=2;
 			            UserOrder::create($orderField);
 
+
+			            $msg='Thank for your purchase. The '.$package->name.' package has been bought successfully.';
+			            if(isset($userData->packageId) && $userData->packageId!=0 && isset($userData->package->name))//upgrade
+			            	$msg='Thank for your upgrade. Your '.$userData->package->name.' package has been upgraded to '.$package->name.' package successfully.';
+
 			            return redirect()->route('package.buy')
-			                            ->with('flash_message','Buy package successfully.');
+			                            ->with('flash_message',$msg);
 					}
 					else//add order
 					{
 						UserOrder::create($orderField);
 						return redirect()->route('package.buy')
-							->with('flash_message','Your balance is not enough to buy this package. So, an order has been created!');
+							->with('flash_message','Your order has been placed. You have '.config('cryptolanding.timeToExpired').' hour(s) to pay your order!');
 					}
 
 					
@@ -264,12 +364,12 @@ class UserOrderController extends Controller
 								$rateBTCUSD=$exchangeRate[1]->exchrate;
 								$balanceCLP=$userCoin->clpCoinAmount;
 								$balanceBTC=$userCoin->btcCoinAmount;
-								$amount=$order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,5):round($order->amountBTC*$rateBTCUSD);
+								$amount=$order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,8):round($order->amountBTC*$rateBTCUSD);
 								$enough=false;
 
 								if(floatval($order->walletType)==Wallet::CLP_WALLET)//clp wallet
 								{
-									$amount=round($amount/$rateCLPUSD,5);
+									$amount=round($amount/$rateCLPUSD,8);
 									if(floatval($amount)<=$balanceCLP)
 									{
 										$enough=true;
@@ -281,7 +381,7 @@ class UserOrderController extends Controller
 								}
 
 								if(floatval($order->walletType)==Wallet::BTC_WALLET){
-									$amount=round($amount/$rateBTCUSD,5);
+									$amount=round($amount/$rateBTCUSD,8);
 									if(floatval($amount)<=$balanceBTC)
 									{
 										$enough=true;
@@ -298,7 +398,7 @@ class UserOrderController extends Controller
 									$user = Auth::user();
 					                if($user->userData->packageId < $order->packageId)
 					                {
-					                    $amount_increase = $packageOldId = 0;
+					                    $amount_increase = $packageOldId =$amount_newincrease= 0;
 							            $userData = $user->userData;
 							            $packageOldId = $userData->packageId;
 							            $packageOldPrice = isset($userData->package->price) ? $userData->package->price : 0;
@@ -307,7 +407,7 @@ class UserOrderController extends Controller
 							            $userData->packageId = $order->packageId;
 							            $userData->status = 1;
 							            $userData->save();
-							            $amount_increase = $order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,5):round($order->amountBTC*$rateBTCUSD,5);
+							            $amount_increase =$amount_newincrease = $order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,8):round($order->amountBTC*$rateBTCUSD,8);
 
 							            //Insert to cron logs for binary, profit
 							            if($packageOldId == 0) {
@@ -319,9 +419,9 @@ class UserOrderController extends Controller
 							                    CronMatchingLogs::create(['userId' => $currentuserid]);
 							            }
 
-							            // if($packageOldId > 0){
-							            //     $amount_increase = $package->price - $packageOldPrice;
-							            // }
+							            if($packageOldId > 0){
+							                $amount_newincrease = $package->price - $packageOldPrice;
+							            }
 
 							            //Get weekYear
 							            $weeked = date('W');
@@ -331,26 +431,26 @@ class UserOrderController extends Controller
 							            if($weeked < 10) $weekYear = $year.'0'.$weeked;
 							            UserPackage::create([
 							                'userId' => $currentuserid,
-							                'packageId' => $userData->packageId,
-							                'amount_increase' => $amount_increase,
+							                'packageId' => $order->packageId,
+							                'amount_increase' => $amount_newincrease,
 							                'buy_date' => date('Y-m-d H:i:s'),
 							                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 6 months")),
 							                'weekYear' => $weekYear,
 							            ]);
 
 
-							            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),5);
-							            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),5);
+							            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),8);
+							            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),8);
 
 							            $userCoin = $userData->userCoin;
 
 							            if($order->walletType==Wallet::CLP_WALLET)
 						            	{
-						            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 2) - $amountCLPDecrease;
+						            		$userCoin->clpCoinAmount = round($userCoin->clpCoinAmount, 8) - $amountCLPDecrease;
 						            	}
 						            	if($order->walletType==Wallet::BTC_WALLET)
 					            		{
-					            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 2) - $amountBTCDecrease;
+					            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 8) - $amountBTCDecrease;
 					            		}
 							           
 							            $userCoin->save();
@@ -369,7 +469,7 @@ class UserOrderController extends Controller
 							            Wallet::create($fieldUsd);
 
 							            // Calculate fast start bonus
-							            User::investBonus($user->id, $user->refererId, $order->packageId, $amount_increase);
+							            User::investBonus($user->id, $user->refererId, $order->packageId, $amount_newincrease);
 
 							            // Case: User already in tree and then upgrade package => re-caculate loyalty
 							            if($userData->binaryUserId && $userData->packageId > 0)
@@ -393,8 +493,12 @@ class UserOrderController extends Controller
 							            $order->paid_date=date('Y-m-d H:i:s');
 							            $order->save();
 
+							            $msg='Thank for your purchase. The '.$package->name.' package has been bought successfully.';
+							            if(isset($userData->packageId) && $userData->packageId!=0 && isset($userData->package->name))//upgrade
+							            	$msg='Thank for your upgrade. Your '.$userData->package->name.' package has been upgraded to '.$package->name.' package successfully.';
+
 							            return redirect()->route('package.buy')
-							                            ->with('flash_message','Order has been paid successfully.');
+							                            ->with('flash_message',$msg);
 					                }
 					                else
 					                {
@@ -405,8 +509,11 @@ class UserOrderController extends Controller
 								}
 								else
 								{
+									$wallet='CLP';
+									if(floatval($order->walletType)==Wallet::BTC_WALLET)
+										$wallet='BTC';
 									return redirect()->route('package.buy')
-	                            ->with('errorMessage','Whoops. Your balance is not enough to pay this order!');
+	                            ->with('errorMessage','Your '.$wallet.' balance is not sufficient. Please deposit more coin and try again later.');
 								}
 
 							}

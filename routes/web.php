@@ -27,7 +27,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('roles', 'Backend\User\RoleController');
     Route::resource('posts', 'Backend\User\PostController');
 
-    Route::get('admin/packages/orders','Backend\UserOrderController@index')->name('backend.package_order');
+    
 
     Route::group(['middleware' => ['permission:view_admins']], function () {
         Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
@@ -59,6 +59,10 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::group(['middleware' => ['permission:view_reports']], function () {
         Route::get('/report', 'Backend\Report\ReportController@getDataReport')->name('report');
         Route::get('/report/commission', 'Backend\Report\ReportController@getDataCommissionReport');
+    });
+
+    Route::group(['middleware'=>['permission:view_orders']],function(){
+        Route::get('admin/packages/orders','Backend\UserOrderController@index')->name('backend.package_order');
     });
     
     Route::get('members/genealogy', 'User\MemberController@genealogy');
@@ -123,6 +127,9 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::post('orders/add','UserOrderController@addNew');
     Route::post('orders/pay','UserOrderController@payOrder');
+    Route::post('orders/cancel','UserOrderController@cancelOrder');
+    Route::post('orders/check-order','UserOrderController@checkOrder');
+    Route::post('orders/check-balance','UserOrderController@checkBalance')->name('order.checkBalance');;
     Route::get('packages/ibuy','PackageController@getIbuyPackage')->name('packages.ibuy');
 
     Route::get('packages/buy',['as'=>'package.buy','uses'=>'PackageController@buyPackage']);
@@ -161,8 +168,8 @@ Route::post('getnotification','GetNotificationController@getNotification');
 Route::post('clpnotification','GetNotificationController@clpNotification');
 
 /***------- TEST -------***/
-//Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
 //Route::get('test-binary', 'TestController@testBinary');
 //Route::get('test-matching', 'TestController@testMatching');

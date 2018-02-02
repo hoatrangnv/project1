@@ -20,7 +20,6 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
-
         $permissions = Permission::all();
         return view('adminlte::backend.role.index', compact('roles', 'permissions'));
     }

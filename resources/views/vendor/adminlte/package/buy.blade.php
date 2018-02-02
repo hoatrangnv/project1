@@ -6,7 +6,11 @@
 
 @section('custome_css')
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/dataTable/media/css/datatables.min.css')}}">
-
+<style type="text/css" media="screen">
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+		vertical-align: middle;
+	}
+</style>
 @endsection
 
 @section('main-content')
@@ -50,10 +54,11 @@
                         <div class="col-xs-6 col-md-2 col-lg-2">
                             <div class="form-group">
                               <select class="form-control input-sm" name="type">
-                                <option {{isset($_GET['type']) && $_GET['type']==''?'selected':''}} value="">Select Status</option>
-                                <option {{isset($_GET['type']) && $_GET['type']==2?'selected':''}} value="2">Paid</option>
-                                <option {{isset($_GET['type']) && $_GET['type']==1?'selected':''}} value="1">Not Paid</option>
-                                <option {{isset($_GET['type']) && $_GET['type']==3?'selected':''}} value="3">Expired</option>
+                              	@if(count($filters)>0)
+                              		@foreach($filters as $fKey=>$fVal)
+                              			<option {{isset($_GET['type']) && $_GET['type']==$fKey?'selected':''}}  value="{{$fKey}}">{{$fVal}}</option>
+                              		@endforeach
+                              	@endif
                               </select>
                             </div>
                         </div>
@@ -72,6 +77,7 @@
 	                            <th>Purchased By</th>
 	                            <th>CLP Amount</th>
 	                            <th>BTC Amount</th>
+	                            <th>Status</th>
 	                            <th>Action</th>
                           	</tr>
 		                </thead>
@@ -86,12 +92,28 @@
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
-												<a href='javascript:;' class='btn btn-xs bg-olive pull-left btn-pay' data-id="{{$userOrder->id}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
+												<b class="text-success">Pending</b><br/>
+												<b class="text-warning small pull-left"><?=floor($userOrder->timeLeft).' min(s) left';
+													?></b>
 											@elseif($userOrder->status==2)
 												<b class='text-info'>Paid</b>
+											@elseif($userOrder->status==4)
+												<b class="text-warning">Canceled</b>
 											@else
 												<b class='text-danger'>Expired</b>
 											@endif
+										</td>
+										<td>
+											@if($userOrder->status==1)
+												
+												<div class="pull-left">
+													<a href='javascript:;' class='btn btn-xs bg-olive btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
+													<a href="javascript:;" data-name="{{$userOrder->package->name}}" class="btn btn-danger btn-xs btn-cancel" data-id="{{$userOrder->id}}">Cancel</a>
+													
+												</div>
+											@endif
+												
+											
 										</td>
 									</tr>
 		                		@endforeach
@@ -108,6 +130,10 @@
 	{!! Form::open(['action'=>'UserOrderController@payOrder','method'=>'post','style'=>'display:none','id'=>'fPay']) !!}
 		<input type="hidden" name="orderId" id="orderId" />
 	{!! Form::close() !!}
+	
+	{!! Form::open(['action'=>'UserOrderController@cancelOrder','method'=>'post','style'=>'display:none','id'=>'fCancel']) !!}
+		<input type="hidden" name="orderId" id="oId" />
+	{!! Form::close() !!}
 
 	<script src="{{asset('plugins/dataTable/media/js/datatables.min.js')}}"></script>
     
@@ -122,26 +148,64 @@
             sort:false
         });
 
+		$(document).on('click','.btn-cancel',function(){
+			var id=$(this).attr('data-id');
+			var name=$(this).attr('data-name');
+			var currPack={{Auth::user()->userData->packageId}};
+			var action='Buy';
+			if(currPack>0)
+				action='Upgrade to';
+			var title='Are you going to cancel the '+action+' '+name+' package Order?';
+			swal({
+              title: title,
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonClass: "btn-info",
+              confirmButtonText: "Yes",
+              closeOnConfirm: false
+            },function(){
+              $('#oId').val(id);
+              $('#fCancel').submit();
+            });
+
+		});
+
 		$(document).on('click','.btn-pay',function(){
 			var currPack={{Auth::user()->userData->packageId}};
+			var currPackName="{{isset(Auth::user()->userData->package->name)?Auth::user()->userData->package->name:''}}";
 			var pid=$(this).attr('data-package-id');
 			var oid=$(this).attr('data-id');
+			var packName=$(this).attr('data-packname');
+			var walletType=$(this).attr('data-walletType');
+			var amountCLP=$(this).attr('data-amountclp');
+			var amountBTC=$(this).attr('data-amountbtc');
+			var time=$(this).attr('data-time');
 			if(currPack > pid)
 			{
-				swal('Whoops','You can not downgrade package.','error');
+				swal("Whoops","Your current package is "+currPackName+". You are unable to downgrade the package, and this order will be expired in "+time+" min(s)","error");
 			}
 			else if(currPack==pid){
-				swal('Whoops','You purchased this package.','error');
+				swal('Whoops','You have already purchased this package. This order will be expired in '+time+' min(s)','error');
 			}
 			else
 			{
 				$('#orderId').val(oid);
+
+				var amount=amountBTC!=0?amountBTC:amountCLP;
+				var wallet='CLP';
+					if(walletType==2)
+						wallet='BTC';
+				var action='buy';
+				if(currPack>0)
+					action='upgrade to';
+				var title='Are you going to '+action+' '+packName+' package. '+amount+' '+wallet+' will be deducted in your wallet.';
+
 				swal({
-	                  title: "Are you sure?",
+	                  title: title,
 	                  type: "warning",
 	                  showCancelButton: true,
 	                  confirmButtonClass: "btn-info",
-	                  confirmButtonText: "Yes, pay it!",
+	                  confirmButtonText: "Yes",
 	                  closeOnConfirm: false
 	                },function(){
 	                  $('#fPay').submit();

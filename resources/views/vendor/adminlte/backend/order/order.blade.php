@@ -60,6 +60,30 @@
                       </select>
                     </div>
                 </div>
+                <div class="clearfix"></div>
+                <div class="col-xs-6 col-md-3 col-lg-2">
+                    <div class="form-group">
+                      <select class="form-control input-sm" name="orderType" id="order-type">
+                        @if(count($orderTypes)>0)
+                            @foreach($orderTypes as $odKey=>$odType)
+                                <option value="{{$odKey}}">{{$odType}}</option>
+                            @endforeach
+                        @endif
+                      </select>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-3 col-lg-2">
+                    <div class="form-group">
+                      <select class="form-control input-sm" name="originalPackage" id="original-package" disabled="">
+                        <option value="">Original Package</option>
+                        @if(count($packages)>0)
+                            @foreach($packages as $pKey=>$pVal)
+                                <option value="{{$pVal->id}}">{{$pVal->name}}</option>
+                            @endforeach
+                        @endif
+                      </select>
+                    </div>
+                </div>
                 <div class="col-xs-6 col-md-3 col-lg-2 ">
                     <button class="btn btn-sm btn-primary" id="btn_filter" type="submit">Filter</button>
                     <button class="btn btn-sm bg-olive" onclick="window.location.href='{{route('backend.package_order')}}'" id="btn_filter_clear" type="button">Clear</button>
@@ -76,6 +100,8 @@
                     <th>Purchased By</th>
                     <th>CLP Amount</th>
                     <th>BTC Amount</th>
+                    <th>Order Type</th>
+                    <th>Original Package</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -89,11 +115,15 @@
                 				<td>{{$oVal->walletType==2?'BTC':'CLP'}}</td>
                 				<td>{{$oVal->amountCLP}}</td>
                 				<td>{{$oVal->amountBTC}}</td>
+                                <td>{{$oVal->type==1?'Buy New':'Upgrade'}}</td>
+                                <td>{{$oVal->original}}</td>
                 				<td>
                 					@if($oVal->status==1)
-                						<b class='text-warning'>Not Paid</b>
+                						<b class='text-success'>Pending</b>
                 					@elseif($oVal->status==2)
 										<b class='text-info'>Paid</b>
+                                    @elseif($oVal->status==4)
+                                        <b class='text-warning'>Canceled</b>
                 					@else
                 						<b class='text-danger'>Expired</b>
                 					@endif
@@ -105,6 +135,8 @@
                 <tfoot class="bg-gray">
                     <tr>
                         <th>Total: </th>
+                        <th></th>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -123,6 +155,23 @@
     <script src="{{asset('plugins/bootstrap-datepicker.js')}}" type="text/javascript"></script>
     <script type="text/javascript">
     	jQuery(document).ready(function(){
+
+
+
+            //loading 
+
+            $('#order-type').on('change',function(){
+                var up=$(this).val()!=2?false:true;
+                if(up)
+                {
+                    $('#original-package').removeAttr('disabled');
+                }
+                else
+                {
+                    $('#original-package').attr('disabled',true);
+                }
+            });
+
     		$('.dataTables-orders').DataTable({
 	            searching: false,
 	            // bInfo: false,
@@ -148,7 +197,7 @@
 	                        sumData += parseFloat( count[i] );
 	                    }
                         if(!Number.isInteger(sumData))
-                            sumData=sumData.toFixed(5);
+                            sumData=sumData.toFixed(8);
 	                    return sumData;
 	                }
 
@@ -180,7 +229,9 @@
 			let status=url.searchParams.get('status');
 			let purchased=url.searchParams.get('purchased');
 			let package=url.searchParams.get('package');
-			let today = new Date().toISOString().slice(0, 10)
+            let orderType=url.searchParams.get('orderType');
+            let originalPackage=url.searchParams.get('originalPackage');
+			let today = new Date().toISOString().slice(0, 10);
 			if(start!=null && start!='')
 			{
 				$('#start').val(start);
@@ -194,6 +245,18 @@
 			$('#purchased').val(purchased);
 			$('#package').val(package);
 
+            $('#order-type').val(orderType);
+            $('#original-package').val(originalPackage);
+
+            console.log(orderType);
+            if(orderType==2)
+            {
+                $('#original-package').removeAttr('disabled');
+            }
+            else
+            {
+                $('#original-package').attr('disabled',true);
+            }
 
     	});
     </script>

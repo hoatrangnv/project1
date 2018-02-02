@@ -84,7 +84,7 @@
             <li class="treeview upgrade-package">
                 <a href="javascript:;" class="btn-buyPack">
                     <i class="fa fa-level-up"></i>
-                    <span>Activate</span>
+                    <span>{{Auth::user()->userData->packageId==0?'Activate':'Upgrade Package'}}</span>
                 </a>
             </li>
         </ul><!-- /.sidebar-menu -->

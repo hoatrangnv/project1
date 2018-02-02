@@ -51,11 +51,11 @@
 		                                        <div class="h1 no-m">${{number_format($pVal->price,0)}}</div>
 		                                      </div>
 		                                      <div class="item display-flex justify-content-center">
-		                                        <span class="m-r-lg">Equivalent CLP<div class="h4 no-m"><b><span class="icon-clp-icon"></span><clp-1>{{number_format($pVal->price/$ExchangeRate['CLP_USD'],2)}}</clp-1></b></div></span>
-		                                        <span class="m-l-lg">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],5)}}</btc-1></b></div></span>
+		                                        <span class="text-center">Equivalent CLP<div class="h4 no-m"><b><span class="icon-clp-icon"></span><clp-1>{{number_format($pVal->price/$ExchangeRate['CLP_USD'],2)}}</clp-1></b></div></span>
+		                                        
 		                                      </div>
 		                                      <div class="item">
-		                                        Reward<div class="h4 no-m"><b>{{$pVal->bonus*100}}% / Day</b></div>
+		                                        <span class="text-center">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],5)}}</btc-1></b></div></span>
 		                                      </div>
 		                                      <div class="item">
 		                                        <label class="iCheck">
@@ -82,8 +82,8 @@
 			                    </div>
 
 			                  <p>Buy Package by</p>
-			                    <button class="btn btn-success btn_submit_clp" data-wid="3" type="button">CLP Wallet</button>
-			                    <button class="btn btn-success btn_submit_btc" data-wid="2" type="button">BTC Wallet</button>
+			                    <button class="btn btn-success" id="btn_submit_clp" data-wid="3" type="button">CLP Wallet</button>
+			                    <button class="btn btn-success" id="btn_submit_btc" data-wid="2" type="button">BTC Wallet</button>
 								<button class="btn btn-danger pull-right" onclick="window.history.back()" type="button" data-dismiss="modal">Back</button>
 							</div>
                     	</div>

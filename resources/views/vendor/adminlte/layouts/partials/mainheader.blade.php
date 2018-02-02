@@ -115,11 +115,11 @@
                                             <div class="h1 no-m">${{number_format($pVal->price,0)}}</div>
                                           </div>
                                           <div class="item display-flex justify-content-center">
-                                            <span class="m-r-lg">Equivalent CLP<div class="h4 no-m"><b><span class="icon-clp-icon"></span><clp-1>{{number_format($pVal->price/$ExchangeRate['CLP_USD'],2)}}</clp-1></b></div></span>
-                                            <span class="m-l-lg">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],5)}}</btc-1></b></div></span>
+                                            <span class="text-center">Equivalent CLP<div class="h4 no-m"><b><span class="icon-clp-icon"></span><clp-1>{{number_format($pVal->price/$ExchangeRate['CLP_USD'],2)}}</clp-1></b></div></span>
+                                            
                                           </div>
                                           <div class="item">
-                                            Reward<div class="h4 no-m"><b>{{$pVal->bonus*100}}% / Day</b></div>
+                                            <span class="text-center">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],8)}}</btc-1></b></div></span>
                                           </div>
                                           <div class="item">
                                             <label class="iCheck">
@@ -181,13 +181,26 @@
             }
             else
             {
-                $('#buy-package').modal('show');
+                //$('#buy-package').modal('show');
+                $.post('{{URL::to("orders/check-order")}}',function(response){
+                    var rsp=$.parseJSON(response);
+                    if(rsp.status==true)
+                    {
+                        $('#buy-package').modal('show');
+                    }
+                    else
+                    {
+                        swal('Whoops','You are unable to create an order or buy a new package, since your buy '+rsp.data+' package order is not completed yet. Please complete or cancel that order then try again.','error');
+                    }
+                });
             }
         });
 
-        var packageId = {{ Auth::user()->userData->packageId }};
-        var packageIdPick = packageId;
 
+
+        var packageId = {{ Auth::user()->userData->packageId }};
+        var packName = "{{isset(Auth::user()->userData->package->name)?Auth::user()->userData->package->name:''}}";
+        var packageIdPick = packageId;
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
           checkboxClass: 'icheckbox_flat-green',
           radioClass   : 'iradio_flat-green'
@@ -197,27 +210,58 @@
             $(el).hasClass('active') ? $(el) : $(el).addClass('disabled');
         });
 
-        jQuery('.iCheck,[name="choose-package"]+ins').click(function(event) {
-            console.log('choose package');
+        $('#buy-package').on('hidden.bs.modal', function () {
+            $('#termsPackage').prop('checked',false);
+            $('#package_term_error').text('');
+            $('#packageId').val(packageId);
+            packageIdPick=packageId;
+            $('.package-wrapper').addClass('disabled');
+            $('[name="choose-package"]').removeAttr('checked');
+            $('.iCheck .checked').removeClass('checked');
+            $('.package-wrapper').each(function(index, el) {
+                let oldP=$(this).children().find('[name="choose-package"]');
+
+                if(oldP.val()==packageId)
+                {
+                    $(this).removeClass('disabled');
+                    $(this).addClass('active');
+                    oldP.attr('checked',true);
+                    oldP.parent().addClass('checked');
+                }
+                //$(el).hasClass('active') ? ($(el).removeClass('active'), $(el).addClass('disabled')) : $(el);
+            });
+            //$(this).closest('.package-wrapper').removeClass('disabled');
+            //$(this).closest('.package-wrapper').addClass('active');
+
+        });
+
+        jQuery('.item .iCheck, [name="choose-package"]+ins').click(function(event) {
+            $('[name="choose-package"]').removeAttr('checked');
+            $('[name="choose-package"]').parent().removeClass('checked');
+
             var _packageId=packageId;
             if(event.target.className=='iCheck-helper')
             {
                 _packageId=$(this).parent().children('input[type="radio"]').val();
+                $(this).parent().children('input[type="radio"]').attr('checked',true);//add checked
+                $(this).parent().children('input[type="radio"]').parent().addClass('checked');
                 packageIdPick=_packageId;
             }
             if(event.target.className=='m-l-xxs' || event.target.className=="iCheck hover")
             {
                 _packageId=$(this).children().find('input[type="radio"]').val();
+                $(this).children().find('input[type="radio"]').attr('checked',true);
+                $(this).children().find('input[type="radio"]').parent().addClass('checked');
                 packageIdPick=_packageId;
             }
             if (parseInt(_packageId)>0)
             {
                 if (parseInt(_packageId) < parseInt(packageId))
                 {
-                    swal("Whoops","You can not downgrade package.","error");
+                    swal("Whoops","Your current package is "+packName+". You are unable to downgrade the package.","error");
                 }
                 if (_packageId == packageId) {
-                    swal("Whoops","You purchased this package.","error");
+                    swal("Whoops","You have already purchased this package. Please try again with the larger package or go back if your current package is Angel.","error");
                 }
             }
 
@@ -226,6 +270,7 @@
 
             $('.package-wrapper').each(function(index, el) {
                 $(el).hasClass('active') ? ($(el).removeClass('active'), $(el).addClass('disabled')) : $(el);
+
             });
             $(this).closest('.package-wrapper').removeClass('disabled');
             $(this).closest('.package-wrapper').addClass('active');
@@ -236,41 +281,98 @@
 
 
 
-        jQuery('.btn_submit_clp, .btn_submit_btc').click(function(){
+        jQuery('#btn_submit_clp, #btn_submit_btc').click(function(){
             $('#package_term_error').text('');
             var walletId=$(this).attr('data-wid');
             if (parseInt(packageIdPick)>0)
             {
                 if (parseInt(packageIdPick) < parseInt(packageId))
                 {
-                    swal("Whoops","You can not downgrade package.","error");
+                    swal("Whoops","Your current package is "+packName+". You are unable to downgrade the package.","error");
                 }
                 else if (packageIdPick == packageId) {
-                    swal("Whoops","You purchased this package.","error");
+                    swal("Whoops","You have already purchased this package. Please try again with the larger package or go back if your current package is Angel","error");
                 }
                 else 
                 {
                     $('#walletId').val(walletId);
-                    if($('#termsPackage').is(':checked'))
-                    {
 
-                        swal({
-                          title: "Are you sure?",
-                          type: "warning",
-                          showCancelButton: true,
-                          confirmButtonClass: "btn-info",
-                          confirmButtonText: "Yes, buy it!",
-                          closeOnConfirm: false
-                        },function(){
-                          jQuery('#fBuy').submit();
+                    if($('#termsPackage').is(':checked')==true)
+                    {
+                        console.log($('#termsPackage').is(':checked'));
+
+                        $.post('{{URL::to("orders/check-order")}}',function(response){
+                            var rsp=$.parseJSON(response);
+                            if(rsp.status==false)
+                            {
+                                swal('Whoops','You are unable to create an order or buy a new package, since your buy '+rsp.data+' package order is not completed yet. Please complete or cancel that order then try again.','error');
+                                return false;
+                            }
+                            else
+                            {
+                                //check banlance
+                                    $.post('{{route("order.checkBalance")}}',{_token:'{{csrf_token()}}',pid:packageIdPick,wallet:walletId},function(response){
+                                        var response=$.parseJSON(response);
+                                        if(response.status==true)
+                                        {
+                                            var action='buy';
+                                            if(packageId>0)//upgrade
+                                                action='upgrade to';
+                                            var title='Are you going to '+action+' '+response.packName+' package. '+response.packPriceCLP+' CLP will be deducted in your wallet.';
+                                            if(walletId==2)
+                                                title='Are you going to '+action+' '+response.packName+' package. '+response.packPriceBTC+' BTC will be deducted in your wallet.';
+                                            swal({
+                                              title:title,
+                                              type: "warning",
+                                              showCancelButton: true,
+                                              confirmButtonClass: "btn-info",
+                                              confirmButtonText: "Yes",
+                                              closeOnConfirm: false
+                                            },function(){
+                                              jQuery('#fBuy').submit();
+                                            });
+                                        }
+                                        else if(response.status==false){
+                                            var title='Your CLP balance is not sufficient. Would you like to put an order and pay later?';
+                                            if(walletId==2)
+                                                title='Your BTC balance is not sufficient. Would you like to put an order and pay later?';
+                                            swal({
+                                              title:title,
+                                              type: "warning",
+                                              showCancelButton: true,
+                                              confirmButtonClass: "btn-info",
+                                              confirmButtonText: "Yes",
+                                              closeOnConfirm: false
+                                            },function(){
+                                              jQuery('#fBuy').submit();
+                                            });
+                                        }
+                                        else
+                                        {
+                                            swal("Error","Whoops. Look like something went wrong","error");
+                                        }
+                                    });
+                                //
+                            }
                         });
+
+                        
+
+                        
                     }
                     else
                     {
-                        $('#package_term_error').text('Please checked term!');
+                        var act='buy';
+                        if(packageId>0)
+                            act='upgrade';
+                        $('#package_term_error').text('In order to '+act+' package, you must read and check the Term and Condition!');
                         return false;
                     }
                 }
+            }
+            else
+            {
+                swal("Error","Please choose a package!","error");
             }
 
         });
@@ -308,6 +410,7 @@
             $arr = json_encode($arr);
         @endphp
     @endif
+
 
 
     function getRate(){
