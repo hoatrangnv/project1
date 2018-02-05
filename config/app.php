@@ -158,6 +158,7 @@ return [
     'freeze_withdraw' => env('FREEZE_WITHDRAW', 0),
     'clp_target_price' => env('CLP_TARGET_PRICE', 3),
     'top_leaders' => env('TOP_LEADERS'),
+    'fullnode_api_url' => env('FULLNODE_API_URL'),
     
     /*
     |--------------------------------------------------------------------------
