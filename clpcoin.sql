@@ -457,8 +457,8 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
-INSERT INTO `users` VALUES ('2', 'root', 'giangitman@gmail.com', '$2y$10$m/400CQhjiCEXSowiAO/c.hz4wnbMGO0qaLYrgY/bN6ylUu.XGoGi', '7GrJboRlsJAzUi4ABh9BN0RUW8wD5RQAuA1vXGfDUYpQWQDwZW4UU8F3WU2a', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '1', 'root', 'Giang', '0978708981', '0', null, '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, '99', '1', '1');
+INSERT INTO `users` VALUES ('1', 'admin', 'test@clp.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7J', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
+INSERT INTO `users` VALUES ('2', 'root', 'gtest@gmail.com', '$2y$10$m/400CQhjiCEXSowiAO/c.hz4wnbMGO0qaLY', '7GrJboRlsJAzUi4ABh9BN0RUW8wD5RQAuA1vXGfDUYpQWQDwZW4UU8F3WU2a', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '1', 'root', 'Giang', '0978708981', '0', null, '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, '99', '1', '1');
 
 -- ----------------------------
 -- Table structure for users_loyalty
