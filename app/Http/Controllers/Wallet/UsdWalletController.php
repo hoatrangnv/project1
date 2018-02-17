@@ -165,11 +165,10 @@ class UsdWalletController extends Controller
     {
         if($request->ajax()) {
 
-            /** Remove **/
-            // if($clpUSDRate < 0.95 * config('app.clp_target_price')) {
-            //     return response()->json(array('err' => false));
-            // }
-            /** Remove **/
+            $clpUSDRate = ExchangeRate::getCLPUSDRate();
+            if($clpUSDRate < config('app.clp_target_price')) {
+                return response()->json(array('err' => false));
+            }
             
             $userCoin = Auth::user()->userCoin;
 
