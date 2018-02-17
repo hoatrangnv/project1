@@ -142,7 +142,7 @@ class WithDrawController extends Controller
 
 									if($withdrawConfirm->type == 'btc')
 									{
-										self::sendCoinBTC($request, $id);
+										self::withdrawBTC($request, $id);
 									}elseif($withdrawConfirm->type == 'clp')
 									{
 										if($totalToday <= 3000)
