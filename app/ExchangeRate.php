@@ -111,8 +111,11 @@ class ExchangeRate extends Model
                 ])
                 ->limit(1)
                 ->get();
+
+        $rate = $data[0]->exchrate;
+        if($rate < config('app.clp_target_price')) $rate = config('app.clp_target_price');
         
-        return $data[0]->exchrate;
+        return $rate;
         
     }
 
