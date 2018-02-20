@@ -164,12 +164,6 @@ class UsdWalletController extends Controller
     public function buyCLP(Request $request)
     {
         if($request->ajax()) {
-
-            $clpUSDRate = ExchangeRate::getCLPUSDRate();
-            if($clpUSDRate < config('app.clp_target_price')) {
-                return response()->json(array('err' => false));
-            }
-            
             $userCoin = Auth::user()->userCoin;
 
             $usdAmountErr = '';
@@ -184,6 +178,7 @@ class UsdWalletController extends Controller
             if($usdAmountErr == '')
             {
                 $clpRate = ExchangeRate::getCLPUSDRate();
+                if($clpRate < config('app.clp_target_price')) $clpRate = config('app.clp_target_price');
                 $amountCLP = $request->usdAmount / $clpRate;
 
                 $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;
