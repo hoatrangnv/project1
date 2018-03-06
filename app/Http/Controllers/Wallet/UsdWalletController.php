@@ -169,7 +169,7 @@ class UsdWalletController extends Controller
             $usdAmountErr = '';
             if($request->usdAmount == ''){
                 $usdAmountErr = trans('adminlte_lang::wallet.msg_usd_amount_required');
-            }elseif (!is_numeric($request->usdAmount)){
+            }elseif (!is_numeric($request->usdAmount) || $request->usdAmount < 0){
                 $usdAmountErr = trans('adminlte_lang::wallet.amount_number');
             }elseif ($userCoin->usdAmount < $request->usdAmount){
                 $usdAmountErr = trans('adminlte_lang::wallet.error_not_enough');
