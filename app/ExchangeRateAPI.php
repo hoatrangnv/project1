@@ -26,6 +26,8 @@ class ExchangeRateAPI
     {
         $clpUSDRate = self::getCLPBTCRate() * self::getBTCUSDRate();
 
+        //if($clpUSDRate < config('app.clp_target_price')) $clpUSDRate = config('app.clp_target_price');
+
         return round($clpUSDRate, 2);
     }
 

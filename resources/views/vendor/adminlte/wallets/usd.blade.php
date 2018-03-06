@@ -230,12 +230,14 @@
         // },{{ config("app.time_interval")}});
         
         $( ".switch-USD-to-CLP" ).keyup(function() {
+            if(globalCLPUSD < 1) globalCLPUSD = 1;
              var value = $(this).val();
              var result = value / globalCLPUSD;
              $(".switch-CLP-to-USD").val(result);
         });
         
         $( ".switch-CLP-to-USD" ).keyup(function() {
+            if(globalCLPUSD < 1) globalCLPUSD = 1;
              var value = $(this).val();
             var result = value * globalCLPUSD;
            $(".switch-USD-to-CLP").val(result);
@@ -244,6 +246,7 @@
         var data = {{ $wallets->currencyPair }};
         //get total value;
         $( ".max" ).click(function() {
+            if(globalCLPUSD < 1) globalCLPUSD = 1;
             $(".switch-USD-to-CLP").val(data)
             var result = data / globalCLPUSD;
             $(".switch-CLP-to-USD").val(result);
