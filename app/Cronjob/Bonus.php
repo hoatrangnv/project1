@@ -168,8 +168,11 @@ class Bonus
 			$binary->save();
 
 			if($bonus > 0){
+				$clpUSDRate = ExchangeRate::getCLPUSDRate();
+				if($clpUSDRate < config('app.clp_target_price')) $clpUSDRate = config('app.clp_target_price');
+
 				$usdAmount = $bonus * config('cryptolanding.usd_bonus_pay');
-				$reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+				$reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / $clpUSDRate;
 
 				$userCoin = $binary->userCoin;
 				$userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
@@ -279,8 +282,11 @@ class Bonus
 
 					if($totalBonus > 0)
 					{
+						$clpUSDRate = ExchangeRate::getCLPUSDRate();
+						if($clpUSDRate < config('app.clp_target_price')) $clpUSDRate = config('app.clp_target_price');
+
 						$usdAmount = $totalBonus * config('cryptolanding.usd_bonus_pay');
-						$reinvestAmount = $totalBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+						$reinvestAmount = $totalBonus * config('cryptolanding.reinvest_bonus_pay') / $clpUSDRate;
 
 						$userCoin = $user->userCoin;
 						$userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
