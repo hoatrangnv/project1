@@ -195,7 +195,7 @@ class ClpWalletController extends Controller {
 
             if($request->clpAmount == ''){
                 $clpAmountErr = trans('adminlte_lang::wallet.amount_required');
-            }elseif (!is_numeric($request->clpAmount)){
+            }elseif (!is_numeric($request->clpAmount) || $request->clpAmount < 0){
                 $clpAmountErr = trans('adminlte_lang::wallet.amount_number');
             }elseif ($userCoin->clpCoinAmount < $request->clpAmount){
                 $clpAmountErr = trans('adminlte_lang::wallet.error_not_enough');
