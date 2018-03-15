@@ -15,33 +15,33 @@ return [
 
     'custom' => [
 		'name' => [
-			'required' => 'Not empty :attribute?',
+			'required' => ':attribute?不能空的',
 			'unique' => ':attribute unique?',
 			'without_spaces' => ':attribute without_spaces?',
 		],
 		'price' => [
-			'required' => 'Not empty :attribute?',
+			'required' => ':attribute?不能空的',
 			'unique' => ':attribute unique?',
 		],
 		'token' => [
-			'required' => 'Not empty :attribute?',
+			'required' => ':attribute?不能空的',
 		],
 		'password' => [
-			'required' => 'Not empty :attribute?',
+			'required' => ':attribute?不能空的',
 			'min' => 'Min charter 8',
 			'regex' => 'regex',
 		],
 		'email' => [
-			'required' => 'Not empty :attribute?',
+			'required' => ':attribute?不能空的',
 			'unique' => 'unique?',
 		],
         'phone' => [
-			'required' => 'Not empty :attribute?',
+			'required' => ':attribute?不能空的',
 		],
 		'g-recaptcha-response' => [
 			'required' => 'Not empty recaptcha field',
 			'captcha' => 'The recaptcha field is not correct.',
 		]
 	],
-    '*.required' => 'Not empty :attribute?',
+    '*.required' => ':attribute?不能空的',
 ];

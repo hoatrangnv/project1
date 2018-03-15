@@ -192,6 +192,13 @@
                                 </div>
                                 <span class="help-block"></span>
                             </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                    {{ Form::number('trfOTP', '', ['class' => 'form-control input-sm trf-input', 'id' => 'trfOTP', 'placeholder' => trans('adminlte_lang::wallet.2fa_code')]) }}
+                                </div>
+                                <span class="help-block"></span>
+                            </div>
                         </div>
                         <span class="help-block"></span>
                     </div>

@@ -11,10 +11,14 @@ Route::get('/package-term-condition.html', function () {
     return view('adminlte::layouts.term_buy_pack');
 });
 
+Route::get('/language/{lang}', ['as'=>'lang.switch', 'uses'=>'LanguageController@switchLang']);
+
 Auth::routes();
 Route::get('authenticator', 'Auth\LoginController@auth2fa');
 Route::post('authenticator', 'Auth\LoginController@auth2fa');
-Route::get('users/search',"User\UserController@search");
+Route::get('users/search', 'User\UserController@search');
+Route::get('users/searchp', 'User\UserController@searchp');
+Route::get('wallets/usd/gettransferandbuypackges', 'Wallet\UsdWalletController@getTransferAndBuyPackages');
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
@@ -26,8 +30,6 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('users', 'Backend\User\UserController');
     Route::resource('roles', 'Backend\User\RoleController');
     Route::resource('posts', 'Backend\User\PostController');
-
-    
 
     Route::group(['middleware' => ['permission:view_admins']], function () {
         Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
@@ -116,8 +118,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/transferholding', 'WalletController@transferFromHolding')->name('holding.transfer');
 
     Route::post('wallets/buyclpusd', 'Wallet\UsdWalletController@buyCLP')->name('usd.buyclp');
+    Route::post('wallets/transferusd', 'Wallet\UsdWalletController@transferUSD')->name('usd.transferusd');
 
-  
+
 
     Route::get('mybonus/faststart', 'MyBonusController@faststart');
     Route::get('mybonus/binary', 'MyBonusController@binary');
@@ -134,20 +137,22 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('packages/buy',['as'=>'package.buy','uses'=>'PackageController@buyPackage']);
 
-
-
     Route::get('packages/invest', 'PackageController@invest');
     Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
     Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'PackageController@withDraw']);
     Route::resource('packages', 'PackageController');
 
-    //Profile router
+    // Profile router
     Route::any('profile/upload','User\ProfileController@upload');
     Route::get('profile','User\ProfileController@index');
     Route::post('profile/changepassword','User\ProfileController@changePassword');
     Route::get('profile/switchauthen','User\ProfileController@switchTwoFactorAuthen');
 
+    // User router
     Route::get('info','User\InfoController@clp');
+    Route::get('user/profile','User\ProfileController@index');
+    Route::get('user/login-history', 'LoginActivityController@index');
+    Route::get('user/preference', 'User\PreferenceController@index');
 
     Route::resource('profile', 'User\ProfileController');
 
@@ -161,6 +166,7 @@ Route::group( ['middleware' => ['auth']], function() {
     });
 
     Route::get('faq/{type}','FaqController@index');
+
 });
 Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');

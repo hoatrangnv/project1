@@ -13,7 +13,13 @@ return [
     |
     */
 
-    'active_email'              => 'We have sent you an email. Please open your email then click on the link to active account before login!',
-    'active_success'            => 'You have activated your account successfully.',
-    'active_already'            => 'This account already activated!',
+    'header_title'           	=> '权限',
+    'manager'                	=> '经理',
+    'header_add'              	=> '新增',
+    'header_edit'            	=> '编辑',
+    'add'                 		=> '新增权限',
+    'edit'                 		=> '编辑权限',
+    'title'                     => '标题',
+    'action'                    => '行动',
+
 ];

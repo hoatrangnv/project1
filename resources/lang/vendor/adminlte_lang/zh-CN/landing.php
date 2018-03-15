@@ -13,7 +13,13 @@ return [
     |
     */
 
-    'active_email'              => 'We have sent you an email. Please open your email then click on the link to active account before login!',
-    'active_success'            => 'You have activated your account successfully.',
-    'active_already'            => 'This account already activated!',
+    'home'                      => '主页',
+    'about'                     => '关于',
+    'mining_packs'              => '采矿包',
+    'features'                  => '功能',
+    'team'                      => '团队',
+    'faq'                       => '常见问题',
+    'language'                  => '语言',
+    'login'                     => '登录',
+
 ];

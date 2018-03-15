@@ -65,7 +65,7 @@ class User extends Authenticatable
     /**
     * Calculate fast start bonus
     */
-    public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0, $level = 1)
+    public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0, $level = 1, $name = '')
     {
         if($refererId > 0){
             $packageBonus = 0;
@@ -93,6 +93,8 @@ class User extends Authenticatable
                     //Get info of user
                     $user = Auth::user();
 
+                    $nameBoughtPack = $name != "" ? $name : $user->name;
+
                     $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
                     $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate());
                     $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
@@ -104,7 +106,7 @@ class User extends Authenticatable
                         'inOut' => Wallet::IN,
                         'userId' => $userData->userId,
                         'amount' => $usdAmount,
-                        'note'   => $user->name . ' bought package'
+                        'note'   => $nameBoughtPack . ' bought package'
                     ];
                     Wallet::create($fieldUsd);
                     $fieldInvest = [
@@ -113,7 +115,7 @@ class User extends Authenticatable
                         'inOut' => Wallet::IN,
                         'userId' => $userData->userId,
                         'amount' => $reinvestAmount,
-                        'note'   => $user->name . ' bought package'
+                        'note'   => $nameBoughtPack . ' bought package'
                     ];
                     Wallet::create($fieldInvest);
                 }
