@@ -13,11 +13,11 @@ return [
     |
     */
 
-    'htmlheader_title'                  => 'Permissions',
-    'header_title'                  => 'Permissions',
-    'header_title_create'                  => 'Create Permissions',
-    'header_title_edit'                  => 'Edit Permissions',
-    'title'                  => 'Title',
-    'action'                  => 'Action',
+    'htmlheader_title'          => 'Permissions',
+    'header_title'              => 'Permissions',
+    'header_title_create'       => 'Create Permissions',
+    'header_title_edit'         => 'Edit Permissions',
+    'title'                     => 'Title',
+    'action'                    => 'Action',
     
 ];

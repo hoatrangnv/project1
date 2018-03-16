@@ -62,6 +62,8 @@ class Wallet extends Model
     const MATCHING_TYPE = 17;
     //inOut 
 
+    const TRANSFER_USD_TYPE = 18;
+
     const IN = "in" ;
     
     const OUT = "out";

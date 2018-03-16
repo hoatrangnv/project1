@@ -111,11 +111,8 @@ class ExchangeRate extends Model
                 ])
                 ->limit(1)
                 ->get();
-
-        $rate = $data[0]->exchrate;
-        //if($rate < config('app.clp_target_price')) $rate = config('app.clp_target_price');
         
-        return $rate;
+        return $data[0]->exchrate;
         
     }
 
@@ -146,5 +143,42 @@ class ExchangeRate extends Model
                 ->get();
         
         return $data[0]->exchrate;
+    }
+
+    public static function getExchangeTable() {
+
+        $ExchangeTable = [];
+        $rate = ExchangeRate::getCLPUSDRate();
+        switch ($rate) {
+            case ($rate>=0.1&&$rate<0.2):
+                $ExchangeTable = [500,2500,5000,10000,25000,50000];
+                break;
+            case ($rate>=0.2&&$rate<0.3):
+                $ExchangeTable = [280,1400,2800,5600,14000,28000];
+                break;
+            case ($rate>=0.3&&$rate<0.4):
+                $ExchangeTable = [200,1000,2000,4000,10000,20000];
+                break;
+            case ($rate>=0.4&&$rate<0.5):
+                $ExchangeTable = [160,800,1600,3200,8000,16000];
+                break;
+            case ($rate>=0.5&&$rate<0.6):
+                $ExchangeTable = [140,700,1400,2800,7000,1400];
+                break;
+            case ($rate>=0.6&&$rate<0.7):
+                $ExchangeTable = [130,650,1300,2600,6500,13000];
+                break;
+            case ($rate>=0.7&&$rate<0.8):
+                $ExchangeTable = [120,600,1200,2400,6000,12000];
+                break;
+            case ($rate>=0.8&&$rate<0.9):
+                $ExchangeTable = [110,550,1100,2200,5500,11000];
+                break;
+            case ($rate>=0.9&&$rate<1.0):
+                $ExchangeTable = [100,500,1000,2000,5000,10000];
+                break;
+        };
+
+        return $ExchangeTable;
     }
 }

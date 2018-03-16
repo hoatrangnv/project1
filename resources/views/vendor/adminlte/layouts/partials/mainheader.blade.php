@@ -29,7 +29,22 @@
                     <li><a href="{{ url('/register') }}">{{ trans('adminlte_lang::message.register') }}</a></li>
                     <li><a href="{{ url('/login') }}">{{ trans('adminlte_lang::message.login') }}</a></li>
                 @else
-                    <!-- User Account Menu -->
+                    @if( sizeof(Config::get('languages')) > 1)
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            {{ Config::get('languages')[App::getLocale()] }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            @foreach( Config::get('languages') as $loc => $lang )
+                            <li>
+                                <a href="{{ url('/language/') . '/' . $loc }}">{{ $lang }} </a>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                    @endif
+
+
                     <li class="dropdown user user-menu" id="user_menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -44,15 +59,15 @@
                                 <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" />
                                 <p style="font-size: 16px;margin-bottom: 0px;margin-top: 0px;">{{ Auth::user()->name }}</p>
                                 <div class="row" style="color:white">
-                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">ID:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">{{ trans('adminlte_lang::profile.id') }}:&nbsp</span></div>
                                     <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">{{  Auth::user()->uid }}</i></div>
                                 </div>
                                 <div class="row" style="color:white">
-                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Pack:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">{{ trans('adminlte_lang::profile.pack') }}:&nbsp</span></div>
                                     <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</i></div>
                                 </div>
                                 <div class="row" style="color:white">
-                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Loyalty:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">{{ trans('adminlte_lang::profile.loyalty') }}:&nbsp</span></div>
                                     <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</i></div>
                                 </div>
                             </li>
@@ -103,30 +118,47 @@
                         @if(count($packages)>0)
                             @foreach($packages as $pKey=>$pVal)
                                 <div class="col-md-4 m-b-lg">
-                                      <div class="package-wrapper {{floatval($pKey+1)==Auth::user()->userData->packageId?'active':''}} {{strtolower($pVal->name)=='small'?'Small':strtolower($pVal->name)}}">
+                                    <div class="package-wrapper {{floatval($pKey+1)==Auth::user()->userData->packageId?'active':''}} {{strtolower($pVal->name)=='small'?'Small':strtolower($pVal->name)}}">
                                         <div class="package-title">
-                                          <div class="package-logo">
-                                            <img src="{{asset('img/p-'.strtolower($pVal->name).'.png')}}"/>
-                                            {{$pVal->name}}
-                                          </div>
+                                            <div class="package-logo">
+                                                <img src="{{asset('img/p-'.strtolower($pVal->name).'.png')}}"/>
+                                                {{$pVal->name}}
+                                            </div>
                                         </div>
                                         <div class="package-content">
-                                          <div class="item">
-                                            <div class="h1 no-m">${{number_format($pVal->price,0)}}</div>
-                                          </div>
-                                          <div class="item display-flex justify-content-center">
-                                            <span class="text-center">Equivalent CLP<div class="h4 no-m"><b><span class="icon-clp-icon"></span><clp-1>{{number_format($pVal->price/$ExchangeRate['CLP_USD'],2)}}</clp-1></b></div></span>
-                                            
-                                          </div>
-                                          <div class="item">
-                                            <span class="text-center">Equivalent BTC<div class="h4 no-m"><b><span class="fa fa-btc"></span><btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],8)}}</btc-1></b></div></span>
-                                          </div>
-                                          <div class="item">
-                                            <label class="iCheck">
-                                              <input type="radio" value="{{$pVal->id}}" name="choose-package" {{floatval($pKey+1)==Auth::user()->userData->packageId?'checked':''}} class="flat-red">
-                                              <span class="m-l-xxs">Choose</span>
-                                            </label>
-                                          </div>
+                                            <div class="item">
+                                                <div class="h1 no-m">${{number_format($pVal->price,0)}}</div>
+                                            </div>
+                                            <div class="item display-flex justify-content-center">
+                                                <span class="text-center">Equivalent CLP
+                                                    <div class="h4 no-m">
+                                                        <b>
+                                                            <span class="icon-clp-icon"></span>
+                                                            @if(Config('params.fixCLPUSDTable') && !empty($ExchangeTable))
+                                                            <clp-1>{{number_format($ExchangeTable[$pVal->id-1],2)}}</clp-1>
+                                                            @else
+                                                            <clp-1>{{number_format($pVal->price/$ExchangeRate['CLP_USD'],2)}}</clp-1>
+                                                            @endif
+                                                        </b>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                            <div class="item">
+                                                <span class="text-center">Equivalent BTC
+                                                    <div class="h4 no-m">
+                                                        <b>
+                                                            <span class="fa fa-btc"></span>
+                                                            <btc-1>{{number_format($pVal->price/$ExchangeRate['BTC_USD'],8)}}</btc-1>
+                                                        </b>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                            <div class="item">
+                                                <label class="iCheck">
+                                                    <input type="radio" value="{{$pVal->id}}" name="choose-package" {{floatval($pKey+1)==Auth::user()->userData->packageId?'checked':''}} class="flat-red">
+                                                    <span class="m-l-xxs">Choose</span>
+                                                </label>
+                                            </div>
                                         </div>
                                       </div>
                                     </div>

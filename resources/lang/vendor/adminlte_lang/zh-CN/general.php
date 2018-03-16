@@ -13,7 +13,14 @@ return [
     |
     */
 
-    'active_email'              => 'We have sent you an email. Please open your email then click on the link to active account before login!',
-    'active_success'            => 'You have activated your account successfully.',
-    'active_already'            => 'This account already activated!',
+    'btn_save'                  => '保存',
+    'btn_check'                 => '检查',
+    'btn_close'                 => '关闭',
+    'btn_submit'                => '提交',
+    'btn_transfer'              => '转账',
+    'btn_transfer_and_buy'      => '转让及购买',
+    'btn_buy_clp'               => '购买 CLP',
+    'yes'                       => '是',
+    'no'                        => '否',
+
 ];
