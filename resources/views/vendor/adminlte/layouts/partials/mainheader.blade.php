@@ -17,7 +17,7 @@
         </a>
         &nbsp;
         <span style="font-size: 14px;line-height: 50px;text-align: center;color: white">
-            <span  class="hidden-xs" >1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span>&nbsp;|&nbsp;</span>
+            <span class="hidden-xs" >1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span>&nbsp;|&nbsp;</span>
             <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>
             <span>&nbsp;|&nbsp;1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
         </span>
@@ -450,9 +450,9 @@
             dataType: "json",
             url: '{{ URL::to("exchange") }}',
             success: function(data){
-                $('.btcusd').html(formatter.format(data[1].exchrate));
-                $('.clpusd').html(formatter.format(data[2].exchrate));
-                $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
+                $('.btcusd').html(formatter.format(data[4].exchrate));
+                $('.clpusd').html(formatter.format(data[5].exchrate));
+                $('.clpbtc').html(formatterBTC.format(data[3].exchrate));
                 $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
                 globalBTCUSD = data[1].exchrate;
                 globalCLPUSD = data[2].exchrate; //clpUSD

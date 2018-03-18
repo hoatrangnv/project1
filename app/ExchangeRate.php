@@ -82,8 +82,28 @@ class ExchangeRate extends Model
                 ->orderby('id','DESC')
                 ->limit(3)
                 ->get();
+
+        $data1 = array_merge( json_decode($data), json_decode($data) );
         
-        return response()->json( $data );
+
+        if( Config('params.fixCLPUSD') ) {
+            $clpbtc = $data[0]->exchrate ;
+            $btcusd = $data[1]->exchrate ;
+            $clpusd = $data[2]->exchrate ;
+            foreach($data1 as $index => $d) {
+                if($index == 0 ) {
+                    $d->exchrate = (($clpusd>1) ? $clpusd : 1) / $btcusd;
+                }
+                if($index == 1 ) {
+                    $d->exchrate = $btcusd;
+                }
+                if($index == 2 ) {
+                    $d->exchrate = ($clpusd>1) ? $clpusd : 1;
+                }
+            }
+        }
+
+        return response()->json( $data1 );
         
     }
 

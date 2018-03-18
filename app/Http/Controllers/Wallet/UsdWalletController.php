@@ -189,6 +189,7 @@ class UsdWalletController extends Controller
             if($usdAmountErr == '')
             {
                 $clpRate = ExchangeRate::getCLPUSDRate();
+                if($clpRate < config('app.clp_target_price')) $clpRate = config('app.clp_target_price');
                 $amountCLP = $request->usdAmount / $clpRate;
 
                 $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;
