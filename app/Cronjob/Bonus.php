@@ -69,8 +69,13 @@ class Bonus
 					Wallet::create($fieldUsd);
 
 					//Update cron status from 0 => 1
-					$cronStatus->status = 1;
-					$cronStatus->save();
+					if(isset($cronStatus)) {
+						$cronStatus->status = 1;
+						$cronStatus->save();
+					} else {
+						Log::info("bonusDayCron cron job have user " . $user->userId . " have no logs row");
+						continue;
+					} 
 				}
 			}
 
@@ -232,8 +237,11 @@ class Bonus
 			}
 
 			//Update cron status from 0 => 1
-			$cronStatus->status = 1;
-			$cronStatus->save();
+			if(isset($cronStatus)) {
+				$cronStatus->status = 1;
+				$cronStatus->save();
+			}
+			
 		}
 
 		//Update status from 1 => 0 after run all user
@@ -314,8 +322,10 @@ class Bonus
 						Wallet::create($fieldInvest);
 
 						//Update cron status from 0 => 1
-						$cronStatus->status = 1;
-						$cronStatus->save();
+						if(isset($cronStatus)) {
+							$cronStatus->status = 1;
+							$cronStatus->save();
+						}
 					}
 				}
 			}
