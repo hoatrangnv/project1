@@ -460,6 +460,9 @@ class UsdWalletController extends Controller
                 ];
                 Wallet::create($clpBuyPackage);
 
+                $transferee->userCoin->clpCoinAmount = $transferee->userCoin->clpCoinAmount - $transferAmount;
+                $transferee->userCoin->save();
+
                 $transferee->userData->packageDate = date('Y-m-d H:i:s');
                 $transferee->userData->packageId = $upgradeToPackage->id;
                 $transferee->userData->status = 1;
