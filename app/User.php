@@ -120,10 +120,10 @@ class User extends Authenticatable
                     Wallet::create($fieldInvest);
                 }
                 if($packageBonus > 0)
-                    self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
+                    self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level, $name);
             }
             if($userData)
-                self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
+                self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1), $name);
             self::bonusBinaryThisWeek($refererId);
         }
     }

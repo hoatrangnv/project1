@@ -24,7 +24,6 @@ use function Sodium\compare;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
 use Google2FA;
-use Log;
 
 /**
  * Description of UsdWalletController
@@ -469,7 +468,7 @@ class UsdWalletController extends Controller
                 ]);
 
                 // Calculate fast start bonus
-                User::investBonus($transferee->id, $transferee->refererId, $upgradeToPackage->id, $transferAmount, $transferee->name);
+                User::investBonus($transferee->id, $transferee->refererId, $upgradeToPackage->id, $transferAmount, 1, $transferee->name);
 
                 // Case: User already in tree and then upgrade package => re-calculate loyalty
                 if($transferee->userData->binaryUserId && $transferee->userData->packageId > 0)
