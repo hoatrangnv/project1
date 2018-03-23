@@ -188,22 +188,8 @@ class UsdWalletController extends Controller
      
             if($usdAmountErr == '')
             {
-                /* 
-                 * Dont use the ExchangeRate::getCLPUSDRate();
-                 * Instead use GetExchRate() which return json object;
-                 */
                 $clpRate = ExchangeRate::getCLPUSDRate();
                 if($clpRate < config('app.clp_target_price')) $clpRate = config('app.clp_target_price');
-
-                $rateObj = ExchangeRate::getExchRate();
-                $i = 0;
-                foreach ($rateObj as $r) {
-                    if($i==1) $rates = $r;
-                    $i++;
-                }
-                $clpRate = $rates[2]->exchrate;
-                // Changes ends here
-                
                 $amountCLP = $request->usdAmount / $clpRate;
 
                 $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;

@@ -51,7 +51,7 @@
                             <tbody>
                             @foreach($result as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->uid }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
                                     <td>@isset($item->usercoin->btcCoinAmount){{ number_format($item->usercoin->btcCoinAmount, 5) }}@endisset</td>
