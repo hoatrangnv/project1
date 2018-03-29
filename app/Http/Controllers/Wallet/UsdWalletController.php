@@ -15,6 +15,7 @@ use App\User;
 use App\Wallet;
 use App\Package;
 use App\UserCoin;
+use App\UserCoinUsd;
 use App\ExchangeRate;
 use App\UserOrder;
 use App\UserPackage;
@@ -24,6 +25,8 @@ use function Sodium\compare;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
 use Google2FA;
+
+use Log;
 
 /**
  * Description of UsdWalletController
@@ -175,16 +178,17 @@ class UsdWalletController extends Controller
             /** Remove **/
             
             $userCoin = Auth::user()->userCoin;
+            $free_to_use = empty($userCoin->userCoinUsd) ? $userCoin->usdAmount : $userCoin->userCoinUsd->usdAmountFree;
 
             $usdAmountErr = '';
             if($request->usdAmount == ''){
                 $usdAmountErr = trans('adminlte_lang::wallet.msg_usd_amount_required');
             }elseif (!is_numeric($request->usdAmount) || $request->usdAmount < 0){
                 $usdAmountErr = trans('adminlte_lang::wallet.amount_number');
-            }elseif ($userCoin->usdAmount < $request->usdAmount){
+            }elseif ($free_to_use < $request->usdAmount){
                 $usdAmountErr = trans('adminlte_lang::wallet.error_not_enough');
             }
-     
+
             if($usdAmountErr == '')
             {
                 $clpRate = ExchangeRate::getCLPUSDRate();
@@ -194,6 +198,19 @@ class UsdWalletController extends Controller
                 $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;
                 $userCoin->clpCoinAmount =  $userCoin->clpCoinAmount + $amountCLP;
                 $userCoin->save();
+
+                if( empty($userCoin->userCoinUsd) ) {
+                    $record = [
+                        userid          => Auth::user()->id,
+                        usdAmountFree   => $userCoin->usdAmount - $request->usdAmount,
+                        usdAmountHold   => 0,
+                    ];
+                    $userCoin->userCoinUsd::create($record);
+                } else {
+                    // update
+                    $userCoin->userCoinUsd->usdAmountFree = $userCoin->userCoinUsd->usdAmountFree - $request->usdAmount;
+                    $userCoin->userCoinUsd->save();
+                }
 
                 $usd_to_clp = [
                     "walletType" => Wallet::USD_WALLET,
@@ -213,7 +230,6 @@ class UsdWalletController extends Controller
                     "amount"     => $amountCLP,
                     "note"      => "Rate " . $clpRate . '$',
                 ];
-                // Bulk insert
                 $result = Wallet::create($clp_from_usd);
 
                 $request->session()->flash( 'successMessage', "Buy CLP successfully!" );
@@ -255,17 +271,19 @@ class UsdWalletController extends Controller
 
 
     public function getTransferAndBuyPackages(Request $request) {
-        $userId = $request->get('id', 0);
-        $userName = $request->get('username', '');
-        if($userId > 0 || $userName != ''){
-            if($userId > 0)
-                $user = User::where('uid', $userId)->where('active', 1)->first();
-            elseif($userName != '')
-                $user = User::where('name', '=', $userName)->where('active', 1)->first();
 
+        if ( $request->ajax() ) {
+
+            $user = User::where('uid', $request->get('id', 0))
+                        ->orWhere('name', $request->get('username', ''))
+                        ->where('active', 1)
+                        ->first();
+            
             if(empty($user)) {
                 return response()->json(['err' => trans('adminlte_lang::message.user_not_found')]);
             }
+
+            $packages = Package::orderBy('price')->get();
 
             if(empty($user->userData->packageId)) {
                 $myPackageId = 0;
@@ -275,19 +293,12 @@ class UsdWalletController extends Controller
                 $myPackage = Package::where('id', $myPackageId)->get()->first();
                 $myPackagePrice = $myPackage->price;
             }
-
-            $packages = Package::orderBy('price')->get();
-
+    
             $transferOptions = [];
             foreach($packages as $package) {
-                $index = $package->id * (($package->id>$myPackageId) ? 1 : -1);
-                $price_diff = ($package->price > $myPackagePrice) ? '$'. number_format($package->price - $myPackagePrice,2) : trans('adminlte_lang::message.not_available');
-                $transferOptions[$package->id] =  
-                    ($myPackageId ? trans('adminlte_lang::message.upgrade_to') : trans('adminlte_lang::message.activate_user_package_to')) . ' ' . $package->name . '  (' . $price_diff . ')';
-            }
-
-            foreach($packages as $package) {
-                $price_diff = ($package->price > $myPackagePrice) ? '$'. number_format($package->price - $myPackagePrice,2) : trans('adminlte_lang::message.not_available');
+                $price_diff = ($package->price > $myPackagePrice) ? 
+                            '$'. number_format($package->price - $myPackagePrice - $user->userCoin->userCoinUsd->usdAmountHold, 2) : 
+                            trans('adminlte_lang::message.not_available');
                 $transferOptions[$package->id] = [
                     'name' => $package->name,
                     'price' => $package->price,
@@ -301,8 +312,95 @@ class UsdWalletController extends Controller
                 'id' => $user->uid, 
                 'username' => $user->name, 
                 'transferoptions' => $transferOptions]);
+
         }
-        return response()->json(['err' => trans('adminlte_lang::message.user_not_found')]);
+    }
+
+
+    public function usdTransferValidate(Request $request) {
+        if ( $request->ajax() ) {
+
+            // validate transferee if username is provided
+            if( $request->username == '' ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.user_required') ]);
+            } elseif( !preg_match('/^\S*$/u', $request->username) ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.user_notspace') ]);
+            } elseif( !User::where('name', $request->username)->where('active', 1)->count() ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.username_invalid') ]);
+            } elseif( $request->username == Auth()->user()->name ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.cannot_send_yourself') ]);
+            }
+
+            // or validate transferee if user id is provided
+            if( $request->userid == '' ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.uid_required') ]);
+            } elseif( !preg_match('/^\S*$/u', $request->userid) ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.uid_notspace') ]);
+            } elseif(!User::where('uid', $request->userid)->where('active', 1)->count()) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.uid_invalid') ]);
+            } elseif( $request->userid == Auth()->user()->uid ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.cannot_send_yourself') ]);
+            }
+
+            // or check if user transfer and transfee are up/down line related & no side line
+            $transferer = Auth()->user();
+            $transferUsdWallet = $transferer->usercoin->usdAmount;
+            $transferee = User::where('name', $request->username)->where('uid', $request->userid)->where('active', 1)->first();
+            $transferer_uplines = $transferer->upLines();
+
+Log::debug('------------- usdTransferValidate --------------');
+Log::debug( 'Transferer = ' . $transferer->id . ' ' . $transferer->name);
+Log::debug( 'Transferee = ' . $transferee->id . ' ' . $transferee->name);
+if( $transferer->isUpline($transferee->id) ) {
+    Log::debug( 'Is ' . $transferer->name . '(' . $transferer->id . ') upline of ' . $transferee->name . '(' . $transferee->id . ') : Yes' ) ;
+} else {
+    Log::debug( 'Is ' . $transferer->name . '(' . $transferer->id . ') upline of ' . $transferee->name . '(' . $transferee->id . ') : No' ) ;
+}
+if( $transferee->isUpline($transferer->id) ) {
+    Log::debug( 'Is ' . $transferer->name . '(' . $transferer->id . ') downline of ' . $transferee->name . '(' . $transferee->id . ') : Yes' ) ;
+} else {
+    Log::debug( 'Is ' . $transferer->name . '(' . $transferer->id . ') downline of ' . $transferee->name . '(' . $transferee->id . ') : No' ) ;
+}
+if( empty($transferer->userCoin->userCoinUsd) ) {
+    Log::debug( 'Transferer max Free amount = ' . 'no record created yet' );
+} else {
+    Log::debug( 'Transferer max Free amount = ' . $transferer->userCoin->userCoinUsd->usdAmountFree );
+}
+if( empty($transferee->userCoin->userCoinUsd) ) {
+    Log::debug( 'Transferee Hold account = ' . 'no record created yet' );
+} else {
+    Log::debug( 'Transferee Hold account = ' . $transferee->userCoin->userCoinUsd->usdAmountHold );
+}
+Log::debug( 'Transferee current package : ' . $transferee->userData->package );
+Log::debug('----------------------------------------------');
+
+            if( !$transferer->isUpline($transferee->id) && !$transferee->isUpline($transferer->id) ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.not_related') ]);
+            }
+
+            // validate the transfer amount 
+            // 1. cannot be less than 0
+            // 2. cannot be greater than package price different - transferee's USD in hold
+            if( $request->trfAmount <= 0) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.amount_need_positive') ]);
+            }
+            $free_to_use = empty($transferer->userCoin->userCoinUsd) ? $transferer->usercoin->usdAmount : $transferer->userCoin->userCoinUsd->usdAmountFree;
+            $transferer_usd_wallet_balance = $transferer->usercoin->usdAmount;
+            if( $request->trfAmount > $free_to_use ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.insufficient_balance') ]);
+            }
+            $transferee = User::where('name', $request->username)->where('uid', $request->userid)->where('active', 1)->first();
+            $usdAmountHold = empty($transferee->userCoin->userCoinUsd->usdAmountHold) ? 0 : $transferee->userCoin->userCoinUsd->usdAmountHold;
+
+            $biggestPackage = Package::orderBy('price')->get()->last()->price;
+            $currentPackage = empty($transferee->userData->package) ? 0 : $transferee->userData->package->price;
+            $maxTransferAmount = $biggestPackage - $currentPackage - $usdAmountHold;
+
+            if( $request->trfAmount > $maxTransferAmount) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.exceed_transferee_limit') ]);
+            }
+
+        }
     }
 
 
@@ -310,7 +408,7 @@ class UsdWalletController extends Controller
 
         if($request->ajax()) {
 
-            // validate transferee 
+            // validate transferee if username is provided
             if( $request->username == '' ){
                 return response()->json(['err' => trans('adminlte_lang::wallet.user_required') ]);
             } elseif( !preg_match('/^\S*$/u', $request->username) ) {
@@ -319,32 +417,47 @@ class UsdWalletController extends Controller
                 return response()->json(['err' => trans('adminlte_lang::wallet.username_invalid') ]);
             }
 
-            if( $request->userId == '' ){
+            // or validate transferee if user id is provided
+            if( $request->userid == '' ){
                 return response()->json(['err' => trans('adminlte_lang::wallet.uid_required') ]);
-            } elseif( !preg_match('/^\S*$/u', $request->userId) ) {
+            } elseif( !preg_match('/^\S*$/u', $request->userid) ) {
                 return response()->json(['err' => trans('adminlte_lang::wallet.uid_notspace') ]);
-            } elseif(!User::where('uid', $request->userId)->where('active', 1)->count()) {
+            } elseif(!User::where('uid', $request->userid)->where('active', 1)->count()) {
                 return response()->json(['err' => trans('adminlte_lang::wallet.uid_invalid') ]);
             }
 
+            // or check if user transfer and transfee are up/down line related & no side line
             $transferer = Auth()->user();
             $transferUsdWallet = $transferer->usercoin->usdAmount ;
-
-            $transferee = User::where('name', $request->username)->where('uid', $request->userId)->where('active', 1)->first();
-            if( $transferee->userData->packageId ) {
-                $transfereePackage = Package::where('id', $transferee->userData->packageId)->get()->first();
-                $transfereePackagePrice = $transfereePackage->price;
-                $transfereeCurrentPackage = $transfereePackage;
-            } else {
-                $transfereePackagePrice = 0;
+            $transferee = User::where('name', $request->username)->where('uid', $request->userid)->where('active', 1)->first();
+            $transferer_uplines = $transferer->upLines();
+            if( !$transferer->isUpline($transferee->id) && !$transferee->isUpline($transferer->id)) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.not_related') ]);
             }
-            
-            $upgradeToPackage = Package::where('id', $request->packageId)->get()->first();
-            $transferAmount = $upgradeToPackage->price - $transfereePackagePrice;
 
-            // Validate sufficient money for transfer
-            if( $transferUsdWallet<$transferAmount ) {
-                return response()->json(['err' => trans('adminlte_lang::wallet.error_not_enough') ]);
+            if( !$transferer->isUpline($transferee->id) && !$transferee->isUpline($transferer->id)) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.not_related') ]);
+            }
+
+            // validate the transfer amount 
+            // 1. cannot be less than 0
+            // 2. cannot be greater than package price different - transferee's USD in hold
+            if( $request->trfAmount <= 0) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.amount_need_positive') ]);
+            }
+            $free_to_use = empty($transferer->userCoin->userCoinUsd) ? $transferer->usercoin->usdAmount : $transferer->userCoin->userCoinUsd->usdAmountFree;
+            $transferer_usd_wallet_balance = $transferer->usercoin->usdAmount;
+            if( $request->trfAmount > $free_to_use ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.insufficient_balance') ]);
+            }
+            $transferee = User::where('name', $request->username)->where('uid', $request->userid)->where('active', 1)->first();
+            $usdAmountHold = empty($transferee->userCoin->userCoinUsd->usdAmountHold) ? 0 : $transferee->userCoin->userCoinUsd->usdAmountHold;            
+            $biggestPackage = Package::orderBy('price')->get()->last()->price;
+            $currentPackage = empty($transferee->userData->package) ? 0 : $transferee->userData->package->price;
+            $maxTransferAmount = $biggestPackage - $usdAmountHold;
+
+            if( $request->trfAmount > $maxTransferAmount) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.exceed_transferee_limit') ]);
             }
 
             // Validate the OTP
@@ -359,12 +472,15 @@ class UsdWalletController extends Controller
             //     }
             // }
 
-
             // Update the transaction deatil tables & the USD Wallet Balance (Step 1 of 3)
             $currentDate = date("Y-m-d");
-	        $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
+            $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
+            $transferAmount = $request->trfAmount;
+            $usdAmountHold = empty($transferee->userCoin->userCoinUsd->usdAmountHold) ? 0 : $transferee->userCoin->userCoinUsd->usdAmountHold;
+
             if($request->isMethod('post') && ($currentDate > $preSaleEnd))
 	        {
+                // Update the transaction ledger in wallet table
                 $transferOutDetail = [
                     'walletType'        => Wallet::USD_WALLET,
                     'type'              => Wallet::TRANSFER_USD_TYPE,
@@ -385,107 +501,40 @@ class UsdWalletController extends Controller
                 ];
                 Wallet::create($transferInDetail);
 
+                // Update user balance in user_coins table
                 $transferer->userCoin->usdAmount = $transferer->userCoin->usdAmount - $transferAmount;
                 $transferer->userCoin->save();
 
                 $transferee->userCoin->usdAmount = $transferee->userCoin->usdAmount + $transferAmount;
                 $transferee->userCoin->save();
 
-    // $user->notify( new UserLoginNotification($user) );
-
-                // Transferee converts USD to CLP (Step 2 of 3)
-                $sendUsdToClp = [
-                    'walletType'        => Wallet::USD_WALLET,
-                    'type'              => Wallet::USD_CLP_TYPE,
-                    'inOut'             => Wallet::OUT,
-                    'userId'            => $transferee->id,
-                    'amount'            => $transferAmount,
-                    'note'              => 'Rate 1.0 USD',
-                ];
-                Wallet::create($sendUsdToClp);
-
-                $sendUsdToClp = [
-                    'walletType'        => Wallet::CLP_WALLET,
-                    'type'              => Wallet::USD_CLP_TYPE,
-                    'inOut'             => Wallet::IN,
-                    'userId'            => $transferee->id,
-                    'amount'            => $transferAmount,
-                    'note'              => 'Rate 1.0 USD',
-                ];
-                Wallet::create($sendUsdToClp);
-
-                $transferee->userCoin->usdAmount = $transferee->userCoin->usdAmount - $transferAmount;
-                $transferee->userCoin->save();
-
-                $transferee->userCoin->clpCoinAmount = $transferee->userCoin->clpCoinAmount + $transferAmount;
-                $transferee->userCoin->save();
-
-                // Transferee acquire the Package (activate or upgrade) from CLP (Step 3 of 3)
-                $orderField=[
-                    'userId'            => $transferee->id,
-                    'packageId'         => $upgradeToPackage->id,
-                    'walletType'        => Wallet::CLP_WALLET,
-                    'amountCLP'         => $transferAmount,
-                    'amountBTC'         => null,
-                    'buy_date'          => (new \DateTime())->format('Y-m-d H:i:s'),
-                    'paid_date'         => null,
-                    'type'              => ($transferAmount == $upgradeToPackage->price) ? UserOrder::TYPE_UPGRADE : UserOrder::TYPE_NEW,
-                    'original'          => ($transferAmount == $upgradeToPackage->price) ? 0 : $transfereeCurrentPackage->id,
-                    'status'            => UserOrder::STATUS_PAID,
-                ];
-                UserOrder::create($orderField);
-
-                $clpBuyPackage = [
-                    'walletType'        => Wallet::CLP_WALLET,
-                    'type'              => Wallet::BUY_PACK_TYPE,
-                    'inOut'             => Wallet::OUT,
-                    'userId'            => $transferee->id,
-                    'amount'            => $transferAmount,
-                    'note'              => $transferee->name . ' bought package',
-                ];
-                Wallet::create($clpBuyPackage);
-
-                $transferee->userCoin->clpCoinAmount = $transferee->userCoin->clpCoinAmount - $transferAmount;
-                $transferee->userCoin->save();
-
-                $transferee->userData->packageDate = date('Y-m-d H:i:s');
-                $transferee->userData->packageId = $upgradeToPackage->id;
-                $transferee->userData->status = 1;
-                $transferee->userData->save();
-
-                $weeked = date('W');
-                $year = date('Y');
-                $weekYear = $year.$weeked;
-
-                if($weeked < 10) $weekYear = $year.'0'.$weeked;
-                UserPackage::create([
-                    'userId'            => $transferee->id,
-                    'packageId'         => $upgradeToPackage->id,
-                    'amount_increase'   => $transferAmount,
-                    'buy_date'          => date('Y-m-d H:i:s'),
-                    'release_date'      => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 6 months")),
-                    'weekYear'          => $weekYear,
-                ]);
-
-                // Calculate fast start bonus
-                User::investBonus($transferee->id, $transferee->refererId, $upgradeToPackage->id, $transferAmount, 1, $transferee->name);
-
-                // Case: User already in tree and then upgrade package => re-calculate loyalty
-                if($transferee->userData->binaryUserId && $transferee->userData->packageId > 0)
-                    User::bonusLoyaltyUser($transferee->userData->userId, $transferee->userData->refererId, $transferee->userData->leftRight);
-
-                // Case: User already in tree and then upgrade package => re-caculate binary bonus
-                if($transferee->userData->binaryUserId > 0 && in_array($transferee->userData->leftRight, ['left', 'right'])) {
-                    $leftRight = $transferee->userData->leftRight == 'left' ? 1 : 2;
-                    User::bonusBinary($transferee->userData->userId, 
-                        $transferee->userData->refererId, 
-                        $transferee->userData->packageId, 
-                        $transferee->userData->binaryUserId, 
-                        $transferee->leftRight,
-                        true,
-                        false
-                    );
+                // Update user USD balance break (free and hold) amount
+                if ( empty($transferer->userCoin->userCoinUsd) ) {
+                    $record = [
+                        'userId'            => $transferer->id,
+                        'usdAmountHold'     => 0,
+                        'usdAmountFree'     => $transferer->userCoin->usdAmount,
+                    ];
+                    UserCoinUsd::create($record);
+                } else {
+                    $transferer->userCoin->userCoinUsd->usdAmountFree = $transferer->userCoin->userCoinUsd->usdAmountFree - $transferAmount;
+                    $transferer->userCoin->userCoinUsd->save();
                 }
+
+                if ( empty($transferee->userCoin->userCoinUsd) ) {
+                    $record = [
+                        'userId'            => $transferee->id,
+                        'usdAmountHold'     => $transferAmount,
+                        'usdAmountFree'     => $transferee->userCoin->usdAmount - $transferAmount,
+                    ];
+                    UserCoinUsd::create($record);
+                } else {
+                    $transferee->userCoin->userCoinUsd->usdAmountHold = $transferee->userCoin->userCoinUsd->usdAmountHold + $transferAmount;
+                    $transferee->userCoin->userCoinUsd->save();
+                }
+
+
+                // $user->notify( new UserLoginNotification($user) );
 
 
             }
@@ -496,5 +545,5 @@ class UsdWalletController extends Controller
         }
         return response()->json(['err' => false, 'msg' => null]);
     }
-}
 
+}

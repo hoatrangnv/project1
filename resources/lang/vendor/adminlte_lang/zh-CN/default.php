@@ -20,6 +20,8 @@ return [
     'btn_delete'                => '删除',
     'btn_view'                  => '更多信息',
     'btn_sign_in'               => '登录',
+    'warning'                   => '警告',
+    'error'                     => '错误',
     'remember_me'               => '记住我',
     'create_at'                 => '创建日期',
     'update_at'                 => '更新日期',

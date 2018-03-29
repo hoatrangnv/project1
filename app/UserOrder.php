@@ -10,7 +10,7 @@
 		const TYPE_NEW=1;
 		const TYPE_UPGRADE=2;
 		
-		protected $fillable = ['userId', 'packageId','walletType','amountCLP','amountBTC','status','buy_date','paid_date','type','original'];
+		protected $fillable = ['userId', 'packageId','walletType','amountUSD','amountCLP','amountBTC','status','buy_date','paid_date','type','original'];
 		    public function package() {
 		        return $this->hasOne(Package::class, 'id', 'packageId');
 		    }

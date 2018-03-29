@@ -119,7 +119,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::post('wallets/buyclpusd', 'Wallet\UsdWalletController@buyCLP')->name('usd.buyclp');
     Route::post('wallets/transferusd', 'Wallet\UsdWalletController@transferUSD')->name('usd.transferusd');
-
+    Route::get('wallets/usdTransferValidate', 'Wallet\UsdWalletController@usdTransferValidate')->name('usd.usdTransferValidate');
 
 
     Route::get('mybonus/faststart', 'MyBonusController@faststart');

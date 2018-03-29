@@ -75,7 +75,8 @@
 	                            <th>Date/Time</th>
 	                            <th>Package</th>
 	                            <th>Purchased By</th>
-	                            <th>CLP Amount</th>
+	                            <th>USD Amount</th>
+                                <th>CLP Amount</th>
 	                            <th>BTC Amount</th>
 	                            <th>Status</th>
 	                            <th>Action</th>
@@ -87,8 +88,9 @@
 									<tr>
 										<td>{{$userOrder->buy_date}}</td>
 										<td>{{$userOrder->package->name}}</td>
-										<td>{{$userOrder->walletType==2?'BTC':'CLP'}}</td>
-										<td>{{$userOrder->amountCLP}}</td>
+										<td class="text-center">{{$userOrder->walletType==1?'USD':($userOrder->walletType==2?'BTC':'CLP')}}</td>
+										<td>{{$userOrder->amountUSD}}</td>
+                                        <td>{{$userOrder->amountCLP}}</td>
 										<td>{{$userOrder->amountBTC}}</td>
 										<td>
 											@if($userOrder->status==1)
