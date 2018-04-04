@@ -19,6 +19,9 @@ class UserCoin extends Model
     public function user() {
         return $this->hasOne(User::class, 'id', 'userId');
     }
+    public function userCoinUsd() {
+        return $this->hasOne(UserCoinUsd::class, 'userId');
+    }
 
     public static function  getTotalWithdrawTransferDay($userId)
     {

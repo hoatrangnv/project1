@@ -107,6 +107,7 @@ return [
     'btn_copy'                  => "复制",
     'amount_number'             => '金额必须是数字',
     'amount_required'           => '金额是必需的',
+    'amount_need_positive'      => '金额必须为正值',
     'msg_usd_amount_required'   => '美元金额是必需的',
     'username_required'         => '用户名是必需的',
     'username_notspace'         => '用户名不能有空格',
@@ -130,5 +131,9 @@ return [
     '2fa_code'                  => '2FA 代碼 例如 123456',
     'select_an_option'          => '选择一个选项',
     'transfer_completed'        => '传输完成',
+    'not_related'               => '你与承让人不是上线关系，不能转账!',
+    'insufficient_balance'      => '余额不足',
+    'exceed_transferee_limit'   => '您的转金額超过承让人可以接受',
+    'cannot_send_yourself'      => '无法转移给自己',
 
 ];

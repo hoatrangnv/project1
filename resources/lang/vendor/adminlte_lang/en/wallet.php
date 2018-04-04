@@ -107,6 +107,7 @@ return [
     'btn_copy'                  => "copy",
     'amount_number'             =>'The Amount must be a number',
     'amount_required'           =>'The Amount is required',
+    'amount_need_positive'      => 'Amount must be positive',
     'msg_usd_amount_required'   =>'The USD Amount is required',
     'username_required'         =>'The Username is required',
     'username_notspace'         =>'The Username does\'t have spaces',
@@ -130,5 +131,9 @@ return [
     '2fa_code'                  => '2FA Code E.g. 123456',
     'select_an_option'          => 'Select an option',
     'transfer_completed'        => 'Transfer Completed',
+    'not_related'               => 'You are not transferee upline nor downline. Cannot transfer!',
+    'insufficient_balance'      => 'Insufficient balance',
+    'exceed_transferee_limit'   => 'You are transfering more than transfere can accept',
+    'cannot_send_yourself'      => 'Cannot transfer to yourself',
 
 ];

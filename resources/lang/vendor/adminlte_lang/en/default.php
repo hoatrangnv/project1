@@ -23,6 +23,8 @@ return [
     'btn_delete'                => 'Delete',
     'btn_view'                  => 'More info',
     'btn_sign_in'               => 'Sign in',
+    'warning'                   => 'Warning',
+    'error'                     => 'Error',
     'remember_me'               => 'Remember me',
 	'create_at'                 => 'Date Created',
 	'update_at'                 => 'Date Updated',

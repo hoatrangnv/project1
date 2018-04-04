@@ -48,7 +48,7 @@
                                 </th>
                                 <th>
                                     <button class="btn bg-olive" data-toggle="modal" data-target="#modal-buyCLP">{{ trans('adminlte_lang::general.btn_buy_clp') }}</button>
-                                    <button class="btn bg-olive" data-toggle="modal" data-target="#modal-transferandbuyUSD">{{ trans('adminlte_lang::general.btn_transfer_and_buy') }}</button>
+                                    <button class="btn bg-olive" data-toggle="modal" data-target="#modal-transferandbuyUSD">{{ trans('adminlte_lang::general.btn_transfer') }}</button>
                                 </th>
                             </tr>
                         </table>
@@ -188,7 +188,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="fa fa-dollar"></span></span>
-                                    {{ Form::select('trfOptions', [], '', ['class' => 'form-control select2', 'id' => 'trfOptions']) }}
+                                    {{ Form::number('trfAmount', '', ['class' => 'form-control input-sm switch-USD-to-CLP trf-input', 'id' => 'trfAmount', 'placeholder' => trans('adminlte_lang::wallet.usd_amount')] ) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>
@@ -280,7 +280,7 @@
             $('#transferandbuyUSD').on('click', function () {
                 var trfUsername = $('#trfUsername').val();
                 var trfUid = $('#trfUid').val();
-                var trfOptions = $('#trfOptions').val();
+                var trfAmount = $('#trfAmount').val();
                 var trfOTP = $('#trfOTP').val();
                 if($.trim(trfUsername) == ''){
                     $("#trfUsername").parents("div.form-group").addClass('has-error');
@@ -296,31 +296,30 @@
                     $("#trfUid").parents("div.form-group").removeClass('has-error');
                     $("#trfUid").parents("div.form-group").find('.help-block').text('');
                 }
-                if($.trim(trfOptions) == ''){
-                    $("#trfOptions").parents("div.form-group").addClass('has-error');
-                    $("#trfOptions").parents("div.form-group").find('.help-block').text("{{ trans('adminlte_lang::wallet.select_an_option') }}");
+                if($.trim(trfAmount) == ''){
+                    $("#trfAmount").parents("div.form-group").addClass('has-error');
+                    $("#trfAmount").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::message.usd_amount_required')}}");
                 }else{
-                    $("#trfOptions").parents("div.form-group").removeClass('has-error');
-                    $("#trfOptions").parents("div.form-group").find('.help-block').text('');
+                    $("#trfAmount").parents("div.form-group").removeClass('has-error');
+                    $("#trfAmount").parents("div.form-group").find('.help-block').text('');
                 }
                 if($.trim(trfOTP) == ''){
                     $("#trfOTP").parents("div.form-group").addClass('has-error');
-                    $("#trfOTP").parents("div.form-group").find('.help-block').text("{{ trans('adminlte_lang::wallet.otp_required') }}");
+                    $("#trfOTP").parents("div.form-group").find
+                    ('.help-block').text("{{ trans('adminlte_lang::wallet.otp_required') }}");
                 }else{
                     $("#trfOTP").parents("div.form-group").removeClass('has-error');
                     $("#trfOTP").parents("div.form-group").find('.help-block').text('');
                 }
-
                 $.ajax({
                     type: "GET",
-                    url:"{{ url('wallets/usd/gettransferandbuypackges')}}/",
-                    data: {username : trfUsername},
+                    url:"{{ route('usd.usdTransferValidate') }}",
+                    data: {username: trfUsername, userid: trfUid, trfAmount: trfAmount},
                 }).done(function(data){
-                    trfAmount = data.transferoptions[trfOptions].amount;
                     swaltitle= "{{ trans('adminlte_lang::wallet.transfer') }} $" + trfAmount + " {{ trans('adminlte_lang::wallet.to') }} " + trfUsername;
                     if(data.err) {
                         $('#tranfer').modal('hide');
-                        swal("{{ trans('adminlte_lang::message.something_goes_wrong') }}");
+                        swal( "", data.err, "error" );
                     } else {
                         swal({
                             title: "",
@@ -328,7 +327,7 @@
                             type: "warning",
                             showCancelButton: true,
                             confirmButtonClass: "btn-danger",
-                            confirmButtonText: "{{trans('adminlte_lang::wallet.msg_sure_confirm')}}",
+                            confirmButtonText: "{{trans('adminlte_lang::general.yes')}}",
                             cancelButtonText: "{{trans('adminlte_lang::general.no')}}",
                             closeOnConfirm: true,
                             closeOnCancel: true,
@@ -338,7 +337,7 @@
                                 $.ajax({
                                     method : 'POST',
                                     url: "{{ route('usd.transferusd') }}",
-                                    data: {username: trfUsername, userId: trfUid, packageId: trfOptions, OTP: trfOTP}
+                                    data: {username: trfUsername, userid: trfUid, trfAmount: trfAmount, OTP: trfOTP}
                                 }).done(function (data) {
                                     if (data.err) {
                                     } else {
@@ -387,34 +386,28 @@
         });
         
         var mytimer;
-        $('#usdUid').on('blur onmouseout keyup', function () {
+        $('#trfUid').on('blur onmouseout keyup', function () {
             clearTimeout(mytimer);
             var search = $(this).val();
             if(search.length >= 1){
                 mytimer = setTimeout(function(){
                     $.ajax({
                         type: "GET",
-                        url:"{{ url('wallets/usd/gettransferandbuypackges')}}/",
+                        url: "/users/search",
                         data: {id : search}
                     }).done(function(data){
+console.log(data);
                         var output = [];
-                        output.push('<option value="0" disabled selected>{{trans("adminlte_lang::message.please_select_package")}}</option>');
                         if(data.err) {
-                            $("#usdUid").parents("div.form-group").addClass('has-error');
-                            $("#usdUid").parents("div.form-group").find('.help-block').text(data.err);
-                            $('#usdUsername').val('');
-                            $('#usdTransferOptions').html(output.join(''));
+                            $("#trfUid").parents("div.form-group").addClass('has-error');
+                            $("#trfUid").parents("div.form-group").find('.help-block').text(data.err);
+                            $('#trfUsername').val('');
                         }else{
-                            $('#usdUid').parent().removeClass('has-error');
-                            $("#usdUid").parents("div.form-group").find('.help-block').text('');
-                            $('#usdUsername').parent().removeClass('has-error');
-                            $('#usdUsername').parent().find('.help-block').text('');
-                            $('#usdUsername').val(data.username);
-                            $('#usdTransferOptions').length = 0;
-                            $.each(data.transferoptions, function(key, value) {
-                                output.push('<option value="' + key + '" ' + (value.enable? '' : 'disabled') + '>' + value.text + '</option>');
-                            });
-                            $('#usdTransferOptions').html(output.join(''));
+                            $('#trfUid').parent().removeClass('has-error');
+                            $("#trfUid").parents("div.form-group").find('.help-block').text('');
+                            $('#trfUsername').parent().removeClass('has-error');
+                            $('#trfUsername').parent().find('.help-block').text('');
+                            $('#trfUsername').val(data.username);
                         }
                     });
                 }, 1000);
@@ -431,29 +424,22 @@
                     $('#trfUid').parents("div.form-group").find('.input-group-addon').append('<i class="fa fa-spinner"></i>');
                     $.ajax({
                         type: "GET",
-                        url:"{{ url('wallets/usd/gettransferandbuypackges')}}/",
+                        url: "/users/search",
                         data: {username : search}
                     }).done(function(data){
                         var output = [];
-                        output.push('<option value="0" disabled selected>{{trans("adminlte_lang::message.please_select_package")}}</option>');
                         $('#trfUid').parents("div.form-group").find('.fa-spinner').remove();
                         $('#trfUid').parents("div.form-group").find('.input-group-addon').append('<i class="fa fa-id-card-o"></i>');
                         if(data.err) {
                             $("#trfUsername").parents("div.form-group").addClass('has-error');
                             $("#trfUsername").parents("div.form-group").find('.help-block').text(data.err);
                             $('#trfUid').val('');
-                            $('#trfTransferOptions').html(output.join(''));
                         }else{
                             $('#trfUsername').parents("div.form-group").removeClass('has-error');
                             $("#trfUsername").parents("div.form-group").find('.help-block').text('');
                             $('#trfUid').parents("div.form-group").removeClass('has-error');
                             $('#trfUid').parents("div.form-group").find('.help-block').text('');
                             $('#trfUid').val(data.id);
-                            $('#trfTransferOptions').length = 0;
-                            $.each(data.transferoptions, function(key, value) {
-                                output.push('<option value="' + key + '" ' + (value.enable? '' : 'disabled') + '>' + value.text + '</option>');
-                            });
-                            $('#trfOptions').html(output.join(''));
                         }
                     }).fail(function (){
                         $('#tranfer').modal('hide');

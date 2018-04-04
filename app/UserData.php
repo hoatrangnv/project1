@@ -6,6 +6,8 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 
+use Log;
+
 class UserData extends Model
 {
     use HasRoles;
@@ -43,4 +45,23 @@ class UserData extends Model
             ->get()
             ->toArray();
     }
+
+    /**
+     * This function checks returns a list of the uplines of current user in a collecitons
+     * $this->upLines() or
+     * $this->upLines()->reverse()
+     */
+    public function genalogy_upLines()
+    {
+        $uplines = $this->where('userId', '=', $this->binaryUserId)->get();
+    
+        while ($uplines->last() && !($uplines->last()->binaryUserId == null || empty($uplines->last()->binaryUserId)))
+        {
+            $parent = $this->where('userId', '=', $uplines->last()->binaryUserId)->get();
+            $uplines = $uplines->merge($parent);
+        }
+
+        return $uplines;
+    }
+
 }

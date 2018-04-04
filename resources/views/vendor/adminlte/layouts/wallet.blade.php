@@ -43,7 +43,16 @@
                 <div class="small-box bg-yellow">
                     <div class="inner">
                         <h3 class="usd-amount">{{ number_format(Auth::user()->userCoin->usdAmount, 2) }}</h3>
+                        @if ( empty(Auth::user()->userCoin->userCoinUsd->usdAmountHold) )
                         <p>{{ trans('adminlte_lang::home.usd_wallet') }}</p>
+                        @elseif ( Auth::user()->userCoin->userCoinUsd->usdAmountHold == 0 )
+                        <p>{{ trans('adminlte_lang::home.usd_wallet') }}</p>
+                        @else 
+                        <p class="usd-amount">{{ number_format(Auth::user()->userCoin->userCoinUsd->usdAmountHold,2) }} buy package only</p>
+                        @endif
+<?php /*
+                        <p>{{ trans('adminlte_lang::home.usd_wallet') }}***</p>
+*/ ?>
                     </div>
                     <div class="icon"><i class="fa fa-usd"></i></div>
                     <a href="{{ route('wallet.usd') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>

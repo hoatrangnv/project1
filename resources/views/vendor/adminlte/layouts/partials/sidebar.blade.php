@@ -66,6 +66,7 @@
                 </span>
                 </a>
             </li>
+            <?php /*
             <li class="treeview{{ Request::is('faq*') ? ' active' : null }}">
                 <a href="#"><i class='fa fa-info'></i> <span>FAQ</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
@@ -81,6 +82,7 @@
                     </li>
                 </ul>
             </li>
+            */?>
             <li class="treeview upgrade-package">
                 <a href="javascript:;" class="btn-buyPack">
                     <i class="fa fa-level-up"></i>
