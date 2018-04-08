@@ -346,7 +346,6 @@ class UsdWalletController extends Controller
             $transferer = Auth()->user();
             $transferUsdWallet = $transferer->usercoin->usdAmount;
             $transferee = User::where('name', $request->username)->where('uid', $request->userid)->where('active', 1)->first();
-            $transferer_uplines = $transferer->upLines();
 
 /*
 Log::debug('------------- usdTransferValidate --------------');
@@ -418,7 +417,7 @@ Log::debug('----------------------------------------------');
             $transferer = Auth()->user();
             $transferUsdWallet = $transferer->usercoin->usdAmount ;
             $transferee = User::where('name', $request->username)->where('uid', $request->userid)->where('active', 1)->first();
-            $transferer_uplines = $transferer->upLines();
+
             if( !$transferer->isDownline($transferee->id) && !$transferee->isDownline($transferer->id)) {
                 return response()->json(['err' => trans('adminlte_lang::wallet.not_related') ]);
             }

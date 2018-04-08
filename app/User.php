@@ -694,25 +694,4 @@ class User extends Authenticatable
         return  strpos($this->UserTreePermission->genealogy, strval($downline_id)) > 0;
     }
 
-    /**
-     * This function checks returns a list of the uplines of current user in a collecitons
-     * $this->upLines() or
-     * $this->upLines()->reverse()
-     */
-    public function upLines($id = null)
-    {
-        if ($id == null ) {
-            return null;
-        }
-
-        $uplines = $this->where('id', '=', $this->refererId)->get();
-    
-        while ($uplines->last() && $uplines->last()->refererId !== null)
-        {
-            $parent = $this->where('id', '=', $uplines->last()->refererId)->get();
-            $uplines = $uplines->merge($parent);
-        }
-    
-        return $uplines;
-    }
 }

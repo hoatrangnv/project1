@@ -46,26 +46,4 @@ class UserData extends Model
             ->toArray();
     }
 
-    /**
-     * This function checks returns a list of the uplines of current user in a collecitons
-     * $this->upLines() or
-     * $this->upLines()->reverse()
-     */
-    public function genalogy_upLines($id = null)
-    {
-        if( empty($id) ){
-            return null;
-        }
-
-        $uplines = $this->where('userId', '=', $id)->get();
-    
-        while ($uplines->last() && !($uplines->last()->binaryUserId == null || empty($uplines->last()->binaryUserId)))
-        {
-            $parent = $this->where('userId', '=', $uplines->last()->binaryUserId)->get();
-            $uplines = $uplines->merge($parent);
-        }
-
-        return $uplines;
-    }
-
 }
