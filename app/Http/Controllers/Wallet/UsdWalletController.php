@@ -348,7 +348,6 @@ class UsdWalletController extends Controller
             $transferee = User::where('name', $request->username)->where('uid', $request->userid)->where('active', 1)->first();
             $transferer_uplines = $transferer->upLines();
 
-/*
 Log::debug('------------- usdTransferValidate --------------');
 Log::debug( 'Transferer = ' . $transferer->id . ' ' . $transferer->name);
 Log::debug( 'Transferee = ' . $transferee->id . ' ' . $transferee->name);
@@ -374,7 +373,6 @@ if( empty($transferee->userCoin->userCoinUsd) ) {
 }
 Log::debug( 'Transferee current package : ' . $transferee->userData->package );
 Log::debug('----------------------------------------------');
-*/
 
             if( !$transferer->isUpline($transferee->id) && !$transferee->isUpline($transferer->id) ) {
                 return response()->json(['err' => trans('adminlte_lang::wallet.not_related') ]);
@@ -386,6 +384,10 @@ Log::debug('----------------------------------------------');
             if( $request->trfAmount <= 0) {
                 return response()->json(['err' => trans('adminlte_lang::wallet.amount_need_positive') ]);
             }
+
+            /*
+             * CR0032 Treat all USD are the same & no ceiling limit
+             *
             $free_to_use = empty($transferer->userCoin->userCoinUsd) ? $transferer->usercoin->usdAmount : $transferer->userCoin->userCoinUsd->usdAmountFree;
             $transferer_usd_wallet_balance = $transferer->usercoin->usdAmount;
             if( $request->trfAmount > $free_to_use ) {
@@ -400,6 +402,11 @@ Log::debug('----------------------------------------------');
 
             if( $request->trfAmount > $maxTransferAmount) {
                 return response()->json(['err' => trans('adminlte_lang::wallet.exceed_transferee_limit') ]);
+            }
+            */
+
+            if( $request->trfAmount > $transferer->usercoin->usdAmount ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.insufficient_balance') ]);
             }
 
         }
@@ -447,6 +454,10 @@ Log::debug('----------------------------------------------');
             if( $request->trfAmount <= 0) {
                 return response()->json(['err' => trans('adminlte_lang::wallet.amount_need_positive') ]);
             }
+
+            /*
+             * CR0032
+             * 
             $free_to_use = empty($transferer->userCoin->userCoinUsd) ? $transferer->usercoin->usdAmount : $transferer->userCoin->userCoinUsd->usdAmountFree;
             $transferer_usd_wallet_balance = $transferer->usercoin->usdAmount;
             if( $request->trfAmount > $free_to_use ) {
@@ -461,6 +472,11 @@ Log::debug('----------------------------------------------');
             if( $request->trfAmount > $maxTransferAmount) {
                 return response()->json(['err' => trans('adminlte_lang::wallet.exceed_transferee_limit') ]);
             }
+            */
+
+            if( $request->trfAmount > $transferer->usercoin->usdAmount ) {
+                return response()->json(['err' => trans('adminlte_lang::wallet.insufficient_balance') ]);
+            }
 
             // Validate the OTP
             
@@ -473,6 +489,7 @@ Log::debug('----------------------------------------------');
             //         return response()->json(['err' => trans('adminlte_lang::wallet.otp_not_match') ]);
             //     }
             // }
+
 
             // Update the transaction deatil tables & the USD Wallet Balance (Step 1 of 3)
             $currentDate = date("Y-m-d");
@@ -510,7 +527,7 @@ Log::debug('----------------------------------------------');
                 $transferee->userCoin->usdAmount = $transferee->userCoin->usdAmount + $transferAmount;
                 $transferee->userCoin->save();
 
-                // Update user USD balance break (free and hold) amount
+                // Update user USD balance breakdown(free and hold) amount
                 if ( empty($transferer->userCoin->userCoinUsd) ) {
                     $record = [
                         'userId'            => $transferer->id,
@@ -519,8 +536,14 @@ Log::debug('----------------------------------------------');
                     ];
                     UserCoinUsd::create($record);
                 } else {
-                    $transferer->userCoin->userCoinUsd->usdAmountFree = $transferer->userCoin->userCoinUsd->usdAmountFree - $transferAmount;
-                    $transferer->userCoin->userCoinUsd->save();
+                    if ( $transferAmount <= $transferer->userCoin->userCoinUsd->usdAmountHold ) {
+                        $transferer->userCoin->userCoinUsd->usdAmountHold = $transferer->userCoin->userCoinUsd->usdAmountHold - $transferAmount;
+                        $transferer->userCoin->userCoinUsd->save();
+                    } else {
+                        $transferer->userCoin->userCoinUsd->usdAmountHold = $transferer->userCoin->userCoinUsd->usdAmountHold - $transferAmount;
+                        $transferer->userCoin->userCoinUsd->usdAmountFree = $transferer->userCoin->userCoinUsd->usdAmountFree - ($transferAmount - $transferer->userCoin->userCoinUsd->usdAmountHold);
+                        $transferer->userCoin->userCoinUsd->save();
+                    }
                 }
 
                 if ( empty($transferee->userCoin->userCoinUsd) ) {

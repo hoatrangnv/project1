@@ -692,16 +692,7 @@ class User extends Authenticatable
             return false;
         }
         
-        /*
-        $uplines = $this->UpLines();
-        foreach( $uplines as $upline ) {
-            if ( $upline->id == $upline_id ) {
-                return true;
-            }
-        }
-        */
-
-        $genalogy_uplines = $this->userData->genalogy_upLines();
+        $genalogy_uplines = $this->userData->genalogy_upLines($upline_id);
         foreach( $genalogy_uplines as $upline ) {
 
             if ( $upline->userId.'a' == $upline_id.'a'  ) {
@@ -710,25 +701,6 @@ class User extends Authenticatable
         }
 
         return false;
-    }
-
-
-    /**
-     * This function checks returns a list of the uplines of current user in a collecitons
-     * $this->upLines() or
-     * $this->upLines()->reverse()
-     */
-    public function upLines()
-    {
-        $uplines = $this->where('id', '=', $this->refererId)->get();
-    
-        while ($uplines->last() && $uplines->last()->refererId !== null)
-        {
-            $parent = $this->where('id', '=', $uplines->last()->refererId)->get();
-            $uplines = $uplines->merge($parent);
-        }
-    
-        return $uplines;
     }
 
 }
