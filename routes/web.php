@@ -18,7 +18,6 @@ Route::get('authenticator', 'Auth\LoginController@auth2fa');
 Route::post('authenticator', 'Auth\LoginController@auth2fa');
 Route::get('users/search', 'User\UserController@search');
 Route::get('users/searchp', 'User\UserController@searchp');
-Route::get('wallets/usd/gettransferandbuypackges', 'Wallet\UsdWalletController@getTransferAndBuyPackages');
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
