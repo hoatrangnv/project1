@@ -109,7 +109,7 @@
 											@if($userOrder->status==1)
 												
 												<div class="pull-left">
-													<a href='javascript:;' class='btn btn-xs bg-olive btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
+													<a href='javascript:;' class='btn btn-xs bg-olive btn-pay' data-packname="{{$userOrder->package->name}}" data-walletType="{{$userOrder->walletType}}" data-amountclp="{{$userOrder->amountCLP}}" data-amountbtc="{{$userOrder->amountBTC}}" data-amountusd="{{$userOrder->amountUSD}}" data-id="{{$userOrder->id}}" data-time="{{floor($userOrder->timeLeft)}}" data-package-id="{{$userOrder->packageId}}">Pay Now</a>
 													<a href="javascript:;" data-name="{{$userOrder->package->name}}" class="btn btn-danger btn-xs btn-cancel" data-id="{{$userOrder->id}}">Cancel</a>
 													
 												</div>
@@ -181,6 +181,7 @@
 			var walletType=$(this).attr('data-walletType');
 			var amountCLP=$(this).attr('data-amountclp');
 			var amountBTC=$(this).attr('data-amountbtc');
+            var amountUSD=$(this).attr('data-amountusd');
 			var time=$(this).attr('data-time');
 			if(currPack > pid)
 			{
@@ -193,10 +194,21 @@
 			{
 				$('#orderId').val(oid);
 
-				var amount=amountBTC!=0?amountBTC:amountCLP;
-				var wallet='CLP';
-					if(walletType==2)
-						wallet='BTC';
+				var amount=amountCLP;
+                var wallet='CLP';
+                if(walletType==3) {
+                    wallet='CLP';
+                    amount=amountCLP;
+                }
+                if(walletType==2) {
+                    wallet='BTC';
+                    amount=amountBTC;
+                }
+                if(walletType==1) {
+                    wallet='usd';
+                    amount=amountUSD;
+                }
+
 				var action='buy';
 				if(currPack>0)
 					action='upgrade to';

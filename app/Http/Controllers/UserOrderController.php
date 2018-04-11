@@ -72,7 +72,6 @@ class UserOrderController extends Controller
 		{
 			if($request->ajax())
 			{
-
 				$user=Auth::user();
 				$package=Package::find($request->pid);
 				if(!empty($package))
@@ -90,14 +89,15 @@ class UserOrderController extends Controller
                         $check = ($amount<=$user->UserCoin->usdAmount);
                     }
 					if($request->wallet==Wallet::CLP_WALLET){
-						$amount=round($amount/ExchangeRate::getCLPUSDRate(),8);
+                        $amount=round($amount/ExchangeRate::getCLPUSDRate(),8);
 						$clpCoinAmount=$user->UserCoin->clpCoinAmount;
 						if($amount<=$clpCoinAmount)
 							$check=true;
 					}
 					if($request->wallet==Wallet::BTC_WALLET){
-						$amount=round($amount/ExchangeRate::getBTCUSDRate(),8);
+                        $amount=round($amount/ExchangeRate::getBTCUSDRate(),8);
 						$btcCoinAmount=$user->UserCoin->btcCoinAmount;
+
 						if($amount<=$btcCoinAmount)
 							$check=true;
                     }
@@ -134,8 +134,7 @@ class UserOrderController extends Controller
                 $package=Package::find($request->packageId);
 				if($request->walletId!=Wallet::USD_WALLET && $request->walletId!=Wallet::CLP_WALLET && $request->walletId!=Wallet::BTC_WALLET)
 				{
-					return redirect()->route('package.buy')
-	                            ->with('errorMessage','Whoops. Something went wrong.');
+					return redirect()->route('package.buy')->with('errorMessage','Whoops. Something went wrong.');
                 }
 				if($package)
 				{
@@ -150,24 +149,27 @@ class UserOrderController extends Controller
                     $balanceUSD=$userCoin->usdAmount;
 					$balanceCLP=$userCoin->clpCoinAmount;
                     $balanceBTC=$userCoin->btcCoinAmount;
+
 					$enough=false;
                     $pOldPrice = isset($user->userData->package->price) ?$user->userData->package->price : 0;
                     $amount=$package->price-$pOldPrice;
 
                     if(floatval($request->walletId)==Wallet::USD_WALLET)//usd holding wallet
                     {
-                        $enough = ($amount<=$balanceUSD);
+                        $enough = ($amount<=$balanceUSD-$pOldPrice);
                     }
+
                     if(floatval($request->walletId)==Wallet::CLP_WALLET)//clp wallet
 					{
-						$amount=round(($amount-$pOldPrice)/$rateCLPUSD,8);
+						$amount=round($amount/$rateCLPUSD,8);
 						$enough=floatval($amount)<=$balanceCLP;
 					}
 
 					if(floatval($request->walletId)==Wallet::BTC_WALLET){
-						$amount=round(($amount-$pOldPrice)/$rateBTCUSD,8);
-						$enough=floatval($amount)<=$balanceBTC;
+                        $amount=round($amount/$rateBTCUSD,8);
+                        $enough=floatval($amount)<=$balanceBTC;
                     }
+                    
 					///////////////////////////////////////////////////
 					$orderField=[
 						'userId'=>$currentUser->id,
@@ -360,7 +362,7 @@ class UserOrderController extends Controller
 	                if($buyDate>=time())
 	                {
 	                	//buy action
-	                	if($order->walletType!=Wallet::CLP_WALLET && $order->walletType!=Wallet::BTC_WALLET)//check wallet type
+	                	if($order->walletType!=Wallet::CLP_WALLET && $order->walletType!=Wallet::BTC_WALLET && $order->walletType!=Wallet::USD_WALLET)//check wallet type
 						{
 							return redirect()->route('package.buy')
 			                            ->with('errorMessage','Whoops. Something went wrong.');
@@ -378,8 +380,16 @@ class UserOrderController extends Controller
 								$rateCLPUSD=$exchangeRate[0]->exchrate;
 								$rateBTCUSD=$exchangeRate[1]->exchrate;
 								$balanceCLP=$userCoin->clpCoinAmount;
-								$balanceBTC=$userCoin->btcCoinAmount;
-								$amount=$order->walletType==Wallet::CLP_WALLET?round($order->amountCLP*$rateCLPUSD,8):round($order->amountBTC*$rateBTCUSD);
+                                $balanceBTC=$userCoin->btcCoinAmount;
+                                $balanceUSD=$userCoin->usdAmount;
+                                if($order->walletType==Wallet::CLP_WALLET) {
+                                    $amount=round($order->amountCLP*$rateCLPUSD,8);
+                                } elseif($order->walletType==Wallet::BTC_WALLET) {
+                                    $amount=round($order->amountBTC*$rateBTCUSD);
+                                } elseif($order->walletType==Wallet::USD_WALLET) {
+                                    $amount=$order->amountUSD;
+                                }
+
 								$enough=false;
 
 								if(floatval($order->walletType)==Wallet::CLP_WALLET)//clp wallet
@@ -405,8 +415,18 @@ class UserOrderController extends Controller
 									{
 										$enough=false;
 									}
+                                }
 
-								}
+                                if(floatval($order->walletType)==Wallet::USD_WALLET){
+                                    if(floatval($amount)<=$balanceUSD)
+                                    {
+                                        $enough=true;
+                                    }
+                                    else
+                                    {
+                                        $enough=false;
+                                    }
+                                }
 
 								if($enough)
 								{
@@ -455,7 +475,8 @@ class UserOrderController extends Controller
 
 
 							            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(),8);
-							            $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),8);
+                                        $amountBTCDecrease = round($amount_increase / ExchangeRate::getBTCUSDRate(),8);
+                                        $amountUSDDecrease = $amount;
 
 							            $userCoin = $userData->userCoin;
 
@@ -467,12 +488,24 @@ class UserOrderController extends Controller
 					            		{
 					            			$userCoin->btcCoinAmount = round($userCoin->btcCoinAmount, 8) - $amountBTCDecrease;
 					            		}
+						            	if($order->walletType==Wallet::USD_WALLET)
+					            		{
+					            			$userCoin->usdAmount = $userCoin->usdAmount - $amountUSDDecrease;
+					            		}
 							           
 							            $userCoin->save();
 
-							            $walletType=$order->walletType;
-							            $famount=$walletType==Wallet::CLP_WALLET?$amountCLPDecrease:$amountBTCDecrease;
-
+                                        $walletType=$order->walletType;
+                                        if($order->walletType==Wallet::CLP_WALLET) {
+                                            $famount=$amountCLPDecrease;
+                                        } 
+                                        if($order->walletType==Wallet::BTC_WALLET) {
+                                            $famount=$amountBTCDecrease;
+                                        }
+                                        if($order->walletType==Wallet::USD_WALLET) {
+                                            $famount=$amountUSDDecrease;
+                                        } 
+                                                                                
 							            $fieldUsd = [
 							                'walletType' => $walletType,//usd
 							                'type' => Wallet::BUY_PACK_TYPE,//bonus f1
@@ -480,7 +513,8 @@ class UserOrderController extends Controller
 							                'userId' => Auth::user()->id,
 							                'amount' => $famount,
 							                'note'   => $package->name
-							            ];
+                                        ];
+
 							            Wallet::create($fieldUsd);
 
 							            // Calculate fast start bonus
@@ -524,7 +558,14 @@ class UserOrderController extends Controller
 								}
 								else
 								{
-									$wallet='CLP';
+                                    if($order->walletType==Wallet::CLP_WALLET) {
+                                        $wallet='CLP';
+                                    } elseif($order->walletType==Wallet::BTC_WALLET) {
+                                        $wallet='BTC';
+                                    } elseif($order->walletType==Wallet::USD_WALLET) {
+                                        $wallet='USD';
+                                    }
+                                                                        ;
 									if(floatval($order->walletType)==Wallet::BTC_WALLET)
 										$wallet='BTC';
 									return redirect()->route('package.buy')
