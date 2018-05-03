@@ -181,8 +181,8 @@
                     </div>
 
                   <p>Buy Package by</p>
-                    <button class="btn btn-success" data-wid="4" id="btn_submit_clp" type="button">CLP Wallet</button>
-                    <button class="btn btn-success" data-wid="3" id="btn_submit_btc" type="button">BTC Wallet</button>
+                    <button class="btn btn-success" data-wid="3" id="btn_submit_clp" type="button">CLP Wallet</button>
+                    <button class="btn btn-success" data-wid="2" id="btn_submit_btc" type="button">BTC Wallet</button>
                     <button class="btn btn-success" data-wid="1" id="btn_submit_btc" type="button">USD Wallet</button>
                     <button class="btn btn-default pull-right" id="btn_submit" type="button" data-dismiss="modal">Close</button>
                 </form>

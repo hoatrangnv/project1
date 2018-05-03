@@ -1,4 +1,12 @@
 # CLP BOS Change Log
+## CR0032
+This change will enhance CR0031 
+A. User A can transfer unlimited amount of USD to user B;
+B. User B can re-transfer the received USD amount to any other user;
+C. There is not time limit it can take place
+
+and bug fixed
+
 
 ## CR0031
 This change will modify the transfer of USD between users with the following specifications

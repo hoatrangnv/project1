@@ -396,7 +396,6 @@
                         url: "/users/search",
                         data: {id : search}
                     }).done(function(data){
-console.log(data);
                         var output = [];
                         if(data.err) {
                             $("#trfUid").parents("div.form-group").addClass('has-error');

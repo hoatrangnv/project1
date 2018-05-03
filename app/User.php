@@ -682,53 +682,16 @@ class User extends Authenticatable
 
 
     /**
-     * This function checks if a user in parameter is one of the uplines / ancestor of the current user
+     * This function checks if a user in parameter is one of the downlines of the current user
      * 
      * @var integer
      */
-    public function isUpline( $upline_id = null )
+    public function isDownline( $downline_id = null)
     {
-        if ( is_null($upline_id) || empty($upline_id) ) {
+        if ( is_null($downline_id) || empty($downline_id) ) {
             return false;
         }
-        
-        /*
-        $uplines = $this->UpLines();
-        foreach( $uplines as $upline ) {
-            if ( $upline->id == $upline_id ) {
-                return true;
-            }
-        }
-        */
-
-        $genalogy_uplines = $this->userData->genalogy_upLines();
-        foreach( $genalogy_uplines as $upline ) {
-
-            if ( $upline->userId.'a' == $upline_id.'a'  ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-     * This function checks returns a list of the uplines of current user in a collecitons
-     * $this->upLines() or
-     * $this->upLines()->reverse()
-     */
-    public function upLines()
-    {
-        $uplines = $this->where('id', '=', $this->refererId)->get();
-    
-        while ($uplines->last() && $uplines->last()->refererId !== null)
-        {
-            $parent = $this->where('id', '=', $uplines->last()->refererId)->get();
-            $uplines = $uplines->merge($parent);
-        }
-    
-        return $uplines;
+        return  strpos($this->UserTreePermission->genealogy, strval($downline_id)) > 0;
     }
 
 }
