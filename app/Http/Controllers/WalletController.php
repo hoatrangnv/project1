@@ -56,6 +56,7 @@ class WalletController extends Controller
                 $amountTransfer = $userCoin->availableAmount;
                 $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $amountTransfer;
                 $userCoin->availableAmount = 0;
+                $userCoin->reinvestAmount = $userCoin->reinvestAmount - $amountTransfer;
                 $userCoin->save();
 
                 $fieldCLP = [
