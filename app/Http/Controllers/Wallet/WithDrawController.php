@@ -538,7 +538,7 @@ class WithDrawController extends Controller
 			}
 
 			$userData = Auth::user()->userData;
-			if($userData->packageId < 1)
+			if($userData->packageId < 1 && $userData->packageDate == null)
 			{
 				$withdrawAmountErr = 'Please be noted that the minimum mining pack for any withdrawal requests is $100';
 			}
