@@ -39,7 +39,18 @@ class Bonus
 				//Get cron status
 				$cronStatus = CronProfitLogs::where('userId', $user->userId)->first();
 
-				if(isset($cronStatus) && $cronStatus->status == 1) continue;
+
+				if(!is_null($cronStatus)) {
+	                if($cronStatus->status == 1) continue;
+	            } else {
+	                //insert to log
+	                $field = [
+	                    'userId' => $user->userId,
+	                    'status' => 1,
+	                ];
+	                
+	                CronProfitLogs::create($field);
+	            }
 
 				//Get all pack in user_packages
 				$package = UserPackage::where('userId', $user->userId)
@@ -69,13 +80,10 @@ class Bonus
 					Wallet::create($fieldUsd);
 
 					//Update cron status from 0 => 1
-					if(isset($cronStatus)) {
+					if(!is_null($cronStatus)) {
 						$cronStatus->status = 1;
 						$cronStatus->save();
-					} else {
-						Log::info("bonusDayCron cron job have user " . $user->userId . " have no logs row");
-						continue;
-					} 
+					}  
 				}
 			}
 
@@ -123,12 +131,17 @@ class Bonus
 			//Get cron status
 			$cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
 
-			if(is_null($cronStatus)) {
-				Log::info("Binary week cron job have user " . $binary->userId . " have no binary logs row");
-				continue;
-			} 
-
-			if(isset($cronStatus) && $cronStatus->status == 1) continue;
+			if(!is_null($cronStatus)) {
+                if($cronStatus->status == 1) continue;
+            } else {
+                //insert to log
+                $field = [
+                    'userId' => $binary->userId,
+                    'status' => 1,
+                ];
+                
+                CronBinaryLogs::create($field);
+            }
 
 			$leftOver = $binary->leftOpen + $binary->leftNew;
 			$rightOver = $binary->rightOpen + $binary->rightNew;
@@ -237,7 +250,7 @@ class Bonus
 			}
 
 			//Update cron status from 0 => 1
-			if(isset($cronStatus)) {
+			if(!is_null($cronStatus)) {
 				$cronStatus->status = 1;
 				$cronStatus->save();
 			}
@@ -262,12 +275,17 @@ class Bonus
 				//Get cron status
 				$cronStatus = CronMatchingLogs::where('userId', $user->userId)->first();
 
-				if(is_null($cronStatus)) {
-					Log::info("Matching cron job have user " . $user->userId . " have no matching logs row");
-					continue;
-				} 
-
-				if(isset($cronStatus) && $cronStatus->status == 1) continue;
+				if(!is_null($cronStatus)) {
+                    if($cronStatus->status == 1) continue;
+                } else {
+                    //insert to log
+                    $field = [
+                        'userId' => $user->userId,
+                        'status' => 1,
+                    ];
+                    
+                    CronMatchingLogs::create($field);
+                }
 
 				if (User::checkBinaryCount($user->userId, 1))
 				{
@@ -322,7 +340,7 @@ class Bonus
 						Wallet::create($fieldInvest);
 
 						//Update cron status from 0 => 1
-						if(isset($cronStatus)) {
+						if(!is_null($cronStatus)) {
 							$cronStatus->status = 1;
 							$cronStatus->save();
 						}
