@@ -28,7 +28,7 @@ class ExchangeRateAPI
 
         //if($clpUSDRate < config('app.clp_target_price')) $clpUSDRate = config('app.clp_target_price');
 
-        return round($clpUSDRate, 2);
+        return round($clpUSDRate, 5);
     }
 
     public function getBTCUSDRate() 

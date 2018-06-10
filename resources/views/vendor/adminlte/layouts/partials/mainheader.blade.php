@@ -423,7 +423,7 @@
         });
     var formatterBTC = new Intl.NumberFormat('en-US', {
             style: 'decimal',
-            minimumFractionDigits: 5,
+            minimumFractionDigits: 8,
         });
     function doLogout(){
          document.cookie = "open=1";
@@ -454,7 +454,7 @@
             url: '{{ URL::to("exchange") }}',
             success: function(data){
                 $('.btcusd').html(formatter.format(data[4].exchrate));
-                $('.clpusd').html(formatter.format(data[5].exchrate));
+                $('.clpusd').html(formatterBTC.format(data[5].exchrate));
                 $('.clpbtc').html(formatterBTC.format(data[3].exchrate));
                 $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
                 globalBTCUSD = data[1].exchrate;

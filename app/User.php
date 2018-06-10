@@ -296,7 +296,7 @@ class User extends Authenticatable
         }
 
         //Caculate temporary binary bonus this week right after have a new user in tree
-        self::bonusBinaryThisWeek($binaryUserId);
+        //self::bonusBinaryThisWeek($binaryUserId);
     }
 
     /**

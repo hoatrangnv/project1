@@ -44,7 +44,7 @@ class AutoBuyPack
 			$amount_increase = $packageOldId = 0;
 			$userData = $user->userData;
 			$packageOldId = $userData->packageId;
-			$packageOldPrice = isset($userData->package->price) ? $userData->package->price : 0;
+			$packageOldPrice = isset($userData->package) ? $userData->package->price : 0;
 
 			$userData->packageDate = date('Y-m-d H:i:s');
 			$userData->packageId = $requestPackageId;
@@ -145,13 +145,13 @@ class AutoBuyPack
 					$userData->totalBonus = $userData->totalBonus + $packageBonus;
 					$userData->save();
 				}elseif($level == 2){//F2
-					if(isset($userData->package->pack_id) &&  $userCoin->reinvestAmount > 100){
+					if(isset($userData->package) &&  $userCoin->reinvestAmount > 100){
 						$packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f2_pay');
 						$userData->totalBonus = $userData->totalBonus + $packageBonus;
 						$userData->save();
 					}
 				}elseif($level == 3){//F3
-					if(isset($userData->package->pack_id) &&  $userCoin->reinvestAmount > 100){
+					if(isset($userData->package) &&  $userCoin->reinvestAmount > 100){
 						$packageBonus = $usdCoinAmount * config('cryptolanding.bonus_f3_pay');
 						$userData->totalBonus = $userData->totalBonus + $packageBonus;
 						$userData->save();
@@ -293,7 +293,7 @@ class AutoBuyPack
 							->first();
 				if($package)
 				{
-					$bonus = isset($userData->package->bonus) ? $userData->package->bonus : 0;
+					$bonus = isset($userData->package) ? $userData->package->bonus : 0;
 
 					if($bonus == 0.001) $bonus = 0.0025;
 					if($bonus == 0.002) $bonus = 0.002;
