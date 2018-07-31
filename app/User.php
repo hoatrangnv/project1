@@ -95,11 +95,14 @@ class User extends Authenticatable
                 if($userCoin && $packageBonus > 0){
                     //Get info of user
                     $user = Auth::user();
+                    $clpUSDRate = ExchangeRate::getCLPUSDRate();
+                    if($clpUSDRate < config('app.clp_target_price')) $clpUSDRate = config('app.clp_target_price');
 
                     $nameBoughtPack = $name != "" ? $name : $user->name;
 
                     $usdAmount = ($packageBonus * config('cryptolanding.usd_bonus_pay'));
-                    $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate());
+
+                    $reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay') / $clpUSDRate);
                     $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
                     $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
                     $userCoin->save();
